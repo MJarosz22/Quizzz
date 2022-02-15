@@ -11,6 +11,7 @@ Add your own name (do not add the names for others!) to the section below.
 | Profile Picture | Name | Email |
 |---|---|---|
 | ![](https://eu.ui-avatars.com/api/?name=OOPP&length=4&size=50&color=DDD&background=777&font-size=0.325) | Your Name Here | Y.NameHere@student.tudelft.nl |
+| ![](https://secure.gravatar.com/avatar/7fe070246a92ce953af396a64d04a0d3?s=46&d=identicon) | Rafael Petouris Rodriguez de Paterna | R.PetourisRodriguezdePaterna@student.tudelft.nl |
 
 <!-- Instructions (remove once assignment has been completed -->
 <!-- - Add (only!) your own name to the table above (use Markdown formatting) -->
