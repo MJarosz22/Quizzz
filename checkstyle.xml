@@ -8,7 +8,6 @@
     <property name="severity" value="warning"/>
     <module name="TreeWalker">
         <module name="UnusedImports"/>
-        <module name="Indentation"/>
         <module name="NoWhitespaceAfter"/>
         <module name="NoWhitespaceBefore"/>
         <module name="TypeName"/>
@@ -17,9 +16,7 @@
         <module name="EmptyStatement"/>
         <module name="MissingSwitchDefault"/>
         <module name="StringLiteralEquality"/>
-    </module>
-    <module name="FileTabCharacter">
-        <property name="eachLine" value="true"/>
+        <module name="EmptyCatchBlock"/>
     </module>
     <module name="LineLength">
         <property name="fileExtensions" value="java"/>
