@@ -56,7 +56,7 @@ Note taker: Sophie van der Linden
 
 - Good job this previous week!
 
-*** 
+***
 
 # Minutes week 3.2  
 Location: DW PC-Hall 1 cubicle 2  
@@ -115,4 +115,3 @@ No important questions.
  
 ### Closing  
 Closed at 17.30.
-
