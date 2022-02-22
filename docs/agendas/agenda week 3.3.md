@@ -52,3 +52,11 @@ Note taker: Vlad Nitu
 
 - Good job this previous week!
 
+# Plans for this week
+- Schedule another meeting before the “official” meeting on Thursday in order to prepare the mock up for the game.
+- Agreed on the team we will group with to evaluate each others HCI assignments 
+- Have the HCI mock-up finished by Friday’s deadline (preferable on Tuesday so that we can ask our TA for feedback) and also do the Assignments 3A and 3B (which are both team assignments).
+- Add check style after agreeing as a team on some basic rules regarding coding standards (indentation, spacing, etc.) . -> between 5 and 10 rules.
+- Enrol to CSE Information Literacy 1 course and go through BS exercises provided for this course. Note that this is a mandatory assignment, deadlined on Sunday (27th Feb.)
+- We will compare our Backlog to the official one (when it is released) and check whether we’ve missed any issue. If so, we will update our issues so that they will be similar to the official document.
+- Decide on the implementation on propagating data (polling, long-polling or WebSockets). 
