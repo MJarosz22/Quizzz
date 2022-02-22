@@ -124,26 +124,26 @@ Note taker: Vlad Nitu
 - [17.08] **Stand-up meeting** - {Every member presents his work conducted during last week.} 
 - [17.12] **TA expectation regarding every member being equally active** - {} 
 - [17.14] **Ask for feedback regarding quizzz prototype** - {
-- Realistic design. 
-- Don’t spend a lot of time on design (it is not graded)
-- SHOULD BE FUNCTIONAL.
-- Take screenshots of app.moqups.com project. -> before and after feedback from the other team.
-- Set expectations from the other team (i.e: 7-10 points of feedback).  Ask them to follow guidelines from HCI lectures. 
+ Realistic design. 
+ Don’t spend a lot of time on design (it is not graded)
+ SHOULD BE FUNCTIONAL.
+ Take screenshots of app.moqups.com project. -> before and after feedback from the other team.
+ Set expectations from the other team (i.e: 7-10 points of feedback).  Ask them to follow guidelines from HCI lectures. 
 } 
 - [17.18] **Talk about Information Literacy assignment** - {Get a PASS grade after doing all levels.} 
 - [17.20] **API endpoints examples from TA** - {
-- Show examples of API endpoints usage.
-- We basically start our project by working over repository-template.
-- Use findAll(), findById() by using classes that extend JPARepository. 
+ Show examples of API endpoints usage.
+ We basically start our project by working over repository-template.
+ Use findAll(), findById() by using classes that extend JPARepository. 
 }
 - [17.27] **GITLAB good practice discussion** - {
-- 1 issue means 1 feature. 
-- Make them as small as possible (i.e: such that 1/2 people can finish it in a couple of hours).
+ 1 issue means 1 feature. 
+ Make them as small as possible (i.e: such that 1/2 people can finish it in a couple of hours).
 #### TIP:
-    - Create boards(i.e: % ”Sprint 1” milestones) for each sprint, where we decide for each sprint what features are going to be implemented + some new labels: i.e: status::unassigned, status::scheduled, status::in-progress, status::on-review, status::completed.
-- DO NOT approve own MR.
-- Before approval check for pipeline pass. 
-- Comment on GITLAB when reviewing. 
+     Create boards(i.e: % ”Sprint 1” milestones) for each sprint, where we decide for each sprint what features are going to be implemented + some new labels: i.e: status::unassigned, status::scheduled, status::in-progress, status::on-review, status::completed.
+ DO NOT approve own MR.
+ Before approval check for pipeline pass. 
+ Comment on GITLAB when reviewing. 
 } 
 - [17.37] **Rotate each time with other teams of our TA** - {Next Thursday: 29.02.2022 meeting is scheduled at 13.45.} 
 - [17.39] **Meeting ends** - {Chairman closes.} 
