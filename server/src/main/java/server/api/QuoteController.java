@@ -19,12 +19,7 @@ import java.util.List;
 import java.util.Random;
 
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import commons.Quote;
 import server.database.QuoteRepository;
@@ -90,4 +85,14 @@ public class QuoteController {
             return null;
         }
     }
+
+    @DeleteMapping("/{id}")
+    public ResponseEntity<Quote> removeById (@PathVariable("id") long id) {
+        if (id <= 0 || !repo.existsById(id))
+            return ResponseEntity.badRequest().build();
+
+        repo.deleteById(id);
+        return ResponseEntity.ok(repo.getById(id)) ;
+    }
+
 }
