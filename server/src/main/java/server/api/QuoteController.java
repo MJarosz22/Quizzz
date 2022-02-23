@@ -78,8 +78,7 @@ public class QuoteController {
             if (repo.count() > 0) {
                 long size = repo.count();
                 List<Quote> quotes = repo.findAll();
-                Quote middleQuote = quotes.get((int) (size / 2));
-                return middleQuote;
+                return quotes.get((int) (size / 2)); // Middle quote
             } else
                 return null;
         } catch (NullPointerException e) {
@@ -99,7 +98,8 @@ public class QuoteController {
     @PostMapping("/greet-person")
     public Quote greetPerson(@RequestBody Person person) {
         try {
-            if (person.firstName == null || person.lastName == null || person.firstName == "" || person.lastName == "") {
+            if (person.firstName == null || person.lastName == null
+                    || person.firstName.equals("") || person.lastName.equals("")) {
                 return new Quote(new Person("-", "-"), "You are not a person");
             } else {
                 String q = "Hi there, " + person.firstName + " " + person.lastName + "!";
