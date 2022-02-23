@@ -45,7 +45,7 @@ public class QuoteController {
 
     @GetMapping("/{id}")
     public ResponseEntity<Quote> getById(@PathVariable("id") long id) {
-        return ResponseEntity.of(repo.findById(id)) ;
+        return ResponseEntity.of(repo.findById(id));
     }
 
     @PostMapping(path = {"", "/"})
@@ -87,9 +87,9 @@ public class QuoteController {
     @DeleteMapping("/{id}")
     public ResponseEntity<Quote> removeById(@PathVariable("id") long id) {
         if (id <= 0 || !repo.existsById(id))
-            ResponseEntity.of(Optional.empty()) ;
+            ResponseEntity.of(Optional.empty());
 
-        Optional<Quote> q = repo.findById(id) ;
+        Optional<Quote> q = repo.findById(id);
         repo.deleteById(id);
         return ResponseEntity.of(q);
     }
