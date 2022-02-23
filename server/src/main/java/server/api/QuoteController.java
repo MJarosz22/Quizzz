@@ -67,7 +67,7 @@ public class QuoteController {
     @GetMapping("/rnd")
     public ResponseEntity<Quote> getRandom() {
         var idx = random.nextInt((int) repo.count());
-        return ResponseEntity.of(repo.findById((long) idx));
+        return ResponseEntity.ok(repo.getById((long) idx));
     }
 
     @GetMapping("/middle-quote")
