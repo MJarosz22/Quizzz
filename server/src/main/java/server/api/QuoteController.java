@@ -18,6 +18,7 @@ package server.api;
 import java.util.List;
 import java.util.Random;
 
+import commons.Person;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -87,12 +88,30 @@ public class QuoteController {
     }
 
     @DeleteMapping("/{id}")
-    public ResponseEntity<Quote> removeById (@PathVariable("id") long id) {
+    public ResponseEntity<Quote> removeById(@PathVariable("id") long id) {
         if (id <= 0 || !repo.existsById(id))
             return ResponseEntity.badRequest().build();
 
         repo.deleteById(id);
-        return ResponseEntity.ok(repo.getById(id)) ;
+        return ResponseEntity.ok(repo.getById(id));
     }
+
+    @PostMapping("/greet-person")
+    public Quote greetPerson(@RequestBody Person person) {
+        try {
+            if (person.firstName == null || person.lastName == null || person.firstName == "" || person.lastName == "") {
+                return new Quote(new Person("-", "-"), "You are not a person");
+            } else {
+                String q = "Hi there, " + person.firstName + " " + person.lastName + "!";
+                Quote quote = new Quote(person, q);
+                repo.save(quote);
+                return quote;
+            }
+
+        } catch (NullPointerException e) {
+            return new Quote(new Person("-", "-"), "missing body");
+        }
+    }
+
 
 }
