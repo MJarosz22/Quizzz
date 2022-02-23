@@ -16,6 +16,7 @@
 package server.api;
 
 import java.util.List;
+import java.util.Optional;
 import java.util.Random;
 
 import commons.Person;
@@ -44,10 +45,7 @@ public class QuoteController {
 
     @GetMapping("/{id}")
     public ResponseEntity<Quote> getById(@PathVariable("id") long id) {
-        if (id < 0 || !repo.existsById(id)) {
-            return ResponseEntity.badRequest().build();
-        }
-        return ResponseEntity.ok(repo.getById(id));
+        return ResponseEntity.of(repo.findById(id)) ;
     }
 
     @PostMapping(path = {"", "/"})
@@ -66,13 +64,13 @@ public class QuoteController {
         return s == null || s.isEmpty();
     }
 
-    @GetMapping("rnd")
+    @GetMapping("/rnd")
     public ResponseEntity<Quote> getRandom() {
         var idx = random.nextInt((int) repo.count());
-        return ResponseEntity.ok(repo.getById((long) idx));
+        return ResponseEntity.of(repo.findById((long) idx));
     }
 
-    @GetMapping("middle-quote")
+    @GetMapping("/middle-quote")
     public Quote getMiddleQuote() {
         try {
             if (repo.count() > 0) {
@@ -89,10 +87,11 @@ public class QuoteController {
     @DeleteMapping("/{id}")
     public ResponseEntity<Quote> removeById(@PathVariable("id") long id) {
         if (id <= 0 || !repo.existsById(id))
-            return ResponseEntity.badRequest().build();
+            ResponseEntity.of(Optional.empty()) ;
 
+        Optional<Quote> q = repo.findById(id) ;
         repo.deleteById(id);
-        return ResponseEntity.ok(repo.getById(id));
+        return ResponseEntity.of(q);
     }
 
     @PostMapping("/greet-person")
