@@ -12,7 +12,7 @@
             <TableColumn fx:id="columnSource" prefWidth="193.0" text="Source" />
         </columns>
       </TableView>
-      <Button layoutX="509.0" layoutY="366.0" mnemonicParsing="false" text="Add Activity" />
-      <Button layoutX="24.0" layoutY="366.0" mnemonicParsing="false" text="Refresh" />
+      <Button layoutX="509.0" layoutY="366.0" mnemonicParsing="false" onAction="#addActivity" text="Add Activity" />
+      <Button layoutX="24.0" layoutY="366.0" mnemonicParsing="false" onAction="#refresh" text="Refresh" />
    </children>
 </AnchorPane>
