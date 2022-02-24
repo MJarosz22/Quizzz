@@ -115,10 +115,14 @@ Note taker: Vlad Nitu
 
 ## Tips and Tops:
 ### Team:
-Tips: Overall great attendance to the meetings (and even when unable to come, it was stated with plenty of time in advance), we manage to fulfill our deadlines relatively fast and so far we have not missed any. Our assignments are done relatively accurately (while we had issues with the Code of conduct, we were on the verge of passing noting it is a pass/fail scenario).
+Tips: I did realize that while all of us overall do interact and give in ideas to the group, sometimes some do so more than others. Still, that is normal in any group and there has not been any scenario where no one did not contribute anything.
+ 
+Tops: Overall great attendance to the meetings (and even when unable to come, it was stated with plenty of time in advance), we manage to fulfill our deadlines relatively fast and so far we have not missed any. Our assignments are done relatively accurately (while we had issues with the Code of conduct, we were on the verge of passing noting it is a pass/fail scenario).
 
-Tops: I did realize that while all of us overall do interact and give in ideas to the group, sometimes some do so more than others. Still, that is normal in any group and there has not been any scenario where no one did not contribute anything.
+### Chairman: 
+Tips: Maybe try to get other members involved a little bit more. 
 
+Tops: The agenda was posted on time (more than 2 days before the meeting), so we had enough time to make an idea about what we are supposed to do in the following week. Also, the meeting was conducted in a good manner that helped us to boost our team's efficiency. Moreover, the agenda covered all the deadlines regarding the upcoming week.
 
 ## Meeting discussion
 - [16.45] **Meeting started by chairman**
