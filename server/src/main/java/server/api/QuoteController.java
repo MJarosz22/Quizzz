@@ -102,7 +102,7 @@ public class QuoteController {
                 return new Quote(new Person("-", "-"), "You are not a person");
             } else {
                 String q = "Hi there, " + person.firstName + " " + person.lastName + "!";
-                Quote quote = new Quote(person, q);
+                Quote quote = new Quote(new Person(person.firstName, person.lastName), q);
                 repo.save(quote);
                 return quote;
             }
@@ -111,6 +111,4 @@ public class QuoteController {
             return new Quote(new Person("-", "-"), "missing body");
         }
     }
-
-
 }
