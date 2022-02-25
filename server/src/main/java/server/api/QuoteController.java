@@ -38,7 +38,7 @@ public class QuoteController {
         this.repo = repo;
     }
 
-    @GetMapping(path = { "", "/" })
+    @GetMapping(path = {"", "/"})
     public List<Quote> getAll() {
         return repo.findAll();
     }
@@ -51,7 +51,7 @@ public class QuoteController {
         return ResponseEntity.ok(repo.findById(id).get());
     }
 
-    @PostMapping(path = { "", "/" })
+    @PostMapping(path = {"", "/"})
     public ResponseEntity<Quote> add(@RequestBody Quote quote) {
 
         if (quote.person == null || isNullOrEmpty(quote.person.firstName) || isNullOrEmpty(quote.person.lastName)
@@ -115,5 +115,47 @@ public class QuoteController {
         }
         // No such quote in quoteRepository
         return ResponseEntity.of(Optional.empty());
+    }
+
+    @GetMapping("/middle-quote")
+    public Quote getMiddleQuote() {
+        try {
+            if (repo.count() > 0) {
+                long size = repo.count();
+                List<Quote> quotes = repo.findAll();
+                return quotes.get((int) (size / 2)); // Middle quote
+            } else
+                return null;
+        } catch (NullPointerException e) {
+            return null;
+        }
+    }
+
+    @DeleteMapping("/{id}")
+    public ResponseEntity<Quote> removeById(@PathVariable("id") long id) {
+        if (id <= 0 || !repo.existsById(id))
+            ResponseEntity.of(Optional.empty());
+
+        Optional<Quote> q = repo.findById(id);
+        repo.deleteById(id);
+        return ResponseEntity.of(q);
+    }
+
+    @PostMapping("/greet-person")
+    public Quote greetPerson(@RequestBody Person person) {
+        try {
+            if (person.firstName == null || person.lastName == null
+                    || person.firstName.equals("") || person.lastName.equals("")) {
+                return new Quote(new Person("-", "-"), "You are not a person");
+            } else {
+                String q = "Hi there, " + person.firstName + " " + person.lastName + "!";
+                Quote quote = new Quote(new Person(person.firstName, person.lastName), q);
+                repo.save(quote);
+                return quote;
+            }
+
+        } catch (NullPointerException e) {
+            return new Quote(new Person("-", "-"), "missing body");
+        }
     }
 }
