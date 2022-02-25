@@ -113,37 +113,45 @@ Note taker: Vlad Nitu
 #### Consequences: 
 - Too vague, write AT LEAST 2 concrete consequences.
 
+## Tips and Tops:
+### Team:
+Tips: I did realize that while all of us overall do interact and give in ideas to the group, sometimes some do so more than others. Still, that is normal in any group and there has not been any scenario where no one did not contribute anything.
+ 
+Tops: Overall great attendance to the meetings (and even when unable to come, it was stated with plenty of time in advance), we manage to fulfill our deadlines relatively fast and so far we have not missed any. Our assignments are done relatively accurately (while we had issues with the Code of conduct, we were on the verge of passing noting it is a pass/fail scenario).
 
+### Chairman: 
+Tips: Maybe try to get other members involved a little bit more. 
 
+Tops: The agenda was posted on time (more than 2 days before the meeting), so we had enough time to make an idea about what we are supposed to do in the following week. Also, the meeting was conducted in a good manner that helped us to boost our team's efficiency. Moreover, the agenda covered all the deadlines regarding the upcoming week.
 
 ## Meeting discussion
-[16.45] **Meeting started by chairman**
-[16.46] **TA announces deadlines** - {also some tips about API endpoints} 
-[16.49] **Chairman leads the meeting** -{Talks about important points to touch} 
-[16.50] **TA ends giving feedback on Code of Conduct** - { } 
-[17.08] **Stand-up meeting** - {Every member presents his work conducted during last week.} 
-[17.12] **TA expectation regarding every member being equally active** - {} 
-[17.14] **Ask for feedback regarding quizzz prototype** - {
-- Realistic design. 
-- Don’t spend a lot of time on design (it is not graded)
-- SHOULD BE FUNCTIONAL.
-- Take screenshots of app.moqups.com project. -> before and after feedback from the other team.
-- Set expectations from the other team (i.e: 7-10 points of feedback).  Ask them to follow guidelines from HCI lectures. 
+- [16.45] **Meeting started by chairman**
+- [16.46] **TA announces deadlines** - {also some tips about API endpoints} 
+- [16.49] **Chairman leads the meeting** -{Talks about important points to touch} 
+- [16.50] **TA ends giving feedback on Code of Conduct** - { } 
+- [17.08] **Stand-up meeting** - {Every member presents his work conducted during last week.} 
+- [17.12] **TA expectation regarding every member being equally active** - {} 
+- [17.14] **Ask for feedback regarding quizzz prototype** - {
+ 1. Realistic design. 
+ 2. Don’t spend a lot of time on design (it is not graded)
+ 3. SHOULD BE FUNCTIONAL.
+ 4. Take screenshots of app.moqups.com project. -> before and after feedback from the other team.
+ 5. Set expectations from the other team (i.e: 7-10 points of feedback).  Ask them to follow guidelines from HCI lectures. 
 } 
-[17.18] **Talk about Information Literacy assignment** - {Get a PASS grade after doing all levels.} 
-[17.20] **API endpoints examples from TA** - {
-- Show examples of API endpoints usage.
-- We basically start our project by working over repository-template.
-- Use findAll(), findById() by using classes that extend JPARepository. 
+- [17.18] **Talk about Information Literacy assignment** - {Get a PASS grade after doing all levels.} 
+- [17.20] **API endpoints examples from TA** - {
+ 1. Show examples of API endpoints usage.
+ 2. We basically start our project by working over repository-template.
+ 3. Use findAll(), findById() by using classes that extend JPARepository. 
 }
-[17.27] **GITLAB good practice discussion** - {
-- 1 issue means 1 feature. 
-- Make them as small as possible (i.e: such that 1/2 people can finish it in a couple of hours).
+- [17.27] **GITLAB good practice discussion** - {
+ 4. 1 issue means 1 feature. 
+ 5. Make them as small as possible (i.e: such that 1/2 people can finish it in a couple of hours).
 #### TIP:
-    - Create boards(i.e: % ”Sprint 1” milestones) for each sprint, where we decide for each sprint what features are going to be implemented + some new labels: i.e: status::unassigned, status::scheduled, status::in-progress, status::on-review, status::completed.
-- DO NOT approve own MR.
-- Before approval check for pipeline pass. 
-- Comment on GITLAB when reviewing. 
+ 1. Create boards(i.e: % ”Sprint 1” milestones) for each sprint, where we decide for each sprint what features are going to be implemented + some new labels: i.e: status::unassigned, status::scheduled, status::in-progress, status::on-review, status::completed.
+ 2. DO NOT approve own MR.
+ 3. Before approval check for pipeline pass. 
+ 4.  Comment on GITLAB when reviewing. 
 } 
-[17.37] **Rotate each time with other teams of our TA** - {Next Thursday: 29.02.2022 meeting is scheduled at 13.45.} 
-[17.39] **Meeting ends** - {Chairman closes.} 
+- [17.37] **Rotate each time with other teams of our TA** - {Next Thursday: 29.02.2022 meeting is scheduled at 13.45.} 
+- [17.39] **Meeting ends** - {Chairman closes.} 

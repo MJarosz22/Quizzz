@@ -45,7 +45,10 @@ public class QuoteController {
 
     @GetMapping("/{id}")
     public ResponseEntity<Quote> getById(@PathVariable("id") long id) {
-        return ResponseEntity.of(repo.findById(id));
+        if (id < 0 || !repo.existsById(id)) {
+            return ResponseEntity.badRequest().build();
+        }
+        return ResponseEntity.ok(repo.findById(id).get());
     }
 
     @PostMapping(path = {"", "/"})
@@ -66,8 +69,52 @@ public class QuoteController {
 
     @GetMapping("/rnd")
     public ResponseEntity<Quote> getRandom() {
-        var idx = random.nextInt((int) repo.count());
-        return ResponseEntity.ok(repo.getById((long) idx));
+        List<Quote> q = repo.findAll();
+        var idx = random.nextInt((int) q.size());
+        return ResponseEntity.ok(q.get(idx));
+    }
+
+    @PostMapping("/last-person")
+    public ResponseEntity<Quote> removeByString(@RequestBody String string) {
+        if (string == null)
+            return ResponseEntity.of(Optional.empty());
+        int N = (int) (repo.count());
+        if (N >= 1) {
+            Person lastPerson = repo.findAll().get(N - 1).person;
+            String firstName = lastPerson.firstName;
+            String lastName = lastPerson.lastName;
+            Quote quote = new Quote(new Person(firstName, lastName), string);
+            repo.save(quote);
+            return ResponseEntity.ok(quote);
+        } else return ResponseEntity.of(Optional.empty());
+    }
+
+    @DeleteMapping("/last")
+    public ResponseEntity<Quote> removeLastQuote() {
+        List<Quote> quotesList = repo.findAll();
+        int N = (int) repo.count();
+        if (N >= 1) {
+            Quote lastQuote = quotesList.get(N - 1);
+            repo.delete(lastQuote);
+            return ResponseEntity.ok(lastQuote);
+        } else return ResponseEntity.of(Optional.empty());
+    }
+
+    @DeleteMapping("/by-string")
+    public ResponseEntity<Quote> deleteByString(@RequestBody String string) {
+        if (string == null)
+            return ResponseEntity.of(Optional.empty());
+
+        List<Quote> quoteList = repo.findAll();
+        for (Quote q : quoteList) {
+            if (q.quote.equals(string)) {
+                Quote removedQuote = q;
+                repo.delete(q);
+                return ResponseEntity.ok(removedQuote);
+            }
+        }
+        // No such quote in quoteRepository
+        return ResponseEntity.of(Optional.empty());
     }
 
     @GetMapping("/middle-quote")
