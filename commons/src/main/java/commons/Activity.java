@@ -39,12 +39,21 @@ public class Activity {
 
         Activity activity = (Activity) o;
 
-        return new EqualsBuilder().append(id, activity.id).append(consumption, activity.consumption).append(title, activity.title).append(source, activity.source).isEquals();
+        return new EqualsBuilder()
+                .append(id, activity.id)
+                .append(consumption, activity.consumption)
+                .append(title, activity.title)
+                .append(source, activity.source).isEquals();
     }
 
     @Override
     public int hashCode() {
-        return new HashCodeBuilder(17, 37).append(id).append(title).append(consumption).append(source).toHashCode();
+        return new HashCodeBuilder(17, 37)
+                .append(id)
+                .append(title)
+                .append(consumption)
+                .append(source)
+                .toHashCode();
     }
 
     @Override
