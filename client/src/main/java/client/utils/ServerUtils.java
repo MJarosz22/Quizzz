@@ -23,6 +23,7 @@ import java.io.InputStreamReader;
 import java.net.URL;
 import java.util.List;
 
+import commons.Activity;
 import org.glassfish.jersey.client.ClientConfig;
 
 import commons.Quote;
@@ -59,4 +60,14 @@ public class ServerUtils {
                 .accept(APPLICATION_JSON) //
                 .post(Entity.entity(quote, APPLICATION_JSON), Quote.class);
     }
+
+    public List<Activity> getActivities(){
+        return ClientBuilder.newClient(new ClientConfig())
+                .target(SERVER).path("api/activities")
+                .request(APPLICATION_JSON)
+                .accept(APPLICATION_JSON)
+                .get(new GenericType<List<Activity>>() {});
+    }
+
+    //TODO: Implement addActivity(Activity activity) method
 }

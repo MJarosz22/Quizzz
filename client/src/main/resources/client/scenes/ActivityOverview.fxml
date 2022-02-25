@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+
+<AnchorPane prefHeight="400.0" prefWidth="600.0" xmlns="http://javafx.com/javafx/11.0.14-internal" xmlns:fx="http://javafx.com/fxml/1" fx:controller="client.scenes.ActivityOverviewCtrl">
+   <children>
+      <TableView fx:id="table" layoutX="10.0" layoutY="11.0" prefHeight="347.0" prefWidth="581.0" AnchorPane.bottomAnchor="42.0" AnchorPane.leftAnchor="10.0" AnchorPane.rightAnchor="9.0" AnchorPane.topAnchor="11.0">
+        <columns>
+          <TableColumn fx:id="columnTitle" prefWidth="263.4000062942505" text="Title" />
+            <TableColumn fx:id="columnConsumption" prefWidth="125.4000244140625" text="Consumption (Wh)" />
+            <TableColumn fx:id="columnSource" prefWidth="193.0" text="Source" />
+        </columns>
+      </TableView>
+      <Button layoutX="509.0" layoutY="366.0" mnemonicParsing="false" onAction="#addActivity" text="Add Activity" />
+      <Button layoutX="24.0" layoutY="366.0" mnemonicParsing="false" onAction="#refresh" text="Refresh" />
+   </children>
+</AnchorPane>
