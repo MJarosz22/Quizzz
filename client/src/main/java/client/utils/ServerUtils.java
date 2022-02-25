@@ -68,4 +68,6 @@ public class ServerUtils {
                 .accept(APPLICATION_JSON)
                 .get(new GenericType<List<Activity>>() {});
     }
+
+    //TODO: Implement addActivity(Activity activity) method
 }

@@ -23,9 +23,9 @@ public class ActivityMain extends Application {
     public void start(Stage primaryStage) throws IOException {
 
         var overview = FXML.load(ActivityOverviewCtrl.class, "client", "scenes", "ActivityOverview.fxml");
-//        var add = FXML.load(AddQuoteCtrl.class, "client", "scenes", "AddQuote.fxml");
+        //TODO: var add = FXML.load(AddActivityCtrl.class, "client", "scenes", "AddActivitty.fxml");
 
         var mainCtrl = INJECTOR.getInstance(MainActivityCtrl.class);
-        mainCtrl.initialize(primaryStage, overview);
+        mainCtrl.initialize(primaryStage, overview); //Add "var add" as the 3rd parameter
     }
 }
