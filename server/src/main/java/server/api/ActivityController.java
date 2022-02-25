@@ -5,6 +5,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import server.database.ActivityRepository;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 import java.util.Random;
@@ -66,4 +67,24 @@ public class ActivityController {
         }
         return ResponseEntity.notFound().build();
     }
+
+    @GetMapping("/random")
+    public ResponseEntity<Activity> getRandom(){
+        List<Activity> allAct = getAll();
+        if(allAct.size() == 0) return ResponseEntity.notFound().build();
+        int idx = random.nextInt(allAct.size());
+        return ResponseEntity.ok(allAct.get(idx));
+    }
+
+    @DeleteMapping("/all")
+    public ResponseEntity<Activity> deleteAll() {
+        try {
+            activityRepository.deleteAll();
+        }
+        catch(Exception e) {
+            return ResponseEntity.internalServerError().build();
+        }
+        return ResponseEntity.ok().build();
+    }
+
 }
