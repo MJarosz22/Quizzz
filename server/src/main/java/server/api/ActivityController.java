@@ -23,14 +23,14 @@ public class ActivityController {
     }
 
     @GetMapping(path = {"", "/"})
-    public List<Activity> getAll(){
+    public List<Activity> getAll() {
         return activityRepository.findAll();
     }
 
     @PostMapping(path = {"", "/"})
-    public ResponseEntity<Activity> addActivity(@RequestBody Activity activity){
+    public ResponseEntity<Activity> addActivity(@RequestBody Activity activity) {
         //TODO: ENSURE SOURCE IS A URL
-        if(isNullOrEmpty(activity.source) || isNullOrEmpty(activity.title) || activity.title.length() > 140 || activity.consumption == 0){
+        if (isNullOrEmpty(activity.source) || isNullOrEmpty(activity.title) || activity.title.length() > 140 || activity.consumption == 0) {
             return ResponseEntity.badRequest().build();
         }
         Activity savedActivity = activityRepository.save(new Activity(activity.title, activity.consumption, activity.source));
@@ -42,25 +42,25 @@ public class ActivityController {
     }
 
     @PutMapping("/{id}")
-    public ResponseEntity<Activity> updateActivity(@PathVariable("id") long id, @RequestBody Activity activity){
+    public ResponseEntity<Activity> updateActivity(@PathVariable("id") long id, @RequestBody Activity activity) {
         Optional<Activity> activityData = activityRepository.findById(id);
-        if(activityData.isPresent()){
+        if (activityData.isPresent()) {
             Activity newActivity = activityData.get();
-            if(!isNullOrEmpty(activity.title)) newActivity.title = activity.title;
-            if(activity.consumption > 0)newActivity.consumption = activity.consumption;
-            if(!isNullOrEmpty(activity.source)) newActivity.source = activity.source;
+            if (!isNullOrEmpty(activity.title)) newActivity.title = activity.title;
+            if (activity.consumption > 0) newActivity.consumption = activity.consumption;
+            if (!isNullOrEmpty(activity.source)) newActivity.source = activity.source;
             return ResponseEntity.ok(activityRepository.save(newActivity));
         }
         return ResponseEntity.notFound().build();
     }
 
     @DeleteMapping("/{id}")
-    public ResponseEntity<Activity> deleteActivity(@PathVariable("id") long id){
-        if(activityRepository.existsById(id)){
-            try{
+    public ResponseEntity<Activity> deleteActivity(@PathVariable("id") long id) {
+        if (activityRepository.existsById(id)) {
+            try {
                 activityRepository.deleteById(id);
                 return ResponseEntity.ok().build();
-            }catch (Exception e){
+            } catch (Exception e) {
                 return ResponseEntity.internalServerError().build();
             }
         }

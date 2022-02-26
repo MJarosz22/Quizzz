@@ -42,17 +42,17 @@ public class ActivityOverviewCtrl implements Initializable {
     }
 
     @Override
-    public void initialize(URL location, ResourceBundle resources){
+    public void initialize(URL location, ResourceBundle resources) {
         columnTitle.setCellValueFactory(q -> new SimpleStringProperty(q.getValue().title));
         columnConsumption.setCellValueFactory(q -> new SimpleIntegerProperty(q.getValue().consumption));
         columnSource.setCellValueFactory(q -> new SimpleStringProperty(q.getValue().source));
     }
 
-    public void addActivity(){
-        //TODO: Show AddActivity view
+    public void addActivity() {
+        mainActivityCtrl.showAdd();
     }
 
-    public void refresh(){
+    public void refresh() {
         var activities = server.getActivities();
         data = FXCollections.observableList(activities);
         table.setItems(data);

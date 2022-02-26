@@ -50,7 +50,8 @@ public class ServerUtils {
                 .target(SERVER).path("api/quotes") //
                 .request(APPLICATION_JSON) //
                 .accept(APPLICATION_JSON) //
-                .get(new GenericType<List<Quote>>() {});
+                .get(new GenericType<List<Quote>>() {
+                });
     }
 
     public Quote addQuote(Quote quote) {
@@ -61,13 +62,20 @@ public class ServerUtils {
                 .post(Entity.entity(quote, APPLICATION_JSON), Quote.class);
     }
 
-    public List<Activity> getActivities(){
+    public List<Activity> getActivities() {
         return ClientBuilder.newClient(new ClientConfig())
                 .target(SERVER).path("api/activities")
                 .request(APPLICATION_JSON)
                 .accept(APPLICATION_JSON)
-                .get(new GenericType<List<Activity>>() {});
+                .get(new GenericType<List<Activity>>() {
+                });
     }
 
-    //TODO: Implement addActivity(Activity activity) method
+    public Activity addActivity(Activity activity) {
+        return ClientBuilder.newClient(new ClientConfig()) //
+                .target(SERVER).path("api/activities") //
+                .request(APPLICATION_JSON) //
+                .accept(APPLICATION_JSON) //
+                .post(Entity.entity(activity, APPLICATION_JSON), Activity.class);
+    }
 }
