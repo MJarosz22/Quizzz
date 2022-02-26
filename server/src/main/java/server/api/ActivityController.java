@@ -1,10 +1,12 @@
 package server.api;
 
 import commons.Activity;
+import org.springframework.beans.propertyeditors.URLEditor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import server.database.ActivityRepository;
 
+import java.beans.PropertyEditor;
 import java.util.List;
 import java.util.Optional;
 import java.util.Random;
@@ -29,8 +31,7 @@ public class ActivityController {
 
     @PostMapping(path = {"", "/"})
     public ResponseEntity<Activity> addActivity(@RequestBody Activity activity){
-        //TODO: ENSURE SOURCE IS A URL
-        if(isNullOrEmpty(activity.source) || isNullOrEmpty(activity.title) || activity.title.length() > 140 || activity.consumption == 0){
+        if(isNullOrEmpty(activity.source) || !isValidUrl(activity.source) || isNullOrEmpty(activity.title) || activity.title.length() > 140 || activity.consumption == 0){
             return ResponseEntity.badRequest().build();
         }
         Activity savedActivity = activityRepository.save(new Activity(activity.title, activity.consumption, activity.source));
@@ -39,6 +40,16 @@ public class ActivityController {
 
     private static boolean isNullOrEmpty(String s) {
         return s == null || s.isEmpty();
+    }
+
+    private static boolean isValidUrl(String url) {
+        try {
+            PropertyEditor urlEditor = new URLEditor();
+            urlEditor.setAsText(url);
+        } catch (IllegalArgumentException e) {
+            return false;
+        }
+        return true;
     }
 
     @PutMapping("/{id}")
