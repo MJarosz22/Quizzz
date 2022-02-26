@@ -30,7 +30,7 @@ public class ActivityController {
     @PostMapping(path = {"", "/"})
     public ResponseEntity<Activity> addActivity(@RequestBody Activity activity) {
         //TODO: ENSURE SOURCE IS A URL
-        if (isNullOrEmpty(activity.source) || isNullOrEmpty(activity.title) || activity.title.length() > 140 || activity.consumption == 0) {
+        if (isNullOrEmpty(activity.source) || isNullOrEmpty(activity.title) || activity.title.length() > 140 || activity.consumption <= 0) {
             return ResponseEntity.badRequest().build();
         }
         Activity savedActivity = activityRepository.save(new Activity(activity.title, activity.consumption, activity.source));
