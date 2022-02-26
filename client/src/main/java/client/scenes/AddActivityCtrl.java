@@ -19,8 +19,6 @@ import com.google.inject.Inject;
 
 import client.utils.ServerUtils;
 import commons.Activity;
-import commons.Person;
-import commons.Quote;
 import jakarta.ws.rs.WebApplicationException;
 import javafx.fxml.FXML;
 import javafx.scene.control.Alert;
