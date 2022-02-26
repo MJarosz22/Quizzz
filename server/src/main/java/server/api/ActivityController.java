@@ -5,7 +5,6 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import server.database.ActivityRepository;
 
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 import java.util.Random;
@@ -80,8 +79,7 @@ public class ActivityController {
     public ResponseEntity<Activity> deleteAll() {
         try {
             activityRepository.deleteAll();
-        }
-        catch(Exception e) {
+        } catch(Exception e) {
             return ResponseEntity.internalServerError().build();
         }
         return ResponseEntity.ok().build();
