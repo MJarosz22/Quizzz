@@ -55,7 +55,6 @@ public class ActivityOverviewCtrl implements Initializable {
     }
 
     public void addActivity() {
-<<<<<<< client/src/main/java/client/scenes/ActivityOverviewCtrl.java
         mainActivityCtrl.showAdd();
     }
     
@@ -83,7 +82,6 @@ public class ActivityOverviewCtrl implements Initializable {
         refresh();
     }
 
->>>>>>> client/src/main/java/client/scenes/ActivityOverviewCtrl.java
     public void refresh() {
         var activities = server.getActivities();
         data = FXCollections.observableList(activities);
