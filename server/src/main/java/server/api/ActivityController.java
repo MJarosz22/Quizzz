@@ -66,4 +66,23 @@ public class ActivityController {
         }
         return ResponseEntity.notFound().build();
     }
+
+    @GetMapping("/random")
+    public ResponseEntity<Activity> getRandom(){
+        List<Activity> allAct = getAll();
+        if(allAct.size() == 0) return ResponseEntity.notFound().build();
+        int idx = random.nextInt(allAct.size());
+        return ResponseEntity.ok(allAct.get(idx));
+    }
+
+    @DeleteMapping("/all")
+    public ResponseEntity<Activity> deleteAll() {
+        try {
+            activityRepository.deleteAll();
+        } catch(Exception e) {
+            return ResponseEntity.internalServerError().build();
+        }
+        return ResponseEntity.ok().build();
+    }
+
 }
