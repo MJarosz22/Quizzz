@@ -49,7 +49,7 @@ public class ActivityController {
             if (!isNullOrEmpty(activity.title)) newActivity.title = activity.title;
             if (activity.consumption > 0) newActivity.consumption = activity.consumption;
             if (!isNullOrEmpty(activity.source)) newActivity.source = activity.source;
-            return ResponseEntity.ok().build(); //Previous implementation was not correct (see example)
+            return ResponseEntity.ok(activityRepository.save(newActivity));
         }
         return ResponseEntity.notFound().build();
     }
