@@ -136,10 +136,28 @@ public class TestActivityRepository implements ActivityRepository {
 
     @Override
     public <S extends Activity> S save(S entity) {
-        call("save");
-        entity.id = (long) activities.size();
-        activities.add(entity);
-        return entity;
+        if (!findById(entity.id).isPresent()) {
+            call("save");
+            entity.id = currentID();
+            activities.add(entity);
+            return entity;
+        } else {
+            call("replace");
+            Activity activity = findById(entity.id).get();
+            entity.id = activity.id;
+            activity.title = entity.title;
+            activity.consumption = entity.consumption;
+            activity.source = entity.source;
+            return entity;
+        }
+    }
+
+    private long currentID() {
+        int count = 0;
+        for (String s : calledMethods)
+            if (s.equals("save"))
+                count++;
+        return count;
     }
 
     @Override

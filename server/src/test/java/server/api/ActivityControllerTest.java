@@ -63,25 +63,26 @@ public class ActivityControllerTest {
         assertTrue(repo.calledMethods.contains("findAll"));
     }
 
-   /* @Test TODO: THIS TEST DOES NOT PASS (check problem on GitLab)
+    @Test
     public void updateActivityTest() {
         sut.addActivity(getActivity("Boil 2L of water", 120, "www.some-site.com"));
         sut.addActivity(getActivity("Do another activity", 15, "www.another-site.com"));
         sut.addActivity(getActivity("Take a shower for 10 minutes", 60, "www.showers.com"));
 
         var actual = getActivity("Activity changed by using updateActivity method", 65, "www.my-idea.com");
-        actual.id = 1;
+        actual.id = 2;
 
         printActivities(sut);
         System.out.println();
-        sut.updateActivity((long) 1, actual);
+        sut.updateActivity((long) 2, actual);
 
         assertTrue(repo.calledMethods.contains("findById"));
-        assertEquals(actual, repo.getById((long) 1));
+        assertEquals(actual, repo.getById((long) 2));
+        assertTrue(repo.calledMethods.contains("replace"));
 
-        // printActivities(sut);
+        //printActivities(sut);
     }
-    */
+
 
     @Test
     public void deleteActivityFailsTest() {
@@ -109,6 +110,22 @@ public class ActivityControllerTest {
         assertTrue(repo.calledMethods.contains("deleteById"));
 
         assertEquals(2, sut.getAll().size());
+    }
+
+    @Test
+    public void testCorrectIndexing() {
+        var activity1 = getActivity("Boil 2L of water", 120, "www.some-site.com");
+        sut.addActivity(activity1);
+        var activity2 = getActivity("Do another activity", 15, "www.another-site.com");
+        sut.addActivity(activity2);
+        var activity3 = getActivity("Take a shower for 10 minutes", 60, "www.showers.com");
+        sut.addActivity(activity3);
+        sut.deleteActivity(2);
+        sut.deleteActivity(3);
+        sut.addActivity(new Activity("test1", 10, "https://www.google.com/?client=safari"));
+        sut.addActivity(new Activity("test2", 11, "https://www.google.com/?client=safari"));
+        sut.addActivity(new Activity("test3", 113, "https://www.google.com/?client=safari"));
+        assertEquals(6, sut.getAll().get(3).id);
     }
 
     private static Activity getActivity(String title, int consumption, String source) {
