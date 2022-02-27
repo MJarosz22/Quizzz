@@ -25,7 +25,7 @@ public class Activity {
 
     }
 
-    public Activity(String title, int consumption, String source){
+    public Activity(String title, int consumption, String source) {
         this.title = title;
         this.consumption = consumption;
         this.source = source;
@@ -65,4 +65,9 @@ public class Activity {
                 .append("source", source)
                 .toString();
     }
+
+    public long getId() {
+        return id;
+    }
+
 }
