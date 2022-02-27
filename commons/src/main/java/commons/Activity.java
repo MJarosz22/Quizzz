@@ -21,7 +21,7 @@ public class Activity {
     public String source;
 
     @SuppressWarnings("unused")
-    private Activity() {
+    public Activity() {
 
     }
 
