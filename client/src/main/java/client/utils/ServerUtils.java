@@ -71,11 +71,22 @@ public class ServerUtils {
                 });
     }
 
+
     public Activity addActivity(Activity activity) {
         return ClientBuilder.newClient(new ClientConfig()) //
                 .target(SERVER).path("api/activities") //
                 .request(APPLICATION_JSON) //
                 .accept(APPLICATION_JSON) //
                 .post(Entity.entity(activity, APPLICATION_JSON), Activity.class);
+    }
+
+
+    public Activity updateActivity(Activity activity) {
+        return ClientBuilder.newClient(new ClientConfig())
+                .target(SERVER).path("api/activities/" + activity.getId())
+                .request(APPLICATION_JSON)
+                .accept(APPLICATION_JSON)
+                .put(Entity.entity(activity, APPLICATION_JSON), Activity.class);
+
     }
 }

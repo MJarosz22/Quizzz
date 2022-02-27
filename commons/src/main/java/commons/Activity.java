@@ -65,4 +65,9 @@ public class Activity {
                 .append("source", source)
                 .toString();
     }
+
+    public long getId() {
+        return id;
+    }
+
 }

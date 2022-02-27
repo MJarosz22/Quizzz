@@ -10,6 +10,8 @@ import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
+import javafx.scene.control.cell.TextFieldTableCell;
+import javafx.util.converter.NumberStringConverter;
 
 import javax.inject.Inject;
 import java.net.URL;
@@ -46,12 +48,42 @@ public class ActivityOverviewCtrl implements Initializable {
         columnTitle.setCellValueFactory(q -> new SimpleStringProperty(q.getValue().title));
         columnConsumption.setCellValueFactory(q -> new SimpleIntegerProperty(q.getValue().consumption));
         columnSource.setCellValueFactory(q -> new SimpleStringProperty(q.getValue().source));
+
+        columnTitle.setCellFactory(TextFieldTableCell.forTableColumn());
+        columnConsumption.setCellFactory(TextFieldTableCell.forTableColumn(new NumberStringConverter()));
+        columnSource.setCellFactory(TextFieldTableCell.forTableColumn());
     }
 
     public void addActivity() {
+<<<<<<< client/src/main/java/client/scenes/ActivityOverviewCtrl.java
         mainActivityCtrl.showAdd();
     }
+    
 
+
+    public void editTitle(TableColumn.CellEditEvent<Activity, String> productStringCellEditEvent) {
+        Activity activity = table.getSelectionModel().getSelectedItem();
+        activity.title = productStringCellEditEvent.getNewValue();
+        server.updateActivity(activity);
+        refresh();
+    }
+
+
+    public void editConsumption(TableColumn.CellEditEvent<Activity, Number> productStringCellEditEvent) {
+        Activity activity = table.getSelectionModel().getSelectedItem();
+        activity.consumption = productStringCellEditEvent.getNewValue().intValue();
+        server.updateActivity(activity);
+        refresh();
+    }
+
+    public void editSource(TableColumn.CellEditEvent<Activity, String> productStringCellEditEvent) {
+        Activity activity = table.getSelectionModel().getSelectedItem();
+        activity.source = productStringCellEditEvent.getNewValue();
+        server.updateActivity(activity);
+        refresh();
+    }
+
+>>>>>>> client/src/main/java/client/scenes/ActivityOverviewCtrl.java
     public void refresh() {
         var activities = server.getActivities();
         data = FXCollections.observableList(activities);
