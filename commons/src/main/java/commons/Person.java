@@ -38,7 +38,7 @@ public class Person {
 
     @SuppressWarnings("unused")
     private Person() {
-        // for object mapper
+        // for object mapper@
     }
 
     public Person(String firstName, String lastName) {
