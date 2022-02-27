@@ -29,7 +29,7 @@ public class MyModule implements Module {
         binder.bind(QuoteOverviewCtrl.class).in(Scopes.SINGLETON);
 
         binder.bind(MainActivityCtrl.class).in(Scopes.SINGLETON);
-        //TODO: binder.bind(AddActivityCtrl.class).in(Scopes.SINGLETON);
+        binder.bind(AddActivityCtrl.class).in(Scopes.SINGLETON);
         binder.bind(ActivityOverviewCtrl.class).in(Scopes.SINGLETON);
     }
 }
