@@ -1,10 +1,12 @@
 package server.api;
 
 import commons.Activity;
+import org.springframework.beans.propertyeditors.URLEditor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import server.database.ActivityRepository;
 
+import java.beans.PropertyEditor;
 import java.util.List;
 import java.util.Optional;
 import java.util.Random;
@@ -23,14 +25,14 @@ public class ActivityController {
     }
 
     @GetMapping(path = {"", "/"})
-    public List<Activity> getAll(){
+    public List<Activity> getAll() {
         return activityRepository.findAll();
     }
 
     @PostMapping(path = {"", "/"})
-    public ResponseEntity<Activity> addActivity(@RequestBody Activity activity){
-        //TODO: ENSURE SOURCE IS A URL
-        if(isNullOrEmpty(activity.source) || isNullOrEmpty(activity.title) || activity.title.length() > 140 || activity.consumption == 0){
+    public ResponseEntity<Activity> addActivity(@RequestBody Activity activity) {
+        if (isNullOrEmpty(activity.source) || !isValidUrl(activity.source) || isNullOrEmpty(activity.title)
+                || activity.title.length() > 140 || activity.consumption <= 0) {
             return ResponseEntity.badRequest().build();
         }
         Activity savedActivity = activityRepository.save(new Activity(activity.title, activity.consumption, activity.source));
@@ -41,26 +43,36 @@ public class ActivityController {
         return s == null || s.isEmpty();
     }
 
+    private static boolean isValidUrl(String url) {
+        try {
+            PropertyEditor urlEditor = new URLEditor();
+            urlEditor.setAsText(url);
+        } catch (IllegalArgumentException e) {
+            return false;
+        }
+        return true;
+    }
+
     @PutMapping("/{id}")
-    public ResponseEntity<Activity> updateActivity(@PathVariable("id") long id, @RequestBody Activity activity){
+    public ResponseEntity<Activity> updateActivity(@PathVariable("id") long id, @RequestBody Activity activity) {
         Optional<Activity> activityData = activityRepository.findById(id);
-        if(activityData.isPresent()){
+        if (activityData.isPresent()) {
             Activity newActivity = activityData.get();
-            if(!isNullOrEmpty(activity.title)) newActivity.title = activity.title;
-            if(activity.consumption > 0)newActivity.consumption = activity.consumption;
-            if(!isNullOrEmpty(activity.source)) newActivity.source = activity.source;
+            if (!isNullOrEmpty(activity.title)) newActivity.title = activity.title;
+            if (activity.consumption > 0) newActivity.consumption = activity.consumption;
+            if (!isNullOrEmpty(activity.source) && isValidUrl(activity.source)) newActivity.source = activity.source;
             return ResponseEntity.ok(activityRepository.save(newActivity));
         }
         return ResponseEntity.notFound().build();
     }
 
     @DeleteMapping("/{id}")
-    public ResponseEntity<Activity> deleteActivity(@PathVariable("id") long id){
-        if(activityRepository.existsById(id)){
-            try{
+    public ResponseEntity<Activity> deleteActivity(@PathVariable("id") long id) {
+        if (activityRepository.existsById(id)) {
+            try {
                 activityRepository.deleteById(id);
                 return ResponseEntity.ok().build();
-            }catch (Exception e){
+            } catch (Exception e) {
                 return ResponseEntity.internalServerError().build();
             }
         }
