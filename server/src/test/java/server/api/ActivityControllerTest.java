@@ -59,6 +59,7 @@ public class ActivityControllerTest {
         sut.addActivity(getActivity("Boil 2L of water", 120, "www.some-site.com"));
         sut.addActivity(getActivity("Do another activity", 15, "www.another-site.com"));
         sut.addActivity(getActivity("Take a shower for 10 minutes", 60, "www.showers.com"));
+        List<Activity> activities = sut.getAll();
         assertTrue(repo.calledMethods.contains("findAll"));
     }
 
