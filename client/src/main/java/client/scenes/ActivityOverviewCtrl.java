@@ -28,6 +28,12 @@ public class ActivityOverviewCtrl implements Initializable {
     private TableView<Activity> table;
 
     @FXML
+    private TableColumn<Activity, String> columnID;
+
+    @FXML
+    private TableColumn<Activity, String> columnImagePath;
+
+    @FXML
     private TableColumn<Activity, String> columnTitle;
 
     @FXML
@@ -45,20 +51,40 @@ public class ActivityOverviewCtrl implements Initializable {
 
     @Override
     public void initialize(URL location, ResourceBundle resources) {
-        columnTitle.setCellValueFactory(q -> new SimpleStringProperty(q.getValue().title));
-        columnConsumption.setCellValueFactory(q -> new SimpleIntegerProperty(q.getValue().consumption));
-        columnSource.setCellValueFactory(q -> new SimpleStringProperty(q.getValue().source));
+        columnID.setCellValueFactory(q -> new SimpleStringProperty(q.getValue().id));
+        columnID.setCellFactory(TextFieldTableCell.forTableColumn());
 
+        columnImagePath.setCellValueFactory(q -> new SimpleStringProperty(q.getValue().image_path));
+        columnImagePath.setCellFactory(TextFieldTableCell.forTableColumn());
+
+        columnTitle.setCellValueFactory(q -> new SimpleStringProperty(q.getValue().title));
         columnTitle.setCellFactory(TextFieldTableCell.forTableColumn());
+
+        columnConsumption.setCellValueFactory(q -> new SimpleIntegerProperty(q.getValue().consumption_in_wh));
         columnConsumption.setCellFactory(TextFieldTableCell.forTableColumn(new NumberStringConverter()));
+
+        columnSource.setCellValueFactory(q -> new SimpleStringProperty(q.getValue().source));
         columnSource.setCellFactory(TextFieldTableCell.forTableColumn());
     }
 
     public void addActivity() {
         mainActivityCtrl.showAdd();
     }
-    
 
+
+    public void editID(TableColumn.CellEditEvent<Activity, String> productStringCellEditEvent) {
+        Activity activity = table.getSelectionModel().getSelectedItem();
+        activity.id = productStringCellEditEvent.getNewValue();
+        server.updateActivity(activity);
+        refresh();
+    }
+
+    public void editImagePath(TableColumn.CellEditEvent<Activity, String> productStringCellEditEvent) {
+        Activity activity = table.getSelectionModel().getSelectedItem();
+        activity.image_path = productStringCellEditEvent.getNewValue();
+        server.updateActivity(activity);
+        refresh();
+    }
 
     public void editTitle(TableColumn.CellEditEvent<Activity, String> productStringCellEditEvent) {
         Activity activity = table.getSelectionModel().getSelectedItem();
@@ -70,7 +96,7 @@ public class ActivityOverviewCtrl implements Initializable {
 
     public void editConsumption(TableColumn.CellEditEvent<Activity, Number> productStringCellEditEvent) {
         Activity activity = table.getSelectionModel().getSelectedItem();
-        activity.consumption = productStringCellEditEvent.getNewValue().intValue();
+        activity.consumption_in_wh = productStringCellEditEvent.getNewValue().intValue();
         server.updateActivity(activity);
         refresh();
     }

@@ -44,7 +44,7 @@ public class ActivityControllerTest {
 
     @Test
     public void cannotAddNullPerson() {
-        var actual = sut.addActivity(getActivity(null, 1, null));
+        var actual = sut.addActivity(getActivity(null, null,null, 1, null));
         assertEquals(BAD_REQUEST, actual.getStatusCode());
     }
 /* TODO: fix this test, it is failing
@@ -56,9 +56,9 @@ public class ActivityControllerTest {
 */
     @Test
     public void getAllTest() {
-        sut.addActivity(getActivity("Boil 2L of water", 120, "www.some-site.com"));
-        sut.addActivity(getActivity("Do another activity", 15, "www.another-site.com"));
-        sut.addActivity(getActivity("Take a shower for 10 minutes", 60, "www.showers.com"));
+        sut.addActivity(getActivity("id-1", "00/1.png", "Boil 2L of water", 120, "www.some-site.com"));
+        sut.addActivity(getActivity("id-2", "00/2.png", "Do another activity", 15, "www.another-site.com"));
+        sut.addActivity(getActivity("id-3", "00/3.png", "Take a shower for 10 minutes", 60, "www.showers.com"));
         List<Activity> activities = sut.getAll();
         assertTrue(repo.calledMethods.contains("findAll"));
     }
@@ -86,9 +86,9 @@ public class ActivityControllerTest {
 
     @Test
     public void deleteActivityFailsTest() {
-        sut.addActivity(getActivity("Boil 2L of water", 120, "www.some-site.com"));
-        sut.addActivity(getActivity("Do another activity", 15, "www.another-site.com"));
-        sut.addActivity(getActivity("Take a shower for 10 minutes", 60, "www.showers.com"));
+        sut.addActivity(getActivity("id-1", "00/1.png","Boil 2L of water", 120, "www.some-site.com"));
+        sut.addActivity(getActivity("id-2", "00/2.png","Do another activity", 15, "www.another-site.com"));
+        sut.addActivity(getActivity("id-3", "00/3.png","Take a shower for 10 minutes", 60, "www.showers.com"));
 
         var actual = sut.deleteActivity(5);
         assertEquals(NOT_FOUND, actual.getStatusCode());
@@ -130,8 +130,8 @@ public class ActivityControllerTest {
     }
 */
 
-    private static Activity getActivity(String title, int consumption, String source) {
-        return new Activity(title, consumption, source);
+    private static Activity getActivity(String id, String image_path, String title, int consumption, String source) {
+        return new Activity(id, image_path, title, consumption, source);
     }
 
     private static void printActivities(ActivityController sut) {

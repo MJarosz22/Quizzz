@@ -32,6 +32,12 @@ public class AddActivityCtrl {
     private final MainActivityCtrl mainActivityCtrl;
 
     @FXML
+    private TextField id;
+
+    @FXML
+    private TextField image_path;
+
+    @FXML
     private TextField title;
 
     @FXML
@@ -69,18 +75,22 @@ public class AddActivityCtrl {
 
     private Activity getActivity() {
         try {
+            var idText = id.getText();
+            var imagePathText = image_path.getText();
             var titleText = title.getText();
             if (titleText.length() > 140) return null;
             var consumptionInt = Integer.parseInt(consumption.getText());
             if (consumptionInt == 0) return null;
             var sourceText = source.getText();
-            return new Activity(titleText, consumptionInt, sourceText);
+            return new Activity(idText, imagePathText, titleText, consumptionInt, sourceText);
         } catch (NumberFormatException e) {
             return null;
         }
     }
 
     private void clearFields() {
+        id.clear();
+        image_path.clear();
         title.clear();
         consumption.clear();
         source.clear();
