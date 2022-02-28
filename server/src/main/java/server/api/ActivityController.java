@@ -39,7 +39,12 @@ public class ActivityController {
                 || activity.consumption_in_wh <= 0) {
             return ResponseEntity.badRequest().build();
         }
-        Activity savedActivity = activityRepository.save(new Activity(activity.id, activity.image_path, activity.title, activity.consumption_in_wh, activity.source));
+        Activity savedActivity = activityRepository.save(new Activity(
+                activity.id,
+                activity.image_path,
+                activity.title,
+                activity.consumption_in_wh,
+                activity.source));
         return ResponseEntity.ok(savedActivity);
     }
 
