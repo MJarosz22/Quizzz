@@ -74,7 +74,7 @@ public class ActivityControllerTest {
 
         printActivities(sut);
         System.out.println();
-        sut.updateActivity((long) 2, actual);
+        sut.updateActivity(2, actual);
 
         assertTrue(repo.calledMethods.contains("findById"));
         assertEquals(actual, repo.getById((long) 2));
@@ -125,7 +125,7 @@ public class ActivityControllerTest {
         sut.addActivity(new Activity("id-23", "00/23.png","test1", 10, "https://www.google.com/?client=safari"));
         sut.addActivity(new Activity("id-213", "00/213.png","test2", 11, "https://www.google.com/?client=safari"));
         sut.addActivity(new Activity("id-452", "00/452.png","test3", 113, "https://www.google.com/?client=safari"));
-        assertEquals(6, sut.getAll().get(3).id);
+        assertEquals(6, sut.getAll().get(3).activityID);
     }
 
 

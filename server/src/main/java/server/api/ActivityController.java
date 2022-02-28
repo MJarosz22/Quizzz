@@ -67,6 +67,8 @@ public class ActivityController {
         Optional<Activity> activityData = activityRepository.findById(id);
         if (activityData.isPresent()) {
             Activity newActivity = activityData.get();
+            if (!isNullOrEmpty(activity.id)) newActivity.id = activity.id;
+            newActivity.image_path = activity.image_path;
             if (!isNullOrEmpty(activity.title)) newActivity.title = activity.title;
             if (activity.consumption_in_wh > 0) newActivity.consumption_in_wh = activity.consumption_in_wh;
             if (!isNullOrEmpty(activity.source) && isValidUrl(activity.source)) newActivity.source = activity.source;
