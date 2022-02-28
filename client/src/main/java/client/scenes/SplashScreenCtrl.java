@@ -15,18 +15,15 @@ public class SplashScreenCtrl {
         this.mainCtrl = mainCtrl;
     }
 
-    public void playSingle()
-    {
+    public void playSingle() {
         mainCtrl.showSinglePlayerMode();
     }
 
-    public void playMulti()
-    {
+    public void playMulti() {
         mainCtrl.showMultiPlayerMode();
     }
 
-    public void showLB()
-    {
+    public void showLB() {
         mainCtrl.showLeaderBoard();
     }
 

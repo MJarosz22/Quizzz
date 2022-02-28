@@ -14,8 +14,7 @@ public class LeaderBoardCtrl {
         this.mainCtrl = mainCtrl;
     }
 
-    public void back()
-    {
+    public void back() {
         mainCtrl.showSplash();
     }
 }

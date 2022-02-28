@@ -14,8 +14,7 @@ public class SinglePlayerCtrl {
         this.mainCtrl = mainCtrl;
     }
 
-    public void back()
-    {
+    public void back() {
         mainCtrl.showSplash();
     }
 

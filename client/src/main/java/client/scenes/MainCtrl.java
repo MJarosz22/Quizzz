@@ -67,20 +67,17 @@ public class MainCtrl {
         primaryStage.setScene(splash);
     }
 
-    public void showSinglePlayerMode()
-    {
+    public void showSinglePlayerMode() {
         primaryStage.setTitle("Quizz single");
         primaryStage.setScene(single);
     }
 
-    public void showMultiPlayerMode()
-    {
+    public void showMultiPlayerMode() {
         primaryStage.setTitle("Quizzz multi");
         primaryStage.setScene(multi);
     }
 
-    public void showLeaderBoard()
-    {
+    public void showLeaderBoard() {
         primaryStage.setTitle("Quizzz leader board");
         primaryStage.setScene(leaderboard);
     }
