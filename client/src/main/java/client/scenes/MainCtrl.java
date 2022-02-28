@@ -24,29 +24,65 @@ public class MainCtrl {
 
     private Stage primaryStage;
 
-    private QuoteOverviewCtrl overviewCtrl;
-    private Scene overview;
+    private SplashScreenCtrl splashCtrl;
+    private Scene splash;
 
     private AddQuoteCtrl addCtrl;
     private Scene add;
 
-    public void initialize(Stage primaryStage, Pair<QuoteOverviewCtrl, Parent> overview,
-            Pair<AddQuoteCtrl, Parent> add) {
+    private SinglePlayerCtrl singlePlayerCtrl;
+    private Scene single;
+
+    private MultiPlayerCtrl multiPlayerCtrl;
+    private Scene multi;
+
+    private LeaderBoardCtrl leaderBoardCtrl;
+    private Scene leaderboard;
+
+    public void initialize(Stage primaryStage, Pair<SplashScreenCtrl, Parent> splash,
+            Pair<AddQuoteCtrl, Parent> add, Pair<SinglePlayerCtrl, Parent> single, Pair<MultiPlayerCtrl, Parent> multi,
+                           Pair<LeaderBoardCtrl, Parent> leaderboard) {
         this.primaryStage = primaryStage;
-        this.overviewCtrl = overview.getKey();
-        this.overview = new Scene(overview.getValue());
+        this.splashCtrl = splash.getKey();
+        this.splash = new Scene(splash.getValue());
 
         this.addCtrl = add.getKey();
         this.add = new Scene(add.getValue());
 
-        showOverview();
+        this.singlePlayerCtrl = single.getKey();
+        this.single = new Scene(single.getValue());
+
+        this.multiPlayerCtrl = multi.getKey();
+        this.multi = new Scene(multi.getValue());
+
+        this.leaderBoardCtrl = leaderboard.getKey();
+        this.leaderboard = new Scene(leaderboard.getValue());
+
+        showSplash();
         primaryStage.show();
     }
 
-    public void showOverview() {
-        primaryStage.setTitle("Quotes: Overview");
-        primaryStage.setScene(overview);
-        overviewCtrl.refresh();
+    public void showSplash() {
+        primaryStage.setTitle("Splash Screen");
+        primaryStage.setScene(splash);
+    }
+
+    public void showSinglePlayerMode()
+    {
+        primaryStage.setTitle("Quizz single");
+        primaryStage.setScene(single);
+    }
+
+    public void showMultiPlayerMode()
+    {
+        primaryStage.setTitle("Quizzz multi");
+        primaryStage.setScene(multi);
+    }
+
+    public void showLeaderBoard()
+    {
+        primaryStage.setTitle("Quizzz leader board");
+        primaryStage.setScene(leaderboard);
     }
 
     public void showAdd() {

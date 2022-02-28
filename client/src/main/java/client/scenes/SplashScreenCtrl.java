@@ -1,8 +1,8 @@
 package client.scenes;
 
-import client.utils.ServerUtils;
+import com.google.inject.Inject;
 
-import javax.inject.Inject;
+import client.utils.ServerUtils;
 
 public class SplashScreenCtrl {
 
@@ -14,4 +14,21 @@ public class SplashScreenCtrl {
         this.server = server;
         this.mainCtrl = mainCtrl;
     }
+
+    public void playSingle()
+    {
+        mainCtrl.showSinglePlayerMode();
+    }
+
+    public void playMulti()
+    {
+        mainCtrl.showMultiPlayerMode();
+    }
+
+    public void showLB()
+    {
+        mainCtrl.showLeaderBoard();
+    }
+
+
 }
