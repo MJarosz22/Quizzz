@@ -42,12 +42,26 @@ public class Activity {
 
         Activity activity = (Activity) o;
 
-        return new EqualsBuilder().append(activityID, activity.activityID).append(consumption_in_wh, activity.consumption_in_wh).append(id, activity.id).append(image_path, activity.image_path).append(title, activity.title).append(source, activity.source).isEquals();
+        return new EqualsBuilder()
+                .append(activityID, activity.activityID)
+                .append(consumption_in_wh, activity.consumption_in_wh)
+                .append(id, activity.id)
+                .append(image_path, activity.image_path)
+                .append(title, activity.title)
+                .append(source, activity.source)
+                .isEquals();
     }
 
     @Override
     public int hashCode() {
-        return new HashCodeBuilder(17, 37).append(activityID).append(id).append(image_path).append(title).append(consumption_in_wh).append(source).toHashCode();
+        return new HashCodeBuilder(17, 37)
+                .append(activityID)
+                .append(id)
+                .append(image_path)
+                .append(title)
+                .append(consumption_in_wh)
+                .append(source)
+                .toHashCode();
     }
 
     @Override
