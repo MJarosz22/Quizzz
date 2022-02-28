@@ -14,8 +14,8 @@ public class LeaderBoardCtrl {
         this.mainCtrl = mainCtrl;
     }
 
-    public void test()
+    public void back()
     {
-        System.out.println("tres");
+        mainCtrl.showSplash();
     }
 }

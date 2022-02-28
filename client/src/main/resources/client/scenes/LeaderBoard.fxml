@@ -1,6 +1,30 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.TableColumn?>
+<?import javafx.scene.control.TableView?>
 <?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.text.Font?>
+<?import javafx.scene.text.Text?>
 
-
-<AnchorPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="400.0" prefWidth="600.0" xmlns="http://javafx.com/javafx/17" xmlns:fx="http://javafx.com/fxml/1" />
+<AnchorPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="540.0" prefWidth="960.0" style="-fx-background-color: #91e4fb;" xmlns="http://javafx.com/javafx/17" xmlns:fx="http://javafx.com/fxml/1" fx:controller="client.scenes.LeaderBoardCtrl">
+    <children>
+        <Text layoutX="284.0" layoutY="123.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Global leader board">
+            <font>
+                <Font name="Courier New" size="36.0" />
+            </font>
+        </Text>
+        <Button layoutX="83.0" layoutY="54.0" mnemonicParsing="false" onAction="#back" style="-fx-background-color: #fff;" text="BACK">
+            <font>
+                <Font name="Courier New" size="15.0" />
+            </font>
+        </Button>
+      <TableView layoutX="313.0" layoutY="252.0" prefHeight="200.0" prefWidth="292.0">
+        <columns>
+          <TableColumn prefWidth="51.0" text="Position" />
+          <TableColumn prefWidth="145.0" text="Name" />
+            <TableColumn prefWidth="95.0" text="Score" />
+        </columns>
+      </TableView>
+    </children>
+</AnchorPane>
