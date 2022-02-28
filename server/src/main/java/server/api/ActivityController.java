@@ -80,9 +80,9 @@ public class ActivityController {
     }
 
     @GetMapping("/random")
-    public ResponseEntity<Activity> getRandom(){
+    public ResponseEntity<Activity> getRandom() {
         List<Activity> allAct = getAll();
-        if(allAct.size() == 0) return ResponseEntity.notFound().build();
+        if (allAct.size() == 0) return ResponseEntity.notFound().build();
         int idx = random.nextInt(allAct.size());
         return ResponseEntity.ok(allAct.get(idx));
     }
@@ -91,7 +91,7 @@ public class ActivityController {
     public ResponseEntity<Activity> deleteAll() {
         try {
             activityRepository.deleteAll();
-        } catch(Exception e) {
+        } catch (Exception e) {
             return ResponseEntity.internalServerError().build();
         }
         return ResponseEntity.ok().build();
