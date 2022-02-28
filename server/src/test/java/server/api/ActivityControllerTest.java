@@ -47,29 +47,29 @@ public class ActivityControllerTest {
         var actual = sut.addActivity(getActivity(null, null,null, 1, null));
         assertEquals(BAD_REQUEST, actual.getStatusCode());
     }
-/* TODO: fix this test, it is failing
+
     @Test
     public void addActivityTest() {
-        sut.addActivity(getActivity("Boil 2L of water", 120, "www.some-site.com"));
+        sut.addActivity(getActivity("Boil 2L of water", 120, "https://www.some-site.com"));
         assertEquals(true, repo.calledMethods.contains("save"));
     }
-*/
+
     @Test
     public void getAllTest() {
-        sut.addActivity(getActivity("id-1", "00/1.png", "Boil 2L of water", 120, "www.some-site.com"));
-        sut.addActivity(getActivity("id-2", "00/2.png", "Do another activity", 15, "www.another-site.com"));
-        sut.addActivity(getActivity("id-3", "00/3.png", "Take a shower for 10 minutes", 60, "www.showers.com"));
+        sut.addActivity(getActivity("id-1", "00/1.png", "Boil 2L of water", 120, "https://www.some-site.com"));
+        sut.addActivity(getActivity("id-2", "00/2.png", "Do another activity", 15, "https://www.another-site.com"));
+        sut.addActivity(getActivity("id-3", "00/3.png", "Take a shower for 10 minutes", 60, "https://www.showers.com"));
         List<Activity> activities = sut.getAll();
         assertTrue(repo.calledMethods.contains("findAll"));
     }
-/* TODO: fix this test, it is failing
+
     @Test
     public void updateActivityTest() {
-        sut.addActivity(getActivity("Boil 2L of water", 120, "www.some-site.com"));
-        sut.addActivity(getActivity("Do another activity", 15, "www.another-site.com"));
-        sut.addActivity(getActivity("Take a shower for 10 minutes", 60, "www.showers.com"));
+        sut.addActivity(getActivity("Boil 2L of water", 120, "https://www.some-site.com"));
+        sut.addActivity(getActivity("Do another activity", 15, "https://www.another-site.com"));
+        sut.addActivity(getActivity("Take a shower for 10 minutes", 60, "https://www.showers.com"));
 
-        var actual = getActivity("Activity changed by using updateActivity method", 65, "www.my-idea.com");
+        var actual = getActivity("Activity changed by using updateActivity method", 65, "https://www.my-idea.com");
         actual.id = 2;
 
         printActivities(sut);
@@ -82,25 +82,31 @@ public class ActivityControllerTest {
 
         //printActivities(sut);
     }
-*/
+
 
     @Test
     public void deleteActivityFailsTest() {
-        sut.addActivity(getActivity("id-1", "00/1.png","Boil 2L of water", 120, "www.some-site.com"));
-        sut.addActivity(getActivity("id-2", "00/2.png","Do another activity", 15, "www.another-site.com"));
-        sut.addActivity(getActivity("id-3", "00/3.png","Take a shower for 10 minutes", 60, "www.showers.com"));
+<<<<<<< server/src/test/java/server/api/ActivityControllerTest.java
+        sut.addActivity(getActivity("id-1", "00/1.png","Boil 2L of water", 120, "https://www.some-site.com"));
+        sut.addActivity(getActivity("id-2", "00/2.png","Do another activity", 15, "https://www.another-site.com"));
+        sut.addActivity(getActivity("id-3", "00/3.png","Take a shower for 10 minutes", 60, "https://www.showers.com"));
+=======
+        sut.addActivity(getActivity("Boil 2L of water", 120, "https://www.some-site.com"));
+        sut.addActivity(getActivity("Do another activity", 15, "https://www.another-site.com"));
+        sut.addActivity(getActivity("Take a shower for 10 minutes", 60, "https://www.showers.com"));
+>>>>>>> server/src/test/java/server/api/ActivityControllerTest.java
 
         var actual = sut.deleteActivity(5);
         assertEquals(NOT_FOUND, actual.getStatusCode());
     }
-/* TODO: fix this test, it is failing
+
     @Test
     public void deleteActivityTest() {
-        var activity1 = getActivity("Boil 2L of water", 120, "www.some-site.com");
+        var activity1 = getActivity("Boil 2L of water", 120, "https://www.some-site.com");
         sut.addActivity(activity1);
-        var activity2 = getActivity("Do another activity", 15, "www.another-site.com");
+        var activity2 = getActivity("Do another activity", 15, "https://www.another-site.com");
         sut.addActivity(activity2);
-        var activity3 = getActivity("Take a shower for 10 minutes", 60, "www.showers.com");
+        var activity3 = getActivity("Take a shower for 10 minutes", 60, "https://www.showers.com");
         sut.addActivity(activity3);
 
         var actual = sut.deleteActivity((long) 2);
@@ -111,15 +117,14 @@ public class ActivityControllerTest {
 
         assertEquals(2, sut.getAll().size());
     }
-*/
-/* TODO: fix this test, it is failing
+
     @Test
     public void testCorrectIndexing() {
-        var activity1 = getActivity("Boil 2L of water", 120, "www.some-site.com");
+        var activity1 = getActivity("Boil 2L of water", 120, "https://www.some-site.com");
         sut.addActivity(activity1);
-        var activity2 = getActivity("Do another activity", 15, "www.another-site.com");
+        var activity2 = getActivity("Do another activity", 15, "https://www.another-site.com");
         sut.addActivity(activity2);
-        var activity3 = getActivity("Take a shower for 10 minutes", 60, "www.showers.com");
+        var activity3 = getActivity("Take a shower for 10 minutes", 60, "https://www.showers.com");
         sut.addActivity(activity3);
         sut.deleteActivity(2);
         sut.deleteActivity(3);
@@ -128,7 +133,7 @@ public class ActivityControllerTest {
         sut.addActivity(new Activity("test3", 113, "https://www.google.com/?client=safari"));
         assertEquals(6, sut.getAll().get(3).id);
     }
-*/
+
 
     private static Activity getActivity(String id, String image_path, String title, int consumption, String source) {
         return new Activity(id, image_path, title, consumption, source);
