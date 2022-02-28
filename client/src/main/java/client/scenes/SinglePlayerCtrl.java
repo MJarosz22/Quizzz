@@ -14,8 +14,14 @@ public class SinglePlayerCtrl {
         this.mainCtrl = mainCtrl;
     }
 
-    public void test()
+    public void back()
     {
-        System.out.println("tres");
+        mainCtrl.showSplash();
     }
+
+    // To be added when making the main game scene, in order for the player to play
+    /*public void play()
+    {
+        mainCtrl.showPlayMode();
+    }*/
 }
