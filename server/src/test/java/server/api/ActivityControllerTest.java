@@ -65,9 +65,9 @@ public class ActivityControllerTest {
 
     @Test
     public void updateActivityTest() {
-        sut.addActivity(getActivity("Boil 2L of water", 120, "https:/www.some-site.com"));
-        sut.addActivity(getActivity("Do another activity", 15, "https:/www.another-site.com"));
-        sut.addActivity(getActivity("Take a shower for 10 minutes", 60, "https:/www.showers.com"));
+        sut.addActivity(getActivity("Boil 2L of water", 120, "https://www.some-site.com"));
+        sut.addActivity(getActivity("Do another activity", 15, "https://www.another-site.com"));
+        sut.addActivity(getActivity("Take a shower for 10 minutes", 60, "https://www.showers.com"));
 
         var actual = getActivity("Activity changed by using updateActivity method", 65, "https:/www.my-idea.com");
         actual.id = 2;
@@ -86,9 +86,9 @@ public class ActivityControllerTest {
 
     @Test
     public void deleteActivityFailsTest() {
-        sut.addActivity(getActivity("Boil 2L of water", 120, "www.some-site.com"));
-        sut.addActivity(getActivity("Do another activity", 15, "www.another-site.com"));
-        sut.addActivity(getActivity("Take a shower for 10 minutes", 60, "www.showers.com"));
+        sut.addActivity(getActivity("Boil 2L of water", 120, "https://www.some-site.com"));
+        sut.addActivity(getActivity("Do another activity", 15, "https://www.another-site.com"));
+        sut.addActivity(getActivity("Take a shower for 10 minutes", 60, "https://www.showers.com"));
 
         var actual = sut.deleteActivity(5);
         assertEquals(NOT_FOUND, actual.getStatusCode());
@@ -96,11 +96,11 @@ public class ActivityControllerTest {
 
     @Test
     public void deleteActivityTest() {
-        var activity1 = getActivity("Boil 2L of water", 120, "https:/www.some-site.com");
+        var activity1 = getActivity("Boil 2L of water", 120, "https://www.some-site.com");
         sut.addActivity(activity1);
-        var activity2 = getActivity("Do another activity", 15, "https:/www.another-site.com");
+        var activity2 = getActivity("Do another activity", 15, "https://www.another-site.com");
         sut.addActivity(activity2);
-        var activity3 = getActivity("Take a shower for 10 minutes", 60, "https:/www.showers.com");
+        var activity3 = getActivity("Take a shower for 10 minutes", 60, "https://www.showers.com");
         sut.addActivity(activity3);
 
         var actual = sut.deleteActivity((long) 2);
@@ -114,11 +114,11 @@ public class ActivityControllerTest {
 
     @Test
     public void testCorrectIndexing() {
-        var activity1 = getActivity("Boil 2L of water", 120, "https:/www.some-site.com");
+        var activity1 = getActivity("Boil 2L of water", 120, "https://www.some-site.com");
         sut.addActivity(activity1);
-        var activity2 = getActivity("Do another activity", 15, "https:/www.another-site.com");
+        var activity2 = getActivity("Do another activity", 15, "https://www.another-site.com");
         sut.addActivity(activity2);
-        var activity3 = getActivity("Take a shower for 10 minutes", 60, "https:/www.showers.com");
+        var activity3 = getActivity("Take a shower for 10 minutes", 60, "https://www.showers.com");
         sut.addActivity(activity3);
         sut.deleteActivity(2);
         sut.deleteActivity(3);
