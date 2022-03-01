@@ -12,11 +12,6 @@
             <Image url="@/images/background.jpeg" />
          </image>
       </ImageView>
-      <Text fill="WHITE" layoutX="361.0" layoutY="113.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Quizzz">
-         <font>
-            <Font name="Courier New" size="72.0" />
-         </font>
-      </Text>
       <Button layoutX="81.0" layoutY="412.0" mnemonicParsing="false" onAction="#playSingle" style="-fx-background-color: #91e4fb;" text="SINGLE PLAYER">
          <font>
             <Font name="Courier New" size="24.0" />
@@ -32,6 +27,10 @@
             <Font name="Courier New" size="24.0" />
          </font>
       </Button>
-      <Text layoutX="1737.0" layoutY="906.0" strokeType="OUTSIDE" strokeWidth="0.0" />
+      <Text fill="WHITE" layoutX="361.0" layoutY="113.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Quizzz">
+         <font>
+            <Font name="Courier New" size="72.0" />
+         </font>
+      </Text>
    </children>
 </AnchorPane>
