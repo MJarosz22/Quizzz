@@ -45,6 +45,7 @@ Note taker: Joshua Gort
 - Is the Agenda properly done?
 - Is the HCI document well-structured? What else do we need to improve / change regarding it?
 - Are we still on-track? Do you have any piece of advice on what to do next regarding the code?
+- Is it alright if we post the agenda on **dev** branch and merge everything on **main** at the end of the week? 
 
 
 ## Question round
