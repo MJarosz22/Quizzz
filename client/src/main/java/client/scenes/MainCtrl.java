@@ -27,9 +27,6 @@ public class MainCtrl {
     private SplashScreenCtrl splashCtrl;
     private Scene splash;
 
-    private AddQuoteCtrl addCtrl;
-    private Scene add;
-
     private SinglePlayerCtrl singlePlayerCtrl;
     private Scene single;
 
@@ -39,15 +36,11 @@ public class MainCtrl {
     private LeaderBoardCtrl leaderBoardCtrl;
     private Scene leaderboard;
 
-    public void initialize(Stage primaryStage, Pair<SplashScreenCtrl, Parent> splash,
-            Pair<AddQuoteCtrl, Parent> add, Pair<SinglePlayerCtrl, Parent> single, Pair<MultiPlayerCtrl, Parent> multi,
+    public void initialize(Stage primaryStage, Pair<SplashScreenCtrl, Parent> splash, Pair<SinglePlayerCtrl, Parent> single, Pair<MultiPlayerCtrl, Parent> multi,
                            Pair<LeaderBoardCtrl, Parent> leaderboard) {
         this.primaryStage = primaryStage;
         this.splashCtrl = splash.getKey();
         this.splash = new Scene(splash.getValue());
-
-        this.addCtrl = add.getKey();
-        this.add = new Scene(add.getValue());
 
         this.singlePlayerCtrl = single.getKey();
         this.single = new Scene(single.getValue());
@@ -80,11 +73,5 @@ public class MainCtrl {
     public void showLeaderBoard() {
         primaryStage.setTitle("Quizzz leader board");
         primaryStage.setScene(leaderboard);
-    }
-
-    public void showAdd() {
-        primaryStage.setTitle("Quotes: Adding Quote");
-        primaryStage.setScene(add);
-        add.setOnKeyPressed(e -> addCtrl.keyPressed(e));
     }
 }
