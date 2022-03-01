@@ -17,10 +17,12 @@ package client.utils;
 
 import static jakarta.ws.rs.core.MediaType.APPLICATION_JSON;
 
+
 import java.util.List;
 
 import commons.Activity;
 import org.glassfish.jersey.client.ClientConfig;
+
 
 import jakarta.ws.rs.client.ClientBuilder;
 import jakarta.ws.rs.client.Entity;
@@ -30,15 +32,16 @@ public class ServerUtils {
 
     private static final String SERVER = "http://localhost:8080/";
 
-//    public void getQuotesTheHardWay() throws IOException {
-//        var url = new URL("http://localhost:8080/api/quotes");
-//        var is = url.openConnection().getInputStream();
-//        var br = new BufferedReader(new InputStreamReader(is));
-//        String line;
-//        while ((line = br.readLine()) != null) {
-//            System.out.println(line);
-//        }
-//    }
+    /*public void getQuotesTheHardWay() throws IOException {
+        var url = new URL("http://localhost:8080/api/quotes");
+        var is = url.openConnection().getInputStream();
+        var br = new BufferedReader(new InputStreamReader(is));
+        String line;
+        while ((line = br.readLine()) != null) {
+            System.out.println(line);
+        }
+    }*/
+
 
     public List<Activity> getActivities() {
         return ClientBuilder.newClient(new ClientConfig())

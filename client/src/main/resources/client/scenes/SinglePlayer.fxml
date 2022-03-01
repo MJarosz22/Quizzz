@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+<?import javafx.scene.text.*?>
+
+<AnchorPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="540.0" prefWidth="960.0" style="-fx-background-color: #91e4fb;" xmlns="http://javafx.com/javafx/11.0.14-internal" xmlns:fx="http://javafx.com/fxml/1" fx:controller="client.scenes.SinglePlayerCtrl">
+   <children>
+      <TextField alignment="CENTER" layoutX="371.0" layoutY="234.0" prefHeight="36.0" prefWidth="209.0" promptText="Enter your name">
+         <font>
+            <Font name="Courier New" size="18.0" />
+         </font>
+      </TextField>
+      <Button layoutX="424.0" layoutY="344.0" mnemonicParsing="false" style="-fx-background-color: #fff;" text="PLAY">
+         <font>
+            <Font name="Courier New" size="24.0" />
+         </font>
+      </Button>
+      <Button layoutX="83.0" layoutY="54.0" mnemonicParsing="false" onAction="#back" style="-fx-background-color: #fff;" text="BACK">
+         <font>
+            <Font name="Courier New" size="15.0" />
+         </font>
+      </Button>
+      <Text fill="WHITE" layoutX="339.0" layoutY="123.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Single Player">
+         <font>
+            <Font name="Courier New" size="36.0" />
+         </font>
+      </Text>
+   </children>
+</AnchorPane>
