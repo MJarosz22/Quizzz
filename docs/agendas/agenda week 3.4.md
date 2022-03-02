@@ -58,6 +58,23 @@ Note taker: Joshua Gort
 
 - Good job for the previous week!
 
+
+## Tips and Tops:
+
+### Team:
+Tips: 
+- When an idea that you do not agree with comes into discussion, start an argue and try to get people by your side, by coming up with concrete arguments explaining why your solution / idea works better then the one proposed by the chairman.
+ 
+Tops: 
+- Everyone listens carefully and notes what is discussed during the meeting (even though the notetaker is required to do so, they come into his/her help) .
+
+### Chairman: 
+Tips:
+- Encourage other members to stick into discussion even more.
+
+Tops: 
+- The agenda was posted on time (on Monday), it was clear and stated all the upcoming tasks. Also, the meeting was conducted as intended, having all the peers focused on his discourse. Lastly, the agenda covered all the deadlines regarding week 3.4.
+
 ***
 
 # Minutes week 3.4
