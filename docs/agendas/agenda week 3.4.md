@@ -20,12 +20,12 @@ Note taker: Joshua Gort
 
 - On Wednesday we'll have a Discord / on-campus meeting (still need to choose) to discuss what are we planning to do next regarding our code.
 - Attend Q&A Session in order to hear the answers to our question (addressed for assignment 3B from previous week), and also listen to other teams' questions.
-- We must use the feedback that will be provided by our TA on Thursday and change our **HCI draft** in order to improve the document by Friday night.
+- We must use the feedback that will be provided by our TA on Tuesday and change our **HCI draft** in order to improve the document by Friday night. 
 - **Assignment 4A(teamwork)** : have the agenda done (and the minutes appended to it) by Friday night. (then upload on Gitlab).
 - **Assignment 4B(individual)**, also called **Buddycheck**: give and receive feedback to / from peers by Friday night 
 - Choose the next chairman and secretary.
 - Complete Activity-bank activities
-
+- Look over the official backlog posted by Sebastian on MM. 
 
 
 ## Reflection on last week
