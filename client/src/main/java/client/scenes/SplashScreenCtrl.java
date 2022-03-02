@@ -3,7 +3,6 @@ package client.scenes;
 import com.google.inject.Inject;
 
 import client.utils.ServerUtils;
-import commons.Player;
 
 public class SplashScreenCtrl {
 

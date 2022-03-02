@@ -25,17 +25,15 @@ public class SinglePlayerCtrl {
     }
 
     // To be added when making the main game scene, in order for the player to play
-    public void play()
-    {
-        if(getTextField()!="") {
+    public void play() {
+        if(!getTextField().equals("")) {
             Player newPlayer = new Player(getTextField());
             server.addPlayer(newPlayer);
             //mainCtrl.showPlayMode();
         }
     }
 
-    public String getTextField()
-    {
+    public String getTextField() {
         return textField.getText();
     }
 }
