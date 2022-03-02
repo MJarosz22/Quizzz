@@ -8,6 +8,11 @@ import java.util.Objects;
 @Table(name = "Player")
 public class Player {
 
+    public static final int IN_LOBBY = 0;
+    public static final int NOT_ANSWERED = 1;
+    public static final int ANSWERED = 2;
+    public static final int DISCONNECTED = 3;
+
     @Id
     @Column(name = "id")
     @GeneratedValue(strategy = GenerationType.AUTO)
@@ -25,6 +30,8 @@ public class Player {
     @Column(name = "powerUps")
     public ArrayList<PowerUp> powerUpUsed;
 
+    public GameInstance gameInstance;
+
     public Player() {
         //object mapping
     }
@@ -34,6 +41,15 @@ public class Player {
         this.score = 0;
         this.status = 0;
         this.powerUpUsed = new ArrayList<>();
+    }
+
+    public Player(int id, GameInstance gameInstance, String name) {
+        this.id = id;
+        this.name = name;
+        this.score = 0;
+        this.status = 0;
+        this.powerUpUsed = new ArrayList<>();
+        this.gameInstance = gameInstance;
     }
 
     public Player(String name, int score, int status, ArrayList<PowerUp> powerUp) {
