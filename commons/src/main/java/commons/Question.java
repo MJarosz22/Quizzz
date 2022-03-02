@@ -5,6 +5,7 @@ import java.util.List;
 
 public abstract class Question {
 
+    public String title;
     public Activity[] activities = new Activity[3];
     public List<Integer> usablePowerups;
 

@@ -16,6 +16,7 @@
 package client.utils;
 
 import static jakarta.ws.rs.core.MediaType.APPLICATION_JSON;
+import static jakarta.ws.rs.core.MediaType.TEXT_PLAIN;
 
 
 import java.util.List;
@@ -62,12 +63,12 @@ public class ServerUtils {
                 .post(Entity.entity(activity, APPLICATION_JSON), Activity.class);
     }
 
-    public Player addPlayer(Player player) {
+    public Player addPlayer(String name) {
         return ClientBuilder.newClient(new ClientConfig()) //
-                .target(SERVER).path("api/players") //
+                .target(SERVER).path("api/game/join") //
                 .request(APPLICATION_JSON) //
                 .accept(APPLICATION_JSON) //
-                .post(Entity.entity(player, APPLICATION_JSON), Player.class);
+                .post(Entity.entity(name, TEXT_PLAIN), Player.class);
     }
 
 

@@ -4,8 +4,8 @@ import javax.persistence.*;
 import java.util.ArrayList;
 import java.util.Objects;
 
-@Entity
-@Table(name = "Player")
+//@Entity
+//@Table(name = "Player")
 public class Player {
 
     public static final int IN_LOBBY = 0;
@@ -32,6 +32,8 @@ public class Player {
 
     public GameInstance gameInstance;
 
+    public String cookie;
+
     public Player() {
         //object mapping
     }
@@ -43,7 +45,7 @@ public class Player {
         this.powerUpUsed = new ArrayList<>();
     }
 
-    public Player(int id, GameInstance gameInstance, String name) {
+    public Player(int id, GameInstance gameInstance, String name, String cookie) {
         this.id = id;
         this.name = name;
         this.score = 0;

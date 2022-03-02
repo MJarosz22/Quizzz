@@ -27,8 +27,8 @@ public class SinglePlayerCtrl {
     // To be added when making the main game scene, in order for the player to play
     public void play() {
         if(!getTextField().equals("")) {
-            Player newPlayer = new Player(getTextField());
-            server.addPlayer(newPlayer);
+            Player player = server.addPlayer(getTextField());
+            System.out.println(player);
             //mainCtrl.showPlayMode();
         }
     }

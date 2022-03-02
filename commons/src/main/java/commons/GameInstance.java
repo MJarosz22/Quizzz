@@ -22,9 +22,6 @@ public class GameInstance {
         this.questions = generateQuestions();
     }
 
-    private void init(){
-    }
-
     private List<Question> generateQuestions(){
         List<Question> questions = new ArrayList<>();
         //TODO REQUEST 20 QUESTIONS FROM SERVER
