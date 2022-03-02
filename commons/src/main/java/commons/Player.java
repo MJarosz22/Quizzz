@@ -2,7 +2,6 @@ package commons;
 
 import javax.persistence.*;
 import java.util.ArrayList;
-import java.util.List;
 import java.util.Objects;
 
 @Entity
@@ -26,13 +25,11 @@ public class Player {
     @Column(name = "powerUps")
     public ArrayList<PowerUp> powerUpUsed;
 
-    public Player()
-    {
+    public Player() {
         //object mapping
     }
 
-    public Player(String name)
-    {
+    public Player(String name) {
         this.name = name;
         this.score = 0;
         this.status = 0;
@@ -74,8 +71,12 @@ public class Player {
         return powerUpUsed;
     }
 
-    public void setPowerUp(ArrayList<PowerUp> powerUp) {
+    public void setPowerUps(ArrayList<PowerUp> powerUp) {
         this.powerUpUsed = powerUp;
+    }
+
+    public void addPowerUp(PowerUp powerUp) {
+        this.powerUpUsed.add(powerUp);
     }
 
     public long getId() {
