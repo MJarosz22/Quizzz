@@ -71,8 +71,12 @@ public class Player {
         return powerUpUsed;
     }
 
-    public void setPowerUp(ArrayList<PowerUp> powerUp) {
+    public void setPowerUps(ArrayList<PowerUp> powerUp) {
         this.powerUpUsed = powerUp;
+    }
+
+    public void addPowerUp(PowerUp powerUp) {
+        this.powerUpUsed.add(powerUp);
     }
 
     public long getId() {
