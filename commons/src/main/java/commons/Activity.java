@@ -4,20 +4,20 @@ import org.apache.commons.lang3.builder.EqualsBuilder;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
 import org.apache.commons.lang3.builder.ToStringBuilder;
 
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
+import javax.persistence.*;
 
 @Entity
 public class Activity {
 
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
-    public long id;
+    public long activityID;
 
+    public String id; //id provided by activity-bank (i.e. "00-shower")
+
+    public String image_path;
     public String title;
-    public int consumption;
+    public int consumption_in_wh;
     public String source;
 
     @SuppressWarnings("unused")
@@ -25,9 +25,12 @@ public class Activity {
 
     }
 
-    public Activity(String title, int consumption, String source) {
+    public Activity(String id, String image_path, String title, int consumption_in_wh, String source) {
+        this.id = id;
+        this.image_path = image_path;
+        if(image_path == null) image_path = "";
         this.title = title;
-        this.consumption = consumption;
+        this.consumption_in_wh = consumption_in_wh;
         this.source = source;
     }
 
@@ -40,18 +43,23 @@ public class Activity {
         Activity activity = (Activity) o;
 
         return new EqualsBuilder()
+                .append(activityID, activity.activityID)
+                .append(consumption_in_wh, activity.consumption_in_wh)
                 .append(id, activity.id)
-                .append(consumption, activity.consumption)
+                .append(image_path, activity.image_path)
                 .append(title, activity.title)
-                .append(source, activity.source).isEquals();
+                .append(source, activity.source)
+                .isEquals();
     }
 
     @Override
     public int hashCode() {
         return new HashCodeBuilder(17, 37)
+                .append(activityID)
                 .append(id)
+                .append(image_path)
                 .append(title)
-                .append(consumption)
+                .append(consumption_in_wh)
                 .append(source)
                 .toHashCode();
     }
@@ -59,15 +67,17 @@ public class Activity {
     @Override
     public String toString() {
         return new ToStringBuilder(this)
+                .append("activityID", activityID)
                 .append("id", id)
+                .append("image_path", image_path)
                 .append("title", title)
-                .append("consumption", consumption)
+                .append("consumption_in_wh", consumption_in_wh)
                 .append("source", source)
                 .toString();
     }
 
     public long getId() {
-        return id;
+        return activityID;
     }
 
 }
