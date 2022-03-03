@@ -69,6 +69,10 @@ public abstract class Question {
         this.disabledPowerUps = disabledPowerUps;
     }
 
+    public void addDisabledPowerUp(Integer disabledPowerUp) {
+        this.disabledPowerUps.add(disabledPowerUp);
+    }
+
     @Override
     public String toString() {
         return "id=" + id +
