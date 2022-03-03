@@ -18,9 +18,16 @@ public class QuestionTest {
 
     @Test
     public void CheckConstructorHowMuchEnergy() {
-
         Question question = new QuestionHowMuch("Title Test", new ArrayList<>(), new ArrayList<>());
         assertEquals(question.getType(), 2);
         assertEquals(question.getTitle(), "Title Test");
     }
+
+    @Test
+    public void CheckToString() {
+        Question question = new QuestionMoreExpensive("Title Test", new ArrayList<>(), new ArrayList<>());
+        assertEquals(question.toString(), "QuestionMultipleChoice{id=0, type=1, title='Title Test', disabledPowerUps=[], answers=[]}");
+    }
+
+
 }
