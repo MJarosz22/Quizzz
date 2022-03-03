@@ -9,10 +9,18 @@ import static org.junit.jupiter.api.Assertions.*;
 public class QuestionTest {
 
     @Test
-    public void CheckConstructor(){
+    public void CheckConstructorMoreExpensive() {
 
-        Question question = new QuestionMultipleChoice("Title Test", new ArrayList<>(), new ArrayList<>());
+        Question question = new QuestionMoreExpensive("Title Test", new ArrayList<>(), new ArrayList<>());
         assertEquals(question.getType(), 1);
+        assertEquals(question.getTitle(), "Title Test");
+    }
+
+    @Test
+    public void CheckConstructorHowMuchEnergy() {
+
+        Question question = new QuestionHowMuchEnergy("Title Test", new ArrayList<>(), new ArrayList<>());
+        assertEquals(question.getType(), 2);
         assertEquals(question.getTitle(), "Title Test");
     }
 }

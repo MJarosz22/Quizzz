@@ -3,16 +3,16 @@ package commons;
 import java.util.List;
 import java.util.Objects;
 
-public class QuestionMultipleChoice extends Question {
+public class QuestionMoreExpensive extends Question {
 
     private List<Activity> answers;
 
-    public QuestionMultipleChoice(String title, List<Integer> disabledPowerUps, List<Activity> answers) {
+    public QuestionMoreExpensive(String title, List<Integer> disabledPowerUps, List<Activity> answers) {
         super(1, title, disabledPowerUps);
         this.answers = answers;
     }
 
-    public QuestionMultipleChoice() {
+    public QuestionMoreExpensive() {
     }
 
     @Override
@@ -20,7 +20,7 @@ public class QuestionMultipleChoice extends Question {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         if (!super.equals(o)) return false;
-        QuestionMultipleChoice that = (QuestionMultipleChoice) o;
+        QuestionMoreExpensive that = (QuestionMoreExpensive) o;
         return Objects.equals(answers, that.answers);
     }
 
