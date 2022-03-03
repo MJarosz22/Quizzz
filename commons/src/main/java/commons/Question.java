@@ -30,7 +30,10 @@ public abstract class Question {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         Question question = (Question) o;
-        return id == question.id && type == question.type && Objects.equals(title, question.title) && Objects.equals(disabledPowerUps, question.disabledPowerUps);
+        return id == question.id
+                && type == question.type
+                && Objects.equals(title, question.title)
+                && Objects.equals(disabledPowerUps, question.disabledPowerUps);
     }
 
     @Override
