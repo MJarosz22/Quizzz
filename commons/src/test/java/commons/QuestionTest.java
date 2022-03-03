@@ -19,7 +19,7 @@ public class QuestionTest {
     @Test
     public void CheckConstructorHowMuchEnergy() {
 
-        Question question = new QuestionHowMuchEnergy("Title Test", new ArrayList<>(), new ArrayList<>());
+        Question question = new QuestionHowMuch("Title Test", new ArrayList<>(), new ArrayList<>());
         assertEquals(question.getType(), 2);
         assertEquals(question.getTitle(), "Title Test");
     }
