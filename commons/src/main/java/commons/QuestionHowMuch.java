@@ -4,11 +4,11 @@ import java.util.List;
 import java.util.Objects;
 
 public class QuestionHowMuch extends Question {
-    private List<Integer> consumptions;
+    private List<Integer> answers;
 
-    public QuestionHowMuch(String title, List<Integer> disabledPowerUps, List<Integer> consumptions) {
+    public QuestionHowMuch(String title, List<Integer> disabledPowerUps, List<Integer> answers) {
         super(2, title, disabledPowerUps);
-        this.consumptions = consumptions;
+        this.answers = answers;
     }
 
     public QuestionHowMuch() {
@@ -20,19 +20,19 @@ public class QuestionHowMuch extends Question {
         if (o == null || getClass() != o.getClass()) return false;
         if (!super.equals(o)) return false;
         QuestionHowMuch that = (QuestionHowMuch) o;
-        return Objects.equals(consumptions, that.consumptions);
+        return Objects.equals(answers, that.answers);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(super.hashCode(), consumptions);
+        return Objects.hash(super.hashCode(), answers);
     }
 
     @Override
     public String toString() {
         return "QuestionMultipleChoice{" +
                 super.toString() +
-                ", consumptions=" + consumptions +
+                ", answers=" + answers +
                 '}';
     }
 }
