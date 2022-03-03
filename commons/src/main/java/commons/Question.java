@@ -16,8 +16,7 @@ public abstract class Question {
     private String title;
     private List<Integer> disabledPowerUps;
 
-    public Question(long id, int type, String title, List<Integer> disabledPowerUps) {
-        this.id = id;
+    public Question(int type, String title, List<Integer> disabledPowerUps) {
         this.type = type;
         this.title = title;
         this.disabledPowerUps = disabledPowerUps;
@@ -41,10 +40,6 @@ public abstract class Question {
 
     public long getId() {
         return id;
-    }
-
-    public void setId(long id) {
-        this.id = id;
     }
 
     public String getTitle() {

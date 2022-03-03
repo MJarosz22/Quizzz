@@ -7,8 +7,8 @@ public class QuestionMultipleChoice extends Question {
 
     private List<Activity> answers;
 
-    public QuestionMultipleChoice(long id, int type, String title, List<Integer> disabledPowerUps, List<Activity> answers) {
-        super(id, type, title, disabledPowerUps);
+    public QuestionMultipleChoice(String title, List<Integer> disabledPowerUps, List<Activity> answers) {
+        super(1, title, disabledPowerUps);
         this.answers = answers;
     }
 
