@@ -48,7 +48,7 @@ public class GameController {
         for (int i = 0; i < 60; i++) {
             activities[i] = allActivities.get(random.nextInt(allActivities.size()));
         }
-
+        gameInstances.get(0).generateQuestions(activities);
         players = new ArrayList<>();
     }
 

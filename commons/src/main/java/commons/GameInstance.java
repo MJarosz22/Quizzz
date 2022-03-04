@@ -22,14 +22,20 @@ public class GameInstance {
         if (type < 0 || type > 1) throw new IllegalArgumentException();
         this.type = type;
         players = new ArrayList<>();
-
-        this.questions = generateQuestions();
     }
 
-    private List<Question> generateQuestions() {
+    /**
+     * Generates 20 questions based on 60 activities
+     * @param activities
+     * @return
+     */
+    public void generateQuestions(Activity[] activities) {
+        if(activities.length != 60) throw new IllegalArgumentException();
         List<Question> questions = new ArrayList<>();
-        //TODO REQUEST 20 QUESTIONS FROM SERVER
-        return questions;
+        for(int i = 0; i < 20; i++){
+            questions.add(new MultipleChoiceQuestion(new Activity[]{activities[3*i], activities[3*i + 1], activities[3*i + 2]}));
+        }
+        this.questions = questions;
     }
 
     public int getId() {

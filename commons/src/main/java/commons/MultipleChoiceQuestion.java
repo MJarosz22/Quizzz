@@ -8,7 +8,7 @@ public class MultipleChoiceQuestion extends Question {
 
     public Activity getAnswer() {
         //TODO ADD FUNCTIONAL ANSWER FUNCTION BASED ON LOWEST/HIGHEST CONSUMPTION
-        return activities[0];
+        return getActivities()[0];
     }
 
     @Override
