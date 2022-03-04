@@ -1,5 +1,8 @@
 package commons;
 
+import org.apache.commons.lang3.builder.EqualsBuilder;
+import org.apache.commons.lang3.builder.HashCodeBuilder;
+
 import javax.persistence.*;
 import java.util.ArrayList;
 import java.util.Objects;
@@ -14,43 +17,22 @@ public class Player extends SimpleUser{
     public static final int DISCONNECTED = 3;
 
     @Column(name = "status")
-    public int status;
+    private int status;
 
     @Column(name = "powerUps")
-    public ArrayList<PowerUp> powerUpUsed;
+    private ArrayList<PowerUp> powerUpUsed;
 
-    public GameInstance gameInstance;
-
-    public String cookie;
-
+    private GameInstance gameInstance;
     public Player() {
         super();
         //object mapping
     }
 
-    public Player(String name) {
-        this.name = name;
-        this.score = 0;
-        this.status = 0;
-        this.powerUpUsed = new ArrayList<>();
-
-    }
-
     public Player(long id, String name, GameInstance gameInstance, String cookie) {
-        this.id = id;
-        this.name = name;
-        this.score = 0;
+        super(id, name, gameInstance.getId(), cookie);
         this.status = 0;
         this.powerUpUsed = new ArrayList<>();
         this.gameInstance = gameInstance;
-        this.cookie = cookie;
-    }
-
-    public Player(String name, int score, int status, ArrayList<PowerUp> powerUp) {
-        this.name = name;
-        this.score = score;
-        this.status = status;
-        this.powerUpUsed = powerUp;
     }
 
     public int getStatus() {
@@ -76,30 +58,27 @@ public class Player extends SimpleUser{
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
+
         if (o == null || getClass() != o.getClass()) return false;
+
         Player player = (Player) o;
-        return score == player.score && status == player.status && id == player.id && Objects.equals(name, player.name)
-                && Objects.equals(powerUpUsed, player.powerUpUsed);
+
+        return new EqualsBuilder().appendSuper(super.equals(o)).append(status, player.status).append(powerUpUsed, player.powerUpUsed)
+                .append(gameInstance, player.gameInstance).append(getCookie(), player.getCookie()).isEquals();
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(name, score, status, powerUpUsed, id);
+        return new HashCodeBuilder(17, 37).appendSuper(super.hashCode())
+                .append(status).append(powerUpUsed).append(gameInstance).append(getCookie()).toHashCode();
     }
 
-    @Override
-    public String toString() {
-        return "Player{" +
-                "name='" + name + '\'' +
-                ", score=" + score +
-                ", status=" + status +
-                ", powerUp=" + powerUpUsed +
-                ", id=" + id +
-                '}';
-    }
-
+    /**
+     * Makes Simple user from player, used for communication between client and server (to prevent unnecessary info sharing)
+     * @return SimpleUser from this Player
+     */
     public SimpleUser toSimpleUser(){
-        return new SimpleUser(name, id, score, gameInstance.id, cookie);
+        return new SimpleUser(getId(), getName(), gameInstance.getId(), getCookie());
     }
 
 }

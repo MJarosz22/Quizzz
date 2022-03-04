@@ -29,19 +29,21 @@ public class SinglePlayerCtrl {
         mainCtrl.showSplash();
     }
 
-    // To be added when making the main game scene, in order for the player to play
+    /**
+     * To be added when making the main game scene, in order for the player to play
+     */
     public void play() {
         if(!getTextField().equals("")) {
-            if(simpleUser != null && simpleUser.cookie != null && !Objects.equals(simpleUser.cookie, "")) {
+            if(simpleUser != null && simpleUser.getCookie() != null && !Objects.equals(simpleUser.getCookie(), "")) {
                 //Player already has connected
                 System.out.println("Already connected!");
-                //TODO SOMETHING
+                //TODO CREATE Pop-up/info that
                 return;
             }
             SimpleUser player = server.addPlayer(getTextField());
             simpleUser = player;
             System.out.println(player);
-            //mainCtrl.showPlayMode();
+            //TODO ADD mainCtrl.showLobby(); and have a place to store SimpleUser Client-wide
         }
     }
 

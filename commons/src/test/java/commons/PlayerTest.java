@@ -6,35 +6,32 @@ import java.util.ArrayList;
 
 import static org.junit.jupiter.api.Assertions.*;
 
+
+//TODO REWRITE TEST OF PLAYER
 // Modify these tests with correct powerUps entities after the powerUp class is fully designed
 public class PlayerTest {
     @Test
     public void checkConstructor() {
-        var q = new Player("Vlad", 120, 12, new ArrayList<>());
-        assertEquals("Vlad", q.name);
-        assertEquals(120, q.score);
-        assertEquals(12, q.status);
+        var q = new Player(0, "Vlad", new GameInstance(0, GameInstance.SINGLE_PLAYER), "cookietest");
+        assertEquals("Vlad", q.getName());
+        assertEquals("cookietest", q.getCookie());
     }
 
     @Test
     public void equalsHashCode() {
-        var a = new Player("Vlad", 120, 12, new ArrayList<>());
-        var b = new Player("Vlad", 120, 12, new ArrayList<>());
+        GameInstance gi = new GameInstance(0, GameInstance.SINGLE_PLAYER);
+        var a = new Player(0, "Marcin", gi, "cookietest");
+        var b = new Player(0, "Rafael", gi, "cookietest");
         assertEquals(a, b);
         assertEquals(a.hashCode(), b.hashCode());
     }
 
     @Test
     public void notEqualsHashCode() {
-        var a = new Player("Joshua", 120, 12, new ArrayList<>());
-        var b = new Player("Petra", 120, 12, new ArrayList<>());
+        GameInstance gi = new GameInstance(0, GameInstance.SINGLE_PLAYER);
+        var a = new Player(0, "Petra", gi, "cookietest");
+        var b = new Player(0, "Joshua", gi, "cookietest");
         assertNotEquals(a, b);
         assertNotEquals(a.hashCode(), b.hashCode());
-    }
-
-    @Test
-    public void hasToString() {
-        var q = new Player("Sophie", 120, 12, new ArrayList<>()).toString();
-        assertEquals("Player{name='Sophie', score=120, status=12, powerUp=[], id=0}", q);
     }
 }

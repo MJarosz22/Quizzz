@@ -6,40 +6,37 @@ import org.apache.commons.lang3.builder.ToStringBuilder;
 
 import javax.persistence.*;
 
+
+/**
+ * To be mostly used for communication between client and server, since client doesn't need nearly as much info as put into Player class
+ */
 @Entity
 public class SimpleUser {
 
     @Id
     @Column(name = "id")
-    public long id;
+    private long id;
 
     @Column(name = "")
-    public int gameInstanceId;
+    private int gameInstanceId;
 
     @Column(name = "name")
-    public String name;
+    private String name;
 
     @Column(name = "score")
-    public int score;
+    private int score;
 
     @Column(name = "cookie")
-    public String cookie;
+    private String cookie;
 
 
     public SimpleUser(){
 
     }
 
-    public SimpleUser(String name, long id, String cookie) {
+    public SimpleUser(long id, String name, int gameInstanceId, String cookie) {
         this.name = name;
         this.id = id;
-        this.cookie = cookie;
-    }
-
-    public SimpleUser(String name, long id, int score, int gameInstanceId, String cookie) {
-        this.name = name;
-        this.id = id;
-        this.score = score;
         this.gameInstanceId = gameInstanceId;
         this.cookie = cookie;
     }
@@ -54,6 +51,10 @@ public class SimpleUser {
 
     public long getId() {
         return id;
+    }
+
+    public void setScore(int score) {
+        this.score = score;
     }
 
     public long getScore() {
@@ -74,6 +75,14 @@ public class SimpleUser {
 
     public void setCookie(String cookie) {
         this.cookie = cookie;
+    }
+
+    public int getGameInstanceId() {
+        return gameInstanceId;
+    }
+
+    public void setGameInstanceId(int gameInstanceId) {
+        this.gameInstanceId = gameInstanceId;
     }
 
     @Override
@@ -108,7 +117,7 @@ public class SimpleUser {
     }
 
     public SimpleUser unsafe(){
-        return new SimpleUser(name, id, score, gameInstanceId, null);
+        return new SimpleUser(id, name, gameInstanceId, null);
     }
 
 }
