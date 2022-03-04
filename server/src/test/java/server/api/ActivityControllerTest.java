@@ -131,7 +131,7 @@ public class ActivityControllerTest {
     @Test
     public void testInvalidTitle() {
         var actual = sut.addActivity(
-                getActivity("Boil 2L of water. There are 2 sentences!", 120, "https://www.some-site.com")
+                getActivity("id-23", "00/23.png","This? title is invalid!", 10, "https://www.google.com/?client=safari")
         );
         assertEquals(BAD_REQUEST, actual.getStatusCode());
     }
@@ -139,7 +139,7 @@ public class ActivityControllerTest {
     @Test
     public void testInvalidUrl() {
         var actual = sut.addActivity(
-                getActivity("Boil 2L of water.", 120, "not-a-site")
+                getActivity("id-23", "00/23.png","test1", 10, "not-a-valid-url.com")
         );
         assertEquals(BAD_REQUEST, actual.getStatusCode());
     }
