@@ -4,6 +4,7 @@ package server.api;
 import commons.Activity;
 import commons.GameInstance;
 import commons.Player;
+import commons.SimpleUser;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.http.HttpHeaders;
@@ -29,7 +30,7 @@ public class GameController {
     private final ActivityRepository activityRepository;
     private final Random random;
     private final List<GameInstance> gameInstances;
-    private final List<Player> players;
+    private final List<SimpleUser> players;
 
 
     public GameController(Random random, ActivityRepository activityRepository){
@@ -47,21 +48,17 @@ public class GameController {
         players = new ArrayList<>();
     }
 
-
+    //TODO CREATE SIMPLEUSER CLASS SO THAT ONLY NAME AND COOKIE HAVE TO BE PASSED THROUGH TO CLIENT
     @PostMapping("/join")
-    public ResponseEntity<Player> addPlayer(@RequestBody String name){
+    public ResponseEntity<SimpleUser> addPlayer(@RequestBody String name){
         if(isNullOrEmpty(name)) return ResponseEntity.badRequest().build();
 
-        ResponseCookie tokenCookie = ResponseCookie
-                .from("user-id",
-                        DigestUtils.md5DigestAsHex(
-                                (name + System.currentTimeMillis())
-                                        .getBytes(StandardCharsets.UTF_8)))
-                .build();
+        ResponseCookie tokenCookie = ResponseCookie.from("user-id", DigestUtils.md5DigestAsHex(
+                                (name + System.currentTimeMillis()).getBytes(StandardCharsets.UTF_8))).build();
 
-        Player savedPlayer = new Player(players.size(), gameInstances.get(gameInstances.size() - 1), name, tokenCookie.getValue());
+        SimpleUser savedPlayer = new SimpleUser(name, players.size(), 0, gameInstances.get(gameInstances.size() - 1).id, tokenCookie.getValue());
         players.add(savedPlayer);
-        gameInstances.get(gameInstances.size() - 1).players.add(savedPlayer);
+        gameInstances.get(gameInstances.size() - 1).players.add(savedPlayer.toPlayer(gameInstances.get(gameInstances.size() - 1)));
         logger.info("[GI " + (gameInstances.size() - 1) + "] PLAYER ("+ savedPlayer.id + ") JOINED: NAME=" + savedPlayer.name);
         return ResponseEntity.ok().header(HttpHeaders.SET_COOKIE, tokenCookie.toString()).body(savedPlayer);
     }

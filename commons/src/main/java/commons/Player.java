@@ -6,23 +6,12 @@ import java.util.Objects;
 
 //@Entity
 //@Table(name = "Player")
-public class Player {
+public class Player extends SimpleUser{
 
     public static final int IN_LOBBY = 0;
     public static final int NOT_ANSWERED = 1;
     public static final int ANSWERED = 2;
     public static final int DISCONNECTED = 3;
-
-    @Id
-    @Column(name = "id")
-    @GeneratedValue(strategy = GenerationType.AUTO)
-    public long id;
-
-    @Column(name = "name")
-    public String name;
-
-    @Column(name = "score")
-    public int score;
 
     @Column(name = "status")
     public int status;
@@ -35,6 +24,7 @@ public class Player {
     public String cookie;
 
     public Player() {
+        super();
         //object mapping
     }
 
@@ -43,15 +33,17 @@ public class Player {
         this.score = 0;
         this.status = 0;
         this.powerUpUsed = new ArrayList<>();
+
     }
 
-    public Player(int id, GameInstance gameInstance, String name, String cookie) {
+    public Player(long id, String name, GameInstance gameInstance, String cookie) {
         this.id = id;
         this.name = name;
         this.score = 0;
         this.status = 0;
         this.powerUpUsed = new ArrayList<>();
         this.gameInstance = gameInstance;
+        this.cookie = cookie;
     }
 
     public Player(String name, int score, int status, ArrayList<PowerUp> powerUp) {
@@ -59,26 +51,6 @@ public class Player {
         this.score = score;
         this.status = status;
         this.powerUpUsed = powerUp;
-    }
-
-    public String getName() {
-        return name;
-    }
-
-    public void setName(String name) {
-        this.name = name;
-    }
-
-    public int getScore() {
-        return score;
-    }
-
-    public void setScore(int score) {
-        this.score = score;
-    }
-
-    public void addScore(int score) {
-        this.score += score;
     }
 
     public int getStatus() {
@@ -99,14 +71,6 @@ public class Player {
 
     public void addPowerUp(PowerUp powerUp) {
         this.powerUpUsed.add(powerUp);
-    }
-
-    public long getId() {
-        return id;
-    }
-
-    public void setId(long id) {
-        this.id = id;
     }
 
     @Override
@@ -133,4 +97,9 @@ public class Player {
                 ", id=" + id +
                 '}';
     }
+
+    public SimpleUser toSimpleUser(){
+        return new SimpleUser(name, id, score, gameInstance.id, cookie);
+    }
+
 }

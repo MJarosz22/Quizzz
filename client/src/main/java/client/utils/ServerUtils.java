@@ -23,6 +23,8 @@ import java.util.List;
 
 import commons.Activity;
 import commons.Player;
+import commons.SimpleUser;
+import jakarta.ws.rs.client.Client;
 import org.glassfish.jersey.client.ClientConfig;
 
 
@@ -56,19 +58,21 @@ public class ServerUtils {
 
 
     public Activity addActivity(Activity activity) {
-        return ClientBuilder.newClient(new ClientConfig()) //
-                .target(SERVER).path("api/activities") //
-                .request(APPLICATION_JSON) //
-                .accept(APPLICATION_JSON) //
+        return  ClientBuilder.newClient(new ClientConfig())
+                .target(SERVER)
+                .path("api/activities")
+                .request(APPLICATION_JSON)
+                .accept(APPLICATION_JSON)
                 .post(Entity.entity(activity, APPLICATION_JSON), Activity.class);
     }
 
-    public Player addPlayer(String name) {
-        return ClientBuilder.newClient(new ClientConfig()) //
+    public SimpleUser addPlayer(String name) {
+        Client client = ClientBuilder.newClient(new ClientConfig());
+        return client //
                 .target(SERVER).path("api/game/join") //
                 .request(APPLICATION_JSON) //
                 .accept(APPLICATION_JSON) //
-                .post(Entity.entity(name, TEXT_PLAIN), Player.class);
+                .post(Entity.entity(name, TEXT_PLAIN), SimpleUser.class);
     }
 
 
