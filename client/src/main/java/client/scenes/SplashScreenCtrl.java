@@ -21,11 +21,11 @@ public class SplashScreenCtrl {
 
     public void playMulti() {
         mainCtrl.showMultiPlayerMode();
+
     }
 
     public void showLB() {
         mainCtrl.showLeaderBoard();
     }
-
 
 }
