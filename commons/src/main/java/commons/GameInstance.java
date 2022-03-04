@@ -17,16 +17,16 @@ public class GameInstance {
     private List<Player> players;
     private List<Question> questions;
 
-    public GameInstance(int id, int type){
+    public GameInstance(int id, int type) {
         this.id = id;
-        if(type < 0 || type > 1) throw new IllegalArgumentException();
+        if (type < 0 || type > 1) throw new IllegalArgumentException();
         this.type = type;
         players = new ArrayList<>();
 
         this.questions = generateQuestions();
     }
 
-    private List<Question> generateQuestions(){
+    private List<Question> generateQuestions() {
         List<Question> questions = new ArrayList<>();
         //TODO REQUEST 20 QUESTIONS FROM SERVER
         return questions;

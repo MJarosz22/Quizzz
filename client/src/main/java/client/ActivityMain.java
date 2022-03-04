@@ -1,6 +1,8 @@
 package client;
 
-import client.scenes.*;
+import client.scenes.ActivityOverviewCtrl;
+import client.scenes.AddActivityCtrl;
+import client.scenes.MainActivityCtrl;
 import com.google.inject.Injector;
 import javafx.application.Application;
 import javafx.stage.Stage;

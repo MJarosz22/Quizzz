@@ -4,7 +4,9 @@ import org.apache.commons.lang3.builder.EqualsBuilder;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
 import org.apache.commons.lang3.builder.ToStringBuilder;
 
-import javax.persistence.*;
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.Id;
 
 
 /**
@@ -30,7 +32,7 @@ public class SimpleUser {
     private String cookie;
 
 
-    public SimpleUser(){
+    public SimpleUser() {
 
     }
 
@@ -112,11 +114,11 @@ public class SimpleUser {
                 .toString();
     }
 
-    public Player toPlayer(GameInstance gameInstance){
+    public Player toPlayer(GameInstance gameInstance) {
         return new Player(id, name, gameInstance, cookie);
     }
 
-    public SimpleUser unsafe(){
+    public SimpleUser unsafe() {
         return new SimpleUser(id, name, gameInstanceId, null);
     }
 

@@ -3,13 +3,12 @@ package commons;
 import org.apache.commons.lang3.builder.EqualsBuilder;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
 
-import javax.persistence.*;
+import javax.persistence.Column;
 import java.util.ArrayList;
-import java.util.Objects;
 
 //@Entity
 //@Table(name = "Player")
-public class Player extends SimpleUser{
+public class Player extends SimpleUser {
 
     public static final int IN_LOBBY = 0;
     public static final int NOT_ANSWERED = 1;
@@ -23,6 +22,7 @@ public class Player extends SimpleUser{
     private ArrayList<PowerUp> powerUpUsed;
 
     private GameInstance gameInstance;
+
     public Player() {
         super();
         //object mapping
@@ -75,9 +75,10 @@ public class Player extends SimpleUser{
 
     /**
      * Makes Simple user from player, used for communication between client and server (to prevent unnecessary info sharing)
+     *
      * @return SimpleUser from this Player
      */
-    public SimpleUser toSimpleUser(){
+    public SimpleUser toSimpleUser() {
         return new SimpleUser(getId(), getName(), gameInstance.getId(), getCookie());
     }
 

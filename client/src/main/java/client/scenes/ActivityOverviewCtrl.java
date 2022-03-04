@@ -57,7 +57,6 @@ public class ActivityOverviewCtrl implements Initializable {
     public void addActivity() {
         mainActivityCtrl.showAdd();
     }
-    
 
 
     public void editTitle(TableColumn.CellEditEvent<Activity, String> productStringCellEditEvent) {

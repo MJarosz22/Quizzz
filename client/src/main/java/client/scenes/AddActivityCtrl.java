@@ -15,9 +15,8 @@
  */
 package client.scenes;
 
-import com.google.inject.Inject;
-
 import client.utils.ServerUtils;
+import com.google.inject.Inject;
 import commons.Activity;
 import jakarta.ws.rs.WebApplicationException;
 import javafx.fxml.FXML;

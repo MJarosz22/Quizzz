@@ -1,10 +1,7 @@
 package server.api;
 
 
-import commons.Activity;
-import commons.GameInstance;
-import commons.Player;
-import commons.SimpleUser;
+import commons.*;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.http.HttpHeaders;
@@ -14,11 +11,10 @@ import org.springframework.util.DigestUtils;
 import org.springframework.web.bind.annotation.*;
 import server.database.ActivityRepository;
 
-import javax.servlet.http.Cookie;
-import javax.servlet.http.HttpServletResponse;
 import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 import java.util.Random;
 
 @RestController
@@ -35,10 +31,11 @@ public class GameController {
 
     /**
      * Creates the GameController and initializes the first gameInstance
-     * @param random Random class
+     *
+     * @param random             Random class
      * @param activityRepository Repository of all Activities
      */
-    public GameController(Random random, ActivityRepository activityRepository){
+    public GameController(Random random, ActivityRepository activityRepository) {
         this.random = random;
         this.activityRepository = activityRepository;
         System.out.println(this.activityRepository.findAll());
@@ -48,7 +45,7 @@ public class GameController {
         //TODO Make it so that these activities actually get merged into 20 questions and ensure there are no duplicates (if possible)
         Activity[] activities = new Activity[60];
         List<Activity> allActivities = activityRepository.findAll();
-        for(int i = 0; i < 60; i++) {
+        for (int i = 0; i < 60; i++) {
             activities[i] = allActivities.get(random.nextInt(allActivities.size()));
         }
 
@@ -61,23 +58,36 @@ public class GameController {
 
     /**
      * Lets a client join a gameInstance as a player
+     *
      * @param name Name of new player
      * @return Simple User (Including name, cookie and gameInstanceID)
      */
     @PostMapping("/join")
-    public ResponseEntity<SimpleUser> addPlayer(@RequestBody String name){
-        if(isNullOrEmpty(name)) return ResponseEntity.badRequest().build();
+    public ResponseEntity<SimpleUser> addPlayer(@RequestBody String name) {
+        if (isNullOrEmpty(name)) return ResponseEntity.badRequest().build();
 
         ResponseCookie tokenCookie = ResponseCookie.from("user-id", DigestUtils.md5DigestAsHex(
-                                (name + System.currentTimeMillis()).getBytes(StandardCharsets.UTF_8))).build();
+                (name + System.currentTimeMillis()).getBytes(StandardCharsets.UTF_8))).build();
 
         SimpleUser savedPlayer = new SimpleUser(players.size(), name, gameInstances.get(gameInstances.size() - 1).getId(), tokenCookie.getValue());
         players.add(savedPlayer);
         gameInstances.get(gameInstances.size() - 1).getPlayers().add(savedPlayer.toPlayer(gameInstances.get(gameInstances.size() - 1)));
-        logger.info("[GI " + (gameInstances.size() - 1) + "] PLAYER ("+ savedPlayer.getId() + ") JOINED: NAME=" + savedPlayer.getName());
+        logger.info("[GI " + (gameInstances.size() - 1) + "] PLAYER (" + savedPlayer.getId() + ") JOINED: NAME=" + savedPlayer.getName());
         return ResponseEntity.ok().header(HttpHeaders.SET_COOKIE, tokenCookie.toString()).body(savedPlayer);
     }
 
+    @GetMapping("/{gameInstanceId}/q{questionNumber}")
+    public ResponseEntity<Question> getQuestion(@PathVariable int gameInstanceId, @PathVariable int questionNumber, @CookieValue(name = "user-id", defaultValue = "null") String cookie){
+        if(gameInstanceId < 0 || gameInstanceId > gameInstances.size() - 1
+                || questionNumber > 19 || questionNumber < 0) return ResponseEntity.badRequest().build();
+        GameInstance currGI = gameInstances.get(gameInstanceId);
+        Optional<Player> optPlayer = currGI.getPlayers().stream().filter(p -> p.getCookie().equals(cookie)).findFirst();
+        if(optPlayer.isEmpty()) return ResponseEntity.badRequest().build();
+        Player currentPlayer = optPlayer.get();
+        logger.info("[GI " + (currGI.getId()) + "] PLAYER (" + currentPlayer.getId() + ") REQUESTED QUESTION N. " + questionNumber);
+        Question question = currGI.getQuestions().get(questionNumber);
+        return ResponseEntity.ok(question);
+    }
 //    ---------------------------------------------------------------------------
 //    --------------------     HELPER FUNCTIONS     -----------------------------
 //    ---------------------------------------------------------------------------

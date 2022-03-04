@@ -15,22 +15,18 @@
  */
 package client.utils;
 
-import static jakarta.ws.rs.core.MediaType.APPLICATION_JSON;
-import static jakarta.ws.rs.core.MediaType.TEXT_PLAIN;
-
-
-import java.util.List;
-
 import commons.Activity;
-import commons.Player;
 import commons.SimpleUser;
 import jakarta.ws.rs.client.Client;
-import org.glassfish.jersey.client.ClientConfig;
-
-
 import jakarta.ws.rs.client.ClientBuilder;
 import jakarta.ws.rs.client.Entity;
 import jakarta.ws.rs.core.GenericType;
+import org.glassfish.jersey.client.ClientConfig;
+
+import java.util.List;
+
+import static jakarta.ws.rs.core.MediaType.APPLICATION_JSON;
+import static jakarta.ws.rs.core.MediaType.TEXT_PLAIN;
 
 public class ServerUtils {
 
@@ -58,7 +54,7 @@ public class ServerUtils {
 
 
     public Activity addActivity(Activity activity) {
-        return  ClientBuilder.newClient(new ClientConfig())
+        return ClientBuilder.newClient(new ClientConfig())
                 .target(SERVER)
                 .path("api/activities")
                 .request(APPLICATION_JSON)
