@@ -19,8 +19,7 @@ public class MultiPlayerCtrl {
     }
 
     // To be added when making the main game scene, in order for the player to play
-    public void join()
-    {
+    public void join() {
         mainCtrl.showLobby();
     }
 }

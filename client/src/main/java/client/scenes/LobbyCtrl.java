@@ -19,8 +19,7 @@ public class LobbyCtrl {
     }
 
     // To be added when making the main game scene, in order for the player to play
-    public void play()
-    {
+    public void play() {
         //TODO CONNECT TO SERVER
 //        mainCtrl.showPlayMode();
     }
