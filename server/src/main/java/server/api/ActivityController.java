@@ -35,7 +35,7 @@ public class ActivityController {
                 || isNullOrEmpty(activity.id)
                 || !isValidUrl(activity.source)
                 || isNullOrEmpty(activity.title)
-                || activity.title.length() > 140
+                || !isValidTitle(activity.title)
                 || activity.consumption_in_wh <= 0) {
             return ResponseEntity.badRequest().build();
         }
@@ -52,6 +52,12 @@ public class ActivityController {
         return s == null || s.isEmpty();
     }
 
+    /**
+     * Method that checks whether the source of an activity is a valid URL
+     *
+     * @param url - String object that is expected to be an URL
+     * @return - true, if the given string is an URL, or false otherwise.
+     */
     private static boolean isValidUrl(String url) {
         try {
             PropertyEditor urlEditor = new URLEditor();
@@ -62,6 +68,26 @@ public class ActivityController {
         return true;
     }
 
+
+    /**
+     * Method that validates an activity title
+     * A valid title should have <= 140 characters and be one-sentenced.
+     * Note that we consider a title to be valid even if it does not have an end of sentence punctuatio('.', '?' or '!'
+     *
+     * @param title - String object that needs to be validated
+     * @return - true, if the given title is valide, or false otherwise.
+     */
+    private static boolean isValidTitle(String title) {
+        int endOfSentence = 0;
+        int size = title.length();
+        for (char ch : title.toCharArray()) {
+            if (ch == '.' || ch == '!' || ch == '?')
+                endOfSentence++;
+        }
+
+        return size <= 140 && endOfSentence <= 1;
+    }
+
     @PutMapping("/{id}")
     public ResponseEntity<Activity> updateActivity(@PathVariable("id") long id, @RequestBody Activity activity) {
         Optional<Activity> activityData = activityRepository.findById(id);
@@ -69,7 +95,7 @@ public class ActivityController {
             Activity newActivity = activityData.get();
             if (!isNullOrEmpty(activity.id)) newActivity.id = activity.id;
             newActivity.image_path = activity.image_path;
-            if (!isNullOrEmpty(activity.title)) newActivity.title = activity.title;
+            if (!isNullOrEmpty(activity.title) && isValidTitle(activity.title)) newActivity.title = activity.title;
             if (activity.consumption_in_wh > 0) newActivity.consumption_in_wh = activity.consumption_in_wh;
             if (!isNullOrEmpty(activity.source) && isValidUrl(activity.source)) newActivity.source = activity.source;
             return ResponseEntity.ok(activityRepository.save(newActivity));

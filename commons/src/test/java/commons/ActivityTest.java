@@ -33,7 +33,7 @@ public class ActivityTest {
 
     @Test
     public void hasToString() {
-        var q =new Activity("Activity-ID", "00/test.png", "Title", 6, "q").toString();
+        var q = new Activity("Activity-ID", "00/test.png", "Title", 6, "q").toString();
         assertTrue(q.contains(Activity.class.getSimpleName()));
         assertTrue(q.contains("title="));
         assertTrue(q.contains("Title"));
