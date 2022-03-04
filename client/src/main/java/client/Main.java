@@ -40,8 +40,9 @@ public class Main extends Application {
         var single = FXML.load(SinglePlayerCtrl.class, "client", "scenes", "SinglePlayer.fxml");
         var multi = FXML.load(MultiPlayerCtrl.class, "client", "scenes", "Multiplayer.fxml");
         var leaderboard = FXML.load(LeaderBoardCtrl.class, "client", "scenes", "LeaderBoard.fxml");
+        var lobby = FXML.load(LobbyCtrl.class, "client", "scenes", "Lobby.fxml");
         var mainCtrl = INJECTOR.getInstance(MainCtrl.class);
 
-        mainCtrl.initialize(primaryStage, home, single, multi, leaderboard);
+        mainCtrl.initialize(primaryStage, home, single, multi, leaderboard, lobby);
     }
 }

@@ -37,11 +37,14 @@ public class MainCtrl {
     private LeaderBoardCtrl leaderBoardCtrl;
     private Scene leaderboard;
 
+    private LobbyCtrl lobbyCtrl;
+    private Scene lobby;
+
     private SimpleUser player;
 
     public void initialize(Stage primaryStage, Pair<SplashScreenCtrl, Parent> splash, Pair<SinglePlayerCtrl,
-            Parent> single, Pair<MultiPlayerCtrl, Parent> multi,
-                           Pair<LeaderBoardCtrl, Parent> leaderboard) {
+                           Parent> single, Pair<MultiPlayerCtrl, Parent> multi,
+                           Pair<LeaderBoardCtrl, Parent> leaderboard, Pair<LobbyCtrl, Parent> lobby) {
         this.primaryStage = primaryStage;
         this.splashCtrl = splash.getKey();
         this.splash = new Scene(splash.getValue());
@@ -54,6 +57,9 @@ public class MainCtrl {
 
         this.leaderBoardCtrl = leaderboard.getKey();
         this.leaderboard = new Scene(leaderboard.getValue());
+
+        this.lobbyCtrl = lobby.getKey();
+        this.lobby = new Scene(lobby.getValue());
 
         showSplash();
         primaryStage.show();
@@ -77,6 +83,11 @@ public class MainCtrl {
     public void showLeaderBoard() {
         primaryStage.setTitle("Quizzz leader board");
         primaryStage.setScene(leaderboard);
+    }
+
+    public void showLobby() {
+        primaryStage.setTitle("Quizzz lobby");
+        primaryStage.setScene(lobby);
     }
 
     public SimpleUser getPlayer() {
