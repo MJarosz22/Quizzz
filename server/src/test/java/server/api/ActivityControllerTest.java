@@ -128,6 +128,22 @@ public class ActivityControllerTest {
         assertEquals(6, sut.getAll().get(3).id);
     }
 
+    @Test
+    public void testInvalidTitle() {
+        var actual = sut.addActivity(
+                getActivity("Boil 2L of water. There are 2 sentences!", 120, "https://www.some-site.com")
+        );
+        assertEquals(BAD_REQUEST, actual.getStatusCode());
+    }
+
+    @Test
+    public void testInvalidUrl() {
+        var actual = sut.addActivity(
+                getActivity("Boil 2L of water.", 120, "not-a-site")
+        );
+        assertEquals(BAD_REQUEST, actual.getStatusCode());
+    }
+
 
     private static Activity getActivity(String title, int consumption, String source) {
         return new Activity(title, consumption, source);
@@ -140,6 +156,7 @@ public class ActivityControllerTest {
             System.out.println(activity);
         });
     }
+
 
     @SuppressWarnings("serial")
     public class MyRandom extends Random {
