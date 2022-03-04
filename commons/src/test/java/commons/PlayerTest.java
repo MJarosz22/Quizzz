@@ -20,7 +20,7 @@ public class PlayerTest {
     public void equalsHashCode() {
         GameInstance gi = new GameInstance(0, GameInstance.SINGLE_PLAYER);
         var a = new Player(0, "Marcin", gi, "cookietest");
-        var b = new Player(0, "Rafael", gi, "cookietest");
+        var b = new Player(0, "Marcin", gi, "cookietest");
         assertEquals(a, b);
         assertEquals(a.hashCode(), b.hashCode());
     }
