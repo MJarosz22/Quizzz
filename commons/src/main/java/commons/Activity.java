@@ -4,20 +4,24 @@ import org.apache.commons.lang3.builder.EqualsBuilder;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
 import org.apache.commons.lang3.builder.ToStringBuilder;
 
+
 import javax.persistence.*;
 
 @Entity
 public class Activity {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
-    public long activityID;
+    @GeneratedValue(strategy=GenerationType.IDENTITY)
+    public Long activityID;
 
     public String id; //id provided by activity-bank (i.e. "00-shower")
 
     public String image_path;
+
     public String title;
-    public int consumption_in_wh;
+
+    public Long consumption_in_wh; //some values in the JSON file are outside the Integer length, so we have to use long
+
     public String source;
 
     @SuppressWarnings("unused")
@@ -25,12 +29,48 @@ public class Activity {
 
     }
 
-    public Activity(String id, String image_path, String title, int consumption_in_wh, String source) {
+    public Activity(String id, String image_path, String title, Long consumption_in_wh, String source) {
         this.id = id;
         this.image_path = image_path;
         if(image_path == null) image_path = "";
         this.title = title;
         this.consumption_in_wh = consumption_in_wh;
+        this.source = source;
+    }
+
+    public void setId(String id) {
+        this.id = id;
+    }
+
+    public String getImage_path() {
+        return image_path;
+    }
+
+    public void setImage_path(String image_path) {
+        this.image_path = image_path;
+    }
+
+    public String getTitle() {
+        return title;
+    }
+
+    public void setTitle(String title) {
+        this.title = title;
+    }
+
+    public Long getConsumption_in_wh() {
+        return consumption_in_wh;
+    }
+
+    public void setConsumption_in_wh(Long consumption_in_wh) {
+        this.consumption_in_wh = consumption_in_wh;
+    }
+
+    public String getSource() {
+        return source;
+    }
+
+    public void setSource(String source) {
         this.source = source;
     }
 
