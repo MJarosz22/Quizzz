@@ -13,7 +13,7 @@ import javax.persistence.Id;
 public class Activity {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
+    @GeneratedValue()
     public long id;
 
     public String title;
