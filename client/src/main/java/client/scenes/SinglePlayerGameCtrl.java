@@ -111,9 +111,7 @@ public class SinglePlayerGameCtrl implements Initializable {
         if (((MultipleChoiceQuestion) currentQuestion).getAnswer().equals(currentQuestion.getActivities()[0])) {
             //set the color to green
             correctAnswer();
-        }
-        //set the color to red
-        else wrongAnswer();
+        } else wrongAnswer();
     }
 
     public void option2Selected() {
@@ -127,9 +125,7 @@ public class SinglePlayerGameCtrl implements Initializable {
         if (((MultipleChoiceQuestion) currentQuestion).getAnswer().equals(currentQuestion.getActivities()[2])) {
             //set the color to green
             correctAnswer();
-        }
-        //set the color to red
-        else wrongAnswer();
+        } else wrongAnswer();
     }
 
     public void correctAnswer() {
