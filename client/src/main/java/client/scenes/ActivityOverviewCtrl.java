@@ -2,7 +2,7 @@ package client.scenes;
 
 import client.utils.ServerUtils;
 import commons.Activity;
-import javafx.beans.property.SimpleIntegerProperty;
+import javafx.beans.property.SimpleLongProperty;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
@@ -60,7 +60,7 @@ public class ActivityOverviewCtrl implements Initializable {
         columnTitle.setCellValueFactory(q -> new SimpleStringProperty(q.getValue().title));
         columnTitle.setCellFactory(TextFieldTableCell.forTableColumn());
 
-        columnConsumption.setCellValueFactory(q -> new SimpleIntegerProperty(q.getValue().consumption_in_wh));
+        columnConsumption.setCellValueFactory(q -> new SimpleLongProperty(q.getValue().consumption_in_wh));
         columnConsumption.setCellFactory(TextFieldTableCell.forTableColumn(new NumberStringConverter()));
 
         columnSource.setCellValueFactory(q -> new SimpleStringProperty(q.getValue().source));
@@ -96,7 +96,7 @@ public class ActivityOverviewCtrl implements Initializable {
 
     public void editConsumption(TableColumn.CellEditEvent<Activity, Number> productStringCellEditEvent) {
         Activity activity = table.getSelectionModel().getSelectedItem();
-        activity.consumption_in_wh = productStringCellEditEvent.getNewValue().intValue();
+        activity.consumption_in_wh = productStringCellEditEvent.getNewValue().longValue();
         server.updateActivity(activity);
         refresh();
     }
