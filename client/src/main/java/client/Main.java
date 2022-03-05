@@ -38,10 +38,12 @@ public class Main extends Application {
     public void start(Stage primaryStage) throws IOException {
         var home = FXML.load(SplashScreenCtrl.class, "client", "scenes", "SplashScreen.fxml");
         var single = FXML.load(SinglePlayerCtrl.class, "client", "scenes", "SinglePlayer.fxml");
+        var singleGame = FXML.load(SinglePlayerGameCtrl.class, "client", "scenes", "SinglePlayerGame.fxml");
+        var singleGameOver = FXML.load(SinglePlayerGameOverCtrl.class, "client", "scenes", "SinglePlayerGameOver.fxml");
         var multi = FXML.load(MultiPlayerCtrl.class, "client", "scenes", "Multiplayer.fxml");
         var leaderboard = FXML.load(LeaderBoardCtrl.class, "client", "scenes", "LeaderBoard.fxml");
         var mainCtrl = INJECTOR.getInstance(MainCtrl.class);
 
-        mainCtrl.initialize(primaryStage, home, single, multi, leaderboard);
+        mainCtrl.initialize(primaryStage, home, single, singleGame, singleGameOver, multi, leaderboard);
     }
 }

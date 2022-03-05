@@ -25,15 +25,24 @@ public class GameInstance {
     }
 
     /**
+     * Temporary only for single player purposes.
+     */
+    public GameInstance() {
+        this.type = SINGLE_PLAYER;
+        players = new ArrayList<>();
+    }
+
+    /**
      * Generates 20 questions based on 60 activities
+     *
      * @param activities
      * @return
      */
     public void generateQuestions(Activity[] activities) {
-        if(activities.length != 60) throw new IllegalArgumentException();
+        if (activities.length != 60) throw new IllegalArgumentException();
         List<Question> questions = new ArrayList<>();
-        for(int i = 0; i < 20; i++){
-            questions.add(new MultipleChoiceQuestion(new Activity[]{activities[3*i], activities[3*i + 1], activities[3*i + 2]}));
+        for (int i = 0; i < 20; i++) {
+            questions.add(new MultipleChoiceQuestion(new Activity[]{activities[3 * i], activities[3 * i + 1], activities[3 * i + 2]}));
         }
         this.questions = questions;
     }
