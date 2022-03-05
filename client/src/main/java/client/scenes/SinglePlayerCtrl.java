@@ -2,12 +2,10 @@ package client.scenes;
 
 import client.utils.ServerUtils;
 import com.google.inject.Inject;
-import commons.Player;
 import commons.SimpleUser;
 import javafx.fxml.FXML;
 import javafx.scene.control.TextField;
 
-import java.util.Objects;
 
 public class SinglePlayerCtrl {
 
