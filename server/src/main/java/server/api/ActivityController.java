@@ -95,9 +95,11 @@ public class ActivityController {
             Activity newActivity = activityData.get();
             if (!isNullOrEmpty(activity.getId())) newActivity.setId(activity.getId());
             newActivity.setImage_path(activity.getImage_path());
-            if (!isNullOrEmpty(activity.getTitle()) && isValidTitle(activity.getTitle())) newActivity.setTitle(activity.getTitle());
+            if (!isNullOrEmpty(activity.getTitle()) && isValidTitle(activity.getTitle()))
+                newActivity.setTitle(activity.getTitle());
             if (activity.getConsumption_in_wh() > 0) newActivity.setConsumption_in_wh(activity.getConsumption_in_wh());
-            if (!isNullOrEmpty(activity.getSource()) && isValidUrl(activity.getSource())) newActivity.setSource(activity.getSource());
+            if (!isNullOrEmpty(activity.getSource()) && isValidUrl(activity.getSource()))
+                newActivity.setSource(activity.getSource());
             return ResponseEntity.ok(activityRepository.save(newActivity));
         }
         return ResponseEntity.notFound().build();
