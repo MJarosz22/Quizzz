@@ -79,7 +79,8 @@ public class GameController {
     }
 
     @GetMapping("/{gameInstanceId}/q{questionNumber}")
-    public ResponseEntity<Question> getQuestion(@PathVariable int gameInstanceId, @PathVariable int questionNumber, @CookieValue(name = "user-id", defaultValue = "null") String cookie) {
+    public ResponseEntity<Question> getQuestion(@PathVariable int gameInstanceId, @PathVariable int questionNumber,
+                                                @CookieValue(name = "user-id", defaultValue = "null") String cookie) {
         if (gameInstanceId < 0 || gameInstanceId > gameInstances.size() - 1
                 || questionNumber > 19 || questionNumber < 0) return ResponseEntity.badRequest().build();
         GameInstance currGI = gameInstances.get(gameInstanceId);
