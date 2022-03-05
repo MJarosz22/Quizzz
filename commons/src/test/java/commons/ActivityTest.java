@@ -10,9 +10,9 @@ public class ActivityTest {
     @Test
     public void checkConstructor() {
         var q = new Activity("Activity-ID", "00/test.png", "Title", 6, "q");
-        assertEquals("Title", q.title);
-        assertEquals(6, q.consumption_in_wh);
-        assertEquals("q", q.source);
+        assertEquals("Title", q.getTitle());
+        assertEquals(6, q.getConsumption_in_wh());
+        assertEquals("q", q.getSource());
     }
 
     @Test

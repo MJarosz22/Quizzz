@@ -70,7 +70,7 @@ public class ActivityControllerTest {
         sut.addActivity(getActivity("id-3", "00/3.png", "Take a shower for 10 minutes", 60, "https://www.showers.com"));
 
         var actual = getActivity("id-1", "00/1.png", "Activity changed by using updateActivity method", 65, "https://www.my-idea.com");
-        actual.activityID = 2;
+        actual.setActivityID(2);
 
         printActivities(sut);
         System.out.println();
@@ -125,7 +125,7 @@ public class ActivityControllerTest {
         sut.addActivity(new Activity("id-23", "00/23.png", "test1", 10, "https://www.google.com/?client=safari"));
         sut.addActivity(new Activity("id-213", "00/213.png", "test2", 11, "https://www.google.com/?client=safari"));
         sut.addActivity(new Activity("id-452", "00/452.png", "test3", 113, "https://www.google.com/?client=safari"));
-        assertEquals(6, sut.getAll().get(3).activityID);
+        assertEquals(6, sut.getAll().get(3).getActivityID());
     }
 
     @Test

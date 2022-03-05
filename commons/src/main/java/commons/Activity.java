@@ -11,14 +11,14 @@ public class Activity {
 
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
-    public long activityID;
+    private long activityID;
 
-    public String id; //id provided by activity-bank (i.e. "00-shower")
+    private String id; //id provided by activity-bank (i.e. "00-shower")
 
-    public String image_path;
-    public String title;
-    public int consumption_in_wh;
-    public String source;
+    private String image_path;
+    private String title;
+    private int consumption_in_wh;
+    private String source;
 
     @SuppressWarnings("unused")
     public Activity() {
@@ -76,8 +76,51 @@ public class Activity {
                 .toString();
     }
 
-    public long getId() {
+    public long getActivityID() {
         return activityID;
     }
 
+    public void setActivityID(long activityID) {
+        this.activityID = activityID;
+    }
+
+    public String getId() {
+        return id;
+    }
+
+    public void setId(String id) {
+        this.id = id;
+    }
+
+    public String getImage_path() {
+        return image_path;
+    }
+
+    public void setImage_path(String image_path) {
+        this.image_path = image_path;
+    }
+
+    public String getTitle() {
+        return title;
+    }
+
+    public void setTitle(String title) {
+        this.title = title;
+    }
+
+    public int getConsumption_in_wh() {
+        return consumption_in_wh;
+    }
+
+    public void setConsumption_in_wh(int consumption_in_wh) {
+        this.consumption_in_wh = consumption_in_wh;
+    }
+
+    public String getSource() {
+        return source;
+    }
+
+    public void setSource(String source) {
+        this.source = source;
+    }
 }

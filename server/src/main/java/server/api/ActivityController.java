@@ -31,20 +31,20 @@ public class ActivityController {
 
     @PostMapping(path = {"", "/"})
     public ResponseEntity<Activity> addActivity(@RequestBody Activity activity) {
-        if (isNullOrEmpty(activity.source)
-                || isNullOrEmpty(activity.id)
-                || !isValidUrl(activity.source)
-                || isNullOrEmpty(activity.title)
-                || !isValidTitle(activity.title)
-                || activity.consumption_in_wh <= 0) {
+        if (isNullOrEmpty(activity.getSource())
+                || isNullOrEmpty(activity.getId())
+                || !isValidUrl(activity.getSource())
+                || isNullOrEmpty(activity.getTitle())
+                || !isValidTitle(activity.getTitle())
+                || activity.getConsumption_in_wh() <= 0) {
             return ResponseEntity.badRequest().build();
         }
         Activity savedActivity = activityRepository.save(new Activity(
-                activity.id,
-                activity.image_path,
-                activity.title,
-                activity.consumption_in_wh,
-                activity.source));
+                activity.getId(),
+                activity.getImage_path(),
+                activity.getTitle(),
+                activity.getConsumption_in_wh(),
+                activity.getSource()));
         return ResponseEntity.ok(savedActivity);
     }
 
@@ -93,11 +93,11 @@ public class ActivityController {
         Optional<Activity> activityData = activityRepository.findById(id);
         if (activityData.isPresent()) {
             Activity newActivity = activityData.get();
-            if (!isNullOrEmpty(activity.id)) newActivity.id = activity.id;
-            newActivity.image_path = activity.image_path;
-            if (!isNullOrEmpty(activity.title) && isValidTitle(activity.title)) newActivity.title = activity.title;
-            if (activity.consumption_in_wh > 0) newActivity.consumption_in_wh = activity.consumption_in_wh;
-            if (!isNullOrEmpty(activity.source) && isValidUrl(activity.source)) newActivity.source = activity.source;
+            if (!isNullOrEmpty(activity.getId())) newActivity.setId(activity.getId());
+            newActivity.setImage_path(activity.getImage_path());
+            if (!isNullOrEmpty(activity.getTitle()) && isValidTitle(activity.getTitle())) newActivity.setTitle(activity.getTitle());
+            if (activity.getConsumption_in_wh() > 0) newActivity.setConsumption_in_wh(activity.getConsumption_in_wh());
+            if (!isNullOrEmpty(activity.getSource()) && isValidUrl(activity.getSource())) newActivity.setSource(activity.getSource());
             return ResponseEntity.ok(activityRepository.save(newActivity));
         }
         return ResponseEntity.notFound().build();
