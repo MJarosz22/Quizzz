@@ -65,17 +65,30 @@ public class GameController {
      * @return Simple User (Including name, cookie and gameInstanceID)
      */
     @PostMapping("/join")
-    public ResponseEntity<SimpleUser> addPlayer(@RequestBody String name) {
+    public ResponseEntity<Player> addPlayer(@RequestBody String name) {
         if (isNullOrEmpty(name)) return ResponseEntity.badRequest().build();
 
         ResponseCookie tokenCookie = ResponseCookie.from("user-id", DigestUtils.md5DigestAsHex(
                 (name + System.currentTimeMillis()).getBytes(StandardCharsets.UTF_8))).build();
 
-        SimpleUser savedPlayer = new SimpleUser(players.size(), name, gameInstances.get(gameInstances.size() - 1).getId(), tokenCookie.getValue());
+        Player savedPlayer = new Player(players.size(), name, gameInstances.get(gameInstances.size() - 1), tokenCookie.getValue());
         players.add(savedPlayer);
         gameInstances.get(gameInstances.size() - 1).getPlayers().add(savedPlayer.toPlayer(gameInstances.get(gameInstances.size() - 1)));
         logger.info("[GI " + (gameInstances.size() - 1) + "] PLAYER (" + savedPlayer.getId() + ") JOINED: NAME=" + savedPlayer.getName());
         return ResponseEntity.ok().header(HttpHeaders.SET_COOKIE, tokenCookie.toString()).body(savedPlayer);
+    }
+
+    @PostMapping("/single-player")
+    public ResponseEntity<SimpleUser> addSimpleUser(@RequestBody String name) {
+        if (isNullOrEmpty(name)) return ResponseEntity.badRequest().build();
+
+        gameInstances.add(new GameInstance(gameInstances.size()-1, 0));
+        SimpleUser savedPlayer = new SimpleUser(players.size(), name, gameInstances.get(gameInstances.size() - 1).getId());
+        players.add(savedPlayer);
+        gameInstances.get(gameInstances.size() - 1).getPlayers().add(savedPlayer.toPlayer(gameInstances.get(gameInstances.size() - 1)));
+        logger.info("[GI " + (gameInstances.size() - 1) + "] PLAYER (" + savedPlayer.getId() + ") JOINED: NAME=" + savedPlayer.getName());
+
+        return ResponseEntity.ok(savedPlayer);
     }
 
     @GetMapping("/{gameInstanceId}/q{questionNumber}")

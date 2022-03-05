@@ -16,6 +16,7 @@
 package client.utils;
 
 import commons.Activity;
+import commons.Player;
 import commons.SimpleUser;
 import jakarta.ws.rs.client.Client;
 import jakarta.ws.rs.client.ClientBuilder;
@@ -62,12 +63,21 @@ public class ServerUtils {
                 .post(Entity.entity(activity, APPLICATION_JSON), Activity.class);
     }
 
-    public SimpleUser addPlayer(String name) {
+    public Player addPlayer(String name) {
         Client client = ClientBuilder.newClient(new ClientConfig());
-        return client //
-                .target(SERVER).path("api/game/join") //
-                .request(APPLICATION_JSON) //
-                .accept(APPLICATION_JSON) //
+        return client
+                .target(SERVER).path("api/game/join")
+                .request(APPLICATION_JSON)
+                .accept(APPLICATION_JSON)
+                .post(Entity.entity(name, TEXT_PLAIN), Player.class);
+    }
+
+    public SimpleUser addSimpleUser(String name) {
+        Client client = ClientBuilder.newClient(new ClientConfig());
+        return client
+                .target(SERVER).path("api/game/single-player")
+                .request(APPLICATION_JSON)
+                .accept(APPLICATION_JSON)
                 .post(Entity.entity(name, TEXT_PLAIN), SimpleUser.class);
     }
 

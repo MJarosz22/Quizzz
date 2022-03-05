@@ -22,6 +22,7 @@ public class Player extends SimpleUser {
     private ArrayList<PowerUp> powerUpUsed;
 
     private GameInstance gameInstance;
+    private String cookie;
 
     public Player() {
         super();
@@ -29,7 +30,8 @@ public class Player extends SimpleUser {
     }
 
     public Player(long id, String name, GameInstance gameInstance, String cookie) {
-        super(id, name, gameInstance.getId(), cookie);
+        super(id, name, gameInstance.getId());
+        this.cookie = cookie;
         this.status = 0;
         this.powerUpUsed = new ArrayList<>();
         this.gameInstance = gameInstance;
@@ -53,6 +55,14 @@ public class Player extends SimpleUser {
 
     public void addPowerUp(PowerUp powerUp) {
         this.powerUpUsed.add(powerUp);
+    }
+
+    public String getCookie() {
+        return cookie;
+    }
+
+    public void setCookie(String cookie) {
+        this.cookie = cookie;
     }
 
     @Override
@@ -79,7 +89,7 @@ public class Player extends SimpleUser {
      * @return SimpleUser from this Player
      */
     public SimpleUser toSimpleUser() {
-        return new SimpleUser(getId(), getName(), gameInstance.getId(), getCookie());
+        return new SimpleUser(getId(), getName(), gameInstance.getId());
     }
 
 }

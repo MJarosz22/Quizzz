@@ -15,6 +15,7 @@
  */
 package client.scenes;
 
+import commons.Player;
 import commons.SimpleUser;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
@@ -87,6 +88,7 @@ public class MainCtrl {
     public void showSinglePlayerGame() {
         primaryStage.setTitle("Quizz single");
         primaryStage.setScene(singleGame);
+        singlePlayerGameCtrl.initialize();
     }
 
     public void showMultiPlayerMode() {

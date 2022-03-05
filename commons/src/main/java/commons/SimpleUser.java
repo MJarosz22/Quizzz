@@ -28,19 +28,20 @@ public class SimpleUser {
     @Column(name = "score")
     private int score;
 
+    /* Don't think we need a cookie for single player
     @Column(name = "cookie")
     private String cookie;
-
+*/
 
     public SimpleUser() {
 
     }
 
-    public SimpleUser(long id, String name, int gameInstanceId, String cookie) {
+    public SimpleUser(long id, String name, int gameInstanceId) {
         this.name = name;
         this.id = id;
         this.gameInstanceId = gameInstanceId;
-        this.cookie = cookie;
+        //this.cookie = cookie;
     }
 
     public String getName() {
@@ -70,7 +71,7 @@ public class SimpleUser {
     public void setId(long id) {
         this.id = id;
     }
-
+/*
     public String getCookie() {
         return cookie;
     }
@@ -78,7 +79,7 @@ public class SimpleUser {
     public void setCookie(String cookie) {
         this.cookie = cookie;
     }
-
+*/
     public int getGameInstanceId() {
         return gameInstanceId;
     }
@@ -95,12 +96,14 @@ public class SimpleUser {
 
         SimpleUser that = (SimpleUser) o;
 
-        return new EqualsBuilder().append(id, that.id).append(score, that.score).append(name, that.name).append(cookie, that.cookie).isEquals();
+        return new EqualsBuilder().append(id, that.id).append(score, that.score).append(name, that.name)//.append(cookie, that.cookie)
+        .isEquals();
     }
 
     @Override
     public int hashCode() {
-        return new HashCodeBuilder(17, 37).append(id).append(name).append(score).append(cookie).toHashCode();
+        return new HashCodeBuilder(17, 37).append(id).append(name).append(score)//.append(cookie)
+        .toHashCode();
     }
 
     @Override
@@ -110,16 +113,16 @@ public class SimpleUser {
                 .append("gameInstanceId", gameInstanceId)
                 .append("name", name)
                 .append("score", score)
-                .append("cookie", cookie)
+                //.append("cookie", cookie)
                 .toString();
     }
 
     public Player toPlayer(GameInstance gameInstance) {
-        return new Player(id, name, gameInstance, cookie);
+        return new Player(id, name, gameInstance,null);
     }
-
+/*
     public SimpleUser unsafe() {
         return new SimpleUser(id, name, gameInstanceId, null);
     }
-
+*/
 }

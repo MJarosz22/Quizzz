@@ -4,30 +4,27 @@ import client.utils.ServerUtils;
 import com.google.inject.Inject;
 import commons.*;
 import javafx.fxml.FXML;
-import javafx.fxml.Initializable;
 import javafx.scene.control.Button;
 import javafx.scene.control.ProgressBar;
 import javafx.scene.image.ImageView;
 import javafx.scene.text.Text;
 
-import java.net.URL;
 import java.util.*;
 
-public class SinglePlayerGameCtrl implements Initializable {
+//Note that in the future, we can make this controller and its scene suitable for multiplayer games as well
+public class SinglePlayerGameCtrl {
 
     private final ServerUtils server;
     private final MainCtrl mainCtrl;
 
-    //TODO: For now there is only GameInstance, we are not making use of the player stored on the server
-    //private SimpleUser player;
+    private SimpleUser player;
 
     private GameInstance currentGame;
     private Queue<Question> gameQuestions = new LinkedList<>();
     private Question currentQuestion;
 
 
-    int temporaryCounter = 1;
-    int temporaryScore = 0;
+    int temporaryCounter;
 
     @FXML
     private Text questionTitle;
@@ -67,27 +64,32 @@ public class SinglePlayerGameCtrl implements Initializable {
     public SinglePlayerGameCtrl(ServerUtils server, MainCtrl mainCtrl) {
         this.server = server;
         this.mainCtrl = mainCtrl;
-        //this.player = player; (or something like this)
     }
 
     public void back() {
         mainCtrl.showSplash();
     }
 
-    @Override
-    public void initialize(URL location, ResourceBundle resources) {
-        currentGame = new GameInstance();
+
+    public void initialize() {
         //currentGame.generateQuestions(*list of activities*);
         //gameQuestions.addAll(currentGame.getQuestions());
+        if (this.mainCtrl.getPlayer() != null) {
+            this.player = mainCtrl.getPlayer();
+            currentGame = new GameInstance(this.player.getGameInstanceId(),0);
+            System.out.println(this.player);
+            System.out.println(this.currentGame);
+        }
         progressBar.setProgress(-0.05);
         score.setText("Your score: 0");
+        temporaryCounter = 1;
         loadNextQuestion();
     }
 
     public void loadNextQuestion() {
+        //TODO: add support for different question types
         //TODO: when we get the activity bank, we will replace the hardcoded currentQuestion
         //this.currentQuestion = gameQuestions.poll();
-        //TODO: add support for different question types
         Activity temporaryActivity1 = new Activity("correctAnswer", 100, "source");
         Activity temporaryActivity2 = new Activity("wrongAnswer", 100, "source");
         Activity temporaryActivity3 = new Activity("wrongAnswer", 100, "source");
@@ -129,13 +131,11 @@ public class SinglePlayerGameCtrl implements Initializable {
     }
 
     public void correctAnswer() {
+        player.addScore(100);
+        score.setText("Your score: " + player.getScore());
         //TODO:
-        //player.addScore(*the added score*)
         //set the color of the button to green
-        //score.setText("Your score: " + player.score);
         //make a prompt "correct answer"
-        temporaryScore += 100;
-        score.setText("Your score: " + temporaryScore);
 
         if (!isGameOver())
             loadNextQuestion();
