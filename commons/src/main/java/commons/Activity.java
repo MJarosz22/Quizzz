@@ -7,6 +7,7 @@ import org.apache.commons.lang3.builder.ToStringBuilder;
 import javax.persistence.*;
 
 @Entity
+@Table(name = "Activity")
 public class Activity {
 
     @Id
@@ -76,6 +77,7 @@ public class Activity {
                 .toString();
     }
 
+    @Column(name = "activityID")
     public long getActivityID() {
         return activityID;
     }
@@ -84,6 +86,7 @@ public class Activity {
         this.activityID = activityID;
     }
 
+    @Column(name = "id")
     public String getId() {
         return id;
     }
@@ -92,6 +95,7 @@ public class Activity {
         this.id = id;
     }
 
+    @Column(name = "image_path")
     public String getImage_path() {
         return image_path;
     }
@@ -100,6 +104,7 @@ public class Activity {
         this.image_path = image_path;
     }
 
+    @Column(name = "title")
     public String getTitle() {
         return title;
     }
@@ -108,6 +113,7 @@ public class Activity {
         this.title = title;
     }
 
+    @Column(name = "consumption_in_wh")
     public int getConsumption_in_wh() {
         return consumption_in_wh;
     }
@@ -116,6 +122,7 @@ public class Activity {
         this.consumption_in_wh = consumption_in_wh;
     }
 
+    @Column(name = "source")
     public String getSource() {
         return source;
     }
