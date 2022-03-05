@@ -71,15 +71,16 @@ public class SimpleUser {
     public void setId(long id) {
         this.id = id;
     }
-/*
-    public String getCookie() {
-        return cookie;
-    }
 
-    public void setCookie(String cookie) {
-        this.cookie = cookie;
-    }
-*/
+    /*
+        public String getCookie() {
+            return cookie;
+        }
+
+        public void setCookie(String cookie) {
+            this.cookie = cookie;
+        }
+    */
     public int getGameInstanceId() {
         return gameInstanceId;
     }
@@ -97,13 +98,13 @@ public class SimpleUser {
         SimpleUser that = (SimpleUser) o;
 
         return new EqualsBuilder().append(id, that.id).append(score, that.score).append(name, that.name)//.append(cookie, that.cookie)
-        .isEquals();
+                .isEquals();
     }
 
     @Override
     public int hashCode() {
         return new HashCodeBuilder(17, 37).append(id).append(name).append(score)//.append(cookie)
-        .toHashCode();
+                .toHashCode();
     }
 
     @Override
@@ -118,7 +119,7 @@ public class SimpleUser {
     }
 
     public Player toPlayer(GameInstance gameInstance) {
-        return new Player(id, name, gameInstance,null);
+        return new Player(id, name, gameInstance, null);
     }
 /*
     public SimpleUser unsafe() {

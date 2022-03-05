@@ -82,7 +82,7 @@ public class GameController {
     public ResponseEntity<SimpleUser> addSimpleUser(@RequestBody String name) {
         if (isNullOrEmpty(name)) return ResponseEntity.badRequest().build();
 
-        gameInstances.add(new GameInstance(gameInstances.size()-1, 0));
+        gameInstances.add(new GameInstance(gameInstances.size() - 1, 0));
         SimpleUser savedPlayer = new SimpleUser(players.size(), name, gameInstances.get(gameInstances.size() - 1).getId());
         players.add(savedPlayer);
         gameInstances.get(gameInstances.size() - 1).getPlayers().add(savedPlayer.toPlayer(gameInstances.get(gameInstances.size() - 1)));

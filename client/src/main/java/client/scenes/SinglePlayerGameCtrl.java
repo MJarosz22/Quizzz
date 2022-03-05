@@ -71,21 +71,27 @@ public class SinglePlayerGameCtrl {
     }
 
 
+    /**
+     * This method gets called when play button is pressed. Reset the board, set the player,
+     * set current game, reset the board
+     */
     public void initialize() {
-        //currentGame.generateQuestions(*list of activities*);
-        //gameQuestions.addAll(currentGame.getQuestions());
         if (this.mainCtrl.getPlayer() != null) {
             this.player = mainCtrl.getPlayer();
-            currentGame = new GameInstance(this.player.getGameInstanceId(),0);
-            System.out.println(this.player);
-            System.out.println(this.currentGame);
+            currentGame = new GameInstance(this.player.getGameInstanceId(), 0);
         }
+        //TODO: generate the questions from database
+        //currentGame.generateQuestions(*list of activities*);
+        //gameQuestions.addAll(currentGame.getQuestions());
         progressBar.setProgress(-0.05);
         score.setText("Your score: 0");
         temporaryCounter = 1;
         loadNextQuestion();
     }
 
+    /**
+     * This method gets called before every round. Load next question, update the board.
+     */
     public void loadNextQuestion() {
         //TODO: add support for different question types
         //TODO: when we get the activity bank, we will replace the hardcoded currentQuestion
@@ -109,6 +115,9 @@ public class SinglePlayerGameCtrl {
         //TODO: set the images, reset/start the timer, add timer logic, implement power-ups
     }
 
+    /**
+     * This method is called when in a multiple choice question, user selects option 1
+     */
     public void option1Selected() {
         if (((MultipleChoiceQuestion) currentQuestion).getAnswer().equals(currentQuestion.getActivities()[0])) {
             //set the color to green
@@ -130,6 +139,9 @@ public class SinglePlayerGameCtrl {
         } else wrongAnswer();
     }
 
+    /**
+     * User's answer was correct. Show that the answer was correct, update the score, start next round.
+     */
     public void correctAnswer() {
         player.addScore(100);
         score.setText("Your score: " + player.getScore());
@@ -145,6 +157,9 @@ public class SinglePlayerGameCtrl {
         }
     }
 
+    /**
+     * User's answer was correct. Show that the answer was incorrect, start next round.
+     */
     public void wrongAnswer() {
         //TODO:
         //set the color of the correct button to green
@@ -157,6 +172,9 @@ public class SinglePlayerGameCtrl {
         }
     }
 
+    /**
+     * Check if the game is over
+     */
     public boolean isGameOver() {
         //return this.gameQuestions.isEmpty();
         return 20 == temporaryCounter++;
