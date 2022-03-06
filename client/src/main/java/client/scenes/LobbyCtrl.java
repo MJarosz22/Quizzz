@@ -29,7 +29,7 @@ public class LobbyCtrl {
 //        mainCtrl.showPlayMode();
     }
 
-    public void setLabelName(String name){
+    public void setLabelName(String name) {
         labelName.setText(name);
     }
 }

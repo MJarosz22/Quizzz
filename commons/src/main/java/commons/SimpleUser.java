@@ -55,20 +55,20 @@ public class SimpleUser {
         return id;
     }
 
-    public void setScore(int score) {
-        this.score = score;
+    public void setId(long id) {
+        this.id = id;
     }
 
     public long getScore() {
         return score;
     }
 
-    public void addScore(int score) {
-        this.score += score;
+    public void setScore(int score) {
+        this.score = score;
     }
 
-    public void setId(long id) {
-        this.id = id;
+    public void addScore(int score) {
+        this.score += score;
     }
 
     public String getCookie() {

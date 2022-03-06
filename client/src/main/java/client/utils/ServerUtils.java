@@ -16,7 +16,6 @@
 package client.utils;
 
 import commons.Activity;
-import commons.Player;
 import commons.SimpleUser;
 import jakarta.ws.rs.client.Client;
 import jakarta.ws.rs.client.ClientBuilder;
@@ -43,15 +42,24 @@ public class ServerUtils {
         }
     }*/
 
+    public static List<SimpleUser> getPlayers(SimpleUser player) {
+        Client client = ClientBuilder.newClient(new ClientConfig());
+        return client //
+                .target(SERVER).path("api/game/ " + player.getGameInstanceId() + "/players") //
+                .request(APPLICATION_JSON).cookie("user-id", player.getCookie()) //
+                .accept(APPLICATION_JSON) //
+                .get(new GenericType<List<SimpleUser>>() {
+                });
+    }
 
     public List<Activity> getActivities() {
         return ClientBuilder.newClient(new ClientConfig())
                 .target(SERVER).path("api/activities")
                 .request(APPLICATION_JSON)
                 .accept(APPLICATION_JSON)
-                .get(new GenericType<List<Activity>>() {});
+                .get(new GenericType<List<Activity>>() {
+                });
     }
-
 
     public Activity addActivity(Activity activity) {
         return ClientBuilder.newClient(new ClientConfig())
@@ -71,21 +79,11 @@ public class ServerUtils {
                 .post(Entity.entity(name, TEXT_PLAIN), SimpleUser.class);
     }
 
-
     public Activity updateActivity(Activity activity) {
         return ClientBuilder.newClient(new ClientConfig())
                 .target(SERVER).path("api/activities/" + activity.getId())
                 .request(APPLICATION_JSON)
                 .accept(APPLICATION_JSON)
                 .put(Entity.entity(activity, APPLICATION_JSON), Activity.class);
-    }
-
-    public static List<SimpleUser> getPlayers(SimpleUser player) {
-        Client client = ClientBuilder.newClient(new ClientConfig());
-        return client //
-                .target(SERVER).path("api/game/ "+ player.getGameInstanceId() + "/players") //
-                .request(APPLICATION_JSON).cookie("user-id", player.getCookie()) //
-                .accept(APPLICATION_JSON) //
-                .get(new GenericType<List<SimpleUser>>(){});
     }
 }

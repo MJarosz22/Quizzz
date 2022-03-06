@@ -44,7 +44,7 @@ public class MainCtrl {
     private SimpleUser player;
 
     public void initialize(Stage primaryStage, Pair<SplashScreenCtrl, Parent> splash, Pair<SinglePlayerCtrl,
-                           Parent> single, Pair<MultiPlayerCtrl, Parent> multi,
+            Parent> single, Pair<MultiPlayerCtrl, Parent> multi,
                            Pair<LeaderBoardCtrl, Parent> leaderboard, Pair<LobbyCtrl, Parent> lobby) {
         this.primaryStage = primaryStage;
         this.splashCtrl = splash.getKey();

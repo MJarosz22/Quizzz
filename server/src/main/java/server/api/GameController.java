@@ -45,9 +45,9 @@ public class GameController {
 
         //TODO Make it so that these activities actually get merged into 20 questions and ensure there are no duplicates (if possible)
         List<Activity> allActivities = activityRepository.findAll();
-        if(allActivities.size() == 0){
+        if (allActivities.size() == 0) {
             logger.error("No activities found! Cannot generate questions for Gameinstance");
-        }else{
+        } else {
             Activity[] activities = new Activity[60];
 
             for (int i = 0; i < 60; i++) {
@@ -61,6 +61,10 @@ public class GameController {
 //    ---------------------------------------------------------------------------
 //    ---------------------------     PRE-LOBBY     -----------------------------
 //    ---------------------------------------------------------------------------
+
+    private static boolean isNullOrEmpty(String s) {
+        return s == null || s.isEmpty();
+    }
 
     /**
      * Lets a client join a gameInstance as a player
@@ -84,35 +88,31 @@ public class GameController {
 
     @GetMapping("/{gameInstanceId}/q{questionNumber}")
     public ResponseEntity<Question> getQuestion(@PathVariable int gameInstanceId, @PathVariable int questionNumber,
-                                                @CookieValue(name = "user-id", defaultValue = "null") String cookie){
-        if(gameInstanceId < 0 || gameInstanceId > gameInstances.size() - 1
+                                                @CookieValue(name = "user-id", defaultValue = "null") String cookie) {
+        if (gameInstanceId < 0 || gameInstanceId > gameInstances.size() - 1
                 || questionNumber > 19 || questionNumber < 0) return ResponseEntity.badRequest().build();
 
         Player currentPlayer = getPlayerFromGameInstance(gameInstanceId, cookie);
-        if(currentPlayer == null) return ResponseEntity.badRequest().build();
+        if (currentPlayer == null) return ResponseEntity.badRequest().build();
         GameInstance currGI = gameInstances.get(gameInstanceId);
         logger.info("[GI " + (currGI.getId()) + "] PLAYER (" + currentPlayer.getId() + ") REQUESTED QUESTION N. " + questionNumber);
         Question question = currGI.getQuestions().get(questionNumber);
         return ResponseEntity.ok(question);
     }
-
-    @GetMapping("/{gameInstanceId}/players")
-    public ResponseEntity<List<SimpleUser>> getPlayers(@PathVariable int gameInstanceId, @CookieValue(name = "user-id", defaultValue = "null") String cookie){
-        if(getPlayerFromGameInstance(gameInstanceId, cookie) == null) return ResponseEntity.badRequest().build();
-        return ResponseEntity.ok(gameInstances.get(gameInstanceId).getPlayers().stream().map(p -> p.toSimpleUser().unsafe()).collect(Collectors.toList()));
-    }
 //    ---------------------------------------------------------------------------
 //    --------------------     HELPER FUNCTIONS     -----------------------------
 //    ---------------------------------------------------------------------------
 
-    private Player getPlayerFromGameInstance(int gameInstanceId, String cookie){
-        GameInstance currGI = gameInstances.get(gameInstanceId);
-        Optional<Player> optPlayer = currGI.getPlayers().stream().filter(p -> p.getCookie().equals(cookie)).findFirst();
-        if(optPlayer.isEmpty()) return null;
-        else return optPlayer.get();
+    @GetMapping("/{gameInstanceId}/players")
+    public ResponseEntity<List<SimpleUser>> getPlayers(@PathVariable int gameInstanceId, @CookieValue(name = "user-id", defaultValue = "null") String cookie) {
+        if (getPlayerFromGameInstance(gameInstanceId, cookie) == null) return ResponseEntity.badRequest().build();
+        return ResponseEntity.ok(gameInstances.get(gameInstanceId).getPlayers().stream().map(p -> p.toSimpleUser().unsafe()).collect(Collectors.toList()));
     }
 
-    private static boolean isNullOrEmpty(String s) {
-        return s == null || s.isEmpty();
+    private Player getPlayerFromGameInstance(int gameInstanceId, String cookie) {
+        GameInstance currGI = gameInstances.get(gameInstanceId);
+        Optional<Player> optPlayer = currGI.getPlayers().stream().filter(p -> p.getCookie().equals(cookie)).findFirst();
+        if (optPlayer.isEmpty()) return null;
+        else return optPlayer.get();
     }
 }

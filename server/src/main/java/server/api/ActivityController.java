@@ -24,6 +24,20 @@ public class ActivityController {
         this.activityRepository = activityRepository;
     }
 
+    private static boolean isNullOrEmpty(String s) {
+        return s == null || s.isEmpty();
+    }
+
+    private static boolean isValidUrl(String url) {
+        try {
+            PropertyEditor urlEditor = new URLEditor();
+            urlEditor.setAsText(url);
+        } catch (IllegalArgumentException e) {
+            return false;
+        }
+        return true;
+    }
+
     @GetMapping(path = {"", "/"})
     public List<Activity> getAll() {
         return activityRepository.findAll();
@@ -37,20 +51,6 @@ public class ActivityController {
         }
         Activity savedActivity = activityRepository.save(new Activity(activity.title, activity.consumption, activity.source));
         return ResponseEntity.ok(savedActivity);
-    }
-
-    private static boolean isNullOrEmpty(String s) {
-        return s == null || s.isEmpty();
-    }
-
-    private static boolean isValidUrl(String url) {
-        try {
-            PropertyEditor urlEditor = new URLEditor();
-            urlEditor.setAsText(url);
-        } catch (IllegalArgumentException e) {
-            return false;
-        }
-        return true;
     }
 
     @PutMapping("/{id}")
