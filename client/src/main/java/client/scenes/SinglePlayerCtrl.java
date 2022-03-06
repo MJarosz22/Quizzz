@@ -40,6 +40,7 @@ public class SinglePlayerCtrl {
             SimpleUser player = server.addPlayer(getTextField());
             mainCtrl.setPlayer(player);
             System.out.println(player);
+            mainCtrl.showLobby();
             //TODO ADD mainCtrl.showLobby(); and have a place to store SimpleUser Client-wide
         }
     }

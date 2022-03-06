@@ -16,6 +16,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 import java.util.Random;
+import java.util.stream.Collectors;
 
 @RestController
 @RequestMapping("api/game")
@@ -43,12 +44,17 @@ public class GameController {
         gameInstances.add(new GameInstance(gameInstances.size(), GameInstance.MULTI_PLAYER));
 
         //TODO Make it so that these activities actually get merged into 20 questions and ensure there are no duplicates (if possible)
-        Activity[] activities = new Activity[60];
         List<Activity> allActivities = activityRepository.findAll();
-        for (int i = 0; i < 60; i++) {
-            activities[i] = allActivities.get(random.nextInt(allActivities.size()));
+        if(allActivities.size() == 0){
+            logger.error("No activities found! Cannot generate questions for Gameinstance");
+        }else{
+            Activity[] activities = new Activity[60];
+
+            for (int i = 0; i < 60; i++) {
+                activities[i] = allActivities.get(random.nextInt(allActivities.size()));
+            }
+            gameInstances.get(0).generateQuestions(activities);
         }
-        gameInstances.get(0).generateQuestions(activities);
         players = new ArrayList<>();
     }
 
@@ -77,20 +83,34 @@ public class GameController {
     }
 
     @GetMapping("/{gameInstanceId}/q{questionNumber}")
-    public ResponseEntity<Question> getQuestion(@PathVariable int gameInstanceId, @PathVariable int questionNumber, @CookieValue(name = "user-id", defaultValue = "null") String cookie){
+    public ResponseEntity<Question> getQuestion(@PathVariable int gameInstanceId, @PathVariable int questionNumber,
+                                                @CookieValue(name = "user-id", defaultValue = "null") String cookie){
         if(gameInstanceId < 0 || gameInstanceId > gameInstances.size() - 1
                 || questionNumber > 19 || questionNumber < 0) return ResponseEntity.badRequest().build();
+
+        Player currentPlayer = getPlayerFromGameInstance(gameInstanceId, cookie);
+        if(currentPlayer == null) return ResponseEntity.badRequest().build();
         GameInstance currGI = gameInstances.get(gameInstanceId);
-        Optional<Player> optPlayer = currGI.getPlayers().stream().filter(p -> p.getCookie().equals(cookie)).findFirst();
-        if(optPlayer.isEmpty()) return ResponseEntity.badRequest().build();
-        Player currentPlayer = optPlayer.get();
         logger.info("[GI " + (currGI.getId()) + "] PLAYER (" + currentPlayer.getId() + ") REQUESTED QUESTION N. " + questionNumber);
         Question question = currGI.getQuestions().get(questionNumber);
         return ResponseEntity.ok(question);
     }
+
+    @GetMapping("/{gameInstanceId}/players")
+    public ResponseEntity<List<SimpleUser>> getPlayers(@PathVariable int gameInstanceId, @CookieValue(name = "user-id", defaultValue = "null") String cookie){
+        if(getPlayerFromGameInstance(gameInstanceId, cookie) == null) return ResponseEntity.badRequest().build();
+        return ResponseEntity.ok(gameInstances.get(gameInstanceId).getPlayers().stream().map(p -> p.toSimpleUser().unsafe()).collect(Collectors.toList()));
+    }
 //    ---------------------------------------------------------------------------
 //    --------------------     HELPER FUNCTIONS     -----------------------------
 //    ---------------------------------------------------------------------------
+
+    private Player getPlayerFromGameInstance(int gameInstanceId, String cookie){
+        GameInstance currGI = gameInstances.get(gameInstanceId);
+        Optional<Player> optPlayer = currGI.getPlayers().stream().filter(p -> p.getCookie().equals(cookie)).findFirst();
+        if(optPlayer.isEmpty()) return null;
+        else return optPlayer.get();
+    }
 
     private static boolean isNullOrEmpty(String s) {
         return s == null || s.isEmpty();

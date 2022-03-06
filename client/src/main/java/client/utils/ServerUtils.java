@@ -16,6 +16,7 @@
 package client.utils;
 
 import commons.Activity;
+import commons.Player;
 import commons.SimpleUser;
 import jakarta.ws.rs.client.Client;
 import jakarta.ws.rs.client.ClientBuilder;
@@ -48,8 +49,7 @@ public class ServerUtils {
                 .target(SERVER).path("api/activities")
                 .request(APPLICATION_JSON)
                 .accept(APPLICATION_JSON)
-                .get(new GenericType<List<Activity>>() {
-                });
+                .get(new GenericType<List<Activity>>() {});
     }
 
 
@@ -78,6 +78,14 @@ public class ServerUtils {
                 .request(APPLICATION_JSON)
                 .accept(APPLICATION_JSON)
                 .put(Entity.entity(activity, APPLICATION_JSON), Activity.class);
+    }
 
+    public static List<SimpleUser> getPlayers(SimpleUser player) {
+        Client client = ClientBuilder.newClient(new ClientConfig());
+        return client //
+                .target(SERVER).path("api/game/ "+ player.getGameInstanceId() + "/players") //
+                .request(APPLICATION_JSON).cookie("user-id", player.getCookie()) //
+                .accept(APPLICATION_JSON) //
+                .get(new GenericType<List<SimpleUser>>(){});
     }
 }
