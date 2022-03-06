@@ -31,7 +31,7 @@ public class SinglePlayerCtrl {
             Player newPlayer = new Player(getTextField());
             server.addPlayer(newPlayer);
             this.textField.clear();
-            //mainCtrl.showPlayMode();
+            mainCtrl.showSinglePlayerGame();
         }
     }
 

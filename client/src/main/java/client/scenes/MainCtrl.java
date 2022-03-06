@@ -30,6 +30,10 @@ public class MainCtrl {
     private SinglePlayerCtrl singlePlayerCtrl;
     private Scene single;
 
+    private SinglePlayerGameCtrl singlePlayerGameCtrl;
+    private Scene singleGame;
+
+
     private MultiPlayerCtrl multiPlayerCtrl;
     private Scene multi;
 
@@ -39,8 +43,10 @@ public class MainCtrl {
     private LobbyCtrl lobbyCtrl;
     private Scene lobby;
 
-    public void initialize(Stage primaryStage, Pair<SplashScreenCtrl, Parent> splash, Pair<SinglePlayerCtrl,
-                           Parent> single, Pair<MultiPlayerCtrl, Parent> multi,
+    public void initialize(Stage primaryStage, Pair<SplashScreenCtrl, Parent> splash,
+                           Pair<SinglePlayerCtrl, Parent> single,
+                           Pair<SinglePlayerGameCtrl, Parent> singleGame,
+                           Pair<MultiPlayerCtrl, Parent> multi,
                            Pair<LeaderBoardCtrl, Parent> leaderboard, Pair<LobbyCtrl, Parent> lobby) {
         this.primaryStage = primaryStage;
         this.splashCtrl = splash.getKey();
@@ -48,6 +54,9 @@ public class MainCtrl {
 
         this.singlePlayerCtrl = single.getKey();
         this.single = new Scene(single.getValue());
+
+        this.singlePlayerGameCtrl = singleGame.getKey();
+        this.singleGame = new Scene(singleGame.getValue());
 
         this.multiPlayerCtrl = multi.getKey();
         this.multi = new Scene(multi.getValue());
@@ -70,6 +79,12 @@ public class MainCtrl {
     public void showSinglePlayerMode() {
         primaryStage.setTitle("Quizz single");
         primaryStage.setScene(single);
+    }
+
+    public void showSinglePlayerGame() {
+        primaryStage.setTitle("Quizz single");
+        primaryStage.setScene(singleGame);
+        //singlePlayerGameCtrl.initialize();
     }
 
     public void showMultiPlayerMode() {
