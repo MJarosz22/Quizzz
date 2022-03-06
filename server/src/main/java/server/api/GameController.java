@@ -85,7 +85,8 @@ public class GameController {
                         gameInstance.getId(), tokenCookie.getValue());
                 players.add(savedPlayer);
                 gameInstance.getPlayers().add(savedPlayer.toPlayer(gameInstance));
-                logger.info("[GI " + (gameInstance.getId()) + "] PLAYER (" + savedPlayer.getId() + ") STARTED SP GAME: NAME=" + savedPlayer.getName());
+                logger.info("[GI " + (gameInstance.getId()) + "] PLAYER (" + savedPlayer.getId() +
+                        ") STARTED SP GAME: NAME=" + savedPlayer.getName());
                 break;
 
             case GameInstance.MULTI_PLAYER:
@@ -94,7 +95,8 @@ public class GameController {
                         currGameInstance.getId(), tokenCookie.getValue());
                 players.add(savedPlayer);
                 currGameInstance.getPlayers().add(savedPlayer.toPlayer(currGameInstance));
-                logger.info("[GI " + (currGameInstance.getId()) + "] PLAYER (" + savedPlayer.getId() + ") JOINED: NAME=" + savedPlayer.getName());
+                logger.info("[GI " + (currGameInstance.getId()) + "] PLAYER (" + savedPlayer.getId() +
+                        ") JOINED: NAME=" + savedPlayer.getName());
                 break;
 
             default:
