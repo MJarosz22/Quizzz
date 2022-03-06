@@ -43,6 +43,7 @@ public class GameController {
         gameInstances.add(new GameInstance(gameInstances.size(), GameInstance.MULTI_PLAYER));
 /*
         //TODO Make it so that these activities actually get merged into 20 questions and ensure there are no duplicates (if possible)
+        // TODO: In order to make sure there are no duplicates, we can get use of "seeds".
         Activity[] activities = new Activity[60];
         List<Activity> allActivities = activityRepository.findAll();
         for (int i = 0; i < 60; i++) {
@@ -62,7 +63,7 @@ public class GameController {
      * Lets a client join a gameInstance as a player
      *
      * @param name Name of new player
-     * @return Simple User (Including name, cookie and gameInstanceID)
+     * @return Player (Including id, name, gameInstanceID and cookie info)
      */
     @PostMapping("/join")
     public ResponseEntity<Player> addPlayer(@RequestBody String name) {
@@ -78,6 +79,12 @@ public class GameController {
         return ResponseEntity.ok().header(HttpHeaders.SET_COOKIE, tokenCookie.toString()).body(savedPlayer);
     }
 
+    /**
+     * Lets a client join a gameInstance as a player for the SinglePlayer variant
+     *
+     * @param name Name of new player
+     * @return SimpleUser (Including id, name, and gameInstanceID)
+     */
     @PostMapping("/single-player")
     public ResponseEntity<SimpleUser> addSimpleUser(@RequestBody String name) {
         if (isNullOrEmpty(name)) return ResponseEntity.badRequest().build();

@@ -125,6 +125,9 @@ public class SinglePlayerGameCtrl {
         } else wrongAnswer();
     }
 
+    /**
+     * This method is called when in a multiple choice question, user selects option 2
+     */
     public void option2Selected() {
         if (((MultipleChoiceQuestion) currentQuestion).getAnswer().equals(currentQuestion.getActivities()[1])) {
             //set the color to green
@@ -132,6 +135,9 @@ public class SinglePlayerGameCtrl {
         } else wrongAnswer();
     }
 
+    /**
+     * This method is called when in a multiple choice question, user selects option 3
+     */
     public void option3Selected() {
         if (((MultipleChoiceQuestion) currentQuestion).getAnswer().equals(currentQuestion.getActivities()[2])) {
             //set the color to green
@@ -158,11 +164,11 @@ public class SinglePlayerGameCtrl {
     }
 
     /**
-     * User's answer was correct. Show that the answer was incorrect, start next round.
+     * User's answer was incorrect. Show that the answer was incorrect, start next round.
      */
     public void wrongAnswer() {
         //TODO:
-        //set the color of the correct button to green
+        //set the color of the correct button to red
         //make a prompt "wrong answer"
         if (!isGameOver())
             loadNextQuestion();
@@ -173,7 +179,8 @@ public class SinglePlayerGameCtrl {
     }
 
     /**
-     * Check if the game is over
+     * Check if the game is over.
+     * Note that this method compares temporaryCounter to 20, and increments its value AFTER the comparison
      */
     public boolean isGameOver() {
         //return this.gameQuestions.isEmpty();
