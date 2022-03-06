@@ -11,8 +11,9 @@
             prefWidth="960.0" style="-fx-background-color: #91e4fb;" xmlns="http://javafx.com/javafx/17"
             xmlns:fx="http://javafx.com/fxml/1" fx:controller="client.scenes.SinglePlayerGameCtrl">
     <children>
-        <Button layoutX="36.0" layoutY="473.0" mnemonicParsing="false" onAction="#back" text="Leave Game"/>
-        <ProgressBar fx:id="progressBar" layoutX="14.0" layoutY="508.0" prefHeight="18.0" prefWidth="942.0"
+        <Button layoutX="41.0" layoutY="434.0" mnemonicParsing="false" onAction="#back" prefHeight="68.0"
+                prefWidth="94.0" style="-fx-background-radius: 25;" text="LEAVE &#10;GAME" textAlignment="JUSTIFY"/>
+        <ProgressBar fx:id="progressBar" layoutX="12.0" layoutY="508.0" prefHeight="18.0" prefWidth="942.0"
                      progress="0.0"/>
         <Button fx:id="option1Button" layoutX="161.0" layoutY="336.0" mnemonicParsing="false"
                 onAction="#option1Selected" prefHeight="92.0" prefWidth="147.0" text="Option 1"/>
@@ -42,10 +43,10 @@
                 <Font size="14.0"/>
             </font>
         </Text>
-        <Text fx:id="questionCount" layoutX="417.0" layoutY="524.0" strokeType="OUTSIDE" strokeWidth="0.0"
-              text="Question 0/20" wrappingWidth="187.0">
+        <Text fx:id="questionCount" layoutX="423.0" layoutY="522.0" strokeType="OUTSIDE" strokeWidth="0.0"
+              text="Question 0/20" wrappingWidth="115.0">
             <font>
-                <Font size="18.0"/>
+                <Font size="16.0"/>
             </font>
         </Text>
     </children>
