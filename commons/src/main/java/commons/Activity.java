@@ -11,18 +11,18 @@ import javax.persistence.*;
 public class Activity {
 
     @Id
-    @GeneratedValue(strategy=GenerationType.IDENTITY)
-    public Long activityID;
+    @GeneratedValue(strategy = GenerationType.AUTO)
+    private Long activityID;
 
-    public String id; //id provided by activity-bank (i.e. "00-shower")
+    private String id; //id provided by activity-bank (i.e. "00-shower")
 
-    public String image_path;
+    private String image_path;
 
-    public String title;
+    private String title;
 
-    public Long consumption_in_wh; //some values in the JSON file are outside the Integer length, so we have to use long
+    private Long consumption_in_wh; //some values in the JSON file are outside the Integer length, so we have to use long
 
-    public String source;
+    private String source;
 
     @SuppressWarnings("unused")
     public Activity() {
@@ -42,6 +42,12 @@ public class Activity {
         this.id = id;
     }
 
+    @Column(name = "id")
+    public String getId() {
+        return this.id;
+    }
+
+    @Column(name = "image_path")
     public String getImage_path() {
         return image_path;
     }
@@ -50,6 +56,7 @@ public class Activity {
         this.image_path = image_path;
     }
 
+    @Column(name = "title")
     public String getTitle() {
         return title;
     }
@@ -58,6 +65,7 @@ public class Activity {
         this.title = title;
     }
 
+    @Column(name = "consumption_in_wh")
     public Long getConsumption_in_wh() {
         return consumption_in_wh;
     }
@@ -66,12 +74,22 @@ public class Activity {
         this.consumption_in_wh = consumption_in_wh;
     }
 
+    @Column(name = "source")
     public String getSource() {
         return source;
     }
 
     public void setSource(String source) {
         this.source = source;
+    }
+
+    @Column(name = "activityID")
+    public Long getActivityID() {
+        return this.activityID;
+    }
+
+    public void setActivityID(Long activityID) {
+        this.activityID = activityID;
     }
 
     @Override
@@ -116,8 +134,7 @@ public class Activity {
                 .toString();
     }
 
-    public long getId() {
-        return activityID;
-    }
+
+
 
 }
