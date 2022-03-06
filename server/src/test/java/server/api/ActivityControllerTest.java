@@ -42,9 +42,7 @@ public class ActivityControllerTest {
     private static void printActivities(ActivityController sut) {
         // Testing-purpose ONLY
         List<Activity> activities = sut.getAll();
-        activities.forEach(activity -> {
-            System.out.println(activity);
-        });
+        activities.forEach(System.out::println);
     }
 
     @BeforeEach

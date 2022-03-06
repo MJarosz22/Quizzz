@@ -1,42 +1,40 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
 <?import javafx.scene.control.*?>
-<?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.layout.*?>
 <?import javafx.scene.text.*?>
-<AnchorPane xmlns:fx="http://javafx.com/fxml/1" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="540.0"
-            prefWidth="960.0" style="-fx-background-color: #91e4fb;" xmlns="http://javafx.com/javafx/11.0.14-internal"
+
+<AnchorPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="540.0" prefWidth="960.0"
+            style="-fx-background-color: #91e4fb;" xmlns="http://javafx.com/javafx/11.0.14-internal" xmlns:fx="http://javafx.com/fxml/1"
             fx:controller="client.scenes.LobbyCtrl">
-    <children>
-        <Button layoutX="424.0" layoutY="443.0" mnemonicParsing="false" onAction="#play" prefWidth="90.0" style="-fx-background-color: #fff;"
-                text="PLAY">
-            <font>
-                <Font name="Courier New" size="24.0"/>
-            </font>
-        </Button>
-        <Button layoutX="83.0" layoutY="54.0" mnemonicParsing="false" onAction="#back" style="-fx-background-color: #fff;" text="LEAVE LOBBY">
-            <font>
-                <Font name="Courier New" size="15.0"/>
-            </font>
-        </Button>
-        <Text fill="WHITE" layoutX="287.0" layoutY="123.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Multiplayer Lobby">
-            <font>
-                <Font name="Courier New" size="36.0"/>
-            </font>
-        </Text>
-        <Text fill="WHITE" layoutX="316.0" layoutY="186.0" strokeType="OUTSIDE" strokeWidth="0.0" text="There are 000 players">
-            <font>
-                <Font name="Courier New" size="24.0"/>
-            </font>
-        </Text>
-        <Label fx:id="labelName" layoutX="835.0" layoutY="30.0">
-            <font>
-                <Font name="Courier New" size="18.0"/>
-            </font>
-        </Label>
-        <TableView layoutX="367.0" layoutY="219.0" prefHeight="200.0" prefWidth="200.0">
-            <columns>
-                <TableColumn editable="false" prefWidth="199.1999969482422" text="Players"/>
-            </columns>
-        </TableView>
-    </children>
+    <Button layoutX="424.0" layoutY="443.0" mnemonicParsing="false" onAction="#play" prefWidth="90.0" style="-fx-background-color: #fff;" text="PLAY">
+        <font>
+            <Font name="Courier New" size="24.0"/>
+        </font>
+    </Button>
+    <Button layoutX="83.0" layoutY="54.0" mnemonicParsing="false" onAction="#back" style="-fx-background-color: #fff;" text="LEAVE LOBBY">
+        <font>
+            <Font name="Courier New" size="15.0"/>
+        </font>
+    </Button>
+    <Text fill="WHITE" layoutX="287.0" layoutY="123.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Multiplayer Lobby">
+        <font>
+            <Font name="Courier New" size="36.0"/>
+        </font>
+    </Text>
+    <Text fill="WHITE" layoutX="316.0" layoutY="186.0" strokeType="OUTSIDE" strokeWidth="0.0" text="There are 000 players">
+        <font>
+            <Font name="Courier New" size="24.0"/>
+        </font>
+    </Text>
+    <Label fx:id="labelName" layoutX="835.0" layoutY="30.0">
+        <font>
+            <Font name="Courier New" size="18.0"/>
+        </font>
+    </Label>
+    <TableView fx:id="tablePlayers" layoutX="367.0" layoutY="219.0" prefHeight="200.0" prefWidth="200.0">
+        <columns>
+            <TableColumn fx:id="columnName" editable="false" prefWidth="199.1999969482422" text="Players"/>
+        </columns>
+    </TableView>
 </AnchorPane>

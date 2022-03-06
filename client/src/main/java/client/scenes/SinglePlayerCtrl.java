@@ -2,11 +2,11 @@ package client.scenes;
 
 import client.utils.ServerUtils;
 import com.google.inject.Inject;
-import commons.SimpleUser;
+import commons.GameInstance;
+import commons.communication.RequestToJoin;
+import commons.player.SimpleUser;
 import javafx.fxml.FXML;
 import javafx.scene.control.TextField;
-
-import java.util.Objects;
 
 public class SinglePlayerCtrl {
 
@@ -31,17 +31,11 @@ public class SinglePlayerCtrl {
      */
     public void play() {
         if (!getTextField().equals("")) {
-            if (mainCtrl.getPlayer() != null && mainCtrl.getPlayer().getCookie() != null && !Objects.equals(mainCtrl.getPlayer().getCookie(), "")) {
-                //Player already has connected
-                System.out.println("Already connected!");
-                //TODO CREATE Pop-up/info that
-                return;
-            }
-            SimpleUser player = server.addPlayer(getTextField());
+            SimpleUser player = server.addPlayer(new RequestToJoin(getTextField(), GameInstance.SINGLE_PLAYER));
             mainCtrl.setPlayer(player);
             System.out.println(player);
             mainCtrl.showLobby();
-            //TODO ADD mainCtrl.showLobby(); and have a place to store SimpleUser Client-wide
+            //TODO Make it so that player goes directly into game instead of going to lobby
         }
     }
 

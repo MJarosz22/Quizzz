@@ -16,7 +16,7 @@
 package client.scenes;
 
 import client.utils.ServerUtils;
-import commons.SimpleUser;
+import commons.player.SimpleUser;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.stage.Stage;
@@ -89,8 +89,7 @@ public class MainCtrl {
     public void showLobby() {
         primaryStage.setTitle("Quizzz lobby");
         lobbyCtrl.setLabelName(player.getName());
-
-        ServerUtils.getPlayers(player);
+        lobbyCtrl.setTablePlayers(ServerUtils.getPlayers(player));
         primaryStage.setScene(lobby);
     }
 

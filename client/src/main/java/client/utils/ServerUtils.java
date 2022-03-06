@@ -16,7 +16,8 @@
 package client.utils;
 
 import commons.Activity;
-import commons.SimpleUser;
+import commons.communication.RequestToJoin;
+import commons.player.SimpleUser;
 import jakarta.ws.rs.client.Client;
 import jakarta.ws.rs.client.ClientBuilder;
 import jakarta.ws.rs.client.Entity;
@@ -26,21 +27,10 @@ import org.glassfish.jersey.client.ClientConfig;
 import java.util.List;
 
 import static jakarta.ws.rs.core.MediaType.APPLICATION_JSON;
-import static jakarta.ws.rs.core.MediaType.TEXT_PLAIN;
 
 public class ServerUtils {
 
     private static final String SERVER = "http://localhost:8080/";
-
-    /*public void getQuotesTheHardWay() throws IOException {
-        var url = new URL("http://localhost:8080/api/quotes");
-        var is = url.openConnection().getInputStream();
-        var br = new BufferedReader(new InputStreamReader(is));
-        String line;
-        while ((line = br.readLine()) != null) {
-            System.out.println(line);
-        }
-    }*/
 
     public static List<SimpleUser> getPlayers(SimpleUser player) {
         Client client = ClientBuilder.newClient(new ClientConfig());
@@ -48,7 +38,7 @@ public class ServerUtils {
                 .target(SERVER).path("api/game/ " + player.getGameInstanceId() + "/players") //
                 .request(APPLICATION_JSON).cookie("user-id", player.getCookie()) //
                 .accept(APPLICATION_JSON) //
-                .get(new GenericType<List<SimpleUser>>() {
+                .get(new GenericType<>() {
                 });
     }
 
@@ -57,7 +47,7 @@ public class ServerUtils {
                 .target(SERVER).path("api/activities")
                 .request(APPLICATION_JSON)
                 .accept(APPLICATION_JSON)
-                .get(new GenericType<List<Activity>>() {
+                .get(new GenericType<>() {
                 });
     }
 
@@ -70,13 +60,13 @@ public class ServerUtils {
                 .post(Entity.entity(activity, APPLICATION_JSON), Activity.class);
     }
 
-    public SimpleUser addPlayer(String name) {
+    public SimpleUser addPlayer(RequestToJoin request) {
         Client client = ClientBuilder.newClient(new ClientConfig());
         return client //
                 .target(SERVER).path("api/game/join") //
                 .request(APPLICATION_JSON) //
                 .accept(APPLICATION_JSON) //
-                .post(Entity.entity(name, TEXT_PLAIN), SimpleUser.class);
+                .post(Entity.entity(request, APPLICATION_JSON), SimpleUser.class);
     }
 
     public Activity updateActivity(Activity activity) {
