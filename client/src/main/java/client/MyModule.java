@@ -32,6 +32,7 @@ public class MyModule implements Module {
 
         binder.bind(SplashScreenCtrl.class).in(Scopes.SINGLETON);
         binder.bind(SinglePlayerCtrl.class).in(Scopes.SINGLETON);
+        binder.bind(SinglePlayerGameCtrl.class).in(Scopes.SINGLETON);
         binder.bind(LeaderBoardCtrl.class).in(Scopes.SINGLETON);
         binder.bind(MultiPlayerCtrl.class).in(Scopes.SINGLETON);
         binder.bind(LobbyCtrl.class).in(Scopes.SINGLETON);
