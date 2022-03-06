@@ -51,12 +51,14 @@ public abstract class Question {
 
         Question question = (Question) o;
 
-        return new EqualsBuilder().append(title, question.title).append(activities, question.activities).append(usablePowerups, question.usablePowerups).isEquals();
+        return new EqualsBuilder().append(title, question.title).append(activities, question.activities)
+                .append(usablePowerups, question.usablePowerups).isEquals();
     }
 
     @Override
     public int hashCode() {
-        return new HashCodeBuilder(17, 37).append(title).append(activities).append(usablePowerups).toHashCode();
+        return new HashCodeBuilder(17, 37).append(title)
+                .append(activities).append(usablePowerups).toHashCode();
     }
 
     @Override

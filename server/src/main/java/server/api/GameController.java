@@ -104,9 +104,11 @@ public class GameController {
 //    ---------------------------------------------------------------------------
 
     @GetMapping("/{gameInstanceId}/players")
-    public ResponseEntity<List<SimpleUser>> getPlayers(@PathVariable int gameInstanceId, @CookieValue(name = "user-id", defaultValue = "null") String cookie) {
+    public ResponseEntity<List<SimpleUser>> getPlayers(@PathVariable int gameInstanceId,
+                                                       @CookieValue(name = "user-id", defaultValue = "null") String cookie) {
         if (getPlayerFromGameInstance(gameInstanceId, cookie) == null) return ResponseEntity.badRequest().build();
-        return ResponseEntity.ok(gameInstances.get(gameInstanceId).getPlayers().stream().map(p -> p.toSimpleUser().unsafe()).collect(Collectors.toList()));
+        return ResponseEntity.ok(gameInstances.get(gameInstanceId).getPlayers()
+                .stream().map(p -> p.toSimpleUser().unsafe()).collect(Collectors.toList()));
     }
 
     private Player getPlayerFromGameInstance(int gameInstanceId, String cookie) {
