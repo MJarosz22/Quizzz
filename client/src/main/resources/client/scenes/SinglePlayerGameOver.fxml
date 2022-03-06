@@ -7,7 +7,6 @@
 <?import javafx.scene.text.Font?>
 <?import javafx.scene.text.Text?>
 
-
 <AnchorPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="540.0"
             prefWidth="960.0" style="-fx-background-color: #91e4fb;" xmlns="http://javafx.com/javafx/17"
             xmlns:fx="http://javafx.com/fxml/1" fx:controller="client.scenes.SinglePlayerGameOverCtrl">
@@ -23,7 +22,7 @@
                 <TableColumn prefWidth="75.0" text="C2"/>
             </columns>
         </TableView>
-        <Button layoutX="789.0" layoutY="55.0" mnemonicParsing="false" onAction="#back" prefHeight="55.0"
-                prefWidth="82.0" text="PLAY AGAIN"/>
+        <Button layoutX="789.0" layoutY="55.0" mnemonicParsing="false" onAction="#back" prefHeight="81.0"
+                prefWidth="91.0" style="-fx-background-radius: 25;" text="PLAY AGAIN"/>
     </children>
 </AnchorPane>
