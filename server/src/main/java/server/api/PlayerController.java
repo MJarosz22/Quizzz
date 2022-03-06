@@ -30,11 +30,11 @@ public class PlayerController {
 
     @PostMapping(path = {"", "/"})
     public ResponseEntity<Player> addPlayer(@RequestBody Player player) {
-        if (isNullOrEmpty(player.name)) {
+        if (isNullOrEmpty(player.getName())) {
             return ResponseEntity.badRequest().build();
         }
         //playerRepository.save(player);
-        Player savedPlayer = playerRepository.save(new Player(player.name));
+        Player savedPlayer = playerRepository.save(new Player(player.getName()));
         return ResponseEntity.ok(savedPlayer);
     }
 
@@ -48,11 +48,11 @@ public class PlayerController {
         Optional<Player> playerData = playerRepository.findById(id);
         if (playerData.isPresent()) {
             Player newPlayer = playerData.get();
-            if (!isNullOrEmpty(player.name)) newPlayer.name = player.name;
-            newPlayer.score = 0;
-            newPlayer.status = 0;
-            newPlayer.powerUpUsed = new ArrayList<>();
-            newPlayer.id = id;
+            if (!isNullOrEmpty(player.getName())) newPlayer.setName(player.getName());
+            newPlayer.setScore(0);
+            newPlayer.setStatus(0);
+            newPlayer.setPowerUps(new ArrayList<>());
+            newPlayer.setId(id);
             return ResponseEntity.ok(playerRepository.save(newPlayer));
         }
         return ResponseEntity.notFound().build();
