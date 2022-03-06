@@ -11,9 +11,9 @@ public class PlayerTest {
     @Test
     public void checkConstructor() {
         var q = new Player("Vlad", 120, 12, new ArrayList<>());
-        assertEquals("Vlad", q.name);
-        assertEquals(120, q.score);
-        assertEquals(12, q.status);
+        assertEquals("Vlad", q.getName());
+        assertEquals(120, q.getScore());
+        assertEquals(12, q.getStatus());
     }
 
     @Test

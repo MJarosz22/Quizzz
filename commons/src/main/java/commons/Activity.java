@@ -7,18 +7,19 @@ import org.apache.commons.lang3.builder.ToStringBuilder;
 import javax.persistence.*;
 
 @Entity
+@Table(name = "Activity")
 public class Activity {
 
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
-    public long activityID;
+    private long activityID;
 
-    public String id; //id provided by activity-bank (i.e. "00-shower")
+    private String id; //id provided by activity-bank (i.e. "00-shower")
 
-    public String image_path;
-    public String title;
-    public int consumption_in_wh;
-    public String source;
+    private String image_path;
+    private String title;
+    private int consumption_in_wh;
+    private String source;
 
     @SuppressWarnings("unused")
     public Activity() {
@@ -28,7 +29,7 @@ public class Activity {
     public Activity(String id, String image_path, String title, int consumption_in_wh, String source) {
         this.id = id;
         this.image_path = image_path;
-        if(image_path == null) image_path = "";
+        if (image_path == null) image_path = "";
         this.title = title;
         this.consumption_in_wh = consumption_in_wh;
         this.source = source;
@@ -76,8 +77,57 @@ public class Activity {
                 .toString();
     }
 
-    public long getId() {
+    @Column(name = "activityID")
+    public long getActivityID() {
         return activityID;
     }
 
+    public void setActivityID(long activityID) {
+        this.activityID = activityID;
+    }
+
+    @Column(name = "id")
+    public String getId() {
+        return id;
+    }
+
+    public void setId(String id) {
+        this.id = id;
+    }
+
+    @Column(name = "image_path")
+    public String getImage_path() {
+        return image_path;
+    }
+
+    public void setImage_path(String image_path) {
+        this.image_path = image_path;
+    }
+
+    @Column(name = "title")
+    public String getTitle() {
+        return title;
+    }
+
+    public void setTitle(String title) {
+        this.title = title;
+    }
+
+    @Column(name = "consumption_in_wh")
+    public int getConsumption_in_wh() {
+        return consumption_in_wh;
+    }
+
+    public void setConsumption_in_wh(int consumption_in_wh) {
+        this.consumption_in_wh = consumption_in_wh;
+    }
+
+    @Column(name = "source")
+    public String getSource() {
+        return source;
+    }
+
+    public void setSource(String source) {
+        this.source = source;
+    }
 }

@@ -9,21 +9,16 @@ import java.util.Objects;
 public class Player {
 
     @Id
-    @Column(name = "id")
     @GeneratedValue(strategy = GenerationType.AUTO)
-    public long id;
+    private long id;
 
-    @Column(name = "name")
-    public String name;
+    private String name;
 
-    @Column(name = "score")
-    public int score;
+    private int score;
 
-    @Column(name = "status")
-    public int status;
+    private int status;
 
-    @Column(name = "powerUps")
-    public ArrayList<PowerUp> powerUpUsed;
+    private ArrayList<PowerUp> powerUpUsed;
 
     public Player() {
         //object mapping
@@ -43,6 +38,7 @@ public class Player {
         this.powerUpUsed = powerUp;
     }
 
+    @Column(name = "name")
     public String getName() {
         return name;
     }
@@ -51,6 +47,7 @@ public class Player {
         this.name = name;
     }
 
+    @Column(name = "score")
     public int getScore() {
         return score;
     }
@@ -63,6 +60,7 @@ public class Player {
         this.score += score;
     }
 
+    @Column(name = "status")
     public int getStatus() {
         return status;
     }
@@ -71,7 +69,8 @@ public class Player {
         this.status = status;
     }
 
-    public ArrayList<PowerUp> getPowerUp() {
+    @Column(name = "powerUps")
+    public ArrayList<PowerUp> getPowerUps() {
         return powerUpUsed;
     }
 
@@ -83,6 +82,7 @@ public class Player {
         this.powerUpUsed.add(powerUp);
     }
 
+    @Column(name = "id")
     public long getId() {
         return id;
     }
