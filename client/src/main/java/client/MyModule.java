@@ -25,11 +25,15 @@ public class MyModule implements Module {
     @Override
     public void configure(Binder binder) {
         binder.bind(MainCtrl.class).in(Scopes.SINGLETON);
-        binder.bind(AddQuoteCtrl.class).in(Scopes.SINGLETON);
-        binder.bind(QuoteOverviewCtrl.class).in(Scopes.SINGLETON);
 
         binder.bind(MainActivityCtrl.class).in(Scopes.SINGLETON);
-        //TODO: binder.bind(AddActivityCtrl.class).in(Scopes.SINGLETON);
+        binder.bind(AddActivityCtrl.class).in(Scopes.SINGLETON);
         binder.bind(ActivityOverviewCtrl.class).in(Scopes.SINGLETON);
+
+        binder.bind(SplashScreenCtrl.class).in(Scopes.SINGLETON);
+        binder.bind(SinglePlayerCtrl.class).in(Scopes.SINGLETON);
+        binder.bind(LeaderBoardCtrl.class).in(Scopes.SINGLETON);
+        binder.bind(MultiPlayerCtrl.class).in(Scopes.SINGLETON);
+        binder.bind(LobbyCtrl.class).in(Scopes.SINGLETON);
     }
 }

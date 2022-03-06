@@ -18,8 +18,7 @@ package client.scenes;
 import com.google.inject.Inject;
 
 import client.utils.ServerUtils;
-import commons.Person;
-import commons.Quote;
+import commons.Activity;
 import jakarta.ws.rs.WebApplicationException;
 import javafx.fxml.FXML;
 import javafx.scene.control.Alert;
@@ -27,35 +26,40 @@ import javafx.scene.control.TextField;
 import javafx.scene.input.KeyEvent;
 import javafx.stage.Modality;
 
-public class AddQuoteCtrl {
+public class AddActivityCtrl {
 
     private final ServerUtils server;
-    private final MainCtrl mainCtrl;
+    private final MainActivityCtrl mainActivityCtrl;
 
     @FXML
-    private TextField firstName;
+    private TextField id;
 
     @FXML
-    private TextField lastName;
+    private TextField image_path;
 
     @FXML
-    private TextField quote;
+    private TextField title;
+
+    @FXML
+    private TextField consumption;
+
+    @FXML
+    private TextField source;
 
     @Inject
-    public AddQuoteCtrl(ServerUtils server, MainCtrl mainCtrl) {
-        this.mainCtrl = mainCtrl;
+    public AddActivityCtrl(ServerUtils server, MainActivityCtrl mainActivityCtrl) {
+        this.mainActivityCtrl = mainActivityCtrl;
         this.server = server;
-
     }
 
     public void cancel() {
         clearFields();
-        mainCtrl.showOverview();
+        mainActivityCtrl.showOverview();
     }
 
     public void ok() {
         try {
-            server.addQuote(getQuote());
+            server.addActivity(getActivity());
         } catch (WebApplicationException e) {
 
             var alert = new Alert(Alert.AlertType.ERROR);
@@ -66,19 +70,30 @@ public class AddQuoteCtrl {
         }
 
         clearFields();
-        mainCtrl.showOverview();
+        mainActivityCtrl.showOverview();
     }
 
-    private Quote getQuote() {
-        var p = new Person(firstName.getText(), lastName.getText());
-        var q = quote.getText();
-        return new Quote(p, q);
+    private Activity getActivity() {
+        try {
+            var idText = id.getText();
+            var imagePathText = image_path.getText();
+            var titleText = title.getText();
+            if (titleText.length() > 140) return null;
+            var consumptionInt = Integer.parseInt(consumption.getText());
+            if (consumptionInt == 0) return null;
+            var sourceText = source.getText();
+            return new Activity(idText, imagePathText, titleText, consumptionInt, sourceText);
+        } catch (NumberFormatException e) {
+            return null;
+        }
     }
 
     private void clearFields() {
-        firstName.clear();
-        lastName.clear();
-        quote.clear();
+        id.clear();
+        image_path.clear();
+        title.clear();
+        consumption.clear();
+        source.clear();
     }
 
     public void keyPressed(KeyEvent e) {

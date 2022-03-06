@@ -13,18 +13,14 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package server.api;
+/*package server.api;
 
 import java.util.List;
 import java.util.Optional;
 import java.util.Random;
 
-import commons.Person;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-
-import commons.Quote;
-import server.database.QuoteRepository;
 
 @RestController
 @RequestMapping("/api/quotes")
@@ -158,4 +154,4 @@ public class QuoteController {
             return new Quote(new Person("-", "-"), "missing body");
         }
     }
-}
+}*/

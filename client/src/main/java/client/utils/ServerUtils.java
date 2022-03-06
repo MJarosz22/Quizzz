@@ -17,16 +17,14 @@ package client.utils;
 
 import static jakarta.ws.rs.core.MediaType.APPLICATION_JSON;
 
-import java.io.BufferedReader;
-import java.io.IOException;
-import java.io.InputStreamReader;
-import java.net.URL;
+
 import java.util.List;
 
 import commons.Activity;
+import commons.Player;
 import org.glassfish.jersey.client.ClientConfig;
 
-import commons.Quote;
+
 import jakarta.ws.rs.client.ClientBuilder;
 import jakarta.ws.rs.client.Entity;
 import jakarta.ws.rs.core.GenericType;
@@ -35,7 +33,7 @@ public class ServerUtils {
 
     private static final String SERVER = "http://localhost:8080/";
 
-    public void getQuotesTheHardWay() throws IOException {
+    /*public void getQuotesTheHardWay() throws IOException {
         var url = new URL("http://localhost:8080/api/quotes");
         var is = url.openConnection().getInputStream();
         var br = new BufferedReader(new InputStreamReader(is));
@@ -43,24 +41,8 @@ public class ServerUtils {
         while ((line = br.readLine()) != null) {
             System.out.println(line);
         }
-    }
+    }*/
 
-    public List<Quote> getQuotes() {
-        return ClientBuilder.newClient(new ClientConfig()) //
-                .target(SERVER).path("api/quotes") //
-                .request(APPLICATION_JSON) //
-                .accept(APPLICATION_JSON) //
-                .get(new GenericType<List<Quote>>() {
-                });
-    }
-
-    public Quote addQuote(Quote quote) {
-        return ClientBuilder.newClient(new ClientConfig()) //
-                .target(SERVER).path("api/quotes") //
-                .request(APPLICATION_JSON) //
-                .accept(APPLICATION_JSON) //
-                .post(Entity.entity(quote, APPLICATION_JSON), Quote.class);
-    }
 
     public List<Activity> getActivities() {
         return ClientBuilder.newClient(new ClientConfig())
@@ -71,11 +53,30 @@ public class ServerUtils {
                 });
     }
 
-    //TODO: Implement addActivity(Activity activity) method
+
+    public Activity addActivity(Activity activity) {
+        return ClientBuilder.newClient(new ClientConfig()) //
+                .target(SERVER).path("api/activities") //
+                .request(APPLICATION_JSON) //
+                .accept(APPLICATION_JSON) //
+                .post(Entity.entity(activity, APPLICATION_JSON), Activity.class);
+    }
+
+    public Player addPlayer(Player player) {
+        return ClientBuilder.newClient(new ClientConfig()) //
+                .target(SERVER).path("api/players") //
+                .request(APPLICATION_JSON) //
+                .accept(APPLICATION_JSON) //
+                .post(Entity.entity(player, APPLICATION_JSON), Player.class);
+    }
+
 
     public Activity updateActivity(Activity activity) {
-        return ClientBuilder.newClient(new ClientConfig()).target(SERVER).path("api/activities/" + activity.getId())
-                .request(APPLICATION_JSON).accept(APPLICATION_JSON)
+        return ClientBuilder.newClient(new ClientConfig())
+                .target(SERVER).path("api/activities/" + activity.getActivityID())
+                .request(APPLICATION_JSON)
+                .accept(APPLICATION_JSON)
                 .put(Entity.entity(activity, APPLICATION_JSON), Activity.class);
+
     }
 }

@@ -21,11 +21,10 @@ public class ActivityMain extends Application {
 
     @Override
     public void start(Stage primaryStage) throws IOException {
-
         var overview = FXML.load(ActivityOverviewCtrl.class, "client", "scenes", "ActivityOverview.fxml");
-        //TODO: var add = FXML.load(AddActivityCtrl.class, "client", "scenes", "AddActivitty.fxml");
+        var add = FXML.load(AddActivityCtrl.class, "client", "scenes", "AddActivity.fxml");
 
         var mainCtrl = INJECTOR.getInstance(MainActivityCtrl.class);
-        mainCtrl.initialize(primaryStage, overview); //Add "var add" as the 3rd parameter
+        mainCtrl.initialize(primaryStage, overview, add);
     }
 }

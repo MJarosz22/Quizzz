@@ -12,22 +12,32 @@ public class MainActivityCtrl {
     private ActivityOverviewCtrl overviewCtrl;
     private Scene overview;
 
-    public void initialize(Stage primStage, Pair<ActivityOverviewCtrl, Parent> overview){
+    private AddActivityCtrl addCtrl;
+    private Scene add;
+
+    public void initialize(Stage primStage, Pair<ActivityOverviewCtrl, Parent> overview, Pair<AddActivityCtrl, Parent> add) {
         this.primStage = primStage;
         this.overviewCtrl = overview.getKey();
         this.overview = new Scene(overview.getValue());
+
+        this.addCtrl = add.getKey();
+        this.add = new Scene(add.getValue());
 
         showOverview();
         primStage.show();
     }
 
-    public void showOverview(){
+    public void showOverview() {
         primStage.setTitle("Activities: Overview");
         primStage.setScene(overview);
         overviewCtrl.refresh();
     }
 
-    //TODO: Implmenet showAdd() method
+    public void showAdd() {
+        primStage.setTitle("Activities: Adding Activity");
+        primStage.setScene(add);
+        add.setOnKeyPressed(e -> addCtrl.keyPressed(e));
+    }
 
 
 }
