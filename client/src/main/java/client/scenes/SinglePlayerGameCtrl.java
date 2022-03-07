@@ -10,6 +10,8 @@ import javafx.scene.image.ImageView;
 import javafx.scene.text.Text;
 
 import java.util.*;
+import java.util.concurrent.CompletableFuture;
+import java.util.concurrent.TimeUnit;
 
 //Note that in the future, we can make this controller and its scene suitable for multiplayer games as well
 public class SinglePlayerGameCtrl {
@@ -76,6 +78,9 @@ public class SinglePlayerGameCtrl {
      * set current game, reset the board
      */
     public void initialize() {
+        colorsRefresh();
+        setOptions(false);
+
         if (this.mainCtrl.getPlayer() != null) {
             this.player = mainCtrl.getPlayer();
             currentGame = new GameInstance(this.player.getGameInstanceId(), 0);
@@ -96,6 +101,10 @@ public class SinglePlayerGameCtrl {
         //TODO: add support for different question types
         //TODO: when we get the activity bank, we will replace the hardcoded currentQuestion
         //this.currentQuestion = gameQuestions.poll();
+
+        colorsRefresh();
+        setOptions(false);
+
         Activity temporaryActivity1 = new Activity("correctAnswer", 100, "source");
         Activity temporaryActivity2 = new Activity("wrongAnswer", 100, "source");
         Activity temporaryActivity3 = new Activity("wrongAnswer", 100, "source");
@@ -120,7 +129,6 @@ public class SinglePlayerGameCtrl {
      */
     public void option1Selected() {
         if (((MultipleChoiceQuestion) currentQuestion).getAnswer().equals(currentQuestion.getActivities()[0])) {
-            //set the color to green
             correctAnswer();
         } else wrongAnswer();
     }
@@ -130,7 +138,6 @@ public class SinglePlayerGameCtrl {
      */
     public void option2Selected() {
         if (((MultipleChoiceQuestion) currentQuestion).getAnswer().equals(currentQuestion.getActivities()[1])) {
-            //set the color to green
             correctAnswer();
         } else wrongAnswer();
     }
@@ -140,7 +147,6 @@ public class SinglePlayerGameCtrl {
      */
     public void option3Selected() {
         if (((MultipleChoiceQuestion) currentQuestion).getAnswer().equals(currentQuestion.getActivities()[2])) {
-            //set the color to green
             correctAnswer();
         } else wrongAnswer();
     }
@@ -151,31 +157,64 @@ public class SinglePlayerGameCtrl {
     public void correctAnswer() {
         player.addScore(100);
         score.setText("Your score: " + player.getScore());
-        //TODO:
-        //set the color of the button to green
-        //make a prompt "correct answer"
 
-        if (!isGameOver())
-            loadNextQuestion();
-        else {
+        //TODO: make a prompt "correct answer"
+
+        setColors(option1Button, option2Button, option3Button);
+        setOptions(true);
+
+        CompletableFuture.delayedExecutor(1, TimeUnit.SECONDS).execute(() -> {
+            if (!isGameOver())
+                loadNextQuestion();
+        });
+
+        //TODO: Make the screen freeze after the last question (?)
+        if (temporaryCounter >= 20) {
             mainCtrl.showSinglePlayerGameOver();
             progressBar.setProgress(1);
         }
+
     }
 
     /**
      * User's answer was incorrect. Show that the answer was incorrect, start next round.
      */
     public void wrongAnswer() {
-        //TODO:
-        //set the color of the correct button to red
-        //make a prompt "wrong answer"
-        if (!isGameOver())
-            loadNextQuestion();
-        else {
+        //TODO: make a prompt "wrong answer"
+
+        setColors(option1Button, option2Button, option3Button);
+        setOptions(true);
+
+        CompletableFuture.delayedExecutor(1, TimeUnit.SECONDS).execute(() -> {
+            if (!isGameOver())
+                loadNextQuestion();
+        });
+
+        //TODO: Make the screen freeze after the last question (?)
+        if (temporaryCounter >= 20) {
             mainCtrl.showSinglePlayerGameOver();
             progressBar.setProgress(1);
         }
+            /* That's what I've tried, but it seems not to work and idk why.
+            1st variant:
+            setColors(option1Button, option2Button, option3Button);
+            try {
+                TimeUnit.SECONDS.sleep(1);
+            } catch (Exception e) {
+                e.printStackTrace();
+            } finally {
+                setOptions(true);
+                mainCtrl.showSinglePlayerGameOver();
+                progressBar.setProgress(1);
+            }
+            2nd variant:
+            setColors(option1Button, option2Button, option3Button);
+            CompletableFuture.delayedExecutor(1, TimeUnit.SECONDS).execute(() -> {
+            setOptions(option1Button, option2Button, option3Button);
+            });
+              mainCtrl.showSinglePlayerGameOver();
+              progressBar.setProgress(1);
+            */
     }
 
     /**
@@ -186,4 +225,38 @@ public class SinglePlayerGameCtrl {
         //return this.gameQuestions.isEmpty();
         return 20 == temporaryCounter++;
     }
+
+    /**
+     * Restarts the buttons to their original state -> all get the white background color
+     */
+    public void colorsRefresh() {
+        option1Button.setStyle("-fx-background-color: white; ");
+        option2Button.setStyle("-fx-background-color: white; ");
+        option3Button.setStyle("-fx-background-color: white; ");
+    }
+
+    /**
+     * Makes the background of  the correct button GREEN and the background of the wrong buttons RED
+     *
+     * @param correct - Button object that represents the correct option for a MC question
+     * @param wrong1  - Button object that represents one incorrect option for a MC question
+     * @param wrong2  - Button object that represents another incorrect option for a MC question
+     */
+    public void setColors(Button correct, Button wrong1, Button wrong2) {
+        correct.setStyle("-fx-background-color: green; ");
+        wrong1.setStyle("-fx-background-color: red; ");
+        wrong2.setStyle("-fx-background-color: red; ");
+    }
+
+    /**
+     * Sets buttons as functional / disabled, depending on the parameter
+     *
+     * @param value - boolean value that disables our 3 option buttons if it is 'true', or makes them functional otherwise
+     */
+    public void setOptions(boolean value) {
+        option1Button.setDisable(value);
+        option2Button.setDisable(value);
+        option3Button.setDisable(value);
+    }
+
 }
