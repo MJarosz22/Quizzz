@@ -39,6 +39,12 @@ public class SinglePlayerGameCtrl {
     private Text score;
 
     @FXML
+    private Text points;
+
+    @FXML
+    private Text answer;
+
+    @FXML
     private Button option1Button;
 
     @FXML
@@ -91,6 +97,7 @@ public class SinglePlayerGameCtrl {
         //gameQuestions.addAll(currentGame.getQuestions());
         progressBar.setProgress(-0.05);
         score.setText("Your score: 0");
+        pointsAndAnswerRefresh();
         temporaryCounter = 1;
         loadNextQuestion();
     }
@@ -104,6 +111,7 @@ public class SinglePlayerGameCtrl {
         //this.currentQuestion = gameQuestions.poll();
 
         colorsRefresh();
+        pointsAndAnswerRefresh();
         setOptions(false);
 
         Activity temporaryActivity1 = new Activity("correctAnswer", 100, "source");
@@ -158,8 +166,8 @@ public class SinglePlayerGameCtrl {
     public void correctAnswer() {
         player.addScore(100);
         score.setText("Your score: " + player.getScore());
-
-        //TODO: make a prompt "correct answer"
+        points.setText("+100 points"); // In the future calculate the # of points, DON'T hardcode
+        answer.setText("Correct answer \uD83E\uDD29"); // Code of excited emoji, in the future find a better solution
 
         setColors(option1Button, option2Button, option3Button);
         setOptions(true);
@@ -180,10 +188,12 @@ public class SinglePlayerGameCtrl {
      * User's answer was incorrect. Show that the answer was incorrect, start next round.
      */
     public void wrongAnswer() {
-        //TODO: make a prompt "wrong answer"
+        points.setText("+0 points"); // In the future calculate the # of points, DON'T hardcode
+        answer.setText("Incorrect answer  \uD83D\uDE2D"); // Code of crying, in the future find a better solution
 
         setColors(option1Button, option2Button, option3Button);
         setOptions(true);
+
 
         CompletableFuture.delayedExecutor(1, TimeUnit.SECONDS).execute(() -> {
             if (!isGameOver())
@@ -239,6 +249,14 @@ public class SinglePlayerGameCtrl {
     }
 
     /**
+     * Sets the 'points' and 'answer' text fields to being empty strings.
+     */
+    public void pointsAndAnswerRefresh() {
+        points.setText("");
+        answer.setText("");
+    }
+
+    /**
      * Freezes the scene for 'timer' miliseconds ('run' method of thread, the first one) and after this interval of time runs the
      * code inside the 'run'  method of Platform.runLater (the second one), by showing the user the gameOver screen
      *
@@ -266,4 +284,6 @@ public class SinglePlayerGameCtrl {
         });
         thread.start();
     }
+
+
 }
