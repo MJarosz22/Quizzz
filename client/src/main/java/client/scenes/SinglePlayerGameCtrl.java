@@ -167,7 +167,7 @@ public class SinglePlayerGameCtrl {
         player.addScore(100);
         score.setText("Your score: " + player.getScore());
         points.setText("+100 points"); // In the future calculate the # of points, DON'T hardcode
-        answer.setText("Correct answer \uD83E\uDD29"); // Code of excited emoji, in the future find a better solution
+        answer.setText("Correct answer  \uD83E\uDD29"); // Code of excited emoji, in the future find a better solution
 
         setColors(option1Button, option2Button, option3Button);
         setOptions(true);
