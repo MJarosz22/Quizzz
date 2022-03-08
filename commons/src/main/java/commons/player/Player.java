@@ -2,8 +2,6 @@ package commons.player;
 
 import commons.GameInstance;
 import commons.PowerUp;
-import org.apache.commons.lang3.builder.EqualsBuilder;
-import org.apache.commons.lang3.builder.HashCodeBuilder;
 
 import javax.persistence.Column;
 import java.util.ArrayList;
