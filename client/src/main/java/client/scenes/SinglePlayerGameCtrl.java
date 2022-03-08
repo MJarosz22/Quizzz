@@ -3,6 +3,7 @@ package client.scenes;
 import client.utils.ServerUtils;
 import com.google.inject.Inject;
 import commons.*;
+import javafx.application.Platform;
 import javafx.fxml.FXML;
 import javafx.scene.control.Button;
 import javafx.scene.control.ProgressBar;
@@ -168,10 +169,9 @@ public class SinglePlayerGameCtrl {
                 loadNextQuestion();
         });
 
-        //TODO: Make the screen freeze after the last question (?)
+
         if (temporaryCounter >= 20) {
-            mainCtrl.showSinglePlayerGameOver();
-            progressBar.setProgress(1);
+            gameOver(2000);
         }
 
     }
@@ -190,31 +190,10 @@ public class SinglePlayerGameCtrl {
                 loadNextQuestion();
         });
 
-        //TODO: Make the screen freeze after the last question (?)
+
         if (temporaryCounter >= 20) {
-            mainCtrl.showSinglePlayerGameOver();
-            progressBar.setProgress(1);
+            gameOver(2000);
         }
-            /* That's what I've tried, but it seems not to work and idk why.
-            1st variant:
-            setColors(option1Button, option2Button, option3Button);
-            try {
-                TimeUnit.SECONDS.sleep(1);
-            } catch (Exception e) {
-                e.printStackTrace();
-            } finally {
-                setOptions(true);
-                mainCtrl.showSinglePlayerGameOver();
-                progressBar.setProgress(1);
-            }
-            2nd variant:
-            setColors(option1Button, option2Button, option3Button);
-            CompletableFuture.delayedExecutor(1, TimeUnit.SECONDS).execute(() -> {
-            setOptions(option1Button, option2Button, option3Button);
-            });
-              mainCtrl.showSinglePlayerGameOver();
-              progressBar.setProgress(1);
-            */
     }
 
     /**
@@ -259,4 +238,32 @@ public class SinglePlayerGameCtrl {
         option3Button.setDisable(value);
     }
 
+    /**
+     * Freezes the scene for 'timer' miliseconds ('run' method of thread, the first one) and after this interval of time runs the
+     * code inside the 'run'  method of Platform.runLater (the second one), by showing the user the gameOver screen
+     *
+     * @param timer - an integer value representing the number of miliseconds after which the thread executes
+     */
+    public void gameOver(int timer) {
+        Thread thread = new Thread(new Runnable() {
+
+            public void run() {
+
+                try {
+                    Thread.sleep(timer);
+                } catch (InterruptedException e) {
+                    e.printStackTrace();
+                }
+
+                Platform.runLater(new Runnable() {
+                    public void run() {
+                        mainCtrl.showSinglePlayerGameOver();
+                        progressBar.setProgress(1);
+                    }
+                });
+
+            }
+        });
+        thread.start();
+    }
 }
