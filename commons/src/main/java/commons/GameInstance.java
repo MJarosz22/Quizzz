@@ -1,5 +1,6 @@
 package commons;
 
+import commons.player.Player;
 import org.apache.commons.lang3.builder.EqualsBuilder;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
 import org.apache.commons.lang3.builder.ToStringBuilder;
@@ -25,18 +26,9 @@ public class GameInstance {
     }
 
     /**
-     * Temporary only for single player purposes.
-     */
-    public GameInstance() {
-        this.type = SINGLE_PLAYER;
-        players = new ArrayList<>();
-    }
-
-    /**
      * Generates 20 questions based on 60 activities
      *
-     * @param activities
-     * @return
+     * @param activities List of 60 activities
      */
     public void generateQuestions(Activity[] activities) {
         if (activities.length != 60) throw new IllegalArgumentException();

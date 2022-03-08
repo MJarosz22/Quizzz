@@ -2,7 +2,9 @@ package client.scenes;
 
 import client.utils.ServerUtils;
 import com.google.inject.Inject;
-import commons.SimpleUser;
+import commons.GameInstance;
+import commons.player.SimpleUser;
+import communication.RequestToJoin;
 import javafx.fxml.FXML;
 import javafx.scene.control.TextField;
 
@@ -29,20 +31,12 @@ public class SinglePlayerCtrl {
      * To be added when making the main game scene, in order for the player to play
      */
     public void play() {
-
         if (!getTextField().equals("")) {
-            //I don't think we need this part for single player
-            /*
-            if (mainCtrl.getPlayer() != null && mainCtrl.getPlayer().getCookie() != null && !Objects.equals(mainCtrl.getPlayer().getCookie(), "")) {
-                //Player already has connected
-                System.out.println("Already connected!");
-                //TODO CREATE Pop-up/info that
-                return;
-            }*/
-            SimpleUser player = server.addSimpleUser(getTextField());
+            SimpleUser player = server.addPlayer(new RequestToJoin(getTextField(), GameInstance.SINGLE_PLAYER));
             mainCtrl.setPlayer(player);
             System.out.println(player);
             mainCtrl.showSinglePlayerGame();
+            //TODO Make it so that player goes directly into game instead of going to lobby
         }
     }
 
