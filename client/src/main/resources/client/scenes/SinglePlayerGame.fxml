@@ -64,5 +64,7 @@
                 <Font size="16.0"/>
             </font>
         </Text>
+        <AnchorPane fx:id="emoji" layoutX="187.0" layoutY="84.0" prefHeight="30.0" prefWidth="30.0"
+                    style="-fx-background-size: contain;"/>
     </children>
 </AnchorPane>

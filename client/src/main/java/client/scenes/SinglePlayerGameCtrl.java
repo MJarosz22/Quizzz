@@ -9,8 +9,11 @@ import javafx.fxml.FXML;
 import javafx.scene.control.Button;
 import javafx.scene.control.ProgressBar;
 import javafx.scene.image.ImageView;
+import javafx.scene.layout.AnchorPane;
 import javafx.scene.text.Text;
 
+import java.io.File;
+import java.net.URI;
 import java.util.*;
 import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.TimeUnit;
@@ -20,6 +23,8 @@ public class SinglePlayerGameCtrl {
 
     private final ServerUtils server;
     private final MainCtrl mainCtrl;
+    private final String correctEmojiPath = "client/src/main/resources/images/correct-answer.png";
+    private final String wrongEmojiPath = "client/src/main/resources/images/wrong-answer.png";
 
     private SimpleUser player;
 
@@ -44,6 +49,9 @@ public class SinglePlayerGameCtrl {
 
     @FXML
     private Text answer;
+
+    @FXML
+    private AnchorPane emoji;
 
     @FXML
     private Button option1Button;
@@ -98,7 +106,7 @@ public class SinglePlayerGameCtrl {
         //gameQuestions.addAll(currentGame.getQuestions());
         progressBar.setProgress(-0.05);
         score.setText("Your score: 0");
-        pointsAndAnswerRefresh();
+        infoRefresh();
         temporaryCounter = 1;
         loadNextQuestion();
     }
@@ -112,7 +120,7 @@ public class SinglePlayerGameCtrl {
         //this.currentQuestion = gameQuestions.poll();
 
         colorsRefresh();
-        pointsAndAnswerRefresh();
+        infoRefresh();
         setOptions(false);
 
         Activity temporaryActivity1 = new Activity("correctAnswer", 100, "source");
@@ -168,7 +176,8 @@ public class SinglePlayerGameCtrl {
         player.addScore(100);
         score.setText("Your score: " + player.getScore());
         points.setText("+100 points"); // In the future calculate the # of points, DON'T hardcode
-        answer.setText("Correct answer  \uD83E\uDD29"); // Code of excited emoji, in the future find a better solution
+        answer.setText("Correct answer");
+        setEmoji(emoji, true);
 
         setColors(option1Button, option2Button, option3Button);
         setOptions(true);
@@ -190,7 +199,8 @@ public class SinglePlayerGameCtrl {
      */
     public void wrongAnswer() {
         points.setText("+0 points"); // In the future calculate the # of points, DON'T hardcode
-        answer.setText("Incorrect answer  \uD83D\uDE2D"); // Code of crying, in the future find a better solution
+        answer.setText("Correct answer");
+        setEmoji(emoji, false);
 
         setColors(option1Button, option2Button, option3Button);
         setOptions(true);
@@ -252,10 +262,23 @@ public class SinglePlayerGameCtrl {
     /**
      * Sets the 'points' and 'answer' text fields to being empty strings.
      */
-    public void pointsAndAnswerRefresh() {
+    public void infoRefresh() {
         points.setText("");
         answer.setText("");
+        emoji.setVisible(false);
     }
+
+    public void setEmoji(AnchorPane emoji, boolean correct) {
+        emoji.setVisible(true);
+        File file = null;
+        if (correct)
+            file = new File(correctEmojiPath);
+        else
+            file = new File(wrongEmojiPath);
+        URI uri = file.toURI();
+        emoji.setStyle("-fx-background-image: url(" + uri.toString() + ");");
+    }
+
 
     /**
      * Freezes the scene for 'timer' miliseconds ('run' method of thread, the first one) and after this interval of time runs the
