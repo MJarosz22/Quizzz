@@ -27,7 +27,13 @@ public class ActivityController {
     private static boolean isNullOrEmpty(String s) {
         return s == null || s.isEmpty();
     }
-
+    
+    /**
+     * Method that checks whether the source of an activity is a valid URL
+     *
+     * @param url - String object that is expected to be an URL
+     * @return - true, if the given string is an URL, or false otherwise.
+     */
     private static boolean isValidUrl(String url) {
         try {
             PropertyEditor urlEditor = new URLEditor();

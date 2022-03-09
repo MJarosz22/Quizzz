@@ -142,10 +142,10 @@ public class GameController {
     }
 
     /**
-     * Checks whether cookie given is from a player connected to gameInstance with ID
+     * Additional method that checks whether cookie given is from a player connected to gameInstance with ID
      * @param gameInstanceId ID of GameInstance
      * @param cookie Cookie of player
-     * @return Player if exists, otherwise null
+     * @return An instance of class 'Player' if exists, otherwise null
      */
     private Player getPlayerFromGameInstance(int gameInstanceId, String cookie) {
         GameInstance currGI = gameInstances.get(gameInstanceId);
