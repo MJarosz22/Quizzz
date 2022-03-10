@@ -7,31 +7,36 @@
 <?import javafx.scene.text.Font?>
 <?import javafx.scene.text.Text?>
 
-<AnchorPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="540.0" prefWidth="960.0" style="-fx-background-color: #91e4fb;" xmlns="http://javafx.com/javafx/17" xmlns:fx="http://javafx.com/fxml/1" fx:controller="client.scenes.LobbyCtrl">
+<AnchorPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="540.0"
+            prefWidth="960.0" style="-fx-background-color: #91e4fb;" xmlns="http://javafx.com/javafx/17"
+            xmlns:fx="http://javafx.com/fxml/1" fx:controller="client.scenes.LobbyCtrl">
     <children>
-        <Button layoutX="454.0" layoutY="282.0" mnemonicParsing="false" onAction="#play" prefHeight="62.0" prefWidth="204.0" style="-fx-background-color: #fff;" text="START GAME">
+        <Button layoutX="454.0" layoutY="282.0" mnemonicParsing="false" onAction="#play" prefHeight="62.0"
+                prefWidth="204.0" style="-fx-background-color: #fff;" text="START GAME">
             <font>
-                <Font name="Courier New" size="24.0" />
+                <Font name="Courier New" size="24.0"/>
             </font>
         </Button>
-        <Button layoutX="745.0" layoutY="279.0" mnemonicParsing="false" onAction="#back" prefHeight="66.0" prefWidth="163.0" style="-fx-background-color: #fff;" text="LEAVE&#10;LOBBY">
+        <Button layoutX="745.0" layoutY="279.0" mnemonicParsing="false" onAction="#back" prefHeight="66.0"
+                prefWidth="163.0" style="-fx-background-color: #fff;" text="LEAVE&#10;LOBBY">
             <font>
-                <Font name="Courier New" size="15.0" />
+                <Font name="Courier New" size="15.0"/>
             </font>
         </Button>
         <Text fill="WHITE" layoutX="422.0" layoutY="120.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Lobby">
             <font>
-                <Font name="Courier New" size="36.0" />
+                <Font name="Courier New" size="36.0"/>
             </font>
         </Text>
-        <Text fill="WHITE" layoutX="106.0" layoutY="167.0" strokeType="OUTSIDE" strokeWidth="0.0" text="There are 0 players out of the maximum capacity of 50">
+        <Text fill="WHITE" layoutX="106.0" layoutY="167.0" strokeType="OUTSIDE" strokeWidth="0.0"
+              text="There are 0 players out of the maximum capacity of 50">
             <font>
-                <Font name="Courier New" size="24.0" />
+                <Font name="Courier New" size="24.0"/>
             </font>
         </Text>
         <TableView layoutX="146.0" layoutY="230.0" prefHeight="246.0" prefWidth="200.0">
             <columns>
-                <TableColumn editable="false" prefWidth="199.1999969482422" text="Players" />
+                <TableColumn editable="false" prefWidth="199.1999969482422" text="Players"/>
             </columns>
         </TableView>
     </children>
