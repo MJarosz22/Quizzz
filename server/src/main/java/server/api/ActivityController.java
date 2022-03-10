@@ -51,12 +51,23 @@ public class ActivityController {
 
     @PostMapping(path = {"", "/"})
     public ResponseEntity<Activity> addActivity(@RequestBody Activity activity) {
-        if (isNullOrEmpty(activity.source) || !isValidUrl(activity.source) || isNullOrEmpty(activity.title)
-                || activity.title.length() > 140 || activity.getConsumption_in_wh() <= 0) {
+        if (isNullOrEmpty(activity.getSource()) || !isValidUrl(activity.getSource()) || isNullOrEmpty(activity.getTitle())
+                || activity.getTitle().length() > 140 || activity.getConsumption_in_wh() <= 0) {
             return ResponseEntity.badRequest().build();
         }
-        Activity savedActivity = activityRepository.save(new Activity(activity.title, activity.getConsumption_in_wh(), activity.source));
+        Activity savedActivity = activityRepository.save(new Activity(activity.getTitle(), activity.getConsumption_in_wh(), activity.getSource()));
         return ResponseEntity.ok(savedActivity);
+    }
+
+    private static boolean isValidTitle(String title) {
+        int endOfSentence = 0;
+        int size = title.length();
+        for (char ch : title.toCharArray()) {
+            if (ch == '.' || ch == '!' || ch == '?')
+                endOfSentence++;
+        }
+
+        return size <= 140 && endOfSentence <= 1;
     }
 
     @PutMapping("/{id}")
@@ -64,9 +75,13 @@ public class ActivityController {
         Optional<Activity> activityData = activityRepository.findById(id);
         if (activityData.isPresent()) {
             Activity newActivity = activityData.get();
-            if (!isNullOrEmpty(activity.title)) newActivity.title = activity.title;
+            if (!isNullOrEmpty(activity.getId())) newActivity.setId(activity.getId());
+            newActivity.setImage_path(activity.getImage_path());
+            if (!isNullOrEmpty(activity.getTitle()) && isValidTitle(activity.getTitle()))
+                newActivity.setTitle(activity.getTitle());
             if (activity.getConsumption_in_wh() > 0) newActivity.setConsumption_in_wh(activity.getConsumption_in_wh());
-            if (!isNullOrEmpty(activity.source) && isValidUrl(activity.source)) newActivity.source = activity.source;
+            if (!isNullOrEmpty(activity.getSource()) && isValidUrl(activity.getSource()))
+                newActivity.setSource(activity.getSource());
             return ResponseEntity.ok(activityRepository.save(newActivity));
         }
         return ResponseEntity.notFound().build();

@@ -16,8 +16,8 @@ public class Activity {
 
     private String id;
 
-    public String title;
-    public String source;
+    private String title;
+    private String source;
 
     private String image_path;
 
