@@ -17,7 +17,6 @@ public class Activity {
     private String id;
 
     public String title;
-    public int consumption;
     public String source;
 
     private String image_path;
@@ -108,34 +107,26 @@ public class Activity {
 
         Activity activity = (Activity) o;
 
-        return new EqualsBuilder()
-                .append(id, activity.id)
-                .append(consumption, activity.consumption)
-                .append(title, activity.title)
-                .append(source, activity.source).isEquals();
+        return new EqualsBuilder().append(activityID, activity.activityID).append(id, activity.id)
+                .append(title, activity.title).append(source, activity.source).append(image_path, activity.image_path)
+                .append(consumption_in_wh, activity.consumption_in_wh).isEquals();
     }
 
     @Override
     public int hashCode() {
-        return new HashCodeBuilder(17, 37)
-                .append(id)
-                .append(title)
-                .append(consumption)
-                .append(source)
-                .toHashCode();
+        return new HashCodeBuilder(17, 37).append(activityID)
+                .append(id).append(title).append(source).append(image_path).append(consumption_in_wh).toHashCode();
     }
 
     @Override
     public String toString() {
         return new ToStringBuilder(this)
+                .append("activityID", activityID)
                 .append("id", id)
                 .append("title", title)
-                .append("consumption", consumption)
                 .append("source", source)
+                .append("image_path", image_path)
+                .append("consumption_in_wh", consumption_in_wh)
                 .toString();
     }
-
-
-
-
 }

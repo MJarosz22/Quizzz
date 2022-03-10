@@ -47,7 +47,7 @@ public class ActivityOverviewCtrl implements Initializable {
     @Override
     public void initialize(URL location, ResourceBundle resources) {
         columnTitle.setCellValueFactory(q -> new SimpleStringProperty(q.getValue().title));
-        columnConsumption.setCellValueFactory(q -> new SimpleIntegerProperty(q.getValue().consumption));
+        columnConsumption.setCellValueFactory(q -> new SimpleIntegerProperty(q.getValue().co));
         columnSource.setCellValueFactory(q -> new SimpleStringProperty(q.getValue().source));
 
         columnTitle.setCellFactory(TextFieldTableCell.forTableColumn());
