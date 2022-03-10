@@ -16,6 +16,8 @@ public abstract class Question {
     private Activity[] activities = new Activity[3];
     private PowerUp[] usablePowerups;
 
+    public Question() {
+    }
 
     public Question(Activity[] activities) {
         if (activities.length != 3) throw new IllegalArgumentException();
