@@ -44,7 +44,9 @@ public class GameInstance {
     {
         Random random = new Random();
         int idx = random.nextInt(this.questions.size());
-        return this.questions.get(idx);
+        Question question = this.questions.get(idx);
+        this.questions.remove(idx);
+        return question;
     }
 
     public int getId() {
