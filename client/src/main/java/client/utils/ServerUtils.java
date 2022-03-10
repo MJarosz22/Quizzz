@@ -35,6 +35,15 @@ public class ServerUtils {
                 .get(new GenericType<>() {
                 });
     }
+    public List<Activity> getActivitiesRandomly() {
+        return ClientBuilder.newClient(new ClientConfig())
+                .target(SERVER).path("api/activities/random60")
+                .request(APPLICATION_JSON)
+                .accept(APPLICATION_JSON)
+                .get(new GenericType<>() {
+                });
+    }
+
 
     public Activity addActivity(Activity activity) {
         return ClientBuilder.newClient(new ClientConfig())

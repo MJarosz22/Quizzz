@@ -7,6 +7,7 @@ import org.apache.commons.lang3.builder.ToStringBuilder;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Random;
 
 public class GameInstance {
 
@@ -30,13 +31,20 @@ public class GameInstance {
      *
      * @param activities List of 60 activities
      */
-    public void generateQuestions(Activity[] activities) {
-        if (activities.length != 60) throw new IllegalArgumentException();
+    public void generateQuestions(List<Activity> activities) {
+        if (activities.size() != 60) throw new IllegalArgumentException();
         List<Question> questions = new ArrayList<>();
         for (int i = 0; i < 20; i++) {
-            questions.add(new MultipleChoiceQuestion(new Activity[]{activities[3 * i], activities[3 * i + 1], activities[3 * i + 2]}));
+            questions.add(new QuestionMoreExpensive(new Activity[] {activities.get(3*i), activities.get(3*i + 1), activities.get(3*i + 2)}));
         }
         this.questions = questions;
+    }
+
+    public Question getRandomQuestion()
+    {
+        Random random = new Random();
+        int idx = random.nextInt(this.questions.size());
+        return this.questions.get(idx);
     }
 
     public int getId() {

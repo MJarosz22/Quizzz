@@ -100,15 +100,18 @@ public class SinglePlayerGameCtrl {
         if (this.mainCtrl.getPlayer() != null) {
             this.player = mainCtrl.getPlayer();
             currentGame = new GameInstance(this.player.getGameInstanceId(), 0);
+
+            currentGame.generateQuestions(server.getActivitiesRandomly());
+
+            gameQuestions.addAll(currentGame.getQuestions());
+            progressBar.setProgress(-0.05);
+            score.setText("Your score: 0");
+            infoRefresh();
+            temporaryCounter = 1;
+            loadNextQuestion();
         }
         //TODO: generate the questions from database
-        //currentGame.generateQuestions(*list of activities*);
-        //gameQuestions.addAll(currentGame.getQuestions());
-        progressBar.setProgress(-0.05);
-        score.setText("Your score: 0");
-        infoRefresh();
-        temporaryCounter = 1;
-        loadNextQuestion();
+
     }
 
     /**
@@ -123,22 +126,29 @@ public class SinglePlayerGameCtrl {
         infoRefresh();
         setOptions(false);
 
-        Activity temporaryActivity1 = new Activity("correctAnswer", 100, "source");
-        Activity temporaryActivity2 = new Activity("wrongAnswer", 100, "source");
-        Activity temporaryActivity3 = new Activity("wrongAnswer", 100, "source");
-        Activity[] temporaryActivities = {temporaryActivity1, temporaryActivity2, temporaryActivity3};
+    /*
+        Activity activity1 = new Activity("id", "image", "activity 1", 1L, "source");
+        Activity activity2 = new Activity("id", "image", "activity 1", 2L, "source");
+        Activity activity3 = new Activity("id", "image", "activity 1", 3L, "source");
+        Activity[] activities = {activity1, activity2, activity3};
 
-        currentQuestion = new MultipleChoiceQuestion(temporaryActivities);
+        currentQuestion = new QuestionMoreExpensive(activities);
+    */
+        currentQuestion = currentGame.getRandomQuestion();
 
-        questionTitle.setText("QuestionTitle");
+        Platform.runLater(new Runnable(){
+            @Override
+            public void run() {
+                questionTitle.setText(currentQuestion.getTitle());
+                option1Button.setText(((QuestionMoreExpensive)currentQuestion).getActivities()[0].getTitle());
+                option2Button.setText(((QuestionMoreExpensive)currentQuestion).getActivities()[1].getTitle());
+                option3Button.setText(((QuestionMoreExpensive)currentQuestion).getActivities()[2].getTitle());
+                progressBar.setProgress(progressBar.getProgress() + 0.05);
 
-        option1Button.setText(currentQuestion.getActivities()[0].title);
-        option2Button.setText(currentQuestion.getActivities()[1].title);
-        option3Button.setText(currentQuestion.getActivities()[2].title);
+                questionCount.setText("Question " + temporaryCounter + "/20");
+            }
+        });
 
-        progressBar.setProgress(progressBar.getProgress() + 0.05);
-
-        questionCount.setText("Question " + temporaryCounter + "/20");
         //TODO: set the images, reset/start the timer, add timer logic, implement power-ups
     }
 
@@ -146,7 +156,7 @@ public class SinglePlayerGameCtrl {
      * This method is called when in a multiple choice question, user selects option 1
      */
     public void option1Selected() {
-        if (((MultipleChoiceQuestion) currentQuestion).getAnswer().equals(currentQuestion.getActivities()[0])) {
+        if (((QuestionMoreExpensive) currentQuestion).getAnswer() == ((QuestionMoreExpensive) currentQuestion).getActivities()[0].getConsumption_in_wh()) {
             correctAnswer();
         } else wrongAnswer();
     }
@@ -155,7 +165,7 @@ public class SinglePlayerGameCtrl {
      * This method is called when in a multiple choice question, user selects option 2
      */
     public void option2Selected() {
-        if (((MultipleChoiceQuestion) currentQuestion).getAnswer().equals(currentQuestion.getActivities()[1])) {
+        if (((QuestionMoreExpensive) currentQuestion).getAnswer() == ((QuestionMoreExpensive) currentQuestion).getActivities()[1].getConsumption_in_wh()) {
             correctAnswer();
         } else wrongAnswer();
     }
@@ -164,7 +174,7 @@ public class SinglePlayerGameCtrl {
      * This method is called when in a multiple choice question, user selects option 3
      */
     public void option3Selected() {
-        if (((MultipleChoiceQuestion) currentQuestion).getAnswer().equals(currentQuestion.getActivities()[2])) {
+        if (((QuestionMoreExpensive) currentQuestion).getAnswer() == ((QuestionMoreExpensive) currentQuestion).getActivities()[2].getConsumption_in_wh()) {
             correctAnswer();
         } else wrongAnswer();
     }

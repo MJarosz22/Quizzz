@@ -7,6 +7,7 @@ import org.springframework.web.bind.annotation.*;
 import server.database.ActivityRepository;
 
 import java.beans.PropertyEditor;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 import java.util.Random;
@@ -31,11 +32,20 @@ public class ActivityController {
 
     @PostMapping(path = {"", "/"})
     public ResponseEntity<Activity> addActivity(@RequestBody Activity activity) {
-        if (isNullOrEmpty(activity.source) || !isValidUrl(activity.source) || isNullOrEmpty(activity.title)
-                || activity.title.length() > 140 || activity.consumption <= 0) {
+        if (isNullOrEmpty(activity.getSource())
+                || isNullOrEmpty(activity.getId())
+                || !isValidUrl(activity.getSource())
+                || isNullOrEmpty(activity.getTitle())
+                || !isValidTitle(activity.getTitle())
+                || activity.getConsumption_in_wh() <= 0) {
             return ResponseEntity.badRequest().build();
         }
-        Activity savedActivity = activityRepository.save(new Activity(activity.title, activity.consumption, activity.source));
+        Activity savedActivity = activityRepository.save(new Activity(
+                activity.getId(),
+                activity.getImage_path(),
+                activity.getTitle(),
+                activity.getConsumption_in_wh(),
+                activity.getSource()));
         return ResponseEntity.ok(savedActivity);
     }
 
@@ -43,6 +53,12 @@ public class ActivityController {
         return s == null || s.isEmpty();
     }
 
+    /**
+     * Method that checks whether the source of an activity is a valid URL
+     *
+     * @param url - String object that is expected to be an URL
+     * @return - true, if the given string is an URL, or false otherwise.
+     */
     private static boolean isValidUrl(String url) {
         try {
             PropertyEditor urlEditor = new URLEditor();
@@ -53,14 +69,38 @@ public class ActivityController {
         return true;
     }
 
+
+    /**
+     * Method that validates an activity title
+     * A valid title should have <= 140 characters and be one-sentenced.
+     * Note that we consider a title to be valid even if it does not have an end of sentence punctuatio('.', '?' or '!'
+     *
+     * @param title - String object that needs to be validated
+     * @return - true, if the given title is valide, or false otherwise.
+     */
+    private static boolean isValidTitle(String title) {
+        int endOfSentence = 0;
+        int size = title.length();
+        for (char ch : title.toCharArray()) {
+            if (ch == '.' || ch == '!' || ch == '?')
+                endOfSentence++;
+        }
+
+        return size <= 140 && endOfSentence <= 1;
+    }
+
     @PutMapping("/{id}")
     public ResponseEntity<Activity> updateActivity(@PathVariable("id") long id, @RequestBody Activity activity) {
         Optional<Activity> activityData = activityRepository.findById(id);
         if (activityData.isPresent()) {
             Activity newActivity = activityData.get();
-            if (!isNullOrEmpty(activity.title)) newActivity.title = activity.title;
-            if (activity.consumption > 0) newActivity.consumption = activity.consumption;
-            if (!isNullOrEmpty(activity.source) && isValidUrl(activity.source)) newActivity.source = activity.source;
+            if (!isNullOrEmpty(activity.getId())) newActivity.setId(activity.getId());
+            newActivity.setImage_path(activity.getImage_path());
+            if (!isNullOrEmpty(activity.getTitle()) && isValidTitle(activity.getTitle()))
+                newActivity.setTitle(activity.getTitle());
+            if (activity.getConsumption_in_wh() > 0) newActivity.setConsumption_in_wh(activity.getConsumption_in_wh());
+            if (!isNullOrEmpty(activity.getSource()) && isValidUrl(activity.getSource()))
+                newActivity.setSource(activity.getSource());
             return ResponseEntity.ok(activityRepository.save(newActivity));
         }
         return ResponseEntity.notFound().build();
@@ -85,6 +125,33 @@ public class ActivityController {
         if (allAct.size() == 0) return ResponseEntity.notFound().build();
         int idx = random.nextInt(allAct.size());
         return ResponseEntity.ok(allAct.get(idx));
+    }
+
+    @GetMapping("/random60")
+    public ResponseEntity<List<Optional<Activity>>> getRandom60() {
+        //hard coded -> size of all activities - 60
+        long countIds = activityRepository.count();
+
+        int idRandom = (int)Math.abs(Math.random() * countIds) - 60;
+        List<Optional<Activity>> foundAct = new ArrayList<>();
+        int limit = 60;
+        int i = 0;
+        while(i < limit)
+        {
+            Optional<Activity> a = activityRepository.findById((long) idRandom);
+            if(a.isPresent() && !foundAct.contains(a))
+            {
+                foundAct.add(a);
+            }
+            else
+            {
+                limit++;
+            }
+            idRandom = (int)Math.abs(Math.random() * countIds) - 60;
+            i++;
+        }
+        if (foundAct.size() == 0) return ResponseEntity.notFound().build();
+        return ResponseEntity.ok(foundAct);
     }
 
     @DeleteMapping("/all")
