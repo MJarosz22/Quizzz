@@ -97,6 +97,10 @@ public class MainCtrl {
         return player;
     }
 
+    public LobbyCtrl getLobbyCtrl() {
+        return lobbyCtrl;
+    }
+
     public void setPlayer(SimpleUser player) {
         this.player = player;
     }

@@ -16,6 +16,7 @@
 package client;
 
 import client.scenes.*;
+import client.utils.ServerUtils;
 import com.google.inject.Injector;
 import javafx.application.Application;
 import javafx.stage.Stage;
@@ -44,5 +45,12 @@ public class Main extends Application {
         var mainCtrl = INJECTOR.getInstance(MainCtrl.class);
 
         mainCtrl.initialize(primaryStage, home, single, multi, leaderboard, lobby);
+    }
+
+    @Override
+    public void stop() {
+        var mainCtrl = INJECTOR.getInstance(MainCtrl.class);
+        ServerUtils serverUtils = new ServerUtils();
+        serverUtils.disconnect(mainCtrl.getPlayer());
     }
 }

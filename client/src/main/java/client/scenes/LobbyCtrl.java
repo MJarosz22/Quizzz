@@ -41,6 +41,7 @@ public class LobbyCtrl implements Initializable {
     }
 
     public void back() {
+        server.disconnect(mainCtrl.getPlayer());
         mainCtrl.showSplash();
     }
 
