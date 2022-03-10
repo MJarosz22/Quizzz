@@ -27,7 +27,7 @@ public class ActivityController {
     private static boolean isNullOrEmpty(String s) {
         return s == null || s.isEmpty();
     }
-    
+
     /**
      * Method that checks whether the source of an activity is a valid URL
      *

@@ -145,9 +145,9 @@ public class TestActivityRepository implements ActivityRepository {
             call("replace");
             Activity activity = findById(entity.getActivityID()).get();
             entity.setActivityID(activity.getActivityID());
-            activity.title = entity.title;
+            activity.setTitle(entity.getTitle());
             activity.setConsumption_in_wh(entity.getConsumption_in_wh());
-            activity.source = entity.source;
+            activity.setSource(entity.getSource());
             return entity;
         }
     }
