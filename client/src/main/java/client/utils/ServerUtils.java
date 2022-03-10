@@ -70,4 +70,15 @@ public class ServerUtils {
                 .accept(APPLICATION_JSON)
                 .put(Entity.entity(activity, APPLICATION_JSON), Activity.class);
     }
+
+    public boolean disconnect(SimpleUser player) {
+        Client client = ClientBuilder.newClient(new ClientConfig());
+        return client //
+                .target(SERVER).path("api/game/ " + player.getGameInstanceId() + "/disconnect") //
+                .request(APPLICATION_JSON).cookie("user-id", player.getCookie()) //
+                .accept(APPLICATION_JSON) //
+                .delete(new GenericType<>() {
+                });
+    }
+
 }
