@@ -15,6 +15,10 @@
  */
 package server.api;
 
+import commons.Activity;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
+
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.springframework.http.HttpStatus.*;
 
@@ -34,7 +38,7 @@ public class ActivityControllerTest {
 
     private ActivityController sut;
 
-    private static Activity getActivity(String title, int consumption, String source) {
+    private static Activity getActivity(String title, Long consumption, String source) {
         return new Activity(title, consumption, source);
     }
 
@@ -167,14 +171,6 @@ public class ActivityControllerTest {
 
     private static Activity getActivity(String id, String image_path, String title, Long consumption, String source) {
         return new Activity(id, image_path, title, consumption, source);
-    }
-
-    private static void printActivities(ActivityController sut) {
-        // Testing-purpose ONLY
-        List<Activity> activities = sut.getAll();
-        activities.forEach(activity -> {
-            System.out.println(activity);
-        });
     }
 
 

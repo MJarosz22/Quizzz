@@ -14,21 +14,27 @@ public class Activity {
     @GeneratedValue(strategy = GenerationType.AUTO)
     private Long activityID;
 
+    private String id;
+
     public String title;
     public int consumption;
     public String source;
 
     private String image_path;
 
-    private String title;
-
     private Long consumption_in_wh; //some values in the JSON file are outside the Integer length, so we have to use long
-
-    private String source;
 
     @SuppressWarnings("unused")
     public Activity() {
 
+    }
+
+    public Activity(String title, Long consumption_in_wh, String source) {
+        this.id = "";
+        image_path = "";
+        this.title = title;
+        this.consumption_in_wh = consumption_in_wh;
+        this.source = source;
     }
 
     public Activity(String id, String image_path, String title, Long consumption_in_wh, String source) {
@@ -36,7 +42,7 @@ public class Activity {
         this.image_path = image_path;
         if(image_path == null) image_path = "";
         this.title = title;
-        this.consumption = consumption;
+        this.consumption_in_wh = consumption_in_wh;
         this.source = source;
     }
 

@@ -2,6 +2,7 @@ package client.scenes;
 
 import client.utils.ServerUtils;
 import commons.Activity;
+import javafx.beans.property.SimpleIntegerProperty;
 import javafx.beans.property.SimpleLongProperty;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.collections.FXCollections;
