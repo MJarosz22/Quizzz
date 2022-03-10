@@ -70,7 +70,7 @@ public class AddActivityCtrl {
         try {
             var titleText = title.getText();
             if (titleText.length() > 140) return null;
-            var consumptionInt = Integer.parseInt(consumption.getText());
+            var consumptionInt = Long.parseLong(consumption.getText());
             if (consumptionInt == 0) return null;
             var sourceText = source.getText();
             return new Activity(titleText, consumptionInt, sourceText);
