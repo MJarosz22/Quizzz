@@ -52,7 +52,7 @@ public class ActivityController {
     @PostMapping(path = {"", "/"})
     public ResponseEntity<Activity> addActivity(@RequestBody Activity activity) {
         if (isNullOrEmpty(activity.source) || !isValidUrl(activity.source) || isNullOrEmpty(activity.title)
-                || activity.title.length() > 140 || activity.consumption <= 0) {
+                || activity.title.length() > 140 || activity.getConsumption_in_wh() <= 0) {
             return ResponseEntity.badRequest().build();
         }
         Activity savedActivity = activityRepository.save(new Activity(activity.title, activity.getConsumption_in_wh(), activity.source));
@@ -65,7 +65,7 @@ public class ActivityController {
         if (activityData.isPresent()) {
             Activity newActivity = activityData.get();
             if (!isNullOrEmpty(activity.title)) newActivity.title = activity.title;
-            if (activity.consumption > 0) newActivity.consumption = activity.consumption;
+            if (activity.getConsumption_in_wh() > 0) newActivity.setConsumption_in_wh(activity.getConsumption_in_wh());
             if (!isNullOrEmpty(activity.source) && isValidUrl(activity.source)) newActivity.source = activity.source;
             return ResponseEntity.ok(activityRepository.save(newActivity));
         }

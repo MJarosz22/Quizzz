@@ -15,8 +15,9 @@
  */
 package client.scenes;
 
-import client.utils.ServerUtils;
 import com.google.inject.Inject;
+
+import client.utils.ServerUtils;
 import commons.Activity;
 import jakarta.ws.rs.WebApplicationException;
 import javafx.fxml.FXML;
@@ -31,10 +32,16 @@ public class AddActivityCtrl {
     private final MainActivityCtrl mainActivityCtrl;
 
     @FXML
+    private TextField id;
+
+    @FXML
+    private TextField image_path;
+
+    @FXML
     private TextField title;
 
     @FXML
-    private TextField consumption;
+    private TextField consumption_in_wh;
 
     @FXML
     private TextField source;
@@ -68,20 +75,24 @@ public class AddActivityCtrl {
 
     private Activity getActivity() {
         try {
+            var idText = id.getText();
+            var imagePathText = image_path.getText();
             var titleText = title.getText();
             if (titleText.length() > 140) return null;
-            var consumptionInt = Long.parseLong(consumption.getText());
-            if (consumptionInt == 0) return null;
+            var consumptionLong = Long.parseLong(consumption_in_wh.getText());
+            if (consumptionLong == 0) return null;
             var sourceText = source.getText();
-            return new Activity(titleText, consumptionInt, sourceText);
+            return new Activity(idText, imagePathText, titleText, consumptionLong, sourceText);
         } catch (NumberFormatException e) {
             return null;
         }
     }
 
     private void clearFields() {
+        id.clear();
+        image_path.clear();
         title.clear();
-        consumption.clear();
+        consumption_in_wh.clear();
         source.clear();
     }
 
