@@ -3,19 +3,28 @@ package client.scenes;
 import client.utils.ServerUtils;
 import com.google.inject.Inject;
 import commons.*;
+import commons.player.SimpleUser;
+import javafx.application.Platform;
 import javafx.fxml.FXML;
 import javafx.scene.control.Button;
 import javafx.scene.control.ProgressBar;
 import javafx.scene.image.ImageView;
+import javafx.scene.layout.AnchorPane;
 import javafx.scene.text.Text;
 
+import java.io.File;
+import java.net.URI;
 import java.util.*;
+import java.util.concurrent.CompletableFuture;
+import java.util.concurrent.TimeUnit;
 
 //Note that in the future, we can make this controller and its scene suitable for multiplayer games as well
 public class SinglePlayerGameCtrl {
 
     private final ServerUtils server;
     private final MainCtrl mainCtrl;
+    private final String correctEmojiPath = "client/src/main/resources/images/correct-answer.png";
+    private final String wrongEmojiPath = "client/src/main/resources/images/wrong-answer.png";
 
     private SimpleUser player;
 
@@ -34,6 +43,15 @@ public class SinglePlayerGameCtrl {
 
     @FXML
     private Text score;
+
+    @FXML
+    private Text points;
+
+    @FXML
+    private Text answer;
+
+    @FXML
+    private AnchorPane emoji;
 
     @FXML
     private Button option1Button;
@@ -76,6 +94,9 @@ public class SinglePlayerGameCtrl {
      * set current game, reset the board
      */
     public void initialize() {
+        colorsRefresh();
+        setOptions(false);
+
         if (this.mainCtrl.getPlayer() != null) {
             this.player = mainCtrl.getPlayer();
             currentGame = new GameInstance(this.player.getGameInstanceId(), 0);
@@ -85,6 +106,7 @@ public class SinglePlayerGameCtrl {
         //gameQuestions.addAll(currentGame.getQuestions());
         progressBar.setProgress(-0.05);
         score.setText("Your score: 0");
+        infoRefresh();
         temporaryCounter = 1;
         loadNextQuestion();
     }
@@ -96,6 +118,11 @@ public class SinglePlayerGameCtrl {
         //TODO: add support for different question types
         //TODO: when we get the activity bank, we will replace the hardcoded currentQuestion
         //this.currentQuestion = gameQuestions.poll();
+
+        colorsRefresh();
+        infoRefresh();
+        setOptions(false);
+
         Activity temporaryActivity1 = new Activity("correctAnswer", 100, "source");
         Activity temporaryActivity2 = new Activity("wrongAnswer", 100, "source");
         Activity temporaryActivity3 = new Activity("wrongAnswer", 100, "source");
@@ -120,7 +147,6 @@ public class SinglePlayerGameCtrl {
      */
     public void option1Selected() {
         if (((MultipleChoiceQuestion) currentQuestion).getAnswer().equals(currentQuestion.getActivities()[0])) {
-            //set the color to green
             correctAnswer();
         } else wrongAnswer();
     }
@@ -130,7 +156,6 @@ public class SinglePlayerGameCtrl {
      */
     public void option2Selected() {
         if (((MultipleChoiceQuestion) currentQuestion).getAnswer().equals(currentQuestion.getActivities()[1])) {
-            //set the color to green
             correctAnswer();
         } else wrongAnswer();
     }
@@ -140,7 +165,6 @@ public class SinglePlayerGameCtrl {
      */
     public void option3Selected() {
         if (((MultipleChoiceQuestion) currentQuestion).getAnswer().equals(currentQuestion.getActivities()[2])) {
-            //set the color to green
             correctAnswer();
         } else wrongAnswer();
     }
@@ -151,30 +175,45 @@ public class SinglePlayerGameCtrl {
     public void correctAnswer() {
         player.addScore(100);
         score.setText("Your score: " + player.getScore());
-        //TODO:
-        //set the color of the button to green
-        //make a prompt "correct answer"
+        points.setText("+100 points"); // In the future calculate the # of points, DON'T hardcode
+        answer.setText("Correct answer");
+        setEmoji(emoji, true);
 
-        if (!isGameOver())
-            loadNextQuestion();
-        else {
-            mainCtrl.showSinglePlayerGameOver();
-            progressBar.setProgress(1);
+        setColors(option1Button, option2Button, option3Button);
+        setOptions(true);
+
+        CompletableFuture.delayedExecutor(1, TimeUnit.SECONDS).execute(() -> {
+            if (!isGameOver())
+                loadNextQuestion();
+        });
+
+
+        if (temporaryCounter >= 20) {
+            gameOver(2000);
         }
+
     }
 
     /**
      * User's answer was incorrect. Show that the answer was incorrect, start next round.
      */
     public void wrongAnswer() {
-        //TODO:
-        //set the color of the correct button to red
-        //make a prompt "wrong answer"
-        if (!isGameOver())
-            loadNextQuestion();
-        else {
-            mainCtrl.showSinglePlayerGameOver();
-            progressBar.setProgress(1);
+        points.setText("+0 points"); // In the future calculate the # of points, DON'T hardcode
+        answer.setText("Correct answer");
+        setEmoji(emoji, false);
+
+        setColors(option1Button, option2Button, option3Button);
+        setOptions(true);
+
+
+        CompletableFuture.delayedExecutor(1, TimeUnit.SECONDS).execute(() -> {
+            if (!isGameOver())
+                loadNextQuestion();
+        });
+
+
+        if (temporaryCounter >= 20) {
+            gameOver(2000);
         }
     }
 
@@ -186,4 +225,89 @@ public class SinglePlayerGameCtrl {
         //return this.gameQuestions.isEmpty();
         return 20 == temporaryCounter++;
     }
+
+    /**
+     * Restarts the buttons to their original state -> all get the white background color
+     */
+    public void colorsRefresh() {
+        option1Button.setStyle("-fx-background-color: white; ");
+        option2Button.setStyle("-fx-background-color: white; ");
+        option3Button.setStyle("-fx-background-color: white; ");
+    }
+
+    /**
+     * Makes the background of  the correct button GREEN and the background of the wrong buttons RED
+     *
+     * @param correct - Button object that represents the correct option for a MC question
+     * @param wrong1  - Button object that represents one incorrect option for a MC question
+     * @param wrong2  - Button object that represents another incorrect option for a MC question
+     */
+    public void setColors(Button correct, Button wrong1, Button wrong2) {
+        correct.setStyle("-fx-background-color: green; ");
+        wrong1.setStyle("-fx-background-color: red; ");
+        wrong2.setStyle("-fx-background-color: red; ");
+    }
+
+    /**
+     * Sets buttons as functional / disabled, depending on the parameter
+     *
+     * @param value - boolean value that disables our 3 option buttons if it is 'true', or makes them functional otherwise
+     */
+    public void setOptions(boolean value) {
+        option1Button.setDisable(value);
+        option2Button.setDisable(value);
+        option3Button.setDisable(value);
+    }
+
+    /**
+     * Sets the 'points' and 'answer' text fields to being empty strings.
+     */
+    public void infoRefresh() {
+        points.setText("");
+        answer.setText("");
+        emoji.setVisible(false);
+    }
+
+    public void setEmoji(AnchorPane emoji, boolean correct) {
+        emoji.setVisible(true);
+        File file = null;
+        if (correct)
+            file = new File(correctEmojiPath);
+        else
+            file = new File(wrongEmojiPath);
+        URI uri = file.toURI();
+        emoji.setStyle("-fx-background-image: url(" + uri.toString() + ");");
+    }
+
+
+    /**
+     * Freezes the scene for 'timer' miliseconds ('run' method of thread, the first one) and after this interval of time runs the
+     * code inside the 'run'  method of Platform.runLater (the second one), by showing the user the gameOver screen
+     *
+     * @param timer - an integer value representing the number of miliseconds after which the thread executes
+     */
+    public void gameOver(int timer) {
+        Thread thread = new Thread(new Runnable() {
+
+            public void run() {
+
+                try {
+                    Thread.sleep(timer);
+                } catch (InterruptedException e) {
+                    e.printStackTrace();
+                }
+
+                Platform.runLater(new Runnable() {
+                    public void run() {
+                        mainCtrl.showSinglePlayerGameOver();
+                        progressBar.setProgress(1);
+                    }
+                });
+
+            }
+        });
+        thread.start();
+    }
+
+
 }

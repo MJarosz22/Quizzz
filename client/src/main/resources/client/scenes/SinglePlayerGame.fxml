@@ -16,6 +16,18 @@
                 <Font size="14.0"/>
             </font>
         </Text>
+        <Text fx:id="points" layoutX="62.0" layoutY="82.0" strokeType="OUTSIDE" strokeWidth="0.0" text=" Points"
+              wrappingWidth="106.0">
+            <font>
+                <Font size="14.0"/>
+            </font>
+        </Text>
+        <Text fx:id="answer" layoutX="51.0" layoutY="113.0" strokeType="OUTSIDE" strokeWidth="0.0"
+              text="Your answer is correct or wrong" wrappingWidth="127.21630859375">
+            <font>
+                <Font size="14.0"/>
+            </font>
+        </Text>
         <Text fx:id="questionTitle" layoutX="449.0" layoutY="84.0" strokeType="OUTSIDE" strokeWidth="0.0"
               text="Question">
             <font>
@@ -34,11 +46,14 @@
         <ImageView fx:id="image2" fitHeight="83.0" fitWidth="115.0" layoutX="689.0" layoutY="208.0" pickOnBounds="true"
                    preserveRatio="true"/>
         <Button fx:id="option1Button" layoutX="161.0" layoutY="336.0" mnemonicParsing="false"
-                onAction="#option1Selected" prefHeight="92.0" prefWidth="147.0" text="Option 1"/>
+                onAction="#option1Selected" prefHeight="92.0" prefWidth="147.0" style="-fx-background-color: white;"
+                text="Option 1"/>
         <Button fx:id="option2Button" layoutX="407.0" layoutY="336.0" mnemonicParsing="false"
-                onAction="#option2Selected" prefHeight="92.0" prefWidth="147.0" text="Option 2"/>
+                onAction="#option2Selected" prefHeight="92.0" prefWidth="147.0" style="-fx-background-color: white;"
+                text="Option 2"/>
         <Button fx:id="option3Button" layoutX="677.0" layoutY="336.0" mnemonicParsing="false"
-                onAction="#option3Selected" prefHeight="92.0" prefWidth="139.0" text="Option 3"/>
+                onAction="#option3Selected" prefHeight="92.0" prefWidth="139.0" style="-fx-background-color: white;"
+                text="Option 3"/>
         <Button layoutX="41.0" layoutY="434.0" mnemonicParsing="false" onAction="#back" prefHeight="68.0"
                 prefWidth="94.0" style="-fx-background-radius: 25;" text="LEAVE &#10;GAME" textAlignment="JUSTIFY"/>
         <ProgressBar fx:id="progressBar" layoutX="12.0" layoutY="508.0" prefHeight="18.0" prefWidth="942.0"
@@ -49,5 +64,7 @@
                 <Font size="16.0"/>
             </font>
         </Text>
+        <AnchorPane fx:id="emoji" layoutX="187.0" layoutY="84.0" prefHeight="30.0" prefWidth="30.0"
+                    style="-fx-background-size: contain;"/>
     </children>
 </AnchorPane>

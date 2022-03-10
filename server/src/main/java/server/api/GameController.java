@@ -2,6 +2,8 @@ package server.api;
 
 
 import commons.*;
+import commons.player.Player;
+import commons.player.SimpleUser;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.http.HttpHeaders;
@@ -77,25 +79,6 @@ public class GameController {
         gameInstances.get(gameInstances.size() - 1).getPlayers().add(savedPlayer.toPlayer(gameInstances.get(gameInstances.size() - 1)));
         logger.info("[GI " + (gameInstances.size() - 1) + "] PLAYER (" + savedPlayer.getId() + ") JOINED: NAME=" + savedPlayer.getName());
         return ResponseEntity.ok().header(HttpHeaders.SET_COOKIE, tokenCookie.toString()).body(savedPlayer);
-    }
-
-    /**
-     * Lets a client join a gameInstance as a player for the SinglePlayer variant
-     *
-     * @param name Name of new player
-     * @return SimpleUser (Including id, name, and gameInstanceID)
-     */
-    @PostMapping("/single-player")
-    public ResponseEntity<SimpleUser> addSimpleUser(@RequestBody String name) {
-        if (isNullOrEmpty(name)) return ResponseEntity.badRequest().build();
-
-        gameInstances.add(new GameInstance(gameInstances.size() - 1, 0));
-        SimpleUser savedPlayer = new SimpleUser(players.size(), name, gameInstances.get(gameInstances.size() - 1).getId());
-        players.add(savedPlayer);
-        gameInstances.get(gameInstances.size() - 1).getPlayers().add(savedPlayer.toPlayer(gameInstances.get(gameInstances.size() - 1)));
-        logger.info("[GI " + (gameInstances.size() - 1) + "] PLAYER (" + savedPlayer.getId() + ") JOINED: NAME=" + savedPlayer.getName());
-
-        return ResponseEntity.ok(savedPlayer);
     }
 
     @GetMapping("/{gameInstanceId}/q{questionNumber}")
