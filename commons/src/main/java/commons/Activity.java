@@ -4,21 +4,24 @@ import org.apache.commons.lang3.builder.EqualsBuilder;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
 import org.apache.commons.lang3.builder.ToStringBuilder;
 
+
 import javax.persistence.*;
 
 @Entity
-@Table(name = "Activity")
 public class Activity {
 
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
-    private long activityID;
+    private Long activityID;
 
     private String id; //id provided by activity-bank (i.e. "00-shower")
 
     private String image_path;
+
     private String title;
-    private int consumption_in_wh;
+
+    private Long consumption_in_wh; //some values in the JSON file are outside the Integer length, so we have to use long
+
     private String source;
 
     @SuppressWarnings("unused")
@@ -26,13 +29,67 @@ public class Activity {
 
     }
 
-    public Activity(String id, String image_path, String title, int consumption_in_wh, String source) {
+    public Activity(String id, String image_path, String title, Long consumption_in_wh, String source) {
         this.id = id;
         this.image_path = image_path;
-        if (image_path == null) image_path = "";
+        if(image_path == null) image_path = "";
         this.title = title;
         this.consumption_in_wh = consumption_in_wh;
         this.source = source;
+    }
+
+    public void setId(String id) {
+        this.id = id;
+    }
+
+    @Column(name = "id")
+    public String getId() {
+        return this.id;
+    }
+
+    @Column(name = "image_path")
+    public String getImage_path() {
+        return image_path;
+    }
+
+    public void setImage_path(String image_path) {
+        this.image_path = image_path;
+    }
+
+    @Column(name = "title")
+    public String getTitle() {
+        return title;
+    }
+
+    public void setTitle(String title) {
+        this.title = title;
+    }
+
+    @Column(name = "consumption_in_wh")
+    public Long getConsumption_in_wh() {
+        return consumption_in_wh;
+    }
+
+    public void setConsumption_in_wh(Long consumption_in_wh) {
+        this.consumption_in_wh = consumption_in_wh;
+    }
+
+    @Column(name = "source")
+    public String getSource() {
+        return source;
+    }
+
+    public void setSource(String source) {
+        this.source = source;
+    }
+
+    @Column(name = "activityID")
+    public Long getActivityID() {
+        return this.activityID;
+    }
+
+    public void setActivityID(Long activityID) {
+        this.activityID = activityID;
     }
 
     @Override
@@ -77,57 +134,7 @@ public class Activity {
                 .toString();
     }
 
-    @Column(name = "activityID")
-    public long getActivityID() {
-        return activityID;
-    }
 
-    public void setActivityID(long activityID) {
-        this.activityID = activityID;
-    }
 
-    @Column(name = "id")
-    public String getId() {
-        return id;
-    }
 
-    public void setId(String id) {
-        this.id = id;
-    }
-
-    @Column(name = "image_path")
-    public String getImage_path() {
-        return image_path;
-    }
-
-    public void setImage_path(String image_path) {
-        this.image_path = image_path;
-    }
-
-    @Column(name = "title")
-    public String getTitle() {
-        return title;
-    }
-
-    public void setTitle(String title) {
-        this.title = title;
-    }
-
-    @Column(name = "consumption_in_wh")
-    public int getConsumption_in_wh() {
-        return consumption_in_wh;
-    }
-
-    public void setConsumption_in_wh(int consumption_in_wh) {
-        this.consumption_in_wh = consumption_in_wh;
-    }
-
-    @Column(name = "source")
-    public String getSource() {
-        return source;
-    }
-
-    public void setSource(String source) {
-        this.source = source;
-    }
 }
