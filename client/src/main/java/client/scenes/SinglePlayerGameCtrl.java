@@ -63,6 +63,18 @@ public class SinglePlayerGameCtrl {
     private Button option3Button;
 
     @FXML
+    private Button correct_answer;
+
+    @FXML
+    private  Button wrong_answer1;
+
+    @FXML
+    private  Button wrong_answer2;
+
+    @FXML
+    private  Button wrong_answer3;
+
+    @FXML
     private ImageView image1;
 
     @FXML
@@ -126,14 +138,6 @@ public class SinglePlayerGameCtrl {
         infoRefresh();
         setOptions(false);
 
-    /*
-        Activity activity1 = new Activity("id", "image", "activity 1", 1L, "source");
-        Activity activity2 = new Activity("id", "image", "activity 1", 2L, "source");
-        Activity activity3 = new Activity("id", "image", "activity 1", 3L, "source");
-        Activity[] activities = {activity1, activity2, activity3};
-
-        currentQuestion = new QuestionMoreExpensive(activities);
-    */
         currentQuestion = currentGame.getRandomQuestion();
 
         Platform.runLater(new Runnable(){
@@ -146,6 +150,12 @@ public class SinglePlayerGameCtrl {
                 progressBar.setProgress(progressBar.getProgress() + 0.05);
 
                 questionCount.setText("Question " + temporaryCounter + "/20");
+                if (((QuestionMoreExpensive) currentQuestion).getAnswer() == ((QuestionMoreExpensive) currentQuestion).getActivities()[0].getConsumption_in_wh())
+                    correct_answer = option1Button;
+                if (((QuestionMoreExpensive) currentQuestion).getAnswer() == ((QuestionMoreExpensive) currentQuestion).getActivities()[1].getConsumption_in_wh())
+                    correct_answer = option2Button;
+                if (((QuestionMoreExpensive) currentQuestion).getAnswer() == ((QuestionMoreExpensive) currentQuestion).getActivities()[2].getConsumption_in_wh())
+                    correct_answer = option3Button;
             }
         });
 
@@ -158,7 +168,9 @@ public class SinglePlayerGameCtrl {
     public void option1Selected() {
         if (((QuestionMoreExpensive) currentQuestion).getAnswer() == ((QuestionMoreExpensive) currentQuestion).getActivities()[0].getConsumption_in_wh()) {
             correctAnswer();
-        } else wrongAnswer();
+        }else {
+            wrongAnswer();
+        }
     }
 
     /**
@@ -167,7 +179,9 @@ public class SinglePlayerGameCtrl {
     public void option2Selected() {
         if (((QuestionMoreExpensive) currentQuestion).getAnswer() == ((QuestionMoreExpensive) currentQuestion).getActivities()[1].getConsumption_in_wh()) {
             correctAnswer();
-        } else wrongAnswer();
+        } else {
+            wrongAnswer();
+        }
     }
 
     /**
@@ -176,7 +190,9 @@ public class SinglePlayerGameCtrl {
     public void option3Selected() {
         if (((QuestionMoreExpensive) currentQuestion).getAnswer() == ((QuestionMoreExpensive) currentQuestion).getActivities()[2].getConsumption_in_wh()) {
             correctAnswer();
-        } else wrongAnswer();
+        }else {
+            wrongAnswer();
+        }
     }
 
     /**
@@ -189,7 +205,7 @@ public class SinglePlayerGameCtrl {
         answer.setText("Correct answer");
         setEmoji(emoji, true);
 
-        setColors(option1Button, option2Button, option3Button);
+        setColors();
         setOptions(true);
 
         CompletableFuture.delayedExecutor(1, TimeUnit.SECONDS).execute(() -> {
@@ -209,10 +225,10 @@ public class SinglePlayerGameCtrl {
      */
     public void wrongAnswer() {
         points.setText("+0 points"); // In the future calculate the # of points, DON'T hardcode
-        answer.setText("Correct answer");
+        answer.setText("Wrong answer");
         setEmoji(emoji, false);
 
-        setColors(option1Button, option2Button, option3Button);
+        setColors();
         setOptions(true);
 
 
@@ -240,22 +256,21 @@ public class SinglePlayerGameCtrl {
      * Restarts the buttons to their original state -> all get the white background color
      */
     public void colorsRefresh() {
-        option1Button.setStyle("-fx-background-color: white; ");
-        option2Button.setStyle("-fx-background-color: white; ");
-        option3Button.setStyle("-fx-background-color: white; ");
+        option1Button.setStyle("-fx-background-color: #91e4fb; ");
+        option2Button.setStyle("-fx-background-color: #91e4fb; ");
+        option3Button.setStyle("-fx-background-color: #91e4fb; ");
     }
 
     /**
      * Makes the background of  the correct button GREEN and the background of the wrong buttons RED
      *
-     * @param correct - Button object that represents the correct option for a MC question
-     * @param wrong1  - Button object that represents one incorrect option for a MC question
-     * @param wrong2  - Button object that represents another incorrect option for a MC question
+     *
      */
-    public void setColors(Button correct, Button wrong1, Button wrong2) {
-        correct.setStyle("-fx-background-color: green; ");
-        wrong1.setStyle("-fx-background-color: red; ");
-        wrong2.setStyle("-fx-background-color: red; ");
+    public void setColors() {
+        correct_answer.setStyle("-fx-background-color: green; ");
+        if(option1Button!=correct_answer) option1Button.setStyle("-fx-background-color: red; ");
+        if(option2Button!=correct_answer) option2Button.setStyle("-fx-background-color: red; ");
+        if(option3Button!=correct_answer) option3Button.setStyle("-fx-background-color: red; ");
     }
 
     /**
