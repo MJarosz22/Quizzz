@@ -163,14 +163,4 @@ public class GameController {
         if (optPlayer.isEmpty()) return null;
         else return optPlayer.get();
     }
-
-    @DeleteMapping("/{gameInstanceId}/disconnect")
-    public ResponseEntity<Boolean> disconnect(@PathVariable int gameInstanceId,
-                                              @CookieValue(name = "user-id", defaultValue = "null") String cookie) {
-        Player removePlayer = getPlayerFromGameInstance(gameInstanceId, cookie);
-        if(removePlayer == null) return ResponseEntity.badRequest().build();
-        logger.info("[GI " + (gameInstanceId) + "] PLAYER (" + removePlayer.getId() + ") DISCONNECTED");
-        return ResponseEntity.ok(gameInstances.get(gameInstanceId).getPlayers().remove(removePlayer));
-    }
-
 }
