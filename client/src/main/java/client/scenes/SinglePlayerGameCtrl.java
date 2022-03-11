@@ -197,6 +197,9 @@ public class SinglePlayerGameCtrl {
                     answer1.setSelected(false);
                     answer2.setSelected(false);
                     answer3.setSelected(false);
+                    answer1.setStyle("-fx-background-color: #91e4fb; ");
+                    answer2.setStyle("-fx-background-color: #91e4fb; ");
+                    answer3.setStyle("-fx-background-color: #91e4fb; ");
                     option1Button.setText(((QuestionWhichOne) currentQuestion).getActivity().getTitle());
                     option1Button.disabledProperty();
                     option2Button.setVisible(false);
@@ -404,6 +407,7 @@ public class SinglePlayerGameCtrl {
         long number = Long.parseLong(input.toString());
         if( number == ((QuestionHowMuch) currentQuestion).getActivity().getConsumption_in_wh()) {
             player.addScore(100);
+            score.setText("Your score: " + player.getScore());
             points.setText("+100 points");
             answer.setText("Correct answer");
             setEmoji(emoji, true);
@@ -431,32 +435,47 @@ public class SinglePlayerGameCtrl {
 
     public void answer1Selected(){
         long response = Long.parseLong(answer1.getText());
-        isSelectionCorrect(response);
+        isSelectionCorrect(answer1,response);
     }
 
     public void answer2Selected(){
         long response = Long.parseLong(answer2.getText());
-        isSelectionCorrect(response);
+        isSelectionCorrect(answer2,response);
     }
 
     public void answer3Selected(){
         long response = Long.parseLong(answer3.getText());
-        isSelectionCorrect(response);
+        isSelectionCorrect(answer3,response);
     }
 
-    public void isSelectionCorrect(long response) {
+    public void isSelectionCorrect(RadioButton player_answer, long response) {
 
         if (response == ((QuestionWhichOne) currentQuestion).getActivity().getConsumption_in_wh()){
             player.addScore(100);
+            score.setText("Your score: " + player.getScore());
             points.setText("+100 points");
             answer.setText("Correct answer");
             setEmoji(emoji, true);
+            player_answer.setStyle("-fx-background-color: green; ");
+            if(!answer1.equals(player_answer)) answer1.setStyle("-fx-background-color: red; ");
+            if(!answer2.equals(player_answer)) answer2.setStyle("-fx-background-color: red; ");
+            if(!answer3.equals(player_answer)) answer3.setStyle("-fx-background-color: red; ");
         }
         else{
             points.setText("+0 points");
             answer.setText("Wrong answer");
             setEmoji(emoji, false);
+            if(Long.parseLong(answer1.getText()) == ((QuestionWhichOne) currentQuestion).getActivity().getConsumption_in_wh())
+                answer1.setStyle("-fx-background-color: green; ");
+            else answer1.setStyle("-fx-background-color: red; ");
+            if(Long.parseLong(answer2.getText()) == ((QuestionWhichOne) currentQuestion).getActivity().getConsumption_in_wh())
+                answer2.setStyle("-fx-background-color: green; ");
+            else answer2.setStyle("-fx-background-color: red; ");
+            if(Long.parseLong(answer3.getText()) == ((QuestionWhichOne) currentQuestion).getActivity().getConsumption_in_wh())
+                answer3.setStyle("-fx-background-color: green; ");
+            else answer3.setStyle("-fx-background-color: red; ");
         }
+
         setOptions(true);
 
         CompletableFuture.delayedExecutor(1, TimeUnit.SECONDS).execute(() -> {
