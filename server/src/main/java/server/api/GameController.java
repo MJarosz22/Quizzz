@@ -2,9 +2,9 @@ package server.api;
 
 
 import commons.*;
-import commons.communication.RequestToJoin;
 import commons.player.Player;
 import commons.player.SimpleUser;
+import communication.RequestToJoin;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.http.HttpHeaders;
@@ -21,6 +21,8 @@ import java.util.Optional;
 import java.util.Random;
 import java.util.stream.Collectors;
 
+
+
 @RestController
 @RequestMapping("api/game")
 public class GameController {
@@ -32,6 +34,7 @@ public class GameController {
     private final List<GameInstance> gameInstances;
     private final List<SimpleUser> players;
     private static int currentMPGIId; //Current ID of gameInstance for multiplayer
+
 
     /**
      * Creates the GameController and initializes the first gameInstance
@@ -45,25 +48,23 @@ public class GameController {
         System.out.println(this.activityRepository.findAll());
         gameInstances = new ArrayList<>();
         gameInstances.add(new GameInstance(gameInstances.size(), GameInstance.MULTI_PLAYER));
-        currentMPGIId = 0;
+/*
         //TODO Make it so that these activities actually get merged into 20 questions and ensure there are no duplicates (if possible)
+        // TODO: In order to make sure there are no duplicates, we can get use of "seeds".
+        Activity[] activities = new Activity[60];
         List<Activity> allActivities = activityRepository.findAll();
-        if (allActivities.size() == 0) {
-            logger.error("No activities found! Cannot generate questions for Gameinstance");
-        } else {
-            Activity[] activities = new Activity[60];
-
-            for (int i = 0; i < 60; i++) {
-                activities[i] = allActivities.get(random.nextInt(allActivities.size()));
-            }
-            gameInstances.get(0).generateQuestions(activities);
+        for (int i = 0; i < 60; i++) {
+            activities[i] = allActivities.get(random.nextInt(allActivities.size()));
         }
+        gameInstances.get(0).generateQuestions(activities);
+
+ */
         players = new ArrayList<>();
     }
 
-    private static boolean isNullOrEmpty(String s) {
-        return s == null || s.isEmpty();
-    }
+//    ---------------------------------------------------------------------------
+//    ---------------------------     PRE-LOBBY     -----------------------------
+//    ---------------------------------------------------------------------------
 
     /**
      * Lets a client join a gameInstance as a player
@@ -72,7 +73,7 @@ public class GameController {
      */
     @PostMapping("/join")
     public ResponseEntity<SimpleUser> addPlayer(@RequestBody RequestToJoin request) {
-        if (request == null || isNullOrEmpty(request.getName())) return ResponseEntity.badRequest().build();
+        if (request == null) return ResponseEntity.badRequest().build();
         ResponseCookie tokenCookie = ResponseCookie.from("user-id", DigestUtils.md5DigestAsHex(
                 (request.getName() + System.currentTimeMillis()).getBytes(StandardCharsets.UTF_8))).build();
 
@@ -162,4 +163,14 @@ public class GameController {
         if (optPlayer.isEmpty()) return null;
         else return optPlayer.get();
     }
+
+    @DeleteMapping("/{gameInstanceId}/disconnect")
+    public ResponseEntity<Boolean> disconnect(@PathVariable int gameInstanceId,
+                                              @CookieValue(name = "user-id", defaultValue = "null") String cookie) {
+        Player removePlayer = getPlayerFromGameInstance(gameInstanceId, cookie);
+        if(removePlayer == null) return ResponseEntity.badRequest().build();
+        logger.info("[GI " + (gameInstanceId) + "] PLAYER (" + removePlayer.getId() + ") DISCONNECTED");
+        return ResponseEntity.ok(gameInstances.get(gameInstanceId).getPlayers().remove(removePlayer));
+    }
+
 }

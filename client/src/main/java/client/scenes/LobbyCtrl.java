@@ -56,6 +56,7 @@ public class LobbyCtrl implements Initializable {
         System.out.println(player.getName() + " disconnected!");
         decreaseNumberOfPlayers();
         mainCtrl.showSplash();
+        server.disconnect(mainCtrl.getPlayer());
     }
 
     // To be added when making the main game scene, in order for the player to play
@@ -64,9 +65,9 @@ public class LobbyCtrl implements Initializable {
 //        mainCtrl.showPlayMode();
     }
 
-    public void setLabelName(String name) {
+    /*public void setLabelName(String name) {
         labelName.setText(name);
-    }
+    }*/
 
     public void setTablePlayers(List<SimpleUser> players) {
         tablePlayers.setItems(FXCollections.observableList(players));

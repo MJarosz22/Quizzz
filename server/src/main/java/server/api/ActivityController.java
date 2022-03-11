@@ -7,6 +7,7 @@ import org.springframework.web.bind.annotation.*;
 import server.database.ActivityRepository;
 
 import java.beans.PropertyEditor;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 import java.util.Random;
@@ -22,6 +23,30 @@ public class ActivityController {
     public ActivityController(Random random, ActivityRepository activityRepository) {
         this.random = random;
         this.activityRepository = activityRepository;
+    }
+
+    @GetMapping(path = {"", "/"})
+    public List<Activity> getAll() {
+        return activityRepository.findAll();
+    }
+
+    @PostMapping(path = {"", "/"})
+    public ResponseEntity<Activity> addActivity(@RequestBody Activity activity) {
+        if (isNullOrEmpty(activity.getSource())
+                || isNullOrEmpty(activity.getId())
+                || !isValidUrl(activity.getSource())
+                || isNullOrEmpty(activity.getTitle())
+                || !isValidTitle(activity.getTitle())
+                || activity.getConsumption_in_wh() <= 0) {
+            return ResponseEntity.badRequest().build();
+        }
+        Activity savedActivity = activityRepository.save(new Activity(
+                activity.getId(),
+                activity.getImage_path(),
+                activity.getTitle(),
+                activity.getConsumption_in_wh(),
+                activity.getSource()));
+        return ResponseEntity.ok(savedActivity);
     }
 
     private static boolean isNullOrEmpty(String s) {
@@ -44,21 +69,15 @@ public class ActivityController {
         return true;
     }
 
-    @GetMapping(path = {"", "/"})
-    public List<Activity> getAll() {
-        return activityRepository.findAll();
-    }
 
-    @PostMapping(path = {"", "/"})
-    public ResponseEntity<Activity> addActivity(@RequestBody Activity activity) {
-        if (isNullOrEmpty(activity.getSource()) || !isValidUrl(activity.getSource()) || isNullOrEmpty(activity.getTitle())
-                || activity.getTitle().length() > 140 || activity.getConsumption_in_wh() <= 0) {
-            return ResponseEntity.badRequest().build();
-        }
-        Activity savedActivity = activityRepository.save(new Activity(activity.getTitle(), activity.getConsumption_in_wh(), activity.getSource()));
-        return ResponseEntity.ok(savedActivity);
-    }
-
+    /**
+     * Method that validates an activity title
+     * A valid title should have <= 140 characters and be one-sentenced.
+     * Note that we consider a title to be valid even if it does not have an end of sentence punctuatio('.', '?' or '!'
+     *
+     * @param title - String object that needs to be validated
+     * @return - true, if the given title is valide, or false otherwise.
+     */
     private static boolean isValidTitle(String title) {
         int endOfSentence = 0;
         int size = title.length();
@@ -106,6 +125,29 @@ public class ActivityController {
         if (allAct.size() == 0) return ResponseEntity.notFound().build();
         int idx = random.nextInt(allAct.size());
         return ResponseEntity.ok(allAct.get(idx));
+    }
+
+    @GetMapping("/random60")
+    public ResponseEntity<List<Optional<Activity>>> getRandom60() {
+        //hard coded -> size of all activities - 60
+        long countIds = activityRepository.count();
+
+        int idRandom = (int)Math.abs(Math.random() * countIds) - 60;
+        List<Optional<Activity>> foundAct = new ArrayList<>();
+        int limit = 60;
+        int i = 0;
+        while(i < limit) {
+            Optional<Activity> a = activityRepository.findById((long) idRandom);
+            if(a.isPresent() && !foundAct.contains(a)) {
+                foundAct.add(a);
+            } else {
+                limit++;
+            }
+            idRandom = (int)Math.abs(Math.random() * countIds) - 60;
+            i++;
+        }
+        if (foundAct.size() == 0) return ResponseEntity.notFound().build();
+        return ResponseEntity.ok(foundAct);
     }
 
     @DeleteMapping("/all")

@@ -41,7 +41,7 @@ public class AddActivityCtrl {
     private TextField title;
 
     @FXML
-    private TextField consumption_in_wh;
+    private TextField consumption;
 
     @FXML
     private TextField source;
@@ -79,10 +79,10 @@ public class AddActivityCtrl {
             var imagePathText = image_path.getText();
             var titleText = title.getText();
             if (titleText.length() > 140) return null;
-            var consumptionLong = Long.parseLong(consumption_in_wh.getText());
-            if (consumptionLong == 0) return null;
+            var consumptionInt = Long.parseLong(consumption.getText());
+            if (consumptionInt == 0) return null;
             var sourceText = source.getText();
-            return new Activity(idText, imagePathText, titleText, consumptionLong, sourceText);
+            return new Activity(idText, imagePathText, titleText, consumptionInt, sourceText);
         } catch (NumberFormatException e) {
             return null;
         }
@@ -92,7 +92,7 @@ public class AddActivityCtrl {
         id.clear();
         image_path.clear();
         title.clear();
-        consumption_in_wh.clear();
+        consumption.clear();
         source.clear();
     }
 
