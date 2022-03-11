@@ -2,6 +2,7 @@ package client.scenes;
 
 import client.utils.ServerUtils;
 import com.google.inject.Inject;
+import commons.player.Player;
 import commons.player.SimpleUser;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.collections.FXCollections;
@@ -40,8 +41,14 @@ public class LobbyCtrl implements Initializable {
         columnName.setCellValueFactory(q -> new SimpleStringProperty(q.getValue().getName()));
     }
 
+    /**
+     * When you press "LEAVE LOBBY" for the multi-player variant of the game, or "BACK"
+     * in the singleplayer variant, the player should be disconnected and guided back to the splash screen.
+     */
     public void back() {
-        server.disconnect(mainCtrl.getPlayer());
+        SimpleUser player = mainCtrl.getPlayer();
+        server.disconnect(player);
+        System.out.println(player.getName() + " disconnected!");
         mainCtrl.showSplash();
     }
 
@@ -55,7 +62,7 @@ public class LobbyCtrl implements Initializable {
         labelName.setText(name);
     }
 
-    public void setTablePlayers(List<SimpleUser> players){
+    public void setTablePlayers(List<SimpleUser> players) {
         tablePlayers.setItems(FXCollections.observableList(players));
     }
 }
