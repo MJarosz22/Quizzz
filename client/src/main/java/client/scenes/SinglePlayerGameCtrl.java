@@ -15,9 +15,11 @@ import javafx.scene.text.Text;
 
 import java.io.*;
 import java.net.URI;
-import java.util.*;
 import java.util.concurrent.CompletableFuture;
-import java.util.concurrent.TimeUnit;
+import java.util.concurrent.Executors;
+import java.util.concurrent.ScheduledExecutorService;
+
+import static java.util.concurrent.TimeUnit.SECONDS;
 
 //Note that in the future, we can make this controller and its scene suitable for multiplayer games as well
 public class SinglePlayerGameCtrl {
@@ -30,10 +32,10 @@ public class SinglePlayerGameCtrl {
     private SimpleUser player;
 
     private GameInstance currentGame;
-    private Queue<Question> gameQuestions = new LinkedList<>();
+
     private Question currentQuestion;
 
-    private int[] timeLeft = new int[1];
+    private int timeLeft;
     private boolean answered;
 
 
@@ -119,7 +121,6 @@ public class SinglePlayerGameCtrl {
 
             currentGame.generateQuestions(server.getActivitiesRandomly());
 
-            gameQuestions.addAll(currentGame.getQuestions());
             progressBar.setProgress(-0.05);
             score.setText("Your score: 0");
             infoRefresh();
@@ -155,8 +156,8 @@ public class SinglePlayerGameCtrl {
 
                 setImages();
 
-                timeLeft[0] = 20;
-                timer.setText(String.valueOf(timeLeft[0]));
+                timeLeft = 20;
+                timer.setText(String.valueOf(timeLeft));
 
                 progressBar.setProgress(progressBar.getProgress() + 0.05);
 
@@ -169,7 +170,7 @@ public class SinglePlayerGameCtrl {
                     correct_answer = option3Button;
 
                 answered = false;
-                startCountdown();
+                startCountdown(20);
                 startTimer(20000);
 
             }
@@ -225,7 +226,7 @@ public class SinglePlayerGameCtrl {
         setColors();
         setOptions(true);
 
-        CompletableFuture.delayedExecutor(1, TimeUnit.SECONDS).execute(() -> {
+        CompletableFuture.delayedExecutor(1, SECONDS).execute(() -> {
             if (!isGameOver())
                 loadNextQuestion();
         });
@@ -250,7 +251,7 @@ public class SinglePlayerGameCtrl {
         setOptions(true);
 
 
-        CompletableFuture.delayedExecutor(1, TimeUnit.SECONDS).execute(() -> {
+        CompletableFuture.delayedExecutor(1, SECONDS).execute(() -> {
             if (!isGameOver())
                 loadNextQuestion();
         });
@@ -320,7 +321,7 @@ public class SinglePlayerGameCtrl {
         emoji.setStyle("-fx-background-image: url(" + uri.toString() + ");");
     }
 
-    public void setImages(){
+    public void setImages() {
         String activitiesPath = new File("").getAbsolutePath();
         activitiesPath += "\\client\\src\\main\\resources\\images\\activities\\";
 
@@ -331,47 +332,56 @@ public class SinglePlayerGameCtrl {
                     .getActivities()[1].getImage_path().replace("/", "\\"))));
             image3.setImage(new Image(new FileInputStream(activitiesPath + ((QuestionMoreExpensive) currentQuestion)
                     .getActivities()[2].getImage_path().replace("/", "\\"))));
-        } catch (FileNotFoundException e){
+        } catch (FileNotFoundException e) {
             System.out.println("Image not found!");
         }
     }
 
-    public void startCountdown(){
-        Thread thread = new Thread(new Runnable() {
+    /**
+     * Start the countdown. Update the timer every second.
+     *
+     * @param time time in seconds
+     */
+    public void startCountdown(int time) {
+        ScheduledExecutorService scheduler = Executors.newScheduledThreadPool(1);
+        Question currentQ = currentQuestion;
+        Runnable runnable = new Runnable() {
+            int countdown = time;
 
             public void run() {
-                while(!answered && timeLeft[0] >0) {
-                    try {
-                        Thread.sleep(1000);
-                    } catch (InterruptedException e) {
-                        e.printStackTrace();
-                    }
-                    Platform.runLater(new Runnable() {
-                        public void run() {
-                            timer.setText(String.valueOf(--timeLeft[0]));
-                        }
-                    });
+
+                if (currentQ != currentQuestion || answered) { //check if the question wasn't already answered
+                    scheduler.shutdown();
+                } else {
+                    timer.setText(String.valueOf(countdown--));
                 }
+
             }
-        });
-        thread.start();
+        };
+        scheduler.scheduleAtFixedRate(runnable, 0, 1, SECONDS);
     }
 
 
-    public void startTimer(int timer) {
+    /**
+     * Start the timer. After specified time, execute wrongAnswer()
+     *
+     * @param time time in miliseconds
+     */
+    public void startTimer(int time) {
         Thread thread = new Thread(new Runnable() {
 
             public void run() {
+                Question current = currentQuestion;
 
                 try {
-                    Thread.sleep(timer);
+                    Thread.sleep(time);
                 } catch (InterruptedException e) {
                     e.printStackTrace();
                 }
-                Question current = currentQuestion;
+
                 Platform.runLater(new Runnable() {
                     public void run() {
-                        if(current==currentQuestion)
+                        if (current == currentQuestion) //check if the question wasn't already answered
                             wrongAnswer();
                     }
                 });
