@@ -2,7 +2,6 @@ package client.scenes;
 
 import client.utils.ServerUtils;
 import com.google.inject.Inject;
-import commons.player.Player;
 import commons.player.SimpleUser;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.collections.FXCollections;
