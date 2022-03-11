@@ -4,7 +4,7 @@ import client.utils.ServerUtils;
 import com.google.inject.Inject;
 import commons.GameInstance;
 import commons.player.SimpleUser;
-import communication.RequestToJoin;
+import commons.communication.RequestToJoin;
 import javafx.fxml.FXML;
 import javafx.scene.control.TextField;
 
