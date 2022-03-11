@@ -8,15 +8,19 @@
 <?import javafx.scene.text.Text?>
 
 <?import javafx.scene.control.Label?>
-<AnchorPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="540.0" prefWidth="960.0"
-            style="-fx-background-color: #91e4fb;" xmlns="http://javafx.com/javafx/11.0.14-internal" xmlns:fx="http://javafx.com/fxml/1"
+<AnchorPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="540.0"
+            prefWidth="960.0"
+            style="-fx-background-color: #91e4fb;" xmlns="http://javafx.com/javafx/11.0.14-internal"
+            xmlns:fx="http://javafx.com/fxml/1"
             fx:controller="client.scenes.LobbyCtrl">
-    <Button layoutX="424.0" layoutY="443.0" mnemonicParsing="false" onAction="#play" prefWidth="90.0" style="-fx-background-color: #fff;" text="PLAY">
+    <Button layoutX="424.0" layoutY="443.0" mnemonicParsing="false" onAction="#play" prefWidth="90.0"
+            style="-fx-background-color: #fff;" text="PLAY">
         <font>
             <Font name="Courier New" size="24.0"/>
         </font>
     </Button>
-    <Button layoutX="83.0" layoutY="54.0" mnemonicParsing="false" onAction="#back" style="-fx-background-color: #fff;" text="LEAVE LOBBY">
+    <Button layoutX="83.0" layoutY="54.0" mnemonicParsing="false" onAction="#back" style="-fx-background-color: #fff;"
+            text="LEAVE LOBBY">
         <font>
             <Font name="Courier New" size="15.0"/>
         </font>
@@ -26,7 +30,8 @@
             <Font name="Courier New" size="36.0"/>
         </font>
     </Text>
-    <Text fill="WHITE" layoutX="316.0" layoutY="186.0" strokeType="OUTSIDE" strokeWidth="0.0" text="There are 000 players">
+    <Text fill="WHITE" layoutX="316.0" layoutY="186.0" strokeType="OUTSIDE" strokeWidth="0.0"
+          text="There are 000 players">
         <font>
             <Font name="Courier New" size="24.0"/>
         </font>

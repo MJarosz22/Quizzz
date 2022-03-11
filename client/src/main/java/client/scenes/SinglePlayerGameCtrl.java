@@ -28,6 +28,7 @@ public class SinglePlayerGameCtrl {
     private final MainCtrl mainCtrl;
     private final String correctEmojiPath = "client/src/main/resources/images/correct-answer.png";
     private final String wrongEmojiPath = "client/src/main/resources/images/wrong-answer.png";
+    private final String timerPath = "client/src/main/resources/images/timer.png";
 
     private SimpleUser player;
 
@@ -46,6 +47,9 @@ public class SinglePlayerGameCtrl {
 
     @FXML
     private Text timer;
+
+    @FXML
+    private AnchorPane timerImage;
 
     @FXML
     private Text score;
@@ -114,6 +118,7 @@ public class SinglePlayerGameCtrl {
     public void initialize() {
         colorsRefresh();
         setOptions(false);
+        setTimerImage(timerImage);
 
         if (this.mainCtrl.getPlayer() != null) {
             this.player = mainCtrl.getPlayer();
@@ -162,11 +167,14 @@ public class SinglePlayerGameCtrl {
                 progressBar.setProgress(progressBar.getProgress() + 0.05);
 
                 questionCount.setText("Question " + temporaryCounter + "/20");
-                if (((QuestionMoreExpensive) currentQuestion).getAnswer() == ((QuestionMoreExpensive) currentQuestion).getActivities()[0].getConsumption_in_wh())
+                if (((QuestionMoreExpensive) currentQuestion).getAnswer() == ((QuestionMoreExpensive) currentQuestion)
+                        .getActivities()[0].getConsumption_in_wh())
                     correct_answer = option1Button;
-                if (((QuestionMoreExpensive) currentQuestion).getAnswer() == ((QuestionMoreExpensive) currentQuestion).getActivities()[1].getConsumption_in_wh())
+                if (((QuestionMoreExpensive) currentQuestion).getAnswer() == ((QuestionMoreExpensive) currentQuestion)
+                        .getActivities()[1].getConsumption_in_wh())
                     correct_answer = option2Button;
-                if (((QuestionMoreExpensive) currentQuestion).getAnswer() == ((QuestionMoreExpensive) currentQuestion).getActivities()[2].getConsumption_in_wh())
+                if (((QuestionMoreExpensive) currentQuestion).getAnswer() == ((QuestionMoreExpensive) currentQuestion)
+                        .getActivities()[2].getConsumption_in_wh())
                     correct_answer = option3Button;
 
                 answered = false;
@@ -183,7 +191,8 @@ public class SinglePlayerGameCtrl {
      * This method is called when in a multiple choice question, user selects option 1
      */
     public void option1Selected() {
-        if (((QuestionMoreExpensive) currentQuestion).getAnswer() == ((QuestionMoreExpensive) currentQuestion).getActivities()[0].getConsumption_in_wh()) {
+        if (((QuestionMoreExpensive) currentQuestion).getAnswer() == ((QuestionMoreExpensive) currentQuestion)
+                .getActivities()[0].getConsumption_in_wh()) {
             correctAnswer();
         } else {
             wrongAnswer();
@@ -194,7 +203,8 @@ public class SinglePlayerGameCtrl {
      * This method is called when in a multiple choice question, user selects option 2
      */
     public void option2Selected() {
-        if (((QuestionMoreExpensive) currentQuestion).getAnswer() == ((QuestionMoreExpensive) currentQuestion).getActivities()[1].getConsumption_in_wh()) {
+        if (((QuestionMoreExpensive) currentQuestion).getAnswer() == ((QuestionMoreExpensive) currentQuestion)
+                .getActivities()[1].getConsumption_in_wh()) {
             correctAnswer();
         } else {
             wrongAnswer();
@@ -205,7 +215,8 @@ public class SinglePlayerGameCtrl {
      * This method is called when in a multiple choice question, user selects option 3
      */
     public void option3Selected() {
-        if (((QuestionMoreExpensive) currentQuestion).getAnswer() == ((QuestionMoreExpensive) currentQuestion).getActivities()[2].getConsumption_in_wh()) {
+        if (((QuestionMoreExpensive) currentQuestion).getAnswer() == ((QuestionMoreExpensive) currentQuestion)
+                .getActivities()[2].getConsumption_in_wh()) {
             correctAnswer();
         } else {
             wrongAnswer();
@@ -308,6 +319,12 @@ public class SinglePlayerGameCtrl {
         points.setText("");
         answer.setText("");
         emoji.setVisible(false);
+    }
+
+    public void setTimerImage(AnchorPane timerImage) {
+        File file = new File(timerPath);
+        URI uri = file.toURI();
+        timerImage.setStyle("-fx-background-image: url(" + uri.toString() + ");");
     }
 
     public void setEmoji(AnchorPane emoji, boolean correct) {
