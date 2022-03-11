@@ -8,11 +8,12 @@ import javafx.application.Platform;
 import javafx.fxml.FXML;
 import javafx.scene.control.Button;
 import javafx.scene.control.ProgressBar;
+import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.text.Text;
 
-import java.io.File;
+import java.io.*;
 import java.net.URI;
 import java.util.*;
 import java.util.concurrent.CompletableFuture;
@@ -31,6 +32,9 @@ public class SinglePlayerGameCtrl {
     private GameInstance currentGame;
     private Queue<Question> gameQuestions = new LinkedList<>();
     private Question currentQuestion;
+
+    private int[] timeLeft = new int[1];
+    private boolean answered;
 
 
     int temporaryCounter;
@@ -66,13 +70,13 @@ public class SinglePlayerGameCtrl {
     private Button correct_answer;
 
     @FXML
-    private  Button wrong_answer1;
+    private Button wrong_answer1;
 
     @FXML
-    private  Button wrong_answer2;
+    private Button wrong_answer2;
 
     @FXML
-    private  Button wrong_answer3;
+    private Button wrong_answer3;
 
     @FXML
     private ImageView image1;
@@ -140,13 +144,20 @@ public class SinglePlayerGameCtrl {
 
         currentQuestion = currentGame.getRandomQuestion();
 
-        Platform.runLater(new Runnable(){
+        Platform.runLater(new Runnable() {
             @Override
             public void run() {
                 questionTitle.setText(currentQuestion.getTitle());
-                option1Button.setText(((QuestionMoreExpensive)currentQuestion).getActivities()[0].getTitle());
-                option2Button.setText(((QuestionMoreExpensive)currentQuestion).getActivities()[1].getTitle());
-                option3Button.setText(((QuestionMoreExpensive)currentQuestion).getActivities()[2].getTitle());
+
+                option1Button.setText(((QuestionMoreExpensive) currentQuestion).getActivities()[0].getTitle());
+                option2Button.setText(((QuestionMoreExpensive) currentQuestion).getActivities()[1].getTitle());
+                option3Button.setText(((QuestionMoreExpensive) currentQuestion).getActivities()[2].getTitle());
+
+                setImages();
+
+                timeLeft[0] = 20;
+                timer.setText(String.valueOf(timeLeft[0]));
+
                 progressBar.setProgress(progressBar.getProgress() + 0.05);
 
                 questionCount.setText("Question " + temporaryCounter + "/20");
@@ -156,6 +167,11 @@ public class SinglePlayerGameCtrl {
                     correct_answer = option2Button;
                 if (((QuestionMoreExpensive) currentQuestion).getAnswer() == ((QuestionMoreExpensive) currentQuestion).getActivities()[2].getConsumption_in_wh())
                     correct_answer = option3Button;
+
+                answered = false;
+                startCountdown();
+                startTimer(20000);
+
             }
         });
 
@@ -168,7 +184,7 @@ public class SinglePlayerGameCtrl {
     public void option1Selected() {
         if (((QuestionMoreExpensive) currentQuestion).getAnswer() == ((QuestionMoreExpensive) currentQuestion).getActivities()[0].getConsumption_in_wh()) {
             correctAnswer();
-        }else {
+        } else {
             wrongAnswer();
         }
     }
@@ -190,7 +206,7 @@ public class SinglePlayerGameCtrl {
     public void option3Selected() {
         if (((QuestionMoreExpensive) currentQuestion).getAnswer() == ((QuestionMoreExpensive) currentQuestion).getActivities()[2].getConsumption_in_wh()) {
             correctAnswer();
-        }else {
+        } else {
             wrongAnswer();
         }
     }
@@ -199,6 +215,7 @@ public class SinglePlayerGameCtrl {
      * User's answer was correct. Show that the answer was correct, update the score, start next round.
      */
     public void correctAnswer() {
+        answered = true;
         player.addScore(100);
         score.setText("Your score: " + player.getScore());
         points.setText("+100 points"); // In the future calculate the # of points, DON'T hardcode
@@ -224,6 +241,7 @@ public class SinglePlayerGameCtrl {
      * User's answer was incorrect. Show that the answer was incorrect, start next round.
      */
     public void wrongAnswer() {
+        answered = true;
         points.setText("+0 points"); // In the future calculate the # of points, DON'T hardcode
         answer.setText("Wrong answer");
         setEmoji(emoji, false);
@@ -263,14 +281,12 @@ public class SinglePlayerGameCtrl {
 
     /**
      * Makes the background of  the correct button GREEN and the background of the wrong buttons RED
-     *
-     *
      */
     public void setColors() {
         correct_answer.setStyle("-fx-background-color: green; ");
-        if(option1Button!=correct_answer) option1Button.setStyle("-fx-background-color: red; ");
-        if(option2Button!=correct_answer) option2Button.setStyle("-fx-background-color: red; ");
-        if(option3Button!=correct_answer) option3Button.setStyle("-fx-background-color: red; ");
+        if (option1Button != correct_answer) option1Button.setStyle("-fx-background-color: red; ");
+        if (option2Button != correct_answer) option2Button.setStyle("-fx-background-color: red; ");
+        if (option3Button != correct_answer) option3Button.setStyle("-fx-background-color: red; ");
     }
 
     /**
@@ -302,6 +318,67 @@ public class SinglePlayerGameCtrl {
             file = new File(wrongEmojiPath);
         URI uri = file.toURI();
         emoji.setStyle("-fx-background-image: url(" + uri.toString() + ");");
+    }
+
+    public void setImages(){
+        String activitiesPath = new File("").getAbsolutePath();
+        activitiesPath += "\\client\\src\\main\\resources\\images\\activities\\";
+
+        try {
+            image1.setImage(new Image(new FileInputStream(activitiesPath + ((QuestionMoreExpensive) currentQuestion)
+                    .getActivities()[0].getImage_path().replace("/", "\\"))));
+            image2.setImage(new Image(new FileInputStream(activitiesPath + ((QuestionMoreExpensive) currentQuestion)
+                    .getActivities()[1].getImage_path().replace("/", "\\"))));
+            image3.setImage(new Image(new FileInputStream(activitiesPath + ((QuestionMoreExpensive) currentQuestion)
+                    .getActivities()[2].getImage_path().replace("/", "\\"))));
+        } catch (FileNotFoundException e){
+            System.out.println("Image not found!");
+        }
+    }
+
+    public void startCountdown(){
+        Thread thread = new Thread(new Runnable() {
+
+            public void run() {
+                while(!answered && timeLeft[0] >0) {
+                    try {
+                        Thread.sleep(1000);
+                    } catch (InterruptedException e) {
+                        e.printStackTrace();
+                    }
+                    Platform.runLater(new Runnable() {
+                        public void run() {
+                            timer.setText(String.valueOf(--timeLeft[0]));
+                        }
+                    });
+                }
+            }
+        });
+        thread.start();
+    }
+
+
+    public void startTimer(int timer) {
+        Thread thread = new Thread(new Runnable() {
+
+            public void run() {
+
+                try {
+                    Thread.sleep(timer);
+                } catch (InterruptedException e) {
+                    e.printStackTrace();
+                }
+                Question current = currentQuestion;
+                Platform.runLater(new Runnable() {
+                    public void run() {
+                        if(current==currentQuestion)
+                            wrongAnswer();
+                    }
+                });
+
+            }
+        });
+        thread.start();
     }
 
 

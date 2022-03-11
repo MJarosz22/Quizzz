@@ -45,3 +45,6 @@ out/
 .DS_Store
 .DS_Store?
 quizzzz.trace.db
+
+# Activity images #
+!client/src/main/resources/images/activities
