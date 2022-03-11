@@ -15,6 +15,7 @@
  */
 package client.scenes;
 
+import commons.player.SimpleUser;
 import client.utils.ServerUtils;
 import commons.player.SimpleUser;
 import javafx.scene.Parent;
@@ -32,6 +33,12 @@ public class MainCtrl {
     private SinglePlayerCtrl singlePlayerCtrl;
     private Scene single;
 
+    private SinglePlayerGameCtrl singlePlayerGameCtrl;
+    private Scene singleGame;
+
+    private SinglePlayerGameOverCtrl singlePlayerGameOverCtrl;
+    private Scene singleGameOver;
+
     private MultiPlayerCtrl multiPlayerCtrl;
     private Scene multi;
 
@@ -44,14 +51,25 @@ public class MainCtrl {
     private SimpleUser player;
 
     public void initialize(Stage primaryStage, Pair<SplashScreenCtrl, Parent> splash, Pair<SinglePlayerCtrl,
-            Parent> single, Pair<MultiPlayerCtrl, Parent> multi,
-                           Pair<LeaderBoardCtrl, Parent> leaderboard, Pair<LobbyCtrl, Parent> lobby) {
+            Parent> single, Pair<SinglePlayerGameCtrl, Parent> singleGame,
+                           Pair<SinglePlayerGameOverCtrl, Parent> singleGameOver,
+                           Pair<MultiPlayerCtrl, Parent> multi,
+                           Pair<LeaderBoardCtrl, Parent> leaderboard,
+                           Pair<LobbyCtrl, Parent> lobby) {
+
+
         this.primaryStage = primaryStage;
         this.splashCtrl = splash.getKey();
         this.splash = new Scene(splash.getValue());
 
         this.singlePlayerCtrl = single.getKey();
         this.single = new Scene(single.getValue());
+
+        this.singlePlayerGameCtrl = singleGame.getKey();
+        this.singleGame = new Scene(singleGame.getValue());
+
+        this.singlePlayerGameOverCtrl = singleGameOver.getKey();
+        this.singleGameOver = new Scene(singleGameOver.getValue());
 
         this.multiPlayerCtrl = multi.getKey();
         this.multi = new Scene(multi.getValue());
@@ -76,6 +94,12 @@ public class MainCtrl {
         primaryStage.setScene(single);
     }
 
+    public void showSinglePlayerGame() {
+        primaryStage.setTitle("Quizz single");
+        primaryStage.setScene(singleGame);
+        singlePlayerGameCtrl.initialize();
+    }
+
     public void showMultiPlayerMode() {
         primaryStage.setTitle("Quizzz multi");
         primaryStage.setScene(multi);
@@ -84,6 +108,11 @@ public class MainCtrl {
     public void showLeaderBoard() {
         primaryStage.setTitle("Quizzz leader board");
         primaryStage.setScene(leaderboard);
+    }
+
+    public void showSinglePlayerGameOver() {
+        primaryStage.setTitle("GAME OVER");
+        primaryStage.setScene(singleGameOver);
     }
 
     public void showLobby() {

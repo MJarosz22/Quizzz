@@ -8,6 +8,7 @@ import commons.player.SimpleUser;
 import javafx.fxml.FXML;
 import javafx.scene.control.TextField;
 
+
 public class SinglePlayerCtrl {
 
     private final ServerUtils server;
@@ -34,7 +35,7 @@ public class SinglePlayerCtrl {
             SimpleUser player = server.addPlayer(new RequestToJoin(getTextField(), GameInstance.SINGLE_PLAYER));
             mainCtrl.setPlayer(player);
             System.out.println(player);
-            mainCtrl.showLobby();
+            mainCtrl.showSinglePlayerGame();
             //TODO Make it so that player goes directly into game instead of going to lobby
         }
     }
