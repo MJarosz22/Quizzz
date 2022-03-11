@@ -128,6 +128,10 @@ public class MainCtrl {
         return lobbyCtrl;
     }
 
+    public SinglePlayerCtrl getSinglePlayerCtrl() {
+        return singlePlayerCtrl;
+    }
+
     public void setPlayer(SimpleUser player) {
         this.player = player;
     }
