@@ -8,6 +8,7 @@ import javafx.application.Platform;
 import javafx.fxml.FXML;
 import javafx.scene.control.Button;
 import javafx.scene.control.ProgressBar;
+import javafx.scene.control.RadioButton;
 import javafx.scene.control.TextField;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.AnchorPane;
@@ -74,6 +75,15 @@ public class SinglePlayerGameCtrl {
 
     @FXML
     private Button submit_guess;
+
+    @FXML
+    private RadioButton answer1;
+
+    @FXML
+    private RadioButton answer2;
+
+    @FXML
+    private RadioButton answer3;
 
     @FXML
     private ImageView image1;
@@ -151,6 +161,9 @@ public class SinglePlayerGameCtrl {
                     option1Button.setVisible(true);
                     option2Button.setVisible(true);
                     option3Button.setVisible(true);
+                    answer1.setVisible(false);
+                    answer2.setVisible(false);
+                    answer3.setVisible(false);
                     option1Button.setText(((QuestionMoreExpensive) currentQuestion).getActivities()[0].getTitle());
                     option2Button.setText(((QuestionMoreExpensive) currentQuestion).getActivities()[1].getTitle());
                     option3Button.setText(((QuestionMoreExpensive) currentQuestion).getActivities()[2].getTitle());
@@ -174,8 +187,39 @@ public class SinglePlayerGameCtrl {
                     player_answer.setVisible(true);
                     submit_guess.setVisible(true);
                     correct_guess.setVisible(false);
+                    answer1.setVisible(false);
+                    answer2.setVisible(false);
+                    answer3.setVisible(false);
                     progressBar.setProgress(progressBar.getProgress() + 0.05);
                     questionCount.setText("Question " + temporaryCounter + "/20");
+                }
+                if (currentQuestion instanceof QuestionWhichOne){
+                    answer1.setSelected(false);
+                    answer2.setSelected(false);
+                    answer3.setSelected(false);
+                    option1Button.setText(((QuestionWhichOne) currentQuestion).getActivity().getTitle());
+                    option1Button.disabledProperty();
+                    option2Button.setVisible(false);
+                    option3Button.setVisible(false);
+                    player_answer.setVisible(false);
+                    submit_guess.setVisible(false);
+                    correct_guess.setVisible(false);
+                    answer1.setVisible(true);
+                    answer2.setVisible(true);
+                    answer3.setVisible(true);
+                    progressBar.setProgress(progressBar.getProgress() + 0.05);
+                    questionCount.setText("Question " + temporaryCounter + "/20");
+                    Random random = new Random();
+                    int random_correct_answer = random.nextInt(3 - 1 + 1) + 1;
+                    long other_answer1 = Math.abs(((QuestionWhichOne) currentQuestion).getActivity().getConsumption_in_wh() - 500);
+                    long other_answer2 = Math.abs(((QuestionWhichOne) currentQuestion).getActivity().getConsumption_in_wh() + 700);
+                    long other_answer3 = Math.abs(((QuestionWhichOne) currentQuestion).getActivity().getConsumption_in_wh() - 200);
+                    if(random_correct_answer==1)answer1.setText(((QuestionWhichOne) currentQuestion).getActivity().getConsumption_in_wh().toString());
+                    else answer1.setText(String.valueOf(other_answer1));
+                    if(random_correct_answer==2)answer2.setText(((QuestionWhichOne) currentQuestion).getActivity().getConsumption_in_wh().toString());
+                    else answer2.setText(String.valueOf(other_answer2));
+                    if(random_correct_answer==3)answer3.setText(((QuestionWhichOne) currentQuestion).getActivity().getConsumption_in_wh().toString());
+                    else answer3.setText(String.valueOf(other_answer3));
                 }
             }
         });
@@ -371,6 +415,48 @@ public class SinglePlayerGameCtrl {
         }
         correct_guess.setVisible(true);
         correct_guess.setText("The correct answer is: "+ ((QuestionHowMuch) currentQuestion).getActivity().getConsumption_in_wh());
+        setOptions(true);
+
+        CompletableFuture.delayedExecutor(1, TimeUnit.SECONDS).execute(() -> {
+            if (!isGameOver())
+                loadNextQuestion();
+        });
+
+
+        if (temporaryCounter >= 20) {
+            gameOver(2000);
+        }
+    }
+
+
+    public void answer1Selected(){
+        long response = Long.parseLong(answer1.getText());
+        isSelectionCorrect(response);
+    }
+
+    public void answer2Selected(){
+        long response = Long.parseLong(answer2.getText());
+        isSelectionCorrect(response);
+    }
+
+    public void answer3Selected(){
+        long response = Long.parseLong(answer3.getText());
+        isSelectionCorrect(response);
+    }
+
+    public void isSelectionCorrect(long response) {
+
+        if (response == ((QuestionWhichOne) currentQuestion).getActivity().getConsumption_in_wh()){
+            player.addScore(100);
+            points.setText("+100 points");
+            answer.setText("Correct answer");
+            setEmoji(emoji, true);
+        }
+        else{
+            points.setText("+0 points");
+            answer.setText("Wrong answer");
+            setEmoji(emoji, false);
+        }
         setOptions(true);
 
         CompletableFuture.delayedExecutor(1, TimeUnit.SECONDS).execute(() -> {

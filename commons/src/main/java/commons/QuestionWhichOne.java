@@ -1,11 +1,11 @@
 package commons;
 
-public class QuestionHowMuch extends Question{
+public class QuestionWhichOne extends Question{
 
     private String title;
     private Activity activity;
 
-    public QuestionHowMuch(Activity activity) {
+    public QuestionWhichOne(Activity activity) {
         this.setTitle("How much energy does it take?");
         this.activity = activity;
     }
@@ -18,5 +18,6 @@ public class QuestionHowMuch extends Question{
     public void setActivity(Activity activity) {
         this.activity = activity;
     }
+
 
 }
