@@ -47,4 +47,4 @@ out/
 quizzzz.trace.db
 
 # Activity images #
-!client/src/main/resources/images/activities
+!client/src/main/resources/images/activities/
