@@ -136,15 +136,11 @@ public class ActivityController {
         List<Optional<Activity>> foundAct = new ArrayList<>();
         int limit = 60;
         int i = 0;
-        while(i < limit)
-        {
+        while(i < limit) {
             Optional<Activity> a = activityRepository.findById((long) idRandom);
-            if(a.isPresent() && !foundAct.contains(a))
-            {
+            if(a.isPresent() && !foundAct.contains(a)) {
                 foundAct.add(a);
-            }
-            else
-            {
+            } else {
                 limit++;
             }
             idRandom = (int)Math.abs(Math.random() * countIds) - 60;
