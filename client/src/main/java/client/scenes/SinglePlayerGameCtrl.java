@@ -150,11 +150,11 @@ public class SinglePlayerGameCtrl {
 
         currentQuestion = currentGame.getRandomQuestion();
 
-        Platform.runLater(new Runnable(){
+        Platform.runLater(new Runnable() {
             @Override
             public void run() {
                 questionTitle.setText(currentQuestion.getTitle());
-                if(currentQuestion instanceof QuestionMoreExpensive) {
+                if (currentQuestion instanceof QuestionMoreExpensive) {
                     correct_guess.setVisible(false);
                     player_answer.setVisible(false);
                     submit_guess.setVisible(false);
@@ -196,7 +196,7 @@ public class SinglePlayerGameCtrl {
                     progressBar.setProgress(progressBar.getProgress() + 0.05);
                     questionCount.setText("Question " + temporaryCounter + "/20");
                 }
-                if (currentQuestion instanceof QuestionWhichOne){
+                if (currentQuestion instanceof QuestionWhichOne) {
                     answer1.setSelected(false);
                     answer2.setSelected(false);
                     answer3.setSelected(false);
@@ -220,11 +220,14 @@ public class SinglePlayerGameCtrl {
                     long other_answer1 = Math.abs(((QuestionWhichOne) currentQuestion).getActivity().getConsumption_in_wh() - 500);
                     long other_answer2 = Math.abs(((QuestionWhichOne) currentQuestion).getActivity().getConsumption_in_wh() + 700);
                     long other_answer3 = Math.abs(((QuestionWhichOne) currentQuestion).getActivity().getConsumption_in_wh() - 200);
-                    if(random_correct_answer==1)answer1.setText(((QuestionWhichOne) currentQuestion).getActivity().getConsumption_in_wh().toString());
+                    if (random_correct_answer == 1)
+                        answer1.setText(((QuestionWhichOne) currentQuestion).getActivity().getConsumption_in_wh().toString());
                     else answer1.setText(String.valueOf(other_answer1));
-                    if(random_correct_answer==2)answer2.setText(((QuestionWhichOne) currentQuestion).getActivity().getConsumption_in_wh().toString());
+                    if (random_correct_answer == 2)
+                        answer2.setText(((QuestionWhichOne) currentQuestion).getActivity().getConsumption_in_wh().toString());
                     else answer2.setText(String.valueOf(other_answer2));
-                    if(random_correct_answer==3)answer3.setText(((QuestionWhichOne) currentQuestion).getActivity().getConsumption_in_wh().toString());
+                    if (random_correct_answer == 3)
+                        answer3.setText(((QuestionWhichOne) currentQuestion).getActivity().getConsumption_in_wh().toString());
                     else answer3.setText(String.valueOf(other_answer3));
                 }
             }
@@ -240,7 +243,7 @@ public class SinglePlayerGameCtrl {
         if (((QuestionMoreExpensive) currentQuestion).getAnswer() == ((QuestionMoreExpensive) currentQuestion)
                 .getActivities()[0].getConsumption_in_wh()) {
             correctAnswer();
-        }else {
+        } else {
             wrongAnswer();
         }
     }
@@ -264,7 +267,7 @@ public class SinglePlayerGameCtrl {
         if (((QuestionMoreExpensive) currentQuestion).getAnswer() == ((QuestionMoreExpensive) currentQuestion)
                 .getActivities()[2].getConsumption_in_wh()) {
             correctAnswer();
-        }else {
+        } else {
             wrongAnswer();
         }
     }
@@ -337,14 +340,12 @@ public class SinglePlayerGameCtrl {
 
     /**
      * Makes the background of  the correct button GREEN and the background of the wrong buttons RED
-     *
-     *
      */
     public void setColors() {
         correct_answer.setStyle("-fx-background-color: green; ");
-        if(option1Button!=correct_answer) option1Button.setStyle("-fx-background-color: red; ");
-        if(option2Button!=correct_answer) option2Button.setStyle("-fx-background-color: red; ");
-        if(option3Button!=correct_answer) option3Button.setStyle("-fx-background-color: red; ");
+        if (option1Button != correct_answer) option1Button.setStyle("-fx-background-color: red; ");
+        if (option2Button != correct_answer) option2Button.setStyle("-fx-background-color: red; ");
+        if (option3Button != correct_answer) option3Button.setStyle("-fx-background-color: red; ");
     }
 
     /**
@@ -411,19 +412,19 @@ public class SinglePlayerGameCtrl {
     public void isGuessCorrect() {
         CharSequence input = player_answer.getCharacters();
         long number = Long.parseLong(input.toString());
-        if( number == ((QuestionHowMuch) currentQuestion).getActivity().getConsumption_in_wh()) {
+        if (number == ((QuestionHowMuch) currentQuestion).getActivity().getConsumption_in_wh()) {
             player.addScore(100);
             score.setText("Your score: " + player.getScore());
             points.setText("+100 points");
             answer.setText("Correct answer");
             setEmoji(emoji, true);
-        } else{
+        } else {
             points.setText("+0 points");
             answer.setText("Wrong answer");
             setEmoji(emoji, false);
         }
         correct_guess.setVisible(true);
-        correct_guess.setText("The correct answer is: "+ ((QuestionHowMuch) currentQuestion).getActivity().getConsumption_in_wh());
+        correct_guess.setText("The correct answer is: " + ((QuestionHowMuch) currentQuestion).getActivity().getConsumption_in_wh());
         setOptions(true);
 
         CompletableFuture.delayedExecutor(1, TimeUnit.SECONDS).execute(() -> {
@@ -438,44 +439,44 @@ public class SinglePlayerGameCtrl {
     }
 
 
-    public void answer1Selected(){
+    public void answer1Selected() {
         long response = Long.parseLong(answer1.getText());
-        isSelectionCorrect(answer1,response);
+        isSelectionCorrect(answer1, response);
     }
 
-    public void answer2Selected(){
+    public void answer2Selected() {
         long response = Long.parseLong(answer2.getText());
-        isSelectionCorrect(answer2,response);
+        isSelectionCorrect(answer2, response);
     }
 
-    public void answer3Selected(){
+    public void answer3Selected() {
         long response = Long.parseLong(answer3.getText());
-        isSelectionCorrect(answer3,response);
+        isSelectionCorrect(answer3, response);
     }
 
     public void isSelectionCorrect(RadioButton player_answer, long response) {
 
-        if (response == ((QuestionWhichOne) currentQuestion).getActivity().getConsumption_in_wh()){
+        if (response == ((QuestionWhichOne) currentQuestion).getActivity().getConsumption_in_wh()) {
             player.addScore(100);
             score.setText("Your score: " + player.getScore());
             points.setText("+100 points");
             answer.setText("Correct answer");
             setEmoji(emoji, true);
             player_answer.setStyle("-fx-background-color: green; ");
-            if(!answer1.equals(player_answer)) answer1.setStyle("-fx-background-color: red; ");
-            if(!answer2.equals(player_answer)) answer2.setStyle("-fx-background-color: red; ");
-            if(!answer3.equals(player_answer)) answer3.setStyle("-fx-background-color: red; ");
-        } else{
+            if (!answer1.equals(player_answer)) answer1.setStyle("-fx-background-color: red; ");
+            if (!answer2.equals(player_answer)) answer2.setStyle("-fx-background-color: red; ");
+            if (!answer3.equals(player_answer)) answer3.setStyle("-fx-background-color: red; ");
+        } else {
             points.setText("+0 points");
             answer.setText("Wrong answer");
             setEmoji(emoji, false);
-            if(Long.parseLong(answer1.getText()) == ((QuestionWhichOne) currentQuestion).getActivity().getConsumption_in_wh())
+            if (Long.parseLong(answer1.getText()) == ((QuestionWhichOne) currentQuestion).getActivity().getConsumption_in_wh())
                 answer1.setStyle("-fx-background-color: green; ");
             else answer1.setStyle("-fx-background-color: red; ");
-            if(Long.parseLong(answer2.getText()) == ((QuestionWhichOne) currentQuestion).getActivity().getConsumption_in_wh())
+            if (Long.parseLong(answer2.getText()) == ((QuestionWhichOne) currentQuestion).getActivity().getConsumption_in_wh())
                 answer2.setStyle("-fx-background-color: green; ");
             else answer2.setStyle("-fx-background-color: red; ");
-            if(Long.parseLong(answer3.getText()) == ((QuestionWhichOne) currentQuestion).getActivity().getConsumption_in_wh())
+            if (Long.parseLong(answer3.getText()) == ((QuestionWhichOne) currentQuestion).getActivity().getConsumption_in_wh())
                 answer3.setStyle("-fx-background-color: green; ");
             else answer3.setStyle("-fx-background-color: red; ");
         }

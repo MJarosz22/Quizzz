@@ -32,7 +32,7 @@ public class Activity {
     public Activity(String id, String image_path, String title, Long consumption_in_wh, String source) {
         this.id = id;
         this.image_path = image_path;
-        if(image_path == null) image_path = "";
+        if (image_path == null) image_path = "";
         this.title = title;
         this.consumption_in_wh = consumption_in_wh;
         this.source = source;
