@@ -2,18 +2,19 @@
 
 <?import javafx.scene.control.*?>
 <?import javafx.scene.layout.*?>
-<AnchorPane prefHeight="400.0" prefWidth="600.0" xmlns="http://javafx.com/javafx/17" xmlns:fx="http://javafx.com/fxml/1"
-            fx:controller="client.scenes.ActivityOverviewCtrl">
+
+<AnchorPane prefHeight="400.0" prefWidth="846.0" xmlns="http://javafx.com/javafx/11.0.14-internal" xmlns:fx="http://javafx.com/fxml/1" fx:controller="client.scenes.ActivityOverviewCtrl">
     <children>
-        <TableView fx:id="table" editable="true" layoutX="10.0" layoutY="11.0" prefHeight="347.0" prefWidth="581.0" AnchorPane.bottomAnchor="42.0"
-                   AnchorPane.leftAnchor="10.0" AnchorPane.rightAnchor="9.0" AnchorPane.topAnchor="11.0">
+        <TableView fx:id="table" editable="true" layoutX="10.0" layoutY="11.0" prefHeight="347.0" prefWidth="581.0" AnchorPane.bottomAnchor="42.0" AnchorPane.leftAnchor="10.0" AnchorPane.rightAnchor="9.0" AnchorPane.topAnchor="11.0">
             <columns>
-                <TableColumn fx:id="columnTitle" onEditCommit="#editTitle" prefWidth="263.4000062942505" text="Title"/>
-                <TableColumn fx:id="columnConsumption" onEditCommit="#editConsumption" prefWidth="125.4000244140625" text="Consumption (Wh)"/>
-                <TableColumn fx:id="columnSource" onEditCommit="#editSource" prefWidth="193.0" text="Source"/>
+                <TableColumn fx:id="columnID" onEditCommit="#editID" prefWidth="75.0" text="ID" />
+                <TableColumn fx:id="columnImagePath" onEditCommit="#editImagePath" prefWidth="115.19995880126953" text="Image path" />
+                <TableColumn fx:id="columnTitle" onEditCommit="#editTitle" prefWidth="298.0" text="Title" />
+                <TableColumn fx:id="columnConsumption_in_wh" onEditCommit="#editConsumption" prefWidth="115.59994506835938" text="Consumption (Wh)" />
+                <TableColumn fx:id="columnSource" onEditCommit="#editSource" prefWidth="222.4000244140625" text="Source" />
             </columns>
         </TableView>
-        <Button layoutX="509.0" layoutY="366.0" mnemonicParsing="false" onAction="#addActivity" text="Add Activity"/>
-        <Button layoutX="24.0" layoutY="366.0" mnemonicParsing="false" onAction="#refresh" text="Refresh"/>
+        <Button layoutX="754.0" layoutY="366.0" mnemonicParsing="false" onAction="#addActivity" text="Add Activity" />
+        <Button layoutX="11.0" layoutY="366.0" mnemonicParsing="false" onAction="#refresh" text="Refresh" />
     </children>
 </AnchorPane>

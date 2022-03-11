@@ -113,7 +113,7 @@ public class TestActivityRepository implements ActivityRepository {
     }
 
     private Optional<Activity> find(Long id) {
-        return activities.stream().filter(a -> a.id == id).findFirst();
+        return activities.stream().filter(a -> a.getActivityID() == id).findFirst();
     }
 
     @Override
@@ -136,18 +136,18 @@ public class TestActivityRepository implements ActivityRepository {
 
     @Override
     public <S extends Activity> S save(S entity) {
-        if (!findById(entity.id).isPresent()) {
+        if (!findById(entity.getActivityID()).isPresent()) {
             call("save");
-            entity.id = currentID();
+            entity.setActivityID(currentID());
             activities.add(entity);
             return entity;
         } else {
             call("replace");
-            Activity activity = findById(entity.id).get();
-            entity.id = activity.id;
-            activity.title = entity.title;
-            activity.consumption = entity.consumption;
-            activity.source = entity.source;
+            Activity activity = findById(entity.getActivityID()).get();
+            entity.setActivityID(activity.getActivityID());
+            activity.setTitle(entity.getTitle());
+            activity.setConsumption_in_wh(entity.getConsumption_in_wh());
+            activity.setSource(entity.getSource());
             return entity;
         }
     }

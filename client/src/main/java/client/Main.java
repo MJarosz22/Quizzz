@@ -42,6 +42,7 @@ public class Main extends Application {
         var singleGameOver = FXML.load(SinglePlayerGameOverCtrl.class, "client", "scenes", "SinglePlayerGameOver.fxml");
         var multi = FXML.load(MultiPlayerCtrl.class, "client", "scenes", "Multiplayer.fxml");
         var leaderboard = FXML.load(LeaderBoardCtrl.class, "client", "scenes", "LeaderBoard.fxml");
+        var lobby = FXML.load(LobbyCtrl.class, "client", "scenes", "Lobby.fxml");
         var mainCtrl = INJECTOR.getInstance(MainCtrl.class);
 
         mainCtrl.initialize(primaryStage, home, single, singleGame, singleGameOver, multi, leaderboard);

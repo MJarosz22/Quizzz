@@ -16,6 +16,8 @@
 package client.scenes;
 
 import commons.player.SimpleUser;
+import client.utils.ServerUtils;
+import commons.player.SimpleUser;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.stage.Stage;
@@ -43,14 +45,19 @@ public class MainCtrl {
     private LeaderBoardCtrl leaderBoardCtrl;
     private Scene leaderboard;
 
+    private LobbyCtrl lobbyCtrl;
+    private Scene lobby;
+
     private SimpleUser player;
 
     public void initialize(Stage primaryStage, Pair<SplashScreenCtrl, Parent> splash, Pair<SinglePlayerCtrl,
             Parent> single, Pair<SinglePlayerGameCtrl, Parent> singleGame,
                            Pair<SinglePlayerGameOverCtrl, Parent> singleGameOver,
                            Pair<MultiPlayerCtrl, Parent> multi,
-                           Pair<LeaderBoardCtrl, Parent> leaderboard) {
+                           Pair<LeaderBoardCtrl, Parent> leaderboard,
+                           Pair<LobbyCtrl, Parent> lobby) {
 
+                           Pair<LeaderBoardCtrl, Parent> leaderboard, Pair<LobbyCtrl, Parent> lobby) {
         this.primaryStage = primaryStage;
         this.splashCtrl = splash.getKey();
         this.splash = new Scene(splash.getValue());
@@ -69,6 +76,9 @@ public class MainCtrl {
 
         this.leaderBoardCtrl = leaderboard.getKey();
         this.leaderboard = new Scene(leaderboard.getValue());
+
+        this.lobbyCtrl = lobby.getKey();
+        this.lobby = new Scene(lobby.getValue());
 
         showSplash();
         primaryStage.show();
@@ -103,6 +113,13 @@ public class MainCtrl {
     public void showSinglePlayerGameOver() {
         primaryStage.setTitle("GAME OVER");
         primaryStage.setScene(singleGameOver);
+    }
+
+    public void showLobby() {
+        primaryStage.setTitle("Quizzz lobby");
+        lobbyCtrl.setLabelName(player.getName());
+        lobbyCtrl.setTablePlayers(ServerUtils.getPlayers(player));
+        primaryStage.setScene(lobby);
     }
 
     public SimpleUser getPlayer() {
