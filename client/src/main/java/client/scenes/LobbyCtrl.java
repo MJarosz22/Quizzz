@@ -51,9 +51,9 @@ public class LobbyCtrl implements Initializable {
 //        mainCtrl.showPlayMode();
     }
 
-    public void setLabelName(String name) {
+    /*public void setLabelName(String name) {
         labelName.setText(name);
-    }
+    }*/
 
     public void setTablePlayers(List<SimpleUser> players){
         tablePlayers.setItems(FXCollections.observableList(players));

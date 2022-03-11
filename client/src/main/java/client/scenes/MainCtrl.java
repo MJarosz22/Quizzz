@@ -115,7 +115,7 @@ public class MainCtrl {
 
     public void showLobby() {
         primaryStage.setTitle("Quizzz lobby");
-        lobbyCtrl.setLabelName(player.getName());
+        //lobbyCtrl.setLabelName(player.getName());
         lobbyCtrl.setTablePlayers(ServerUtils.getPlayers(player));
         primaryStage.setScene(lobby);
     }
