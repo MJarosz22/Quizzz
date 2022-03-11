@@ -123,18 +123,18 @@ public class SinglePlayerGameCtrl {
         infoRefresh();
         setOptions(false);
 
-        Activity temporaryActivity1 = new Activity("correctAnswer", 100, "source");
-        Activity temporaryActivity2 = new Activity("wrongAnswer", 100, "source");
-        Activity temporaryActivity3 = new Activity("wrongAnswer", 100, "source");
+        Activity temporaryActivity1 = new Activity("correctAnswer", 100L, "source");
+        Activity temporaryActivity2 = new Activity("wrongAnswer", 100L, "source");
+        Activity temporaryActivity3 = new Activity("wrongAnswer", 100L, "source");
         Activity[] temporaryActivities = {temporaryActivity1, temporaryActivity2, temporaryActivity3};
 
         currentQuestion = new MultipleChoiceQuestion(temporaryActivities);
 
         questionTitle.setText("QuestionTitle");
 
-        option1Button.setText(currentQuestion.getActivities()[0].title);
-        option2Button.setText(currentQuestion.getActivities()[1].title);
-        option3Button.setText(currentQuestion.getActivities()[2].title);
+        option1Button.setText(currentQuestion.getActivities()[0].getTitle());
+        option2Button.setText(currentQuestion.getActivities()[1].getTitle());
+        option3Button.setText(currentQuestion.getActivities()[2].getTitle());
 
         progressBar.setProgress(progressBar.getProgress() + 0.05);
 

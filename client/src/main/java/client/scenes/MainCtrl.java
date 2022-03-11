@@ -57,7 +57,7 @@ public class MainCtrl {
                            Pair<LeaderBoardCtrl, Parent> leaderboard,
                            Pair<LobbyCtrl, Parent> lobby) {
 
-                           Pair<LeaderBoardCtrl, Parent> leaderboard, Pair<LobbyCtrl, Parent> lobby) {
+
         this.primaryStage = primaryStage;
         this.splashCtrl = splash.getKey();
         this.splash = new Scene(splash.getValue());

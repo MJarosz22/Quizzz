@@ -74,24 +74,16 @@ public class GameController {
     /**
      * Lets a client join a gameInstance as a player
      *
-     * @param name Name of new player
      * @return Player (Including id, name, gameInstanceID and cookie info)
      * @param request Request of player (includes name of player and gameType(Singleplayer or Multiplayer))
      * @return Simple User (Including name, cookie and gameInstanceID)
      */
     @PostMapping("/join")
-    public ResponseEntity<Player> addPlayer(@RequestBody String name) {
-        if (isNullOrEmpty(name)) return ResponseEntity.badRequest().build();
-
     public ResponseEntity<SimpleUser> addPlayer(@RequestBody RequestToJoin request) {
         if (request == null || isNullOrEmpty(request.getName())) return ResponseEntity.badRequest().build();
         ResponseCookie tokenCookie = ResponseCookie.from("user-id", DigestUtils.md5DigestAsHex(
                 (request.getName() + System.currentTimeMillis()).getBytes(StandardCharsets.UTF_8))).build();
 
-        Player savedPlayer = new Player(players.size(), name, gameInstances.get(gameInstances.size() - 1), tokenCookie.getValue());
-        players.add(savedPlayer);
-        gameInstances.get(gameInstances.size() - 1).getPlayers().add(savedPlayer.toPlayer(gameInstances.get(gameInstances.size() - 1)));
-        logger.info("[GI " + (gameInstances.size() - 1) + "] PLAYER (" + savedPlayer.getId() + ") JOINED: NAME=" + savedPlayer.getName());
         SimpleUser savedPlayer;
         switch (request.getGameType()){
             case GameInstance.SINGLE_PLAYER:
@@ -131,15 +123,12 @@ public class GameController {
     @GetMapping("/{gameInstanceId}/q{questionNumber}")
     public ResponseEntity<Question> getQuestion(@PathVariable int gameInstanceId, @PathVariable int questionNumber,
                                                 @CookieValue(name = "user-id", defaultValue = "null") String cookie) {
-        if (gameInstanceId < 0 || gameInstanceId > gameInstances.size() - 1
-                || questionNumber > 19 || questionNumber < 0) return ResponseEntity.badRequest().build();
+        if (gameInstanceId < 0 || gameInstanceId > gameInstances.size() - 1 ||
+        questionNumber > 19 || questionNumber < 0) return ResponseEntity.badRequest().build();
 
         Player currentPlayer = getPlayerFromGameInstance(gameInstanceId, cookie);
         if (currentPlayer == null) return ResponseEntity.badRequest().build();
         GameInstance currGI = gameInstances.get(gameInstanceId);
-        Optional<Player> optPlayer = currGI.getPlayers().stream().filter(p -> p.getCookie().equals(cookie)).findFirst();
-        if (optPlayer.isEmpty()) return ResponseEntity.badRequest().build();
-        Player currentPlayer = optPlayer.get();
         logger.info("[GI " + (currGI.getId()) + "] PLAYER (" + currentPlayer.getId() + ") REQUESTED QUESTION N. " + questionNumber);
         Question question = currGI.getQuestions().get(questionNumber);
         return ResponseEntity.ok(question);

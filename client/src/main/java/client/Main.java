@@ -45,6 +45,6 @@ public class Main extends Application {
         var lobby = FXML.load(LobbyCtrl.class, "client", "scenes", "Lobby.fxml");
         var mainCtrl = INJECTOR.getInstance(MainCtrl.class);
 
-        mainCtrl.initialize(primaryStage, home, single, singleGame, singleGameOver, multi, leaderboard);
+        mainCtrl.initialize(primaryStage, home, single,  singleGame, singleGameOver, multi, leaderboard, lobby);
     }
 }
