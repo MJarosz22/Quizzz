@@ -132,22 +132,18 @@ public class ActivityController {
         //hard coded -> size of all activities - 60
         long countIds = activityRepository.count();
 
-        int idRandom = (int)Math.abs(Math.random() * countIds) - 60;
+        int idRandom = (int) Math.abs(Math.random() * countIds) - 60;
         List<Optional<Activity>> foundAct = new ArrayList<>();
         int limit = 60;
         int i = 0;
-        while(i < limit)
-        {
+        while (i < limit) {
             Optional<Activity> a = activityRepository.findById((long) idRandom);
-            if(a.isPresent() && !foundAct.contains(a))
-            {
+            if (a.isPresent() && !foundAct.contains(a)) {
                 foundAct.add(a);
-            }
-            else
-            {
+            } else {
                 limit++;
             }
-            idRandom = (int)Math.abs(Math.random() * countIds) - 60;
+            idRandom = (int) Math.abs(Math.random() * countIds) - 60;
             i++;
         }
         if (foundAct.size() == 0) return ResponseEntity.notFound().build();
