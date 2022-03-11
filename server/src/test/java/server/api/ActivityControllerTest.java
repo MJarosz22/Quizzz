@@ -15,15 +15,15 @@
  */
 package server.api;
 
-import commons.Activity;
-import org.junit.jupiter.api.BeforeEach;
-import org.junit.jupiter.api.Test;
-
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.springframework.http.HttpStatus.*;
 
 import java.util.List;
 import java.util.Random;
+
+import commons.Activity;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 
 
 public class ActivityControllerTest {
@@ -33,16 +33,6 @@ public class ActivityControllerTest {
     private TestActivityRepository repo;
 
     private ActivityController sut;
-
-    private static Activity getActivity(String title, Long consumption, String source) {
-        return new Activity(title, consumption, source);
-    }
-
-    private static void printActivities(ActivityController sut) {
-        // Testing-purpose ONLY
-        List<Activity> activities = sut.getAll();
-        activities.forEach(System.out::println);
-    }
 
     @BeforeEach
     public void setup() {
@@ -79,16 +69,16 @@ public class ActivityControllerTest {
 
     /*@Test
     public void updateActivityTest() {
-        sut.addActivity(getActivity("Boil 2L of water", 120, "https://www.some-site.com"));
-        sut.addActivity(getActivity("Do another activity", 15, "https://www.another-site.com"));
-        sut.addActivity(getActivity("Take a shower for 10 minutes", 60, "https://www.showers.com"));
+        sut.addActivity(getActivity("id-1", "00/1.png", "Boil 2L of water", 120, "https://www.some-site.com"));
+        sut.addActivity(getActivity("id-2", "00/2.png", "Do another activity", 15, "https://www.another-site.com"));
+        sut.addActivity(getActivity("id-3", "00/3.png", "Take a shower for 10 minutes", 60, "https://www.showers.com"));
 
         var actual = getActivity("id-1", "00/1.png", "Activity changed by using updateActivity method", 65, "https://www.my-idea.com");
         actual.setActivityID(2L);
 
         printActivities(sut);
         System.out.println();
-        sut.updateActivity((long) 2, actual);
+        sut.updateActivity(2, actual);
 
         assertTrue(repo.calledMethods.contains("findById"));
         assertEquals(actual, repo.getById((long) 2));
@@ -167,6 +157,14 @@ public class ActivityControllerTest {
 
     private static Activity getActivity(String id, String image_path, String title, Long consumption, String source) {
         return new Activity(id, image_path, title, consumption, source);
+    }
+
+    private static void printActivities(ActivityController sut) {
+        // Testing-purpose ONLY
+        List<Activity> activities = sut.getAll();
+        activities.forEach(activity -> {
+            System.out.println(activity);
+        });
     }
 
 

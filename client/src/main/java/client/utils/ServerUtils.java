@@ -35,6 +35,15 @@ public class ServerUtils {
                 .get(new GenericType<>() {
                 });
     }
+    public List<Activity> getActivitiesRandomly() {
+        return ClientBuilder.newClient(new ClientConfig())
+                .target(SERVER).path("api/activities/random60")
+                .request(APPLICATION_JSON)
+                .accept(APPLICATION_JSON)
+                .get(new GenericType<>() {
+                });
+    }
+
 
     public Activity addActivity(Activity activity) {
         return ClientBuilder.newClient(new ClientConfig())
@@ -61,4 +70,15 @@ public class ServerUtils {
                 .accept(APPLICATION_JSON)
                 .put(Entity.entity(activity, APPLICATION_JSON), Activity.class);
     }
+
+    public boolean disconnect(SimpleUser player) {
+        Client client = ClientBuilder.newClient(new ClientConfig());
+        return client //
+                .target(SERVER).path("api/game/ " + player.getGameInstanceId() + "/disconnect") //
+                .request(APPLICATION_JSON).cookie("user-id", player.getCookie()) //
+                .accept(APPLICATION_JSON) //
+                .delete(new GenericType<>() {
+                });
+    }
+
 }

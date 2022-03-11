@@ -37,7 +37,7 @@ public class ActivityOverviewCtrl implements Initializable {
     private TableColumn<Activity, String> columnTitle;
 
     @FXML
-    private TableColumn<Activity, Number> columnConsumption_in_wh;
+    private TableColumn<Activity, Number> columnConsumption;
 
     @FXML
     private TableColumn<Activity, String> columnSource;
@@ -60,8 +60,8 @@ public class ActivityOverviewCtrl implements Initializable {
         columnTitle.setCellValueFactory(q -> new SimpleStringProperty(q.getValue().getTitle()));
         columnTitle.setCellFactory(TextFieldTableCell.forTableColumn());
 
-        columnConsumption_in_wh.setCellValueFactory(q -> new SimpleLongProperty(q.getValue().getConsumption_in_wh()));
-        columnConsumption_in_wh.setCellFactory(TextFieldTableCell.forTableColumn(new NumberStringConverter()));
+        columnConsumption.setCellValueFactory(q -> new SimpleLongProperty(q.getValue().getConsumption_in_wh()));
+        columnConsumption.setCellFactory(TextFieldTableCell.forTableColumn(new NumberStringConverter()));
 
         columnSource.setCellValueFactory(q -> new SimpleStringProperty(q.getValue().getSource()));
         columnSource.setCellFactory(TextFieldTableCell.forTableColumn());
@@ -96,7 +96,7 @@ public class ActivityOverviewCtrl implements Initializable {
 
     public void editConsumption(TableColumn.CellEditEvent<Activity, Number> productStringCellEditEvent) {
         Activity activity = table.getSelectionModel().getSelectedItem();
-        activity.setConsumption_in_wh(productStringCellEditEvent.getNewValue().longValue());
+        activity.setConsumption_in_wh((long) productStringCellEditEvent.getNewValue().intValue());
         server.updateActivity(activity);
         refresh();
     }

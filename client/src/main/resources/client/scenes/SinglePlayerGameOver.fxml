@@ -7,22 +7,29 @@
 <?import javafx.scene.text.Font?>
 <?import javafx.scene.text.Text?>
 
-<AnchorPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="540.0"
-            prefWidth="960.0" style="-fx-background-color: #91e4fb;" xmlns="http://javafx.com/javafx/17"
-            xmlns:fx="http://javafx.com/fxml/1" fx:controller="client.scenes.SinglePlayerGameOverCtrl">
+<AnchorPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="540.0" prefWidth="960.0" style="-fx-background-color: #91e4fb;" xmlns="http://javafx.com/javafx/17" xmlns:fx="http://javafx.com/fxml/1" fx:controller="client.scenes.SinglePlayerGameOverCtrl">
     <children>
-        <Text layoutX="382.0" layoutY="118.0" strokeType="OUTSIDE" strokeWidth="0.0" text="TODO: Game Over">
-            <font>
-                <Font size="24.0"/>
-            </font>
-        </Text>
-        <TableView layoutX="380.0" layoutY="217.0" prefHeight="200.0" prefWidth="200.0">
+        <TableView layoutX="342.0" layoutY="208.0" prefHeight="287.0" prefWidth="291.0">
             <columns>
-                <TableColumn prefWidth="75.0" text="C1"/>
-                <TableColumn prefWidth="75.0" text="C2"/>
+                <TableColumn prefWidth="51.0" text="Position" />
+                <TableColumn prefWidth="145.0" text="Name" />
+                <TableColumn prefWidth="95.0" text="Score" />
             </columns>
         </TableView>
-        <Button layoutX="789.0" layoutY="55.0" mnemonicParsing="false" onAction="#back" prefHeight="81.0"
-                prefWidth="91.0" style="-fx-background-radius: 25;" text="PLAY AGAIN"/>
+        <Button layoutX="804.0" layoutY="53.0" mnemonicParsing="false" onAction="#back" prefHeight="56.0" prefWidth="96.0" style="-fx-background-color: #fff;" text="PLAY AGAIN" textAlignment="CENTER" wrapText="true">
+            <font>
+                <Font name="Courier New" size="15.0" />
+            </font>
+        </Button>
+        <Text layoutX="401.0" layoutY="165.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Leaderboard">
+            <font>
+                <Font name="Courier New" size="24.0" />
+            </font>
+        </Text>
+      <Text fill="WHITE" layoutX="379.0" layoutY="98.0" strokeType="OUTSIDE" strokeWidth="0.0" text="GAME OVER!">
+         <font>
+            <Font name="Courier New" size="36.0" />
+         </font>
+      </Text>
     </children>
 </AnchorPane>

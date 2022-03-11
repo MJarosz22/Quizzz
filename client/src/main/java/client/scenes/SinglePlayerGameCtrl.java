@@ -8,6 +8,8 @@ import javafx.application.Platform;
 import javafx.fxml.FXML;
 import javafx.scene.control.Button;
 import javafx.scene.control.ProgressBar;
+import javafx.scene.control.RadioButton;
+import javafx.scene.control.TextField;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.text.Text;
@@ -63,6 +65,27 @@ public class SinglePlayerGameCtrl {
     private Button option3Button;
 
     @FXML
+    private Button correct_answer;
+
+    @FXML
+    private TextField player_answer;
+
+    @FXML
+    private Text correct_guess;
+
+    @FXML
+    private Button submit_guess;
+
+    @FXML
+    private RadioButton answer1;
+
+    @FXML
+    private RadioButton answer2;
+
+    @FXML
+    private RadioButton answer3;
+
+    @FXML
     private ImageView image1;
 
     @FXML
@@ -100,15 +123,17 @@ public class SinglePlayerGameCtrl {
         if (this.mainCtrl.getPlayer() != null) {
             this.player = mainCtrl.getPlayer();
             currentGame = new GameInstance(this.player.getGameInstanceId(), 0);
+
+            currentGame.generateQuestions(server.getActivitiesRandomly());
+
+            gameQuestions.addAll(currentGame.getQuestions());
+            progressBar.setProgress(-0.05);
+            score.setText("Your score: 0");
+            infoRefresh();
+            temporaryCounter = 1;
+            loadNextQuestion();
         }
-        //TODO: generate the questions from database
-        //currentGame.generateQuestions(*list of activities*);
-        //gameQuestions.addAll(currentGame.getQuestions());
-        progressBar.setProgress(-0.05);
-        score.setText("Your score: 0");
-        infoRefresh();
-        temporaryCounter = 1;
-        loadNextQuestion();
+
     }
 
     /**
@@ -123,22 +148,91 @@ public class SinglePlayerGameCtrl {
         infoRefresh();
         setOptions(false);
 
-        Activity temporaryActivity1 = new Activity("correctAnswer", 100L, "source");
-        Activity temporaryActivity2 = new Activity("wrongAnswer", 100L, "source");
-        Activity temporaryActivity3 = new Activity("wrongAnswer", 100L, "source");
-        Activity[] temporaryActivities = {temporaryActivity1, temporaryActivity2, temporaryActivity3};
+        currentQuestion = currentGame.getRandomQuestion();
 
-        currentQuestion = new MultipleChoiceQuestion(temporaryActivities);
+        Platform.runLater(new Runnable() {
+            @Override
+            public void run() {
+                questionTitle.setText(currentQuestion.getTitle());
+                if (currentQuestion instanceof QuestionMoreExpensive) {
+                    correct_guess.setVisible(false);
+                    player_answer.setVisible(false);
+                    submit_guess.setVisible(false);
+                    option1Button.setVisible(true);
+                    option2Button.setVisible(true);
+                    option3Button.setVisible(true);
+                    answer1.setVisible(false);
+                    answer2.setVisible(false);
+                    answer3.setVisible(false);
+                    option1Button.setText(((QuestionMoreExpensive) currentQuestion).getActivities()[0].getTitle());
+                    option2Button.setText(((QuestionMoreExpensive) currentQuestion).getActivities()[1].getTitle());
+                    option3Button.setText(((QuestionMoreExpensive) currentQuestion).getActivities()[2].getTitle());
+                    progressBar.setProgress(progressBar.getProgress() + 0.05);
 
-        questionTitle.setText("QuestionTitle");
+                    questionCount.setText("Question " + temporaryCounter + "/20");
+                    if (((QuestionMoreExpensive) currentQuestion).getAnswer() == ((QuestionMoreExpensive) currentQuestion)
+                            .getActivities()[0].getConsumption_in_wh())
+                        correct_answer = option1Button;
+                    if (((QuestionMoreExpensive) currentQuestion).getAnswer() == ((QuestionMoreExpensive) currentQuestion)
+                            .getActivities()[1].getConsumption_in_wh())
+                        correct_answer = option2Button;
+                    if (((QuestionMoreExpensive) currentQuestion).getAnswer() == ((QuestionMoreExpensive) currentQuestion)
+                            .getActivities()[2].getConsumption_in_wh())
+                        correct_answer = option3Button;
 
-        option1Button.setText(currentQuestion.getActivities()[0].getTitle());
-        option2Button.setText(currentQuestion.getActivities()[1].getTitle());
-        option3Button.setText(currentQuestion.getActivities()[2].getTitle());
+                }
+                if (currentQuestion instanceof QuestionHowMuch) {
+                    player_answer.clear();
+                    option1Button.setText(((QuestionHowMuch) currentQuestion).getActivity().getTitle());
+                    option1Button.disabledProperty();
+                    option2Button.setVisible(false);
+                    option3Button.setVisible(false);
+                    player_answer.setVisible(true);
+                    submit_guess.setVisible(true);
+                    correct_guess.setVisible(false);
+                    answer1.setVisible(false);
+                    answer2.setVisible(false);
+                    answer3.setVisible(false);
+                    progressBar.setProgress(progressBar.getProgress() + 0.05);
+                    questionCount.setText("Question " + temporaryCounter + "/20");
+                }
+                if (currentQuestion instanceof QuestionWhichOne) {
+                    answer1.setSelected(false);
+                    answer2.setSelected(false);
+                    answer3.setSelected(false);
+                    answer1.setStyle("-fx-background-color: #91e4fb; ");
+                    answer2.setStyle("-fx-background-color: #91e4fb; ");
+                    answer3.setStyle("-fx-background-color: #91e4fb; ");
+                    option1Button.setText(((QuestionWhichOne) currentQuestion).getActivity().getTitle());
+                    option1Button.disabledProperty();
+                    option2Button.setVisible(false);
+                    option3Button.setVisible(false);
+                    player_answer.setVisible(false);
+                    submit_guess.setVisible(false);
+                    correct_guess.setVisible(false);
+                    answer1.setVisible(true);
+                    answer2.setVisible(true);
+                    answer3.setVisible(true);
+                    progressBar.setProgress(progressBar.getProgress() + 0.05);
+                    questionCount.setText("Question " + temporaryCounter + "/20");
+                    Random random = new Random();
+                    int random_correct_answer = random.nextInt(3 - 1 + 1) + 1;
+                    long other_answer1 = Math.abs(((QuestionWhichOne) currentQuestion).getActivity().getConsumption_in_wh() - 500);
+                    long other_answer2 = Math.abs(((QuestionWhichOne) currentQuestion).getActivity().getConsumption_in_wh() + 700);
+                    long other_answer3 = Math.abs(((QuestionWhichOne) currentQuestion).getActivity().getConsumption_in_wh() - 200);
+                    if (random_correct_answer == 1)
+                        answer1.setText(((QuestionWhichOne) currentQuestion).getActivity().getConsumption_in_wh().toString());
+                    else answer1.setText(String.valueOf(other_answer1));
+                    if (random_correct_answer == 2)
+                        answer2.setText(((QuestionWhichOne) currentQuestion).getActivity().getConsumption_in_wh().toString());
+                    else answer2.setText(String.valueOf(other_answer2));
+                    if (random_correct_answer == 3)
+                        answer3.setText(((QuestionWhichOne) currentQuestion).getActivity().getConsumption_in_wh().toString());
+                    else answer3.setText(String.valueOf(other_answer3));
+                }
+            }
+        });
 
-        progressBar.setProgress(progressBar.getProgress() + 0.05);
-
-        questionCount.setText("Question " + temporaryCounter + "/20");
         //TODO: set the images, reset/start the timer, add timer logic, implement power-ups
     }
 
@@ -146,27 +240,36 @@ public class SinglePlayerGameCtrl {
      * This method is called when in a multiple choice question, user selects option 1
      */
     public void option1Selected() {
-        if (((MultipleChoiceQuestion) currentQuestion).getAnswer().equals(currentQuestion.getActivities()[0])) {
+        if (((QuestionMoreExpensive) currentQuestion).getAnswer() == ((QuestionMoreExpensive) currentQuestion)
+                .getActivities()[0].getConsumption_in_wh()) {
             correctAnswer();
-        } else wrongAnswer();
+        } else {
+            wrongAnswer();
+        }
     }
 
     /**
      * This method is called when in a multiple choice question, user selects option 2
      */
     public void option2Selected() {
-        if (((MultipleChoiceQuestion) currentQuestion).getAnswer().equals(currentQuestion.getActivities()[1])) {
+        if (((QuestionMoreExpensive) currentQuestion).getAnswer() == ((QuestionMoreExpensive) currentQuestion)
+                .getActivities()[1].getConsumption_in_wh()) {
             correctAnswer();
-        } else wrongAnswer();
+        } else {
+            wrongAnswer();
+        }
     }
 
     /**
      * This method is called when in a multiple choice question, user selects option 3
      */
     public void option3Selected() {
-        if (((MultipleChoiceQuestion) currentQuestion).getAnswer().equals(currentQuestion.getActivities()[2])) {
+        if (((QuestionMoreExpensive) currentQuestion).getAnswer() == ((QuestionMoreExpensive) currentQuestion)
+                .getActivities()[2].getConsumption_in_wh()) {
             correctAnswer();
-        } else wrongAnswer();
+        } else {
+            wrongAnswer();
+        }
     }
 
     /**
@@ -179,7 +282,7 @@ public class SinglePlayerGameCtrl {
         answer.setText("Correct answer");
         setEmoji(emoji, true);
 
-        setColors(option1Button, option2Button, option3Button);
+        setColors();
         setOptions(true);
 
         CompletableFuture.delayedExecutor(1, TimeUnit.SECONDS).execute(() -> {
@@ -199,10 +302,10 @@ public class SinglePlayerGameCtrl {
      */
     public void wrongAnswer() {
         points.setText("+0 points"); // In the future calculate the # of points, DON'T hardcode
-        answer.setText("Correct answer");
+        answer.setText("Wrong answer");
         setEmoji(emoji, false);
 
-        setColors(option1Button, option2Button, option3Button);
+        setColors();
         setOptions(true);
 
 
@@ -230,22 +333,19 @@ public class SinglePlayerGameCtrl {
      * Restarts the buttons to their original state -> all get the white background color
      */
     public void colorsRefresh() {
-        option1Button.setStyle("-fx-background-color: white; ");
-        option2Button.setStyle("-fx-background-color: white; ");
-        option3Button.setStyle("-fx-background-color: white; ");
+        option1Button.setStyle("-fx-background-color: #91e4fb; ");
+        option2Button.setStyle("-fx-background-color: #91e4fb; ");
+        option3Button.setStyle("-fx-background-color: #91e4fb; ");
     }
 
     /**
      * Makes the background of  the correct button GREEN and the background of the wrong buttons RED
-     *
-     * @param correct - Button object that represents the correct option for a MC question
-     * @param wrong1  - Button object that represents one incorrect option for a MC question
-     * @param wrong2  - Button object that represents another incorrect option for a MC question
      */
-    public void setColors(Button correct, Button wrong1, Button wrong2) {
-        correct.setStyle("-fx-background-color: green; ");
-        wrong1.setStyle("-fx-background-color: red; ");
-        wrong2.setStyle("-fx-background-color: red; ");
+    public void setColors() {
+        correct_answer.setStyle("-fx-background-color: green; ");
+        if (option1Button != correct_answer) option1Button.setStyle("-fx-background-color: red; ");
+        if (option2Button != correct_answer) option2Button.setStyle("-fx-background-color: red; ");
+        if (option3Button != correct_answer) option3Button.setStyle("-fx-background-color: red; ");
     }
 
     /**
@@ -309,5 +409,88 @@ public class SinglePlayerGameCtrl {
         thread.start();
     }
 
+    public void isGuessCorrect() {
+        CharSequence input = player_answer.getCharacters();
+        long number = Long.parseLong(input.toString());
+        if (number == ((QuestionHowMuch) currentQuestion).getActivity().getConsumption_in_wh()) {
+            player.addScore(100);
+            score.setText("Your score: " + player.getScore());
+            points.setText("+100 points");
+            answer.setText("Correct answer");
+            setEmoji(emoji, true);
+        } else {
+            points.setText("+0 points");
+            answer.setText("Wrong answer");
+            setEmoji(emoji, false);
+        }
+        correct_guess.setVisible(true);
+        correct_guess.setText("The correct answer is: " + ((QuestionHowMuch) currentQuestion).getActivity().getConsumption_in_wh());
+        setOptions(true);
 
+        CompletableFuture.delayedExecutor(1, TimeUnit.SECONDS).execute(() -> {
+            if (!isGameOver())
+                loadNextQuestion();
+        });
+
+
+        if (temporaryCounter >= 20) {
+            gameOver(2000);
+        }
+    }
+
+
+    public void answer1Selected() {
+        long response = Long.parseLong(answer1.getText());
+        isSelectionCorrect(answer1, response);
+    }
+
+    public void answer2Selected() {
+        long response = Long.parseLong(answer2.getText());
+        isSelectionCorrect(answer2, response);
+    }
+
+    public void answer3Selected() {
+        long response = Long.parseLong(answer3.getText());
+        isSelectionCorrect(answer3, response);
+    }
+
+    public void isSelectionCorrect(RadioButton player_answer, long response) {
+
+        if (response == ((QuestionWhichOne) currentQuestion).getActivity().getConsumption_in_wh()) {
+            player.addScore(100);
+            score.setText("Your score: " + player.getScore());
+            points.setText("+100 points");
+            answer.setText("Correct answer");
+            setEmoji(emoji, true);
+            player_answer.setStyle("-fx-background-color: green; ");
+            if (!answer1.equals(player_answer)) answer1.setStyle("-fx-background-color: red; ");
+            if (!answer2.equals(player_answer)) answer2.setStyle("-fx-background-color: red; ");
+            if (!answer3.equals(player_answer)) answer3.setStyle("-fx-background-color: red; ");
+        } else {
+            points.setText("+0 points");
+            answer.setText("Wrong answer");
+            setEmoji(emoji, false);
+            if (Long.parseLong(answer1.getText()) == ((QuestionWhichOne) currentQuestion).getActivity().getConsumption_in_wh())
+                answer1.setStyle("-fx-background-color: green; ");
+            else answer1.setStyle("-fx-background-color: red; ");
+            if (Long.parseLong(answer2.getText()) == ((QuestionWhichOne) currentQuestion).getActivity().getConsumption_in_wh())
+                answer2.setStyle("-fx-background-color: green; ");
+            else answer2.setStyle("-fx-background-color: red; ");
+            if (Long.parseLong(answer3.getText()) == ((QuestionWhichOne) currentQuestion).getActivity().getConsumption_in_wh())
+                answer3.setStyle("-fx-background-color: green; ");
+            else answer3.setStyle("-fx-background-color: red; ");
+        }
+
+        setOptions(true);
+
+        CompletableFuture.delayedExecutor(1, TimeUnit.SECONDS).execute(() -> {
+            if (!isGameOver())
+                loadNextQuestion();
+        });
+
+
+        if (temporaryCounter >= 20) {
+            gameOver(2000);
+        }
+    }
 }

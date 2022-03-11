@@ -16,6 +16,7 @@
 package client;
 
 import client.scenes.*;
+import client.utils.ServerUtils;
 import com.google.inject.Injector;
 import javafx.application.Application;
 import javafx.stage.Stage;
@@ -42,9 +43,17 @@ public class Main extends Application {
         var singleGameOver = FXML.load(SinglePlayerGameOverCtrl.class, "client", "scenes", "SinglePlayerGameOver.fxml");
         var multi = FXML.load(MultiPlayerCtrl.class, "client", "scenes", "Multiplayer.fxml");
         var leaderboard = FXML.load(LeaderBoardCtrl.class, "client", "scenes", "LeaderBoard.fxml");
-        var lobby = FXML.load(LobbyCtrl.class, "client", "scenes", "Lobby.fxml");
         var mainCtrl = INJECTOR.getInstance(MainCtrl.class);
+        var lobby = FXML.load(LobbyCtrl.class, "client", "scenes", "Lobby.fxml");
 
-        mainCtrl.initialize(primaryStage, home, single,  singleGame, singleGameOver, multi, leaderboard, lobby);
+        mainCtrl.initialize(primaryStage, home, single, singleGame, singleGameOver, multi, leaderboard, lobby);
     }
+
+    @Override
+    public void stop() {
+        var mainCtrl = INJECTOR.getInstance(MainCtrl.class);
+        ServerUtils serverUtils = new ServerUtils();
+        serverUtils.disconnect(mainCtrl.getPlayer());
+    }
+
 }

@@ -4,6 +4,7 @@ import commons.GameInstance;
 import commons.PowerUp;
 import org.apache.commons.lang3.builder.EqualsBuilder;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
+import org.apache.commons.lang3.builder.ToStringBuilder;
 
 import javax.persistence.Column;
 import java.util.ArrayList;
@@ -83,5 +84,15 @@ public class Player extends SimpleUser {
     public SimpleUser toSimpleUser() {
         return new SimpleUser(getId(), getName(), gameInstance.getId(), getCookie());
     }
+
+    @Override
+    public String toString() {
+        return new ToStringBuilder(this).append(super.toString())
+                .append("status", status)
+                .append("powerUpUsed", powerUpUsed)
+                .append("gameInstance", gameInstance)
+                .toString();
+    }
+
 
 }
