@@ -45,8 +45,11 @@ public class GameController {
         System.out.println(this.activityRepository.findAll());
         gameInstances = new ArrayList<>();
         gameInstances.add(new GameInstance(gameInstances.size(), GameInstance.MULTI_PLAYER));
+/*
         currentMPGIId = 0;
         //TODO Make it so that these activities actually get merged into 20 questions and ensure there are no duplicates (if possible)
+        // TODO: In order to make sure there are no duplicates, we can get use of "seeds".
+        Activity[] activities = new Activity[60];
         List<Activity> allActivities = activityRepository.findAll();
         if (allActivities.size() == 0) {
             logger.error("No activities found! Cannot generate questions for Gameinstance");
@@ -58,6 +61,9 @@ public class GameController {
             }
             gameInstances.get(0).generateQuestions(activities);
         }
+        gameInstances.get(0).generateQuestions(activities);
+
+ */
         players = new ArrayList<>();
     }
 
@@ -67,6 +73,8 @@ public class GameController {
 
     /**
      * Lets a client join a gameInstance as a player
+     *
+     * @return Player (Including id, name, gameInstanceID and cookie info)
      * @param request Request of player (includes name of player and gameType(Singleplayer or Multiplayer))
      * @return Simple User (Including name, cookie and gameInstanceID)
      */
@@ -115,8 +123,8 @@ public class GameController {
     @GetMapping("/{gameInstanceId}/q{questionNumber}")
     public ResponseEntity<Question> getQuestion(@PathVariable int gameInstanceId, @PathVariable int questionNumber,
                                                 @CookieValue(name = "user-id", defaultValue = "null") String cookie) {
-        if (gameInstanceId < 0 || gameInstanceId > gameInstances.size() - 1
-                || questionNumber > 19 || questionNumber < 0) return ResponseEntity.badRequest().build();
+        if (gameInstanceId < 0 || gameInstanceId > gameInstances.size() - 1 ||
+        questionNumber > 19 || questionNumber < 0) return ResponseEntity.badRequest().build();
 
         Player currentPlayer = getPlayerFromGameInstance(gameInstanceId, cookie);
         if (currentPlayer == null) return ResponseEntity.badRequest().build();
