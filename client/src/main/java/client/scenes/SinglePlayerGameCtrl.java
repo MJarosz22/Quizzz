@@ -170,11 +170,14 @@ public class SinglePlayerGameCtrl {
                     progressBar.setProgress(progressBar.getProgress() + 0.05);
 
                     questionCount.setText("Question " + temporaryCounter + "/20");
-                    if (((QuestionMoreExpensive) currentQuestion).getAnswer() == ((QuestionMoreExpensive) currentQuestion).getActivities()[0].getConsumption_in_wh())
+                    if (((QuestionMoreExpensive) currentQuestion).getAnswer() == ((QuestionMoreExpensive) currentQuestion)
+                            .getActivities()[0].getConsumption_in_wh())
                         correct_answer = option1Button;
-                    if (((QuestionMoreExpensive) currentQuestion).getAnswer() == ((QuestionMoreExpensive) currentQuestion).getActivities()[1].getConsumption_in_wh())
+                    if (((QuestionMoreExpensive) currentQuestion).getAnswer() == ((QuestionMoreExpensive) currentQuestion)
+                            .getActivities()[1].getConsumption_in_wh())
                         correct_answer = option2Button;
-                    if (((QuestionMoreExpensive) currentQuestion).getAnswer() == ((QuestionMoreExpensive) currentQuestion).getActivities()[2].getConsumption_in_wh())
+                    if (((QuestionMoreExpensive) currentQuestion).getAnswer() == ((QuestionMoreExpensive) currentQuestion)
+                            .getActivities()[2].getConsumption_in_wh())
                         correct_answer = option3Button;
 
                 }
@@ -234,7 +237,8 @@ public class SinglePlayerGameCtrl {
      * This method is called when in a multiple choice question, user selects option 1
      */
     public void option1Selected() {
-        if (((QuestionMoreExpensive) currentQuestion).getAnswer() == ((QuestionMoreExpensive) currentQuestion).getActivities()[0].getConsumption_in_wh()) {
+        if (((QuestionMoreExpensive) currentQuestion).getAnswer() == ((QuestionMoreExpensive) currentQuestion)
+                .getActivities()[0].getConsumption_in_wh()) {
             correctAnswer();
         }else {
             wrongAnswer();
@@ -245,7 +249,8 @@ public class SinglePlayerGameCtrl {
      * This method is called when in a multiple choice question, user selects option 2
      */
     public void option2Selected() {
-        if (((QuestionMoreExpensive) currentQuestion).getAnswer() == ((QuestionMoreExpensive) currentQuestion).getActivities()[1].getConsumption_in_wh()) {
+        if (((QuestionMoreExpensive) currentQuestion).getAnswer() == ((QuestionMoreExpensive) currentQuestion)
+                .getActivities()[1].getConsumption_in_wh()) {
             correctAnswer();
         } else {
             wrongAnswer();
@@ -256,7 +261,8 @@ public class SinglePlayerGameCtrl {
      * This method is called when in a multiple choice question, user selects option 3
      */
     public void option3Selected() {
-        if (((QuestionMoreExpensive) currentQuestion).getAnswer() == ((QuestionMoreExpensive) currentQuestion).getActivities()[2].getConsumption_in_wh()) {
+        if (((QuestionMoreExpensive) currentQuestion).getAnswer() == ((QuestionMoreExpensive) currentQuestion)
+                .getActivities()[2].getConsumption_in_wh()) {
             correctAnswer();
         }else {
             wrongAnswer();
@@ -411,8 +417,7 @@ public class SinglePlayerGameCtrl {
             points.setText("+100 points");
             answer.setText("Correct answer");
             setEmoji(emoji, true);
-        }
-        else{
+        } else{
             points.setText("+0 points");
             answer.setText("Wrong answer");
             setEmoji(emoji, false);
@@ -460,8 +465,7 @@ public class SinglePlayerGameCtrl {
             if(!answer1.equals(player_answer)) answer1.setStyle("-fx-background-color: red; ");
             if(!answer2.equals(player_answer)) answer2.setStyle("-fx-background-color: red; ");
             if(!answer3.equals(player_answer)) answer3.setStyle("-fx-background-color: red; ");
-        }
-        else{
+        } else{
             points.setText("+0 points");
             answer.setText("Wrong answer");
             setEmoji(emoji, false);
