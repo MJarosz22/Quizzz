@@ -5,14 +5,16 @@ import java.util.Objects;
 
 public class QuestionMoreExpensive extends Question {
 
-    private List<Activity> answers;
+    private Activity[] answers;
 
-    public QuestionMoreExpensive(String title, List<Integer> disabledPowerUps, List<Activity> answers) {
-        super(1, title, disabledPowerUps);
+    public QuestionMoreExpensive(String title, List<Integer> disabledPowerUps, Activity[] answers) {
+        super(answers);
         this.answers = answers;
     }
 
-    public QuestionMoreExpensive() {
+
+    @Override
+    public void setPowerups() {
     }
 
     @Override

@@ -15,11 +15,6 @@
  */
 package server.api;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Optional;
-import java.util.function.Function;
-
 import commons.Activity;
 import org.springframework.data.domain.Example;
 import org.springframework.data.domain.Page;
@@ -30,6 +25,11 @@ import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.FluentQuery.FetchableFluentQuery;
 import org.springframework.transaction.annotation.Transactional;
 import server.database.ActivityRepository;
+
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Optional;
+import java.util.function.Function;
 
 public class TestActivityRepository implements ActivityRepository {
 

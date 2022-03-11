@@ -2,7 +2,9 @@ package client.scenes;
 
 import client.utils.ServerUtils;
 import com.google.inject.Inject;
-import commons.Player;
+import commons.GameInstance;
+import commons.communication.RequestToJoin;
+import commons.player.SimpleUser;
 import javafx.fxml.FXML;
 import javafx.scene.control.TextField;
 
@@ -21,17 +23,19 @@ public class SinglePlayerCtrl {
     }
 
     public void back() {
-        this.textField.clear();
         mainCtrl.showSplash();
     }
 
-    // To be added when making the main game scene, in order for the player to play
+    /**
+     * To be added when making the main game scene, in order for the player to play
+     */
     public void play() {
         if (!getTextField().equals("")) {
-            Player newPlayer = new Player(getTextField());
-            server.addPlayer(newPlayer);
-            this.textField.clear();
-            //mainCtrl.showPlayMode();
+            SimpleUser player = server.addPlayer(new RequestToJoin(getTextField(), GameInstance.SINGLE_PLAYER));
+            mainCtrl.setPlayer(player);
+            System.out.println(player);
+            mainCtrl.showLobby();
+            //TODO Make it so that player goes directly into game instead of going to lobby
         }
     }
 

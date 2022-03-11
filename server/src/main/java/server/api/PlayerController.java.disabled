@@ -1,6 +1,6 @@
 package server.api;
 
-import commons.Player;
+import commons.player.Player;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import server.database.PlayerRepository;
@@ -30,11 +30,11 @@ public class PlayerController {
 
     @PostMapping(path = {"", "/"})
     public ResponseEntity<Player> addPlayer(@RequestBody Player player) {
-        if (isNullOrEmpty(player.getName())) {
+        if (isNullOrEmpty(player.name)) {
             return ResponseEntity.badRequest().build();
         }
         //playerRepository.save(player);
-        Player savedPlayer = playerRepository.save(new Player(player.getName()));
+        Player savedPlayer = playerRepository.save(new Player(player.name));
         return ResponseEntity.ok(savedPlayer);
     }
 
@@ -48,11 +48,11 @@ public class PlayerController {
         Optional<Player> playerData = playerRepository.findById(id);
         if (playerData.isPresent()) {
             Player newPlayer = playerData.get();
-            if (!isNullOrEmpty(player.getName())) newPlayer.setName(player.getName());
-            newPlayer.setScore(0);
-            newPlayer.setStatus(0);
-            newPlayer.setPowerUps(new ArrayList<>());
-            newPlayer.setId(id);
+            if (!isNullOrEmpty(player.name)) newPlayer.name = player.name;
+            newPlayer.score = 0;
+            newPlayer.status = 0;
+            newPlayer.powerUpUsed = new ArrayList<>();
+            newPlayer.id = id;
             return ResponseEntity.ok(playerRepository.save(newPlayer));
         }
         return ResponseEntity.notFound().build();

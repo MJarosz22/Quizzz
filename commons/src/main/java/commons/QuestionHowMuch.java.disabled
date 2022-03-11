@@ -11,7 +11,9 @@ public class QuestionHowMuch extends Question {
         this.answers = answers;
     }
 
-    public QuestionHowMuch() {
+    @Override
+    public void setPowerups() {
+
     }
 
     @Override

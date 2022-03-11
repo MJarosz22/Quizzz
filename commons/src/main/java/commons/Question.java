@@ -1,83 +1,72 @@
 package commons;
 
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
-import java.util.List;
-import java.util.Objects;
+import org.apache.commons.lang3.builder.EqualsBuilder;
+import org.apache.commons.lang3.builder.HashCodeBuilder;
+import org.apache.commons.lang3.builder.ToStringBuilder;
 
+import javax.persistence.Entity;
+import javax.persistence.Id;
+
+@Entity
 public abstract class Question {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
-    private long id;
-
-    private int type;
     private String title;
-    private List<Integer> disabledPowerUps;
 
-    public Question(int type, String title, List<Integer> disabledPowerUps) {
-        this.type = type;
-        this.title = title;
-        this.disabledPowerUps = disabledPowerUps;
+    private Activity[] activities = new Activity[3];
+    private PowerUp[] usablePowerups;
+
+
+    public Question(Activity[] activities) {
+        if (activities.length != 3) throw new IllegalArgumentException();
+        System.arraycopy(activities, 0, this.activities, 0, 3);
+        usablePowerups = new PowerUp[]{};
+        setPowerups();
     }
 
-    public Question() {
-    }
-
-    @Override
-    public boolean equals(Object o) {
-        if (this == o) return true;
-        if (o == null || getClass() != o.getClass()) return false;
-        Question question = (Question) o;
-        return id == question.id
-                && type == question.type
-                && Objects.equals(title, question.title)
-                && Objects.equals(disabledPowerUps, question.disabledPowerUps);
-    }
-
-    @Override
-    public int hashCode() {
-        return Objects.hash(id, type, title, disabledPowerUps);
-    }
-
-    public long getId() {
-        return id;
-    }
+    public abstract void setPowerups();
 
     public String getTitle() {
         return title;
-    }
-
-    public int getType() {
-        return type;
-    }
-
-    public void setType(int type) {
-        this.type = type;
     }
 
     public void setTitle(String title) {
         this.title = title;
     }
 
-    public List<Integer> getDisabledPowerUps() {
-        return disabledPowerUps;
+    public Activity[] getActivities() {
+        return activities;
     }
 
-    public void setDisabledPowerUps(List<Integer> disabledPowerUps) {
-        this.disabledPowerUps = disabledPowerUps;
+    public void setActivities(Activity[] activities) {
+        this.activities = activities;
     }
 
-    public void addDisabledPowerUp(Integer disabledPowerUp) {
-        this.disabledPowerUps.add(disabledPowerUp);
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+
+        if (o == null || getClass() != o.getClass()) return false;
+
+        Question question = (Question) o;
+
+        return new EqualsBuilder().append(title, question.title).append(activities, question.activities)
+                .append(usablePowerups, question.usablePowerups).isEquals();
+    }
+
+    @Override
+    public int hashCode() {
+        return new HashCodeBuilder(17, 37).append(title)
+                .append(activities).append(usablePowerups).toHashCode();
     }
 
     @Override
     public String toString() {
-        return "id=" + id +
-                ", type=" + type +
-                ", title='" + title + '\'' +
-                ", disabledPowerUps=" + disabledPowerUps;
+        return new ToStringBuilder(this)
+                .append("title", title)
+                .append("activities", activities)
+                .append("usablePowerups", usablePowerups)
+                .toString();
     }
 }

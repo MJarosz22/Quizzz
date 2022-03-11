@@ -24,30 +24,6 @@ public class ActivityController {
         this.activityRepository = activityRepository;
     }
 
-    @GetMapping(path = {"", "/"})
-    public List<Activity> getAll() {
-        return activityRepository.findAll();
-    }
-
-    @PostMapping(path = {"", "/"})
-    public ResponseEntity<Activity> addActivity(@RequestBody Activity activity) {
-        if (isNullOrEmpty(activity.getSource())
-                || isNullOrEmpty(activity.getId())
-                || !isValidUrl(activity.getSource())
-                || isNullOrEmpty(activity.getTitle())
-                || !isValidTitle(activity.getTitle())
-                || activity.getConsumption_in_wh() <= 0) {
-            return ResponseEntity.badRequest().build();
-        }
-        Activity savedActivity = activityRepository.save(new Activity(
-                activity.getId(),
-                activity.getImage_path(),
-                activity.getTitle(),
-                activity.getConsumption_in_wh(),
-                activity.getSource()));
-        return ResponseEntity.ok(savedActivity);
-    }
-
     private static boolean isNullOrEmpty(String s) {
         return s == null || s.isEmpty();
     }
@@ -68,15 +44,21 @@ public class ActivityController {
         return true;
     }
 
+    @GetMapping(path = {"", "/"})
+    public List<Activity> getAll() {
+        return activityRepository.findAll();
+    }
 
-    /**
-     * Method that validates an activity title
-     * A valid title should have <= 140 characters and be one-sentenced.
-     * Note that we consider a title to be valid even if it does not have an end of sentence punctuatio('.', '?' or '!'
-     *
-     * @param title - String object that needs to be validated
-     * @return - true, if the given title is valide, or false otherwise.
-     */
+    @PostMapping(path = {"", "/"})
+    public ResponseEntity<Activity> addActivity(@RequestBody Activity activity) {
+        if (isNullOrEmpty(activity.getSource()) || !isValidUrl(activity.getSource()) || isNullOrEmpty(activity.getTitle())
+                || activity.getTitle().length() > 140 || activity.getConsumption_in_wh() <= 0) {
+            return ResponseEntity.badRequest().build();
+        }
+        Activity savedActivity = activityRepository.save(new Activity(activity.getTitle(), activity.getConsumption_in_wh(), activity.getSource()));
+        return ResponseEntity.ok(savedActivity);
+    }
+
     private static boolean isValidTitle(String title) {
         int endOfSentence = 0;
         int size = title.length();

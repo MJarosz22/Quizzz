@@ -14,19 +14,26 @@ public class Activity {
     @GeneratedValue(strategy = GenerationType.AUTO)
     private Long activityID;
 
-    private String id; //id provided by activity-bank (i.e. "00-shower")
+    private String id;
+
+    private String title;
+    private String source;
 
     private String image_path;
 
-    private String title;
-
     private Long consumption_in_wh; //some values in the JSON file are outside the Integer length, so we have to use long
-
-    private String source;
 
     @SuppressWarnings("unused")
     public Activity() {
 
+    }
+
+    public Activity(String title, Long consumption_in_wh, String source) {
+        this.id = "";
+        image_path = "";
+        this.title = title;
+        this.consumption_in_wh = consumption_in_wh;
+        this.source = source;
     }
 
     public Activity(String id, String image_path, String title, Long consumption_in_wh, String source) {
@@ -100,26 +107,15 @@ public class Activity {
 
         Activity activity = (Activity) o;
 
-        return new EqualsBuilder()
-                .append(activityID, activity.activityID)
-                .append(consumption_in_wh, activity.consumption_in_wh)
-                .append(id, activity.id)
-                .append(image_path, activity.image_path)
-                .append(title, activity.title)
-                .append(source, activity.source)
-                .isEquals();
+        return new EqualsBuilder().append(activityID, activity.activityID).append(id, activity.id)
+                .append(title, activity.title).append(source, activity.source).append(image_path, activity.image_path)
+                .append(consumption_in_wh, activity.consumption_in_wh).isEquals();
     }
 
     @Override
     public int hashCode() {
-        return new HashCodeBuilder(17, 37)
-                .append(activityID)
-                .append(id)
-                .append(image_path)
-                .append(title)
-                .append(consumption_in_wh)
-                .append(source)
-                .toHashCode();
+        return new HashCodeBuilder(17, 37).append(activityID)
+                .append(id).append(title).append(source).append(image_path).append(consumption_in_wh).toHashCode();
     }
 
     @Override
@@ -127,14 +123,10 @@ public class Activity {
         return new ToStringBuilder(this)
                 .append("activityID", activityID)
                 .append("id", id)
-                .append("image_path", image_path)
                 .append("title", title)
-                .append("consumption_in_wh", consumption_in_wh)
                 .append("source", source)
+                .append("image_path", image_path)
+                .append("consumption_in_wh", consumption_in_wh)
                 .toString();
     }
-
-
-
-
 }

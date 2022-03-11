@@ -6,7 +6,6 @@ build/
 !**/src/test/**/build/
 
 **/*.mv.db
-**/*.trace.db
 
 **/*.swp
 
@@ -45,3 +44,4 @@ out/
 ######################
 .DS_Store
 .DS_Store?
+quizzzz.trace.db

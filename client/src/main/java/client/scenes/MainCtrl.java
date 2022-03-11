@@ -15,6 +15,8 @@
  */
 package client.scenes;
 
+import client.utils.ServerUtils;
+import commons.player.SimpleUser;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.stage.Stage;
@@ -39,8 +41,10 @@ public class MainCtrl {
     private LobbyCtrl lobbyCtrl;
     private Scene lobby;
 
+    private SimpleUser player;
+
     public void initialize(Stage primaryStage, Pair<SplashScreenCtrl, Parent> splash, Pair<SinglePlayerCtrl,
-                           Parent> single, Pair<MultiPlayerCtrl, Parent> multi,
+            Parent> single, Pair<MultiPlayerCtrl, Parent> multi,
                            Pair<LeaderBoardCtrl, Parent> leaderboard, Pair<LobbyCtrl, Parent> lobby) {
         this.primaryStage = primaryStage;
         this.splashCtrl = splash.getKey();
@@ -84,6 +88,16 @@ public class MainCtrl {
 
     public void showLobby() {
         primaryStage.setTitle("Quizzz lobby");
+        lobbyCtrl.setLabelName(player.getName());
+        lobbyCtrl.setTablePlayers(ServerUtils.getPlayers(player));
         primaryStage.setScene(lobby);
+    }
+
+    public SimpleUser getPlayer() {
+        return player;
+    }
+
+    public void setPlayer(SimpleUser player) {
+        this.player = player;
     }
 }
