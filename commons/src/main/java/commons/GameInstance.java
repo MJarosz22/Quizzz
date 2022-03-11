@@ -35,15 +35,15 @@ public class GameInstance {
         if (activities.size() != 60) throw new IllegalArgumentException();
         List<Question> questions = new ArrayList<>();
         for (int i = 0; i < 20; i++) {
-            if (i%3==2) questions.add(new QuestionMoreExpensive(new Activity[] {activities.get(3*i), activities.get(3*i + 1), activities.get(3*i + 2)}));
+            if (i%3==2) questions.add(new QuestionMoreExpensive
+                    (new Activity[] {activities.get(3*i), activities.get(3*i + 1), activities.get(3*i + 2)}));
             if(i%3 == 1) questions.add(new QuestionHowMuch(activities.get(i)));
             else questions.add(new QuestionWhichOne(activities.get(i)));
         }
         this.questions = questions;
     }
 
-    public Question getRandomQuestion()
-    {
+    public Question getRandomQuestion() {
         Random random = new Random();
         int idx = random.nextInt(this.questions.size());
         Question question = this.questions.get(idx);
