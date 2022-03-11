@@ -80,5 +80,4 @@ public class ServerUtils {
                 .delete(new GenericType<>() {
                 });
     }
-
 }

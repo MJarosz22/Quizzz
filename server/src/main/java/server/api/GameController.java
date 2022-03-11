@@ -142,6 +142,15 @@ public class GameController {
                 .stream().map(p -> p.toSimpleUser().unsafe()).collect(Collectors.toList()));
     }
 
+    @DeleteMapping("/{gameInstanceId}/disconnect")
+    public ResponseEntity<Boolean> disconnect(@PathVariable int gameInstanceId,
+                                              @CookieValue(name = "user-id", defaultValue = "null") String cookie) {
+        Player removePlayer = getPlayerFromGameInstance(gameInstanceId, cookie);
+        if(removePlayer == null) return ResponseEntity.badRequest().build();
+        logger.info("[GI " + (gameInstanceId) + "] PLAYER (" + removePlayer.getId() + ") DISCONNECTED");
+        return ResponseEntity.ok(gameInstances.get(gameInstanceId).getPlayers().remove(removePlayer));
+    }
+
     /**
      * Additional method that checks whether cookie given is from a player connected to gameInstance with ID
      * @param gameInstanceId ID of GameInstance
@@ -154,14 +163,4 @@ public class GameController {
         if (optPlayer.isEmpty()) return null;
         else return optPlayer.get();
     }
-
-    @DeleteMapping("/{gameInstanceId}/disconnect")
-    public ResponseEntity<Boolean> disconnect(@PathVariable int gameInstanceId,
-                                              @CookieValue(name = "user-id", defaultValue = "null") String cookie) {
-        Player removePlayer = getPlayerFromGameInstance(gameInstanceId, cookie);
-        if(removePlayer == null) return ResponseEntity.badRequest().build();
-        logger.info("[GI " + (gameInstanceId) + "] PLAYER (" + removePlayer.getId() + ") DISCONNECTED");
-        return ResponseEntity.ok(gameInstances.get(gameInstanceId).getPlayers().remove(removePlayer));
-    }
-
 }

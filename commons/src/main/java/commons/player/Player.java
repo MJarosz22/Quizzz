@@ -59,6 +59,15 @@ public class Player extends SimpleUser {
     }
 
     @Override
+    public String toString() {
+        return new ToStringBuilder(this).append(super.toString())
+                .append("status", status)
+                .append("powerUpUsed", powerUpUsed)
+                .append("gameInstance", gameInstance)
+                .toString();
+    }
+
+    @Override
     public boolean equals(Object o) {
         if (this == o) return true;
 
@@ -84,15 +93,4 @@ public class Player extends SimpleUser {
     public SimpleUser toSimpleUser() {
         return new SimpleUser(getId(), getName(), gameInstance.getId(), getCookie());
     }
-
-    @Override
-    public String toString() {
-        return new ToStringBuilder(this).append(super.toString())
-                .append("status", status)
-                .append("powerUpUsed", powerUpUsed)
-                .append("gameInstance", gameInstance)
-                .toString();
-    }
-
-
 }

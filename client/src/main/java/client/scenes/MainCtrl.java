@@ -128,7 +128,6 @@ public class MainCtrl {
         return lobbyCtrl;
     }
 
-
     public void setPlayer(SimpleUser player) {
         this.player = player;
     }

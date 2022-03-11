@@ -35,7 +35,7 @@ public class SinglePlayerCtrl {
             SimpleUser player = server.addPlayer(new RequestToJoin(getTextField(), GameInstance.SINGLE_PLAYER));
             mainCtrl.setPlayer(player);
             System.out.println(player);
-            mainCtrl.showSinglePlayerGame();
+            // mainCtrl.showLobby(); -> Disabled, since we won't have a lobby for SinglePlayer and it messed the counter of players implementation
             //TODO Make it so that player goes directly into game instead of going to lobby
         }
     }

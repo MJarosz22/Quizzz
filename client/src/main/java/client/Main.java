@@ -18,6 +18,7 @@ package client;
 import client.scenes.*;
 import client.utils.ServerUtils;
 import com.google.inject.Injector;
+import commons.player.SimpleUser;
 import javafx.application.Application;
 import javafx.stage.Stage;
 
@@ -49,11 +50,18 @@ public class Main extends Application {
         mainCtrl.initialize(primaryStage, home, single, singleGame, singleGameOver, multi, leaderboard, lobby);
     }
 
+    /**
+     * Method called whenever a client is closed (by pressing the 'x' button of the window).
+     * TODO: POP-UP asking for confirmation of closing the client.
+     */
     @Override
     public void stop() {
         var mainCtrl = INJECTOR.getInstance(MainCtrl.class);
         ServerUtils serverUtils = new ServerUtils();
-        serverUtils.disconnect(mainCtrl.getPlayer());
+        SimpleUser player = mainCtrl.getPlayer();
+        if (player != null) {
+            serverUtils.disconnect(mainCtrl.getPlayer());
+            System.out.println(player.getName() + " disconnected!");
+        }
     }
-
 }
