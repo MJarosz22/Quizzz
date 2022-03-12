@@ -14,6 +14,9 @@ public class SinglePlayerGameOverCtrl {
     }
 
     public void back() {
+        SinglePlayerCtrl singlePlayerCtrl = mainCtrl.getSinglePlayerCtrl();
+        String previousTextField = singlePlayerCtrl.getPlayerName();
+        singlePlayerCtrl.setTextField(previousTextField);
         mainCtrl.showSplash();
     }
 }

@@ -13,6 +13,7 @@ public class SinglePlayerCtrl {
 
     private final ServerUtils server;
     private final MainCtrl mainCtrl;
+    private String playerName;
 
     @FXML
     private TextField textField;
@@ -24,6 +25,7 @@ public class SinglePlayerCtrl {
     }
 
     public void back() {
+        this.textField.clear();
         mainCtrl.showSplash();
     }
 
@@ -35,6 +37,8 @@ public class SinglePlayerCtrl {
             SimpleUser player = server.addPlayer(new RequestToJoin(getTextField(), GameInstance.SINGLE_PLAYER));
             mainCtrl.setPlayer(player);
             System.out.println(player);
+            playerName = player.getName();
+            this.textField.clear();
             mainCtrl.showSinglePlayerGame();
             // mainCtrl.showLobby(); -> Disabled, since we won't have a lobby for SinglePlayer and it messed the counter of players implementation
             //TODO Make it so that player goes directly into game instead of going to lobby
@@ -43,5 +47,13 @@ public class SinglePlayerCtrl {
 
     public String getTextField() {
         return textField.getText();
+    }
+
+    public void setTextField(String string) {
+        this.textField.setText(string);
+    }
+
+    public String getPlayerName() {
+        return playerName;
     }
 }

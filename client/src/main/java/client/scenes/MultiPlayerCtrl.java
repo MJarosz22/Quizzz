@@ -23,6 +23,7 @@ public class MultiPlayerCtrl {
     }
 
     public void back() {
+        this.textfieldName.clear();
         mainCtrl.showSplash();
     }
 
@@ -35,6 +36,7 @@ public class MultiPlayerCtrl {
             lobbyCtrl.increaseNumberOfPlayers();
 
             System.out.println(player);
+            this.textfieldName.clear();
             mainCtrl.showLobby();
             //TODO Make it so that player goes directly into game instead of going to lobby
         }
