@@ -178,6 +178,9 @@ public class SinglePlayerGameCtrl {
                     option1Button.setVisible(true);
                     option2Button.setVisible(true);
                     option3Button.setVisible(true);
+                    option1Button.setDisable(false);
+                    option2Button.setDisable(false);
+                    option3Button.setDisable(false);
                     option4.setVisible(false);
 
                     answer1.setVisible(false);
@@ -189,7 +192,7 @@ public class SinglePlayerGameCtrl {
                     option3Button.setText(((QuestionMoreExpensive) currentQuestion).getActivities()[2].getTitle());
 
                     progressBar.setProgress(progressBar.getProgress() + 0.05);
-                    questionCount.setText("Question " + roundCounter + "/" + currentGame.getQuestions().size());
+                    questionCount.setText("Question " + roundCounter + "/20");
 
                     if (((QuestionMoreExpensive) currentQuestion).getAnswer() == ((QuestionMoreExpensive) currentQuestion)
                             .getActivities()[0].getConsumption_in_wh())
@@ -217,6 +220,7 @@ public class SinglePlayerGameCtrl {
 
                     player_answer.setVisible(true);
                     submit_guess.setVisible(true);
+                    submit_guess.setDisable(false);
                     correct_guess.setVisible(false);
 
                     answer1.setVisible(false);
@@ -224,7 +228,7 @@ public class SinglePlayerGameCtrl {
                     answer3.setVisible(false);
 
                     progressBar.setProgress(progressBar.getProgress() + 0.05);
-                    questionCount.setText("Question " + roundCounter + "/" + currentGame.getQuestions().size());
+                    questionCount.setText("Question " + roundCounter + "/20");
                 }
                 if (currentQuestion instanceof QuestionWhichOne) {
 
@@ -252,9 +256,12 @@ public class SinglePlayerGameCtrl {
                     answer1.setVisible(true);
                     answer2.setVisible(true);
                     answer3.setVisible(true);
+                    answer1.setDisable(false);
+                    answer2.setDisable(false);
+                    answer3.setDisable(false);
 
                     progressBar.setProgress(progressBar.getProgress() + 0.05);
-                    questionCount.setText("Question " + roundCounter + "/" + currentGame.getQuestions().size());
+                    questionCount.setText("Question " + roundCounter + "/20");
 
                     Random random = new Random();
                     int random_correct_answer = random.nextInt(3 - 1 + 1) + 1;
@@ -451,6 +458,10 @@ public class SinglePlayerGameCtrl {
      * @param value - boolean value that disables our 3 option buttons if it is 'true', or makes them functional otherwise
      */
     public void setOptions(boolean value) {
+        answer1.setDisable(value);
+        answer2.setDisable(value);
+        answer3.setDisable(value);
+        submit_guess.setDisable(value);
         option1Button.setDisable(value);
         option2Button.setDisable(value);
         option3Button.setDisable(value);
