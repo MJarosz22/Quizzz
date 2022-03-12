@@ -10,15 +10,22 @@ import javafx.scene.control.Button;
 import javafx.scene.control.ProgressBar;
 import javafx.scene.control.RadioButton;
 import javafx.scene.control.TextField;
+import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.text.Text;
 
 import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
 import java.net.URI;
 import java.util.*;
 import java.util.concurrent.CompletableFuture;
+import java.util.concurrent.Executors;
+import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.TimeUnit;
+
+import static java.util.concurrent.TimeUnit.SECONDS;
 
 //Note that in the future, we can make this controller and its scene suitable for multiplayer games as well
 public class SinglePlayerGameCtrl {
@@ -27,21 +34,27 @@ public class SinglePlayerGameCtrl {
     private final MainCtrl mainCtrl;
     private final String correctEmojiPath = "client/src/main/resources/images/correct-answer.png";
     private final String wrongEmojiPath = "client/src/main/resources/images/wrong-answer.png";
+    private final String timerPath = "client/src/main/resources/images/timer.png";
 
     private SimpleUser player;
 
     private GameInstance currentGame;
     private Queue<Question> gameQuestions = new LinkedList<>();
     private Question currentQuestion;
+    private boolean answered;
+    private int timeLeft;
 
 
-    int temporaryCounter;
+    int roundCounter;
 
     @FXML
     private Text questionTitle;
 
     @FXML
     private Text timer;
+
+    @FXML
+    private AnchorPane timerImage;
 
     @FXML
     private Text score;
@@ -63,6 +76,9 @@ public class SinglePlayerGameCtrl {
 
     @FXML
     private Button option3Button;
+
+    @FXML
+    private Text option4;
 
     @FXML
     private Button correct_answer;
@@ -95,6 +111,9 @@ public class SinglePlayerGameCtrl {
     private ImageView image3;
 
     @FXML
+    private ImageView image4;
+
+    @FXML
     private Text questionCount;
 
     @FXML
@@ -119,6 +138,7 @@ public class SinglePlayerGameCtrl {
     public void initialize() {
         colorsRefresh();
         setOptions(false);
+        setTimerImage(timerImage);
 
         if (this.mainCtrl.getPlayer() != null) {
             this.player = mainCtrl.getPlayer();
@@ -130,7 +150,7 @@ public class SinglePlayerGameCtrl {
             progressBar.setProgress(-0.05);
             score.setText("Your score: 0");
             infoRefresh();
-            temporaryCounter = 1;
+            roundCounter = 1;
             loadNextQuestion();
         }
 
@@ -142,94 +162,129 @@ public class SinglePlayerGameCtrl {
     public void loadNextQuestion() {
         //TODO: add support for different question types
         //TODO: when we get the activity bank, we will replace the hardcoded currentQuestion
-        //this.currentQuestion = gameQuestions.poll();
-
         colorsRefresh();
         infoRefresh();
         setOptions(false);
 
         currentQuestion = currentGame.getRandomQuestion();
+        setImages();
 
         Platform.runLater(new Runnable() {
             @Override
             public void run() {
+                timeLeft = 20;
+
+                timer.setText(String.valueOf(timeLeft));
                 questionTitle.setText(currentQuestion.getTitle());
                 if (currentQuestion instanceof QuestionMoreExpensive) {
+
                     correct_guess.setVisible(false);
                     player_answer.setVisible(false);
                     submit_guess.setVisible(false);
+
                     option1Button.setVisible(true);
                     option2Button.setVisible(true);
                     option3Button.setVisible(true);
+                    option4.setVisible(false);
+
                     answer1.setVisible(false);
                     answer2.setVisible(false);
                     answer3.setVisible(false);
+
                     option1Button.setText(((QuestionMoreExpensive) currentQuestion).getActivities()[0].getTitle());
                     option2Button.setText(((QuestionMoreExpensive) currentQuestion).getActivities()[1].getTitle());
                     option3Button.setText(((QuestionMoreExpensive) currentQuestion).getActivities()[2].getTitle());
-                    progressBar.setProgress(progressBar.getProgress() + 0.05);
 
-                    questionCount.setText("Question " + temporaryCounter + "/20");
+                    progressBar.setProgress(progressBar.getProgress() + 0.05);
+                    questionCount.setText("Question " + roundCounter + "/20");
+
                     if (((QuestionMoreExpensive) currentQuestion).getAnswer() == ((QuestionMoreExpensive) currentQuestion)
                             .getActivities()[0].getConsumption_in_wh())
                         correct_answer = option1Button;
+
                     if (((QuestionMoreExpensive) currentQuestion).getAnswer() == ((QuestionMoreExpensive) currentQuestion)
                             .getActivities()[1].getConsumption_in_wh())
                         correct_answer = option2Button;
+
                     if (((QuestionMoreExpensive) currentQuestion).getAnswer() == ((QuestionMoreExpensive) currentQuestion)
                             .getActivities()[2].getConsumption_in_wh())
                         correct_answer = option3Button;
 
                 }
+
                 if (currentQuestion instanceof QuestionHowMuch) {
                     player_answer.clear();
-                    option1Button.setText(((QuestionHowMuch) currentQuestion).getActivity().getTitle());
-                    option1Button.disabledProperty();
+                    setOptions(true);
+                    option4.setText(((QuestionHowMuch) currentQuestion).getActivity().getTitle());
+
+                    option1Button.setVisible(false);
                     option2Button.setVisible(false);
                     option3Button.setVisible(false);
+                    option4.setVisible(true);
+
                     player_answer.setVisible(true);
                     submit_guess.setVisible(true);
                     correct_guess.setVisible(false);
+
                     answer1.setVisible(false);
                     answer2.setVisible(false);
                     answer3.setVisible(false);
+
                     progressBar.setProgress(progressBar.getProgress() + 0.05);
-                    questionCount.setText("Question " + temporaryCounter + "/20");
+                    questionCount.setText("Question " + roundCounter + "/20");
                 }
                 if (currentQuestion instanceof QuestionWhichOne) {
+
                     answer1.setSelected(false);
                     answer2.setSelected(false);
                     answer3.setSelected(false);
+
                     answer1.setStyle("-fx-background-color: #91e4fb; ");
                     answer2.setStyle("-fx-background-color: #91e4fb; ");
                     answer3.setStyle("-fx-background-color: #91e4fb; ");
-                    option1Button.setText(((QuestionWhichOne) currentQuestion).getActivity().getTitle());
-                    option1Button.disabledProperty();
+
+
+                    option4.setText(((QuestionWhichOne) currentQuestion).getActivity().getTitle());
+
+                    option1Button.setVisible(false);
                     option2Button.setVisible(false);
                     option3Button.setVisible(false);
+                    option4.setVisible(true);
+
+                    setOptions(true);
                     player_answer.setVisible(false);
                     submit_guess.setVisible(false);
                     correct_guess.setVisible(false);
+
                     answer1.setVisible(true);
                     answer2.setVisible(true);
                     answer3.setVisible(true);
+
                     progressBar.setProgress(progressBar.getProgress() + 0.05);
-                    questionCount.setText("Question " + temporaryCounter + "/20");
+                    questionCount.setText("Question " + roundCounter + "/20");
+
                     Random random = new Random();
                     int random_correct_answer = random.nextInt(3 - 1 + 1) + 1;
+
                     long other_answer1 = Math.abs(((QuestionWhichOne) currentQuestion).getActivity().getConsumption_in_wh() - 500);
                     long other_answer2 = Math.abs(((QuestionWhichOne) currentQuestion).getActivity().getConsumption_in_wh() + 700);
                     long other_answer3 = Math.abs(((QuestionWhichOne) currentQuestion).getActivity().getConsumption_in_wh() - 200);
+
                     if (random_correct_answer == 1)
                         answer1.setText(((QuestionWhichOne) currentQuestion).getActivity().getConsumption_in_wh().toString());
                     else answer1.setText(String.valueOf(other_answer1));
+
                     if (random_correct_answer == 2)
                         answer2.setText(((QuestionWhichOne) currentQuestion).getActivity().getConsumption_in_wh().toString());
                     else answer2.setText(String.valueOf(other_answer2));
+
                     if (random_correct_answer == 3)
                         answer3.setText(((QuestionWhichOne) currentQuestion).getActivity().getConsumption_in_wh().toString());
                     else answer3.setText(String.valueOf(other_answer3));
                 }
+                answered = false;
+                startCountdown(20000);
+                startTimer(20000);
             }
         });
 
@@ -276,6 +331,7 @@ public class SinglePlayerGameCtrl {
      * User's answer was correct. Show that the answer was correct, update the score, start next round.
      */
     public void correctAnswer() {
+        answered = true;
         player.addScore(100);
         score.setText("Your score: " + player.getScore());
         points.setText("+100 points"); // In the future calculate the # of points, DON'T hardcode
@@ -285,13 +341,13 @@ public class SinglePlayerGameCtrl {
         setColors();
         setOptions(true);
 
-        CompletableFuture.delayedExecutor(1, TimeUnit.SECONDS).execute(() -> {
+        CompletableFuture.delayedExecutor(1, SECONDS).execute(() -> {
             if (!isGameOver())
                 loadNextQuestion();
         });
 
 
-        if (temporaryCounter >= 20) {
+        if (roundCounter >= 20) {
             gameOver(2000);
         }
 
@@ -301,6 +357,7 @@ public class SinglePlayerGameCtrl {
      * User's answer was incorrect. Show that the answer was incorrect, start next round.
      */
     public void wrongAnswer() {
+        answered = true;
         points.setText("+0 points"); // In the future calculate the # of points, DON'T hardcode
         answer.setText("Wrong answer");
         setEmoji(emoji, false);
@@ -309,24 +366,71 @@ public class SinglePlayerGameCtrl {
         setOptions(true);
 
 
-        CompletableFuture.delayedExecutor(1, TimeUnit.SECONDS).execute(() -> {
+        CompletableFuture.delayedExecutor(1, SECONDS).execute(() -> {
             if (!isGameOver())
                 loadNextQuestion();
         });
 
 
-        if (temporaryCounter >= 20) {
+        if (roundCounter >= 20) {
             gameOver(2000);
         }
     }
+
+    public void setImages() {
+        String activitiesPath = new File("").getAbsolutePath();
+        activitiesPath += "\\client\\src\\main\\resources\\images\\activities\\";
+        if (currentQuestion instanceof QuestionMoreExpensive) {
+            image1.setVisible(true);
+            image2.setVisible(true);
+            image3.setVisible(true);
+            image4.setVisible(false);
+            try {
+                image1.setImage(new Image(new FileInputStream(activitiesPath + ((QuestionMoreExpensive) currentQuestion)
+                        .getActivities()[0].getImage_path().replace("/", "\\"))));
+                image2.setImage(new Image(new FileInputStream(activitiesPath + ((QuestionMoreExpensive) currentQuestion)
+                        .getActivities()[1].getImage_path().replace("/", "\\"))));
+                image3.setImage(new Image(new FileInputStream(activitiesPath + ((QuestionMoreExpensive) currentQuestion)
+                        .getActivities()[2].getImage_path().replace("/", "\\"))));
+            } catch (FileNotFoundException e) {
+                System.out.println("Image not found!");
+            }
+        }
+
+        if (currentQuestion instanceof QuestionWhichOne) {
+            image1.setVisible(false);
+            image2.setVisible(false);
+            image3.setVisible(false);
+            image4.setVisible(true);
+            try {
+                image4.setImage(new Image(new FileInputStream(activitiesPath + ((QuestionWhichOne) currentQuestion)
+                        .getActivity().getImage_path().replace("/", "\\"))));
+            } catch (FileNotFoundException e) {
+                System.out.println("Image not found!");
+            }
+        }
+
+        if (currentQuestion instanceof QuestionHowMuch) {
+            image1.setVisible(false);
+            image2.setVisible(false);
+            image3.setVisible(false);
+            image4.setVisible(true);
+            try {
+                image4.setImage(new Image(new FileInputStream(activitiesPath + ((QuestionHowMuch) currentQuestion)
+                        .getActivity().getImage_path().replace("/", "\\"))));
+            } catch (FileNotFoundException e) {
+                System.out.println("Image not found!");
+            }
+        }
+    }
+
 
     /**
      * Check if the game is over.
      * Note that this method compares temporaryCounter to 20, and increments its value AFTER the comparison
      */
     public boolean isGameOver() {
-        //return this.gameQuestions.isEmpty();
-        return 20 == temporaryCounter++;
+        return 20 == roundCounter++;
     }
 
     /**
@@ -357,6 +461,7 @@ public class SinglePlayerGameCtrl {
         option1Button.setDisable(value);
         option2Button.setDisable(value);
         option3Button.setDisable(value);
+        option4.setDisable(value);
     }
 
     /**
@@ -368,6 +473,21 @@ public class SinglePlayerGameCtrl {
         emoji.setVisible(false);
     }
 
+    /**
+     * sets the 'timerImage' anchorpane's image
+     * @param timerImage
+     */
+    public void setTimerImage(AnchorPane timerImage) {
+        File file = new File(timerPath);
+        URI uri = file.toURI();
+        timerImage.setStyle("-fx-background-image: url(" + uri.toString() + ");");
+    }
+
+    /**
+     * sets the 'emoji' anchorpane's image, based boolean value
+     * @param emoji
+     * @param correct
+     */
     public void setEmoji(AnchorPane emoji, boolean correct) {
         emoji.setVisible(true);
         File file = null;
@@ -379,6 +499,151 @@ public class SinglePlayerGameCtrl {
         emoji.setStyle("-fx-background-image: url(" + uri.toString() + ");");
     }
 
+    /**
+     * Checks whether the input guess was correct
+     */
+    public void isGuessCorrect() {
+        CharSequence input = player_answer.getCharacters();
+        long number = Long.parseLong(input.toString());
+        if (number == ((QuestionHowMuch) currentQuestion).getActivity().getConsumption_in_wh()) {
+            player.addScore(100);
+            score.setText("Your score: " + player.getScore());
+            points.setText("+100 points");
+            answer.setText("Correct answer");
+            setEmoji(emoji, true);
+        } else {
+            points.setText("+0 points");
+            answer.setText("Wrong answer");
+            setEmoji(emoji, false);
+        }
+        correct_guess.setVisible(true);
+        correct_guess.setText("The correct answer is: " + ((QuestionHowMuch) currentQuestion).getActivity().getConsumption_in_wh());
+        setOptions(true);
+
+        CompletableFuture.delayedExecutor(1, SECONDS).execute(() -> {
+            if (!isGameOver())
+                loadNextQuestion();
+        });
+
+
+        if (roundCounter >= 20) {
+            gameOver(2000);
+        }
+    }
+
+
+    public void answer1Selected() {
+        long response = Long.parseLong(answer1.getText());
+        isSelectionCorrect(answer1, response);
+    }
+
+    public void answer2Selected() {
+        long response = Long.parseLong(answer2.getText());
+        isSelectionCorrect(answer2, response);
+    }
+
+    public void answer3Selected() {
+        long response = Long.parseLong(answer3.getText());
+        isSelectionCorrect(answer3, response);
+    }
+
+    /**
+     * Checks whether the selected answer was correct
+     * @param player_answer
+     * @param response
+     */
+    public void isSelectionCorrect(RadioButton player_answer, long response) {
+
+        if (response == ((QuestionWhichOne) currentQuestion).getActivity().getConsumption_in_wh()) {
+            player.addScore(100);
+            score.setText("Your score: " + player.getScore());
+            points.setText("+100 points");
+            answer.setText("Correct answer");
+            setEmoji(emoji, true);
+            player_answer.setStyle("-fx-background-color: green; ");
+            if (!answer1.equals(player_answer)) answer1.setStyle("-fx-background-color: red; ");
+            if (!answer2.equals(player_answer)) answer2.setStyle("-fx-background-color: red; ");
+            if (!answer3.equals(player_answer)) answer3.setStyle("-fx-background-color: red; ");
+        } else {
+            points.setText("+0 points");
+            answer.setText("Wrong answer");
+            setEmoji(emoji, false);
+            if (Long.parseLong(answer1.getText()) == ((QuestionWhichOne) currentQuestion).getActivity().getConsumption_in_wh())
+                answer1.setStyle("-fx-background-color: green; ");
+            else answer1.setStyle("-fx-background-color: red; ");
+            if (Long.parseLong(answer2.getText()) == ((QuestionWhichOne) currentQuestion).getActivity().getConsumption_in_wh())
+                answer2.setStyle("-fx-background-color: green; ");
+            else answer2.setStyle("-fx-background-color: red; ");
+            if (Long.parseLong(answer3.getText()) == ((QuestionWhichOne) currentQuestion).getActivity().getConsumption_in_wh())
+                answer3.setStyle("-fx-background-color: green; ");
+            else answer3.setStyle("-fx-background-color: red; ");
+        }
+
+        setOptions(true);
+
+        CompletableFuture.delayedExecutor(1, SECONDS).execute(() -> {
+            if (!isGameOver())
+                loadNextQuestion();
+        });
+
+
+        if (roundCounter >= 20) {
+            gameOver(2000);
+        }
+    }
+
+    /**
+     * Start the timer. After specified time, execute wrongAnswer()
+     *
+     * @param time time in miliseconds
+     */
+    public void startTimer(int time) {
+        Thread thread = new Thread(new Runnable() {
+
+            public void run() {
+                Question current = currentQuestion;
+
+                try {
+                    Thread.sleep(time);
+                } catch (InterruptedException e) {
+                    e.printStackTrace();
+                }
+
+                Platform.runLater(new Runnable() {
+                    public void run() {
+                        if (current == currentQuestion) //check if the question wasn't already answered
+                            wrongAnswer();
+                    }
+                });
+
+            }
+        });
+        thread.start();
+    }
+
+    /**
+     * Start the countdown. Update the timer every second.
+     *
+     * @param time time in miliseconds
+     */
+    public void startCountdown(int time) {
+        ScheduledExecutorService scheduler = Executors.newScheduledThreadPool(1);
+        Question currentQ = currentQuestion;
+        Runnable runnable = new Runnable() {
+            int countdown = time/1000;
+
+            public void run() {
+
+                if (currentQ != currentQuestion || answered) { //check if the question wasn't already answered
+                    scheduler.shutdown();
+                } else {
+                    timer.setText(String.valueOf(countdown--));
+                }
+
+            }
+        };
+        scheduler.scheduleAtFixedRate(runnable, 0, 1, SECONDS);
+    }
 
     /**
      * Freezes the scene for 'timer' miliseconds ('run' method of thread, the first one) and after this interval of time runs the
@@ -409,88 +674,5 @@ public class SinglePlayerGameCtrl {
         thread.start();
     }
 
-    public void isGuessCorrect() {
-        CharSequence input = player_answer.getCharacters();
-        long number = Long.parseLong(input.toString());
-        if (number == ((QuestionHowMuch) currentQuestion).getActivity().getConsumption_in_wh()) {
-            player.addScore(100);
-            score.setText("Your score: " + player.getScore());
-            points.setText("+100 points");
-            answer.setText("Correct answer");
-            setEmoji(emoji, true);
-        } else {
-            points.setText("+0 points");
-            answer.setText("Wrong answer");
-            setEmoji(emoji, false);
-        }
-        correct_guess.setVisible(true);
-        correct_guess.setText("The correct answer is: " + ((QuestionHowMuch) currentQuestion).getActivity().getConsumption_in_wh());
-        setOptions(true);
 
-        CompletableFuture.delayedExecutor(1, TimeUnit.SECONDS).execute(() -> {
-            if (!isGameOver())
-                loadNextQuestion();
-        });
-
-
-        if (temporaryCounter >= 20) {
-            gameOver(2000);
-        }
-    }
-
-
-    public void answer1Selected() {
-        long response = Long.parseLong(answer1.getText());
-        isSelectionCorrect(answer1, response);
-    }
-
-    public void answer2Selected() {
-        long response = Long.parseLong(answer2.getText());
-        isSelectionCorrect(answer2, response);
-    }
-
-    public void answer3Selected() {
-        long response = Long.parseLong(answer3.getText());
-        isSelectionCorrect(answer3, response);
-    }
-
-    public void isSelectionCorrect(RadioButton player_answer, long response) {
-
-        if (response == ((QuestionWhichOne) currentQuestion).getActivity().getConsumption_in_wh()) {
-            player.addScore(100);
-            score.setText("Your score: " + player.getScore());
-            points.setText("+100 points");
-            answer.setText("Correct answer");
-            setEmoji(emoji, true);
-            player_answer.setStyle("-fx-background-color: green; ");
-            if (!answer1.equals(player_answer)) answer1.setStyle("-fx-background-color: red; ");
-            if (!answer2.equals(player_answer)) answer2.setStyle("-fx-background-color: red; ");
-            if (!answer3.equals(player_answer)) answer3.setStyle("-fx-background-color: red; ");
-        } else {
-            points.setText("+0 points");
-            answer.setText("Wrong answer");
-            setEmoji(emoji, false);
-            if (Long.parseLong(answer1.getText()) == ((QuestionWhichOne) currentQuestion).getActivity().getConsumption_in_wh())
-                answer1.setStyle("-fx-background-color: green; ");
-            else answer1.setStyle("-fx-background-color: red; ");
-            if (Long.parseLong(answer2.getText()) == ((QuestionWhichOne) currentQuestion).getActivity().getConsumption_in_wh())
-                answer2.setStyle("-fx-background-color: green; ");
-            else answer2.setStyle("-fx-background-color: red; ");
-            if (Long.parseLong(answer3.getText()) == ((QuestionWhichOne) currentQuestion).getActivity().getConsumption_in_wh())
-                answer3.setStyle("-fx-background-color: green; ");
-            else answer3.setStyle("-fx-background-color: red; ");
-        }
-
-        setOptions(true);
-
-        CompletableFuture.delayedExecutor(1, TimeUnit.SECONDS).execute(() -> {
-            if (!isGameOver())
-                loadNextQuestion();
-        });
-
-
-        if (temporaryCounter >= 20) {
-            gameOver(2000);
-        }
-    }
 }
