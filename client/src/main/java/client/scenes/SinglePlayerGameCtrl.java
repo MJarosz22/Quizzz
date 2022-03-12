@@ -19,6 +19,7 @@ import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.net.URI;
+import java.text.NumberFormat;
 import java.util.*;
 import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.Executors;
@@ -496,33 +497,40 @@ public class SinglePlayerGameCtrl {
 
     /**
      * Checks whether the input guess was correct
+     * If the number the user inputted is not a valid long number, the user will be shown "Invalid number. Try again"
+     * message above the textLabel where he/she inputted his/her name, and he will be asked for another input.
      */
     public void isGuessCorrect() {
         CharSequence input = player_answer.getCharacters();
-        long number = Long.parseLong(input.toString());
-        if (number == ((QuestionHowMuch) currentQuestion).getActivity().getConsumption_in_wh()) {
-            player.addScore(100);
-            score.setText("Your score: " + player.getScore());
-            points.setText("+100 points");
-            answer.setText("Correct answer");
-            setEmoji(emoji, true);
-        } else {
-            points.setText("+0 points");
-            answer.setText("Wrong answer");
-            setEmoji(emoji, false);
-        }
-        correct_guess.setVisible(true);
-        correct_guess.setText("The correct answer is: " + ((QuestionHowMuch) currentQuestion).getActivity().getConsumption_in_wh());
-        setOptions(true);
+        try {
+            long number = Long.parseLong(input.toString());
+            if (number == ((QuestionHowMuch) currentQuestion).getActivity().getConsumption_in_wh()) {
+                player.addScore(100);
+                score.setText("Your score: " + player.getScore());
+                points.setText("+100 points");
+                answer.setText("Correct answer");
+                setEmoji(emoji, true);
+            } else {
+                points.setText("+0 points");
+                answer.setText("Wrong answer");
+                setEmoji(emoji, false);
+            }
+            correct_guess.setVisible(true);
+            correct_guess.setText("The correct answer is: " + ((QuestionHowMuch) currentQuestion).getActivity().getConsumption_in_wh());
+            setOptions(true);
 
-        CompletableFuture.delayedExecutor(1, SECONDS).execute(() -> {
-            if (!isGameOver())
-                loadNextQuestion();
-        });
+            CompletableFuture.delayedExecutor(1, SECONDS).execute(() -> {
+                if (!isGameOver())
+                    loadNextQuestion();
+            });
 
-
-        if (roundCounter >= 20) {
-            gameOver(2000);
+            if (roundCounter >= 20) {
+                gameOver(2000);
+            }
+        } catch (NumberFormatException e) {
+            player_answer.clear();
+            correct_guess.setVisible(true);
+            correct_guess.setText("Invalid number. Try again.");
         }
     }
 

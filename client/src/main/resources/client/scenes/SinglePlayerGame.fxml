@@ -63,25 +63,25 @@
             </font>
         </Text>
         <AnchorPane fx:id="emoji" layoutX="187.0" layoutY="84.0" prefHeight="30.0" prefWidth="30.0" style="-fx-background-size: contain;" />
-      <TextField fx:id="player_answer" layoutX="761.0" layoutY="226.0" />
-      <Text fx:id="correct_guess" layoutX="730.0" layoutY="205.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Text" wrappingWidth="211.0">
-         <font>
-            <Font name="Courier New" size="12.0" />
-         </font>
-      </Text>
-      <Button fx:id="submit_guess" layoutX="805.0" layoutY="270.0" mnemonicParsing="false" onAction="#isGuessCorrect" text="SUBMIT">
-         <font>
-            <Font name="Courier New" size="12.0" />
-         </font>
-      </Button>
-      <RadioButton fx:id="answer1" layoutX="583.0" layoutY="193.0" mnemonicParsing="false" onAction="#answer1Selected" prefHeight="17.0" prefWidth="94.0" text="answer1" />
-      <RadioButton fx:id="answer2" layoutX="581.0" layoutY="243.0" mnemonicParsing="false" onAction="#answer2Selected" prefHeight="17.0" prefWidth="94.0" text="answer2" />
-      <RadioButton fx:id="answer3" layoutX="581.0" layoutY="293.0" mnemonicParsing="false" onAction="#answer3Selected" prefHeight="17.0" prefWidth="94.0" text="answer3" />
-      <ImageView fx:id="image4" fitHeight="200.0" fitWidth="309.0" layoutX="205.0" layoutY="160.0" pickOnBounds="true" preserveRatio="true" />
-      <Text fx:id="option4" fill="WHITE" layoutX="202.0" layoutY="396.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Option 4 " wrappingWidth="315.2109375">
-         <font>
-            <Font name="Courier New Bold Italic" size="14.0" />
-         </font>
-      </Text>
+        <TextField fx:id="player_answer" layoutX="761.0" layoutY="226.0" />
+        <Text fx:id="correct_guess" layoutX="730.0" layoutY="205.0" strokeType="OUTSIDE" strokeWidth="0.0" text="The correct answer is ..." wrappingWidth="211.0">
+            <font>
+                <Font name="Courier New" size="12.0" />
+            </font>
+        </Text>
+        <Button fx:id="submit_guess" layoutX="805.0" layoutY="270.0" mnemonicParsing="false" onAction="#isGuessCorrect" text="SUBMIT">
+            <font>
+                <Font name="Courier New" size="12.0" />
+            </font>
+        </Button>
+        <RadioButton fx:id="answer1" layoutX="583.0" layoutY="193.0" mnemonicParsing="false" onAction="#answer1Selected" prefHeight="18.0" prefWidth="142.0" text="answer1" />
+        <RadioButton fx:id="answer2" layoutX="581.0" layoutY="243.0" mnemonicParsing="false" onAction="#answer2Selected" prefHeight="18.0" prefWidth="142.0" text="answer2" />
+        <RadioButton fx:id="answer3" layoutX="581.0" layoutY="293.0" mnemonicParsing="false" onAction="#answer3Selected" prefHeight="18.0" prefWidth="142.0" text="answer3" />
+        <ImageView fx:id="image4" fitHeight="200.0" fitWidth="309.0" layoutX="205.0" layoutY="160.0" pickOnBounds="true" preserveRatio="true" />
+        <Text fx:id="option4" fill="WHITE" layoutX="202.0" layoutY="396.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Option 4 " wrappingWidth="315.2109375">
+            <font>
+                <Font name="Courier New Bold Italic" size="14.0" />
+            </font>
+        </Text>
     </children>
 </AnchorPane>
