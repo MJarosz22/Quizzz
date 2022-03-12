@@ -37,15 +37,12 @@ public class SinglePlayerGameCtrl {
     private final String timerPath = "client/src/main/resources/images/timer.png";
 
     private SimpleUser player;
-
     private GameInstance currentGame;
-    private Queue<Question> gameQuestions = new LinkedList<>();
     private Question currentQuestion;
+
     private boolean answered;
     private int timeLeft;
-
-
-    int roundCounter;
+    private int roundCounter;
 
     @FXML
     private Text questionTitle;
@@ -146,7 +143,6 @@ public class SinglePlayerGameCtrl {
 
             currentGame.generateQuestions(server.getActivitiesRandomly());
 
-            gameQuestions.addAll(currentGame.getQuestions());
             progressBar.setProgress(-0.05);
             score.setText("Your score: 0");
             infoRefresh();
@@ -160,8 +156,6 @@ public class SinglePlayerGameCtrl {
      * This method gets called before every round. Load next question, update the board.
      */
     public void loadNextQuestion() {
-        //TODO: add support for different question types
-        //TODO: when we get the activity bank, we will replace the hardcoded currentQuestion
         colorsRefresh();
         infoRefresh();
         setOptions(false);
@@ -196,7 +190,7 @@ public class SinglePlayerGameCtrl {
                     option3Button.setText(((QuestionMoreExpensive) currentQuestion).getActivities()[2].getTitle());
 
                     progressBar.setProgress(progressBar.getProgress() + 0.05);
-                    questionCount.setText("Question " + roundCounter + "/20");
+                    questionCount.setText("Question " + roundCounter + "/" + currentGame.getQuestions().size());
 
                     if (((QuestionMoreExpensive) currentQuestion).getAnswer() == ((QuestionMoreExpensive) currentQuestion)
                             .getActivities()[0].getConsumption_in_wh())
@@ -231,7 +225,7 @@ public class SinglePlayerGameCtrl {
                     answer3.setVisible(false);
 
                     progressBar.setProgress(progressBar.getProgress() + 0.05);
-                    questionCount.setText("Question " + roundCounter + "/20");
+                    questionCount.setText("Question " + roundCounter + "/" + currentGame.getQuestions().size());
                 }
                 if (currentQuestion instanceof QuestionWhichOne) {
 
@@ -261,7 +255,7 @@ public class SinglePlayerGameCtrl {
                     answer3.setVisible(true);
 
                     progressBar.setProgress(progressBar.getProgress() + 0.05);
-                    questionCount.setText("Question " + roundCounter + "/20");
+                    questionCount.setText("Question " + roundCounter + "/" + currentGame.getQuestions().size());
 
                     Random random = new Random();
                     int random_correct_answer = random.nextInt(3 - 1 + 1) + 1;
@@ -288,7 +282,7 @@ public class SinglePlayerGameCtrl {
             }
         });
 
-        //TODO: set the images, reset/start the timer, add timer logic, implement power-ups
+        //TODO: implement power-ups
     }
 
     /**
@@ -475,6 +469,7 @@ public class SinglePlayerGameCtrl {
 
     /**
      * sets the 'timerImage' anchorpane's image
+     *
      * @param timerImage
      */
     public void setTimerImage(AnchorPane timerImage) {
@@ -485,6 +480,7 @@ public class SinglePlayerGameCtrl {
 
     /**
      * sets the 'emoji' anchorpane's image, based boolean value
+     *
      * @param emoji
      * @param correct
      */
@@ -549,6 +545,7 @@ public class SinglePlayerGameCtrl {
 
     /**
      * Checks whether the selected answer was correct
+     *
      * @param player_answer
      * @param response
      */
@@ -630,7 +627,7 @@ public class SinglePlayerGameCtrl {
         ScheduledExecutorService scheduler = Executors.newScheduledThreadPool(1);
         Question currentQ = currentQuestion;
         Runnable runnable = new Runnable() {
-            int countdown = time/1000;
+            int countdown = time / 1000;
 
             public void run() {
 
