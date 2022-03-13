@@ -170,121 +170,17 @@ public class SinglePlayerGameCtrl {
                 timer.setText(String.valueOf(timeLeft));
                 questionTitle.setText(currentQuestion.getTitle());
                 if (currentQuestion instanceof QuestionMoreExpensive) {
-
-                    correct_guess.setVisible(false);
-                    player_answer.setVisible(false);
-                    submit_guess.setVisible(false);
-
-                    option1Button.setVisible(true);
-                    option2Button.setVisible(true);
-                    option3Button.setVisible(true);
-                    option1Button.setDisable(false);
-                    option2Button.setDisable(false);
-                    option3Button.setDisable(false);
-                    option4.setVisible(false);
-
-                    answer1.setVisible(false);
-                    answer2.setVisible(false);
-                    answer3.setVisible(false);
-
-                    option1Button.setText(((QuestionMoreExpensive) currentQuestion).getActivities()[0].getTitle());
-                    option2Button.setText(((QuestionMoreExpensive) currentQuestion).getActivities()[1].getTitle());
-                    option3Button.setText(((QuestionMoreExpensive) currentQuestion).getActivities()[2].getTitle());
-
-                    progressBar.setProgress(progressBar.getProgress() + 0.05);
-                    questionCount.setText("Question " + roundCounter + "/20");
-
-                    if (((QuestionMoreExpensive) currentQuestion).getAnswer() == ((QuestionMoreExpensive) currentQuestion)
-                            .getActivities()[0].getConsumption_in_wh())
-                        correct_answer = option1Button;
-
-                    if (((QuestionMoreExpensive) currentQuestion).getAnswer() == ((QuestionMoreExpensive) currentQuestion)
-                            .getActivities()[1].getConsumption_in_wh())
-                        correct_answer = option2Button;
-
-                    if (((QuestionMoreExpensive) currentQuestion).getAnswer() == ((QuestionMoreExpensive) currentQuestion)
-                            .getActivities()[2].getConsumption_in_wh())
-                        correct_answer = option3Button;
-
+                    setScene1();
                 }
 
                 if (currentQuestion instanceof QuestionHowMuch) {
-                    player_answer.clear();
-                    setOptions(true);
-                    option4.setText(((QuestionHowMuch) currentQuestion).getActivity().getTitle());
-
-                    option1Button.setVisible(false);
-                    option2Button.setVisible(false);
-                    option3Button.setVisible(false);
-                    option4.setVisible(true);
-
-                    player_answer.setVisible(true);
-                    submit_guess.setVisible(true);
-                    submit_guess.setDisable(false);
-                    correct_guess.setVisible(false);
-
-                    answer1.setVisible(false);
-                    answer2.setVisible(false);
-                    answer3.setVisible(false);
-
-                    progressBar.setProgress(progressBar.getProgress() + 0.05);
-                    questionCount.setText("Question " + roundCounter + "/20");
+                    setScene2();
                 }
                 if (currentQuestion instanceof QuestionWhichOne) {
-
-                    answer1.setSelected(false);
-                    answer2.setSelected(false);
-                    answer3.setSelected(false);
-
-                    answer1.setStyle("-fx-background-color: #91e4fb; ");
-                    answer2.setStyle("-fx-background-color: #91e4fb; ");
-                    answer3.setStyle("-fx-background-color: #91e4fb; ");
-
-
-                    option4.setText(((QuestionWhichOne) currentQuestion).getActivity().getTitle());
-
-                    option1Button.setVisible(false);
-                    option2Button.setVisible(false);
-                    option3Button.setVisible(false);
-                    option4.setVisible(true);
-
-                    setOptions(true);
-                    player_answer.setVisible(false);
-                    submit_guess.setVisible(false);
-                    correct_guess.setVisible(false);
-
-                    answer1.setVisible(true);
-                    answer2.setVisible(true);
-                    answer3.setVisible(true);
-                    answer1.setDisable(false);
-                    answer2.setDisable(false);
-                    answer3.setDisable(false);
-
-                    progressBar.setProgress(progressBar.getProgress() + 0.05);
-                    questionCount.setText("Question " + roundCounter + "/20");
-
-                    Random random = new Random();
-                    int random_correct_answer = random.nextInt(3 - 1 + 1) + 1;
-
-                    long other_answer1 = Math.abs(((QuestionWhichOne) currentQuestion).getActivity().getConsumption_in_wh() - 500);
-                    long other_answer2 = Math.abs(((QuestionWhichOne) currentQuestion).getActivity().getConsumption_in_wh() + 700);
-                    long other_answer3 = Math.abs(((QuestionWhichOne) currentQuestion).getActivity().getConsumption_in_wh() - 200);
-
-                    if (random_correct_answer == 1)
-                        answer1.setText(((QuestionWhichOne) currentQuestion).getActivity().getConsumption_in_wh().toString());
-                    else answer1.setText(String.valueOf(other_answer1));
-
-                    if (random_correct_answer == 2)
-                        answer2.setText(((QuestionWhichOne) currentQuestion).getActivity().getConsumption_in_wh().toString());
-                    else answer2.setText(String.valueOf(other_answer2));
-
-                    if (random_correct_answer == 3)
-                        answer3.setText(((QuestionWhichOne) currentQuestion).getActivity().getConsumption_in_wh().toString());
-                    else answer3.setText(String.valueOf(other_answer3));
+                    setScene3();
                 }
                 answered = false;
-                startCountdown(20000);
-                startTimer(20000);
+                startTimer(20);
             }
         });
 
@@ -292,7 +188,136 @@ public class SinglePlayerGameCtrl {
     }
 
     /**
-     * This method is called when in a multiple choice question, user selects option 1
+     * Sets the scene for the QuestionMoreExpensive
+     * Knows which activity is the correct answer (correct_answer)
+     * The titles of the activities are on option1Button, option2Button, option3Button
+     */
+
+    public void setScene1() {
+
+        correct_guess.setVisible(false);
+        player_answer.setVisible(false);
+        submit_guess.setVisible(false);
+
+        option1Button.setVisible(true);
+        option2Button.setVisible(true);
+        option3Button.setVisible(true);
+        option1Button.setDisable(false);
+        option2Button.setDisable(false);
+        option3Button.setDisable(false);
+        option4.setVisible(false);
+
+        answer1.setVisible(false);
+        answer2.setVisible(false);
+        answer3.setVisible(false);
+
+        option1Button.setText(((QuestionMoreExpensive) currentQuestion).getActivities()[0].getTitle());
+        option2Button.setText(((QuestionMoreExpensive) currentQuestion).getActivities()[1].getTitle());
+        option3Button.setText(((QuestionMoreExpensive) currentQuestion).getActivities()[2].getTitle());
+
+        progressBar.setProgress(progressBar.getProgress() + 0.05);
+        questionCount.setText("Question " + roundCounter + "/20");
+
+        if (((QuestionMoreExpensive) currentQuestion).getAnswer() == ((QuestionMoreExpensive) currentQuestion)
+                .getActivities()[0].getConsumption_in_wh())
+            correct_answer = option1Button;
+
+        if (((QuestionMoreExpensive) currentQuestion).getAnswer() == ((QuestionMoreExpensive) currentQuestion)
+                .getActivities()[1].getConsumption_in_wh())
+            correct_answer = option2Button;
+
+        if (((QuestionMoreExpensive) currentQuestion).getAnswer() == ((QuestionMoreExpensive) currentQuestion)
+                .getActivities()[2].getConsumption_in_wh())
+            correct_answer = option3Button;
+    }
+
+    /**
+     * Sets the scene for the QuestionHowMuch
+     * Sets the title of the activity on option4
+     */
+    public void setScene2() {
+        player_answer.clear();
+        setOptions(true);
+        option4.setText(((QuestionHowMuch) currentQuestion).getActivity().getTitle());
+
+        option1Button.setVisible(false);
+        option2Button.setVisible(false);
+        option3Button.setVisible(false);
+        option4.setVisible(true);
+
+        player_answer.setVisible(true);
+        submit_guess.setVisible(true);
+        submit_guess.setDisable(false);
+        correct_guess.setVisible(false);
+
+        answer1.setVisible(false);
+        answer2.setVisible(false);
+        answer3.setVisible(false);
+
+        progressBar.setProgress(progressBar.getProgress() + 0.05);
+        questionCount.setText("Question " + roundCounter + "/20");
+    }
+
+    /**
+     * Sets the scene for the QuestionWhichOne
+     * Sets the title for the activity on option4
+     * Randomly choose which one of the three RadioButtons(answer1, answer2, answer3) has the correct answer
+     * The other 2 wrong answers are somewhat randomly generated
+     */
+    public void setScene3() {
+        answer1.setSelected(false);
+        answer2.setSelected(false);
+        answer3.setSelected(false);
+
+        answer1.setStyle("-fx-background-color: #91e4fb; ");
+        answer2.setStyle("-fx-background-color: #91e4fb; ");
+        answer3.setStyle("-fx-background-color: #91e4fb; ");
+
+
+        option4.setText(((QuestionWhichOne) currentQuestion).getActivity().getTitle());
+
+        option1Button.setVisible(false);
+        option2Button.setVisible(false);
+        option3Button.setVisible(false);
+        option4.setVisible(true);
+
+        setOptions(true);
+        player_answer.setVisible(false);
+        submit_guess.setVisible(false);
+        correct_guess.setVisible(false);
+
+        answer1.setVisible(true);
+        answer2.setVisible(true);
+        answer3.setVisible(true);
+        answer1.setDisable(false);
+        answer2.setDisable(false);
+        answer3.setDisable(false);
+
+        progressBar.setProgress(progressBar.getProgress() + 0.05);
+        questionCount.setText("Question " + roundCounter + "/20");
+
+        Random random = new Random();
+        int random_correct_answer = random.nextInt(3 - 1 + 1) + 1;
+
+        long other_answer1 = Math.abs(((QuestionWhichOne) currentQuestion).getActivity().getConsumption_in_wh() - 500);
+        long other_answer2 = Math.abs(((QuestionWhichOne) currentQuestion).getActivity().getConsumption_in_wh() + 700);
+        long other_answer3 = Math.abs(((QuestionWhichOne) currentQuestion).getActivity().getConsumption_in_wh() - 200);
+
+        if (random_correct_answer == 1)
+            answer1.setText(((QuestionWhichOne) currentQuestion).getActivity().getConsumption_in_wh().toString());
+        else answer1.setText(String.valueOf(other_answer1));
+
+        if (random_correct_answer == 2)
+            answer2.setText(((QuestionWhichOne) currentQuestion).getActivity().getConsumption_in_wh().toString());
+        else answer2.setText(String.valueOf(other_answer2));
+
+        if (random_correct_answer == 3)
+            answer3.setText(((QuestionWhichOne) currentQuestion).getActivity().getConsumption_in_wh().toString());
+        else answer3.setText(String.valueOf(other_answer3));
+    }
+
+    /**
+     * This method is called when in a multiple choice question (QuestionMoreExpensive), user selects option 1
      */
     public void option1Selected() {
         if (((QuestionMoreExpensive) currentQuestion).getAnswer() == ((QuestionMoreExpensive) currentQuestion)
@@ -304,7 +329,7 @@ public class SinglePlayerGameCtrl {
     }
 
     /**
-     * This method is called when in a multiple choice question, user selects option 2
+     * This method is called when in a multiple choice question (QuestionMoreExpensive), user selects option 2
      */
     public void option2Selected() {
         if (((QuestionMoreExpensive) currentQuestion).getAnswer() == ((QuestionMoreExpensive) currentQuestion)
@@ -316,7 +341,7 @@ public class SinglePlayerGameCtrl {
     }
 
     /**
-     * This method is called when in a multiple choice question, user selects option 3
+     * This method is called when in a multiple choice question (QuestionMoreExpensive), user selects option 3
      */
     public void option3Selected() {
         if (((QuestionMoreExpensive) currentQuestion).getAnswer() == ((QuestionMoreExpensive) currentQuestion)
@@ -328,13 +353,15 @@ public class SinglePlayerGameCtrl {
     }
 
     /**
+     * For QuestionMoreExpensive
      * User's answer was correct. Show that the answer was correct, update the score, start next round.
      */
     public void correctAnswer() {
         answered = true;
-        player.addScore(100);
+        int numberOfPoints = calculatePoints(timeLeft);
+        player.addScore(numberOfPoints);
         score.setText("Your score: " + player.getScore());
-        points.setText("+100 points"); // In the future calculate the # of points, DON'T hardcode
+        points.setText("+" + numberOfPoints + "points");
         answer.setText("Correct answer");
         setEmoji(emoji, true);
 
@@ -354,11 +381,12 @@ public class SinglePlayerGameCtrl {
     }
 
     /**
+     * For the QuestionMoreExpensive
      * User's answer was incorrect. Show that the answer was incorrect, start next round.
      */
     public void wrongAnswer() {
         answered = true;
-        points.setText("+0 points"); // In the future calculate the # of points, DON'T hardcode
+        points.setText("+0 points");
         answer.setText("Wrong answer");
         setEmoji(emoji, false);
 
@@ -377,6 +405,9 @@ public class SinglePlayerGameCtrl {
         }
     }
 
+    /**
+     * Sets the images for every type of question
+     */
     public void setImages() {
         String activitiesPath = new File("").getAbsolutePath();
         activitiesPath += "\\client\\src\\main\\resources\\images\\activities\\";
@@ -443,6 +474,7 @@ public class SinglePlayerGameCtrl {
     }
 
     /**
+     * For the QuestionMoreExpensive
      * Makes the background of  the correct button GREEN and the background of the wrong buttons RED
      */
     public void setColors() {
@@ -506,6 +538,7 @@ public class SinglePlayerGameCtrl {
     }
 
     /**
+     * For the QuestionHowMuch
      * Checks whether the input guess was correct
      * If the number the user inputted is not a valid long number, the user will be shown "Invalid number. Try again"
      * message above the textLabel where he/she inputted his/her name, and he will be asked for another input.
@@ -514,19 +547,45 @@ public class SinglePlayerGameCtrl {
         CharSequence input = player_answer.getCharacters();
         try {
             long number = Long.parseLong(input.toString());
-            if (number == ((QuestionHowMuch) currentQuestion).getActivity().getConsumption_in_wh()) {
+            long correct_number = ((QuestionHowMuch) currentQuestion).getActivity().getConsumption_in_wh();
+            if (number == correct_number) {
                 player.addScore(100);
                 score.setText("Your score: " + player.getScore());
                 points.setText("+100 points");
                 answer.setText("Correct answer");
                 setEmoji(emoji, true);
             } else {
-                points.setText("+0 points");
-                answer.setText("Wrong answer");
-                setEmoji(emoji, false);
+                if (number <= correct_number + (25 * correct_number) / 100 && number >= correct_number - (25 * correct_number) / 100) {
+                    player.addScore(75);
+                    score.setText("Your score: " + player.getScore());
+                    points.setText("+75 points");
+                    answer.setText("Almost the correct answer");
+                    setEmoji(emoji, true);
+                } else {
+                    if (number <= correct_number + (50 * correct_number) / 100 && number >= correct_number - (50 * correct_number) / 100) {
+                        player.addScore(50);
+                        score.setText("Your score: " + player.getScore());
+                        points.setText("+50 points");
+                        answer.setText("Not quite the correct answer");
+                        setEmoji(emoji, true);
+                    } else {
+                        if (number <= correct_number + (75 * correct_number) / 100 && number >= correct_number - (75 * correct_number) / 100) {
+                            player.addScore(25);
+                            score.setText("Your score: " + player.getScore());
+                            points.setText("+25 points");
+                            answer.setText("Pretty far from the correct answer");
+                            setEmoji(emoji, true);
+                        } else {
+                            points.setText("+0 points");
+                            answer.setText("Wrong answer");
+                            setEmoji(emoji, false);
+                        }
+                    }
+                }
+
             }
             correct_guess.setVisible(true);
-            correct_guess.setText("The correct answer is: " + ((QuestionHowMuch) currentQuestion).getActivity().getConsumption_in_wh());
+            correct_guess.setText("The correct answer is: " + correct_number);
             setOptions(true);
 
             CompletableFuture.delayedExecutor(1, SECONDS).execute(() -> {
@@ -544,34 +603,62 @@ public class SinglePlayerGameCtrl {
         }
     }
 
+    /**
+     * Player ran out of time and didn't make any guess
+     */
+    public void noGuess() {
+        correct_guess.setVisible(true);
+        correct_guess.setText("The correct answer is: " + ((QuestionHowMuch) currentQuestion).getActivity().getConsumption_in_wh());
+        setOptions(true);
 
+        CompletableFuture.delayedExecutor(1, SECONDS).execute(() -> {
+            if (!isGameOver())
+                loadNextQuestion();
+        });
+
+        if (roundCounter >= 20) {
+            gameOver(2000);
+        }
+    }
+
+    /**
+     * For QuestionWhichOne if answer1 was selected
+     */
     public void answer1Selected() {
         long response = Long.parseLong(answer1.getText());
         isSelectionCorrect(answer1, response);
     }
 
+    /**
+     * For QuestionWhichOne if answer2 was selected
+     */
     public void answer2Selected() {
         long response = Long.parseLong(answer2.getText());
         isSelectionCorrect(answer2, response);
     }
 
+    /**
+     * For QuestionWhichOne if answer3 was selected
+     */
     public void answer3Selected() {
         long response = Long.parseLong(answer3.getText());
         isSelectionCorrect(answer3, response);
     }
 
     /**
+     * For QuestionWhichOne
      * Checks whether the selected answer was correct
      *
-     * @param player_answer
-     * @param response
+     * @param player_answer the selected RadioButton of the player
+     * @param response      the consumption from the selected RadioButton
      */
     public void isSelectionCorrect(RadioButton player_answer, long response) {
 
         if (response == ((QuestionWhichOne) currentQuestion).getActivity().getConsumption_in_wh()) {
-            player.addScore(100);
+            int numberOfPoints = calculatePoints(timeLeft);
+            player.addScore(numberOfPoints);
             score.setText("Your score: " + player.getScore());
-            points.setText("+100 points");
+            points.setText("+" + numberOfPoints + "points");
             answer.setText("Correct answer");
             setEmoji(emoji, true);
             player_answer.setStyle("-fx-background-color: green; ");
@@ -606,51 +693,33 @@ public class SinglePlayerGameCtrl {
         }
     }
 
-    /**
-     * Start the timer. After specified time, execute wrongAnswer()
-     *
-     * @param time time in miliseconds
-     */
-    public void startTimer(int time) {
-        Thread thread = new Thread(new Runnable() {
-
-            public void run() {
-                Question current = currentQuestion;
-
-                try {
-                    Thread.sleep(time);
-                } catch (InterruptedException e) {
-                    e.printStackTrace();
-                }
-
-                Platform.runLater(new Runnable() {
-                    public void run() {
-                        if (current == currentQuestion) //check if the question wasn't already answered
-                            wrongAnswer();
-                    }
-                });
-
-            }
-        });
-        thread.start();
-    }
+//I put startTimer and startCountdown in one method
 
     /**
      * Start the countdown. Update the timer every second.
      *
      * @param time time in miliseconds
      */
-    public void startCountdown(int time) {
+    public void startTimer(int time) {
         ScheduledExecutorService scheduler = Executors.newScheduledThreadPool(1);
         Question currentQ = currentQuestion;
         Runnable runnable = new Runnable() {
-            int countdown = time / 1000;
+            int countdown = time;
 
             public void run() {
-
-                if (currentQ != currentQuestion || answered) { //check if the question wasn't already answered
+                if (countdown == 0) {
+                    if (currentQ instanceof QuestionHowMuch)
+                        noGuess();
+                    else if (currentQ instanceof QuestionWhichOne)
+                        isSelectionCorrect(null, 0);
+                    else
+                        wrongAnswer();
+                    timer.setText(String.valueOf(countdown));
+                    scheduler.shutdown();
+                } else if (currentQ != currentQuestion || answered) {
                     scheduler.shutdown();
                 } else {
+                    setTimeLeft(countdown);
                     timer.setText(String.valueOf(countdown--));
                 }
 
@@ -688,5 +757,23 @@ public class SinglePlayerGameCtrl {
         thread.start();
     }
 
+    /**
+     * Additional method that calculates how many points should a player be awarded if he answered to a specific
+     * question in 'timeLeft' seconds. The formula was chosen for the 20 seconds type of question, so answering in i.e:
+     * 15 seconds gives 75 points to the player, 12 seconds -> 60 points, etc.
+     *
+     * @param timeLeft integer value representing how many seconds are left to answer a specific question
+     */
+    public int calculatePoints(int timeLeft) {
+        return (timeLeft * 10) / 2;
+    }
 
+    /**
+     * Sets how many seconds are left for the user to answer a specific question
+     *
+     * @param timeLeft integer value that represents the number of seconds remained to answer a question
+     */
+    public void setTimeLeft(int timeLeft) {
+        this.timeLeft = timeLeft;
+    }
 }

@@ -3,7 +3,7 @@ package client.scenes;
 import client.utils.ServerUtils;
 import com.google.inject.Inject;
 import commons.GameInstance;
-import commons.communication.RequestToJoin;
+import communication.RequestToJoin;
 import commons.player.SimpleUser;
 import javafx.fxml.FXML;
 import javafx.scene.control.TextField;
