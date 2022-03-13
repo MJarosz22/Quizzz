@@ -1,7 +1,7 @@
 package client.utils;
 
 import commons.Activity;
-import commons.communication.RequestToJoin;
+import communication.RequestToJoin;
 import commons.player.SimpleUser;
 import jakarta.ws.rs.client.Client;
 import jakarta.ws.rs.client.ClientBuilder;
