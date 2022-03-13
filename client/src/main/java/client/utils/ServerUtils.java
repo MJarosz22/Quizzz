@@ -80,4 +80,14 @@ public class ServerUtils {
                 .delete(new GenericType<>() {
                 });
     }
+
+    public int getLastGIId() {
+        Client client = ClientBuilder.newClient(new ClientConfig());
+        return client //
+                .target(SERVER).path("api/game/getLastGIId") //
+                .request(APPLICATION_JSON) //
+                .accept(APPLICATION_JSON) //
+                .get(new GenericType<>() {
+                });
+    }
 }

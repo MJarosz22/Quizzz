@@ -14,6 +14,7 @@ import org.springframework.util.DigestUtils;
 import org.springframework.web.bind.annotation.*;
 import server.database.ActivityRepository;
 
+import javax.persistence.criteria.CriteriaBuilder;
 import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 import java.util.List;
@@ -162,5 +163,12 @@ public class GameController {
         Optional<Player> optPlayer = currGI.getPlayers().stream().filter(p -> p.getCookie().equals(cookie)).findFirst();
         if (optPlayer.isEmpty()) return null;
         else return optPlayer.get();
+    }
+
+    @GetMapping("/getLastGIId")
+    public ResponseEntity<Integer> getLastGIId(){
+        int lastGIId = gameInstances.get(gameInstances.size() - 1).getId();
+        logger.info("[GI " + lastGIId);
+        return ResponseEntity.ok(lastGIId);
     }
 }
