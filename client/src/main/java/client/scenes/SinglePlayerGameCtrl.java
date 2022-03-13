@@ -353,14 +353,15 @@ public class SinglePlayerGameCtrl {
     }
 
     /**
-     * For the QuestionMoreExpensive
+     * For QuestionMoreExpensive
      * User's answer was correct. Show that the answer was correct, update the score, start next round.
      */
     public void correctAnswer() {
         answered = true;
-        player.addScore(100);
+        int numberOfPoints = calculatePoints(timeLeft);
+        player.addScore(numberOfPoints);
         score.setText("Your score: " + player.getScore());
-        points.setText("+100 points"); // In the future calculate the # of points, DON'T hardcode
+        points.setText("+" + numberOfPoints + "points");
         answer.setText("Correct answer");
         setEmoji(emoji, true);
 
@@ -385,7 +386,7 @@ public class SinglePlayerGameCtrl {
      */
     public void wrongAnswer() {
         answered = true;
-        points.setText("+0 points"); // In the future calculate the # of points, DON'T hardcode
+        points.setText("+0 points");
         answer.setText("Wrong answer");
         setEmoji(emoji, false);
 
@@ -654,9 +655,10 @@ public class SinglePlayerGameCtrl {
     public void isSelectionCorrect(RadioButton player_answer, long response) {
 
         if (response == ((QuestionWhichOne) currentQuestion).getActivity().getConsumption_in_wh()) {
-            player.addScore(100);
+            int numberOfPoints = calculatePoints(timeLeft);
+            player.addScore(numberOfPoints);
             score.setText("Your score: " + player.getScore());
-            points.setText("+100 points");
+            points.setText("+" + numberOfPoints + "points");
             answer.setText("Correct answer");
             setEmoji(emoji, true);
             player_answer.setStyle("-fx-background-color: green; ");
@@ -692,6 +694,7 @@ public class SinglePlayerGameCtrl {
     }
 
 //I put startTimer and startCountdown in one method
+
     /**
      * Start the countdown. Update the timer every second.
      *
@@ -716,6 +719,7 @@ public class SinglePlayerGameCtrl {
                 } else if (currentQ != currentQuestion || answered) {
                     scheduler.shutdown();
                 } else {
+                    setTimeLeft(countdown);
                     timer.setText(String.valueOf(countdown--));
                 }
 
@@ -753,5 +757,23 @@ public class SinglePlayerGameCtrl {
         thread.start();
     }
 
+    /**
+     * Additional method that calculates how many points should a player be awarded if he answered to a specific
+     * question in 'timeLeft' seconds. The formula was chosen for the 20 seconds type of question, so answering in i.e:
+     * 15 seconds gives 75 points to the player, 12 seconds -> 60 points, etc.
+     *
+     * @param timeLeft integer value representing how many seconds are left to answer a specific question
+     */
+    public int calculatePoints(int timeLeft) {
+        return (timeLeft * 10) / 2;
+    }
 
+    /**
+     * Sets how many seconds are left for the user to answer a specific question
+     *
+     * @param timeLeft integer value that represents the number of seconds remained to answer a question
+     */
+    public void setTimeLeft(int timeLeft) {
+        this.timeLeft = timeLeft;
+    }
 }
