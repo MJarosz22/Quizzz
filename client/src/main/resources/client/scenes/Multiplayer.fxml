@@ -6,32 +6,36 @@
 <?import javafx.scene.text.Font?>
 <?import javafx.scene.text.Text?>
 
-<AnchorPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="540.0" prefWidth="960.0" style="-fx-background-color: #91e4fb;" xmlns="http://javafx.com/javafx/17" xmlns:fx="http://javafx.com/fxml/1" fx:controller="client.scenes.MultiPlayerCtrl">
-    <children>
-        <Button layoutX="83.0" layoutY="54.0" mnemonicParsing="false" onAction="#back" style="-fx-background-color: #fff;" text="BACK">
-            <font>
-                <Font name="Courier New" size="15.0" />
-            </font>
-        </Button>
-        <TextField alignment="CENTER" layoutX="376.0" layoutY="212.0" prefHeight="36.0" prefWidth="209.0" promptText="Enter your name">
-            <font>
-                <Font name="Courier New" size="18.0" />
-            </font>
-        </TextField>
-      <TextField alignment="CENTER" layoutX="377.0" layoutY="280.0" prefHeight="36.0" prefWidth="209.0" promptText="Server name">
-         <font>
-            <Font name="Courier New" size="18.0" />
-         </font>
-      </TextField>
-        <Button layoutX="436.0" layoutY="369.0" mnemonicParsing="false" onAction="#join" style="-fx-background-color: #fff;" text="JOIN">
-            <font>
-                <Font name="Courier New" size="24.0" />
-            </font>
-        </Button>
-        <Text fill="WHITE" layoutX="361.0" layoutY="124.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Multiplayer">
-            <font>
-                <Font name="Courier New" size="36.0" />
-            </font>
-        </Text>
-    </children>
+<AnchorPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="540.0"
+            prefWidth="960.0" style="-fx-background-color: #91e4fb;" xmlns="http://javafx.com/javafx/17"
+            xmlns:fx="http://javafx.com/fxml/1" fx:controller="client.scenes.MultiPlayerCtrl">
+    <Button layoutX="83.0" layoutY="54.0" mnemonicParsing="false" onAction="#back" style="-fx-background-color: #fff;"
+            text="BACK">
+        <font>
+            <Font name="Courier New" size="15.0"/>
+        </font>
+    </Button>
+    <Text fill="WHITE" layoutX="361.0" layoutY="124.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Multiplayer">
+        <font>
+            <Font name="Courier New" size="36.0"/>
+        </font>
+    </Text>
+    <TextField fx:id="textfieldName" alignment="CENTER" layoutX="376.0" layoutY="212.0" prefHeight="36.0"
+               prefWidth="209.0" promptText="Enter your name">
+        <font>
+            <Font name="Courier New" size="18.0"/>
+        </font>
+    </TextField>
+    <TextField alignment="CENTER" layoutX="377.0" layoutY="280.0" prefHeight="36.0" prefWidth="209.0"
+               promptText="Server name">
+        <font>
+            <Font name="Courier New" size="18.0"/>
+        </font>
+    </TextField>
+    <Button layoutX="436.0" layoutY="369.0" mnemonicParsing="false" onAction="#join" style="-fx-background-color: #fff;"
+            text="JOIN">
+        <font>
+            <Font name="Courier New" size="24.0"/>
+        </font>
+    </Button>
 </AnchorPane>

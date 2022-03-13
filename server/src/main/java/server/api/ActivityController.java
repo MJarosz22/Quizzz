@@ -7,9 +7,7 @@ import org.springframework.web.bind.annotation.*;
 import server.database.ActivityRepository;
 
 import java.beans.PropertyEditor;
-import java.util.List;
-import java.util.Optional;
-import java.util.Random;
+import java.util.*;
 
 @RestController
 @RequestMapping("/api/activities")
@@ -124,6 +122,39 @@ public class ActivityController {
         if (allAct.size() == 0) return ResponseEntity.notFound().build();
         int idx = random.nextInt(allAct.size());
         return ResponseEntity.ok(allAct.get(idx));
+    }
+
+    /**
+     * GET API endpoint that 'smartly' generates 60 optional activities using a HashSet(for performance reasons)
+     * for one gameInstance. This method is used in the SinglePlayerGameCtrl when initialising one specific gameInstance, so that questions
+     * can be generated on the basis of our randomly selected activities.
+     *
+     * @return 200 OK - in case there is at least one activity that can be chosen, or 404 NOT_FOUND otherwise
+     */
+    @GetMapping("/random60")
+    public ResponseEntity<List<Optional<Activity>>> getRandom60() {
+        //hard coded -> size of all activities - 60
+        long countIds = activityRepository.count();
+
+        int idRandom = (int) Math.abs(Math.random() * countIds) - 60;
+        Set<Optional<Activity>> setOfActivities = new HashSet<>();
+        int limit = 60;
+        int i = 0;
+        while (i < limit) {
+            Optional<Activity> a = activityRepository.findById((long) idRandom);
+            if (a.isPresent() && !setOfActivities.contains(a)) {
+                setOfActivities.add(a);
+            } else {
+                limit++;
+            }
+            idRandom = (int) Math.abs(Math.random() * countIds) - 60;
+            i++;
+        }
+        if (setOfActivities.size() == 0) return ResponseEntity.notFound().build();
+        List<Optional<Activity>> listOfActivities = new ArrayList<>();
+        for (Optional<Activity> activity : setOfActivities)
+            listOfActivities.add(activity);
+        return ResponseEntity.ok(listOfActivities);
     }
 
     @DeleteMapping("/all")

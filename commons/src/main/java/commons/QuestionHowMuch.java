@@ -1,38 +1,62 @@
 package commons;
 
-import java.util.List;
-import java.util.Objects;
+import org.apache.commons.lang3.builder.EqualsBuilder;
+import org.apache.commons.lang3.builder.HashCodeBuilder;
+import org.apache.commons.lang3.builder.ToStringBuilder;
 
+/**
+ * This is an open-question type of question.
+ * This question type asks the user to guess the correct amount of kWh that takes for a certain activity.
+ * The user will be asked to fill a number regarding his prediction regarding the energy consumed by its activity attribute
+ * - activity: the Activity object instance that the user is asked to guess how much energy it consumes.
+ * - title: the title of this specific question, may be changed later to "Guess the correct amount of energy it takes
+ * to... " so that we do not confuse this class with 'QuestionWhichOne'.
+ */
 public class QuestionHowMuch extends Question {
-    private List<Integer> answers;
 
-    public QuestionHowMuch(String title, List<Integer> disabledPowerUps, List<Integer> answers) {
-        super(2, title, disabledPowerUps);
-        this.answers = answers;
+    private Activity activity;
+
+    public QuestionHowMuch(Activity activity) {
+        this.setTitle("How much energy does it take?");
+        this.activity = activity;
     }
 
-    public QuestionHowMuch() {
+
+    public Activity getActivity() {
+        return activity;
+    }
+
+    public void setActivity(Activity activity) {
+        this.activity = activity;
     }
 
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
+
         if (o == null || getClass() != o.getClass()) return false;
-        if (!super.equals(o)) return false;
-        QuestionHowMuch that = (QuestionHowMuch) o;
-        return Objects.equals(answers, that.answers);
+
+        QuestionHowMuch q = (QuestionHowMuch) o;
+
+        return new EqualsBuilder()
+                .append(getTitle(), q.getTitle())
+                .append(activity, q.activity)
+                .isEquals();
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(super.hashCode(), answers);
+        return new HashCodeBuilder(17, 37)
+                .append(getTitle())
+                .append(activity)
+                .toHashCode();
     }
 
     @Override
     public String toString() {
-        return "QuestionMultipleChoice{" +
-                super.toString() +
-                ", answers=" + answers +
-                '}';
+        return new ToStringBuilder(this)
+                .append("title", getTitle())
+                .append("activity", activity)
+                .toString();
     }
 }

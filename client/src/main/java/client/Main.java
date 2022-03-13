@@ -15,16 +15,17 @@
  */
 package client;
 
-import static com.google.inject.Guice.createInjector;
+import client.scenes.*;
+import client.utils.ServerUtils;
+import com.google.inject.Injector;
+import commons.player.SimpleUser;
+import javafx.application.Application;
+import javafx.stage.Stage;
 
 import java.io.IOException;
 import java.net.URISyntaxException;
 
-import client.scenes.*;
-import com.google.inject.Injector;
-
-import javafx.application.Application;
-import javafx.stage.Stage;
+import static com.google.inject.Guice.createInjector;
 
 public class Main extends Application {
 
@@ -40,11 +41,27 @@ public class Main extends Application {
         var home = FXML.load(SplashScreenCtrl.class, "client", "scenes", "SplashScreen.fxml");
         var single = FXML.load(SinglePlayerCtrl.class, "client", "scenes", "SinglePlayer.fxml");
         var singleGame = FXML.load(SinglePlayerGameCtrl.class, "client", "scenes", "SinglePlayerGame.fxml");
+        var singleGameOver = FXML.load(SinglePlayerGameOverCtrl.class, "client", "scenes", "SinglePlayerGameOver.fxml");
         var multi = FXML.load(MultiPlayerCtrl.class, "client", "scenes", "Multiplayer.fxml");
         var leaderboard = FXML.load(LeaderBoardCtrl.class, "client", "scenes", "LeaderBoard.fxml");
-        var lobby = FXML.load(LobbyCtrl.class, "client", "scenes", "Lobby.fxml");
         var mainCtrl = INJECTOR.getInstance(MainCtrl.class);
+        var lobby = FXML.load(LobbyCtrl.class, "client", "scenes", "Lobby.fxml");
 
-        mainCtrl.initialize(primaryStage, home, single, singleGame, multi, leaderboard, lobby);
+        mainCtrl.initialize(primaryStage, home, single, singleGame, singleGameOver, multi, leaderboard, lobby);
+    }
+
+    /**
+     * Method called whenever a client is closed (by pressing the 'x' button of the window).
+     * TODO: POP-UP asking for confirmation of closing the client.
+     */
+    @Override
+    public void stop() {
+        var mainCtrl = INJECTOR.getInstance(MainCtrl.class);
+        ServerUtils serverUtils = new ServerUtils();
+        SimpleUser player = mainCtrl.getPlayer();
+        if (player != null) {
+            serverUtils.disconnect(mainCtrl.getPlayer());
+            System.out.println(player.getName() + " disconnected!");
+        }
     }
 }

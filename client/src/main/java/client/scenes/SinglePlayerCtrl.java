@@ -2,14 +2,18 @@ package client.scenes;
 
 import client.utils.ServerUtils;
 import com.google.inject.Inject;
-import commons.Player;
+import commons.GameInstance;
+import communication.RequestToJoin;
+import commons.player.SimpleUser;
 import javafx.fxml.FXML;
 import javafx.scene.control.TextField;
+
 
 public class SinglePlayerCtrl {
 
     private final ServerUtils server;
     private final MainCtrl mainCtrl;
+    private String playerName;
 
     @FXML
     private TextField textField;
@@ -25,17 +29,31 @@ public class SinglePlayerCtrl {
         mainCtrl.showSplash();
     }
 
-    // To be added when making the main game scene, in order for the player to play
+    /**
+     * To be added when making the main game scene, in order for the player to play
+     */
     public void play() {
         if (!getTextField().equals("")) {
-            Player newPlayer = new Player(getTextField());
-            server.addPlayer(newPlayer);
+            SimpleUser player = server.addPlayer(new RequestToJoin(getTextField(), GameInstance.SINGLE_PLAYER));
+            mainCtrl.setPlayer(player);
+            System.out.println(player);
+            playerName = player.getName();
             this.textField.clear();
             mainCtrl.showSinglePlayerGame();
+            // mainCtrl.showLobby(); -> Disabled, since we won't have a lobby for SinglePlayer and it messed the counter of players implementation
+            //TODO Make it so that player goes directly into game instead of going to lobby
         }
     }
 
     public String getTextField() {
         return textField.getText();
+    }
+
+    public void setTextField(String string) {
+        this.textField.setText(string);
+    }
+
+    public String getPlayerName() {
+        return playerName;
     }
 }
