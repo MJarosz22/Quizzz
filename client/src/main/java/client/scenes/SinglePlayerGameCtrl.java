@@ -180,8 +180,7 @@ public class SinglePlayerGameCtrl {
                     setScene3();
                 }
                 answered = false;
-                startCountdown(20000);
-                startTimer(20000);
+                startTimer(20);
             }
         });
 
@@ -194,7 +193,7 @@ public class SinglePlayerGameCtrl {
      * The titles of the activities are on option1Button, option2Button, option3Button
      */
 
-    public void setScene1(){
+    public void setScene1() {
 
         correct_guess.setVisible(false);
         player_answer.setVisible(false);
@@ -236,7 +235,7 @@ public class SinglePlayerGameCtrl {
      * Sets the scene for the QuestionHowMuch
      * Sets the title of the activity on option4
      */
-    public void setScene2(){
+    public void setScene2() {
         player_answer.clear();
         setOptions(true);
         option4.setText(((QuestionHowMuch) currentQuestion).getActivity().getTitle());
@@ -265,7 +264,7 @@ public class SinglePlayerGameCtrl {
      * Randomly choose which one of the three RadioButtons(answer1, answer2, answer3) has the correct answer
      * The other 2 wrong answers are somewhat randomly generated
      */
-    public void setScene3(){
+    public void setScene3() {
         answer1.setSelected(false);
         answer2.setSelected(false);
         answer3.setSelected(false);
@@ -554,34 +553,34 @@ public class SinglePlayerGameCtrl {
                 points.setText("+100 points");
                 answer.setText("Correct answer");
                 setEmoji(emoji, true);
-            } else{
-            if(number<=correct_number+(25*correct_number)/100  && number>=correct_number-(25*correct_number)/100){
-                player.addScore(75);
-                score.setText("Your score: " + player.getScore());
-                points.setText("+75 points");
-                answer.setText("Almost the correct answer");
-                setEmoji(emoji, true);
             } else {
-                if (number <= correct_number + (50 * correct_number)/100 && number >= correct_number - (50 * correct_number)/100) {
-                    player.addScore(50);
+                if (number <= correct_number + (25 * correct_number) / 100 && number >= correct_number - (25 * correct_number) / 100) {
+                    player.addScore(75);
                     score.setText("Your score: " + player.getScore());
-                    points.setText("+50 points");
-                    answer.setText("Not quite the correct answer");
+                    points.setText("+75 points");
+                    answer.setText("Almost the correct answer");
                     setEmoji(emoji, true);
                 } else {
-                    if (number <= correct_number + (75 * correct_number)/100 && number >= correct_number - (75 * correct_number)/100) {
-                        player.addScore(25);
+                    if (number <= correct_number + (50 * correct_number) / 100 && number >= correct_number - (50 * correct_number) / 100) {
+                        player.addScore(50);
                         score.setText("Your score: " + player.getScore());
-                        points.setText("+25 points");
-                        answer.setText("Pretty far from the correct answer");
+                        points.setText("+50 points");
+                        answer.setText("Not quite the correct answer");
                         setEmoji(emoji, true);
                     } else {
-                        points.setText("+0 points");
-                        answer.setText("Wrong answer");
-                        setEmoji(emoji, false);
+                        if (number <= correct_number + (75 * correct_number) / 100 && number >= correct_number - (75 * correct_number) / 100) {
+                            player.addScore(25);
+                            score.setText("Your score: " + player.getScore());
+                            points.setText("+25 points");
+                            answer.setText("Pretty far from the correct answer");
+                            setEmoji(emoji, true);
+                        } else {
+                            points.setText("+0 points");
+                            answer.setText("Wrong answer");
+                            setEmoji(emoji, false);
+                        }
                     }
                 }
-            }
 
             }
             correct_guess.setVisible(true);
@@ -603,6 +602,20 @@ public class SinglePlayerGameCtrl {
         }
     }
 
+    public void noGuess() {
+        correct_guess.setVisible(true);
+        correct_guess.setText("The correct answer is: " + ((QuestionHowMuch) currentQuestion).getActivity().getConsumption_in_wh());
+        setOptions(true);
+
+        CompletableFuture.delayedExecutor(1, SECONDS).execute(() -> {
+            if (!isGameOver())
+                loadNextQuestion();
+        });
+
+        if (roundCounter >= 20) {
+            gameOver(2000);
+        }
+    }
 
     /**
      * For QuestionWhichOne if answer1 was selected
@@ -633,7 +646,7 @@ public class SinglePlayerGameCtrl {
      * Checks whether the selected answer was correct
      *
      * @param player_answer the selected RadioButton of the player
-     * @param response the consumption from the selected RadioButton
+     * @param response      the consumption from the selected RadioButton
      */
     public void isSelectionCorrect(RadioButton player_answer, long response) {
 
@@ -675,49 +688,29 @@ public class SinglePlayerGameCtrl {
         }
     }
 
-    /**
-     * Start the timer. After specified time, execute wrongAnswer()
-     *
-     * @param time time in miliseconds
-     */
-    public void startTimer(int time) {
-        Thread thread = new Thread(new Runnable() {
-
-            public void run() {
-                Question current = currentQuestion;
-
-                try {
-                    Thread.sleep(time);
-                } catch (InterruptedException e) {
-                    e.printStackTrace();
-                }
-
-                Platform.runLater(new Runnable() {
-                    public void run() {
-                        if (current == currentQuestion) //check if the question wasn't already answered
-                            wrongAnswer();
-                    }
-                });
-
-            }
-        });
-        thread.start();
-    }
 
     /**
      * Start the countdown. Update the timer every second.
      *
      * @param time time in miliseconds
      */
-    public void startCountdown(int time) {
+    public void startTimer(int time) {
         ScheduledExecutorService scheduler = Executors.newScheduledThreadPool(1);
         Question currentQ = currentQuestion;
         Runnable runnable = new Runnable() {
-            int countdown = time / 1000;
+            int countdown = time;
 
             public void run() {
-
-                if (currentQ != currentQuestion || answered) { //check if the question wasn't already answered
+                if (countdown == 0) {
+                    if (currentQ instanceof QuestionHowMuch)
+                        noGuess();
+                    else if (currentQ instanceof QuestionWhichOne)
+                        isSelectionCorrect(null, 0);
+                    else
+                        wrongAnswer();
+                    timer.setText(String.valueOf(countdown));
+                    scheduler.shutdown();
+                } else if (currentQ != currentQuestion || answered) {
                     scheduler.shutdown();
                 } else {
                     timer.setText(String.valueOf(countdown--));
