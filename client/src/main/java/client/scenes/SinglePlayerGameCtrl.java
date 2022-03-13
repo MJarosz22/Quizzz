@@ -602,6 +602,9 @@ public class SinglePlayerGameCtrl {
         }
     }
 
+    /**
+     * Player ran out of time and didn't make any guess
+     */
     public void noGuess() {
         correct_guess.setVisible(true);
         correct_guess.setText("The correct answer is: " + ((QuestionHowMuch) currentQuestion).getActivity().getConsumption_in_wh());
@@ -688,7 +691,7 @@ public class SinglePlayerGameCtrl {
         }
     }
 
-
+//I put startTimer and startCountdown in one method
     /**
      * Start the countdown. Update the timer every second.
      *
