@@ -74,6 +74,7 @@ public class LobbyCtrl implements Initializable {
     }
 
     public int getPersons() {
+        System.out.println(server.getPlayerList(server.getLastGIId()).size());
         return server.getPlayerList(server.getLastGIId()).size();
     }
 

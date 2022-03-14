@@ -37,9 +37,10 @@ public class MultiPlayerCtrl {
             SimpleUser player = server.addPlayer(new RequestToJoin(getTextFieldName(), GameInstance.MULTI_PLAYER));
             mainCtrl.setPlayer(player);
             LobbyCtrl lobbyCtrl = mainCtrl.getLobbyCtrl();
-            //lobbyCtrl.increaseNumberOfPlayers();
 
+            System.out.println(server.getPlayerList(server.getLastGIId()).size());
             System.out.println(player);
+            lobbyCtrl.changePrompt();
             this.textfieldName.clear();
             mainCtrl.showLobby();
             //TODO Make it so that player goes directly into game instead of going to lobby
