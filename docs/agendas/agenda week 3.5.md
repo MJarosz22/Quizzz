@@ -34,6 +34,9 @@ Secretary: Marcin Jarosz
 - **Assignment 6B(individual)**, Take note of reflection BuddyCheck, reflection report at end of project. 
 - Choose the next chairman and secretary.
 - Start working on sprint 3!
+  1. Multiplayer functionality (!)
+  2. Images
+  3. Additional features like power-ups
 
 ## Questions for the TA
 
