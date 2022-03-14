@@ -20,7 +20,13 @@ import client.utils.ServerUtils;
 import com.google.inject.Injector;
 import commons.player.SimpleUser;
 import javafx.application.Application;
+import javafx.application.Platform;
+import javafx.event.EventHandler;
+import javafx.scene.control.Alert;
+import javafx.scene.control.ButtonType;
+import javafx.stage.Popup;
 import javafx.stage.Stage;
+import javafx.stage.WindowEvent;
 
 import java.io.IOException;
 import java.net.URISyntaxException;
@@ -48,6 +54,12 @@ public class Main extends Application {
         var lobby = FXML.load(LobbyCtrl.class, "client", "scenes", "Lobby.fxml");
 
         mainCtrl.initialize(primaryStage, home, single, singleGame, singleGameOver, multi, leaderboard, lobby);
+        primaryStage.setOnCloseRequest(event -> {
+            Alert alert = new Alert(Alert.AlertType.CONFIRMATION, "Do you want to close the game?", ButtonType.YES, ButtonType.NO);
+            ButtonType result = alert.showAndWait().orElse(ButtonType.NO);
+            if(ButtonType.NO.equals(result)) event.consume();
+            Platform.exit();
+        });
     }
 
     /**

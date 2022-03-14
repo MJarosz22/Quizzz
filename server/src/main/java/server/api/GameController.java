@@ -45,7 +45,6 @@ public class GameController {
     public GameController(Random random, ActivityRepository activityRepository) {
         this.random = random;
         this.activityRepository = activityRepository;
-        System.out.println(this.activityRepository.findAll());
         gameInstances = new ArrayList<>();
         gameInstances.add(new GameInstance(gameInstances.size(), GameInstance.MULTI_PLAYER));
 /*
