@@ -13,6 +13,7 @@ import javafx.scene.control.TextField;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.AnchorPane;
+import javafx.scene.layout.Pane;
 import javafx.scene.text.Text;
 
 import java.io.File;
@@ -115,18 +116,14 @@ public class SinglePlayerGameCtrl {
     @FXML
     private ProgressBar progressBar;
 
+    @FXML
+    private Pane confirmationExit;
+
 
     @Inject
     public SinglePlayerGameCtrl(ServerUtils server, MainCtrl mainCtrl) {
         this.server = server;
         this.mainCtrl = mainCtrl;
-    }
-
-    /**
-     * When leave button is pressed during a SinglePlayer game, the user is guided back to the splash screen
-     */
-    public void back() {
-        mainCtrl.showSplash();
     }
 
 
@@ -137,6 +134,7 @@ public class SinglePlayerGameCtrl {
     public void initialize() {
         if (this.mainCtrl.getPlayer() != null) {
             this.player = mainCtrl.getPlayer();
+            disablePopUp();
             currentGame = new GameInstance(this.player.getGameInstanceId(), 0);
             currentGame.generateQuestions(server.getActivitiesRandomly());
             setTimerImage(timerImage);
@@ -825,5 +823,32 @@ public class SinglePlayerGameCtrl {
      */
     public void setTimeLeft(int timeLeft) {
         this.timeLeft = timeLeft;
+    }
+
+    /**
+     * This method is triggered when the player confirms that he wants to leave the game by pressing 'YES' button.
+     * Works the same as 'back' method from previous version.
+     */
+    public void leaveGame() {
+        mainCtrl.showSplash();
+    }
+
+    /**
+     * Makes the confirmation pop-up invisible
+     */
+    public void disablePopUp() {
+        confirmationExit.setVisible(false);
+        confirmationExit.setDisable(true);
+    }
+
+    /**
+     * Makes the confirmation pop-up visible
+     * This method is triggered when the player presses the 'LEAVE BUTTON' game.
+     * TODO: trigger the same method when clicking on 'x' of the window
+     */
+    public void enablePopUp() {
+        confirmationExit.setVisible(true);
+        confirmationExit.setDisable(false);
+        confirmationExit.setStyle("-fx-background-color: #91e4fb; ");
     }
 }
