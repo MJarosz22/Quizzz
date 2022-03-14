@@ -10,8 +10,6 @@ import javafx.fxml.FXML;
 import javafx.scene.control.Alert;
 import javafx.scene.control.TextField;
 
-import java.util.List;
-
 public class MultiPlayerCtrl {
 
     private final ServerUtils server;
