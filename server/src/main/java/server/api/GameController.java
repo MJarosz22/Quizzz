@@ -5,15 +5,21 @@ import commons.*;
 import commons.player.Player;
 import commons.player.SimpleUser;
 import communication.RequestToJoin;
+import org.apache.tomcat.util.http.fileupload.IOUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.core.io.InputStreamResource;
 import org.springframework.http.HttpHeaders;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseCookie;
 import org.springframework.http.ResponseEntity;
 import org.springframework.util.DigestUtils;
 import org.springframework.web.bind.annotation.*;
+import server.database.ActivityLoader;
 import server.database.ActivityRepository;
 
+import java.awt.image.BufferedImage;
+import java.io.*;
 import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 import java.util.List;
@@ -151,6 +157,18 @@ public class GameController {
         return ResponseEntity.ok(gameInstances.get(gameInstanceId).getPlayers().remove(removePlayer));
     }
 
+    @GetMapping(value = "/activities/{activityFolder}/{activityFile}",
+    produces = "image/png")
+    public ResponseEntity<InputStreamResource> getImage(@PathVariable String activityFolder, @PathVariable String activityFile){
+        try{
+            InputStream inputStream = new FileInputStream(ActivityLoader.path + activityFolder + "/" + activityFile);
+            return ResponseEntity.ok(new InputStreamResource(inputStream));
+        } catch (FileNotFoundException e) {
+            e.printStackTrace();
+        }
+        return ResponseEntity.notFound().build();
+    }
+
     /**
      * Additional method that checks whether cookie given is from a player connected to gameInstance with ID
      * @param gameInstanceId ID of GameInstance
@@ -163,4 +181,6 @@ public class GameController {
         if (optPlayer.isEmpty()) return null;
         else return optPlayer.get();
     }
+
+
 }

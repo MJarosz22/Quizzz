@@ -15,6 +15,7 @@ import javafx.scene.image.ImageView;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.text.Text;
 
+import java.io.ByteArrayInputStream;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
@@ -447,13 +448,17 @@ public class SinglePlayerGameCtrl {
             image3.setVisible(true);
             image4.setVisible(false);
             try {
-                image1.setImage(new Image(new FileInputStream(activitiesPath + ((QuestionMoreExpensive) currentQuestion)
-                        .getActivities()[0].getImage_path().replace("/", "\\"))));
-                image2.setImage(new Image(new FileInputStream(activitiesPath + ((QuestionMoreExpensive) currentQuestion)
-                        .getActivities()[1].getImage_path().replace("/", "\\"))));
-                image3.setImage(new Image(new FileInputStream(activitiesPath + ((QuestionMoreExpensive) currentQuestion)
-                        .getActivities()[2].getImage_path().replace("/", "\\"))));
-            } catch (FileNotFoundException e) {
+//                image1.setImage(new Image(new FileInputStream(activitiesPath + ((QuestionMoreExpensive) currentQuestion)
+//                        .getActivities()[0].getImage_path().replace("/", "\\"))));
+//                image2.setImage(new Image(new FileInputStream(activitiesPath + ((QuestionMoreExpensive) currentQuestion)
+//                        .getActivities()[1].getImage_path().replace("/", "\\"))));
+//                image3.setImage(new Image(new FileInputStream(activitiesPath + ((QuestionMoreExpensive) currentQuestion)
+//                        .getActivities()[2].getImage_path().replace("/", "\\"))));
+                image1.setImage(new Image(server.getImage(((QuestionMoreExpensive) currentQuestion).getActivities()[0])));
+                image2.setImage(new Image(server.getImage(((QuestionMoreExpensive) currentQuestion).getActivities()[1])));
+                image3.setImage(new Image(server.getImage(((QuestionMoreExpensive) currentQuestion).getActivities()[2])));
+            } catch (Exception e) {
+                e.printStackTrace();
                 System.out.println("Image not found!");
             }
         }
@@ -464,9 +469,8 @@ public class SinglePlayerGameCtrl {
             image3.setVisible(false);
             image4.setVisible(true);
             try {
-                image4.setImage(new Image(new FileInputStream(activitiesPath + ((QuestionWhichOne) currentQuestion)
-                        .getActivity().getImage_path().replace("/", "\\"))));
-            } catch (FileNotFoundException e) {
+                image4.setImage(new Image(server.getImage(((QuestionWhichOne) currentQuestion).getActivity())));
+            } catch (Exception e) {
                 System.out.println("Image not found!");
             }
         }
@@ -477,9 +481,9 @@ public class SinglePlayerGameCtrl {
             image3.setVisible(false);
             image4.setVisible(true);
             try {
-                image4.setImage(new Image(new FileInputStream(activitiesPath + ((QuestionHowMuch) currentQuestion)
-                        .getActivity().getImage_path().replace("/", "\\"))));
-            } catch (FileNotFoundException e) {
+                image4.setImage(new Image(server.getImage(((QuestionHowMuch) currentQuestion)
+                        .getActivity())));
+            } catch (Exception e) {
                 System.out.println("Image not found!");
             }
         }

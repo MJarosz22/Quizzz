@@ -7,8 +7,13 @@ import jakarta.ws.rs.client.Client;
 import jakarta.ws.rs.client.ClientBuilder;
 import jakarta.ws.rs.client.Entity;
 import jakarta.ws.rs.core.GenericType;
+import jakarta.ws.rs.core.MediaType;
+import jakarta.ws.rs.core.Response;
+import javafx.scene.image.Image;
 import org.glassfish.jersey.client.ClientConfig;
 
+import java.io.FileNotFoundException;
+import java.io.InputStream;
 import java.util.List;
 
 import static jakarta.ws.rs.core.MediaType.APPLICATION_JSON;
@@ -42,6 +47,15 @@ public class ServerUtils {
                 .accept(APPLICATION_JSON)
                 .get(new GenericType<>() {
                 });
+    }
+
+    public InputStream getImage(Activity activity) throws Exception {
+        Response response = ClientBuilder.newClient(new ClientConfig())
+                .target(SERVER).path("api/game/activities/" + activity.getImage_path())
+                .request("image/*")
+                .accept("image/*")
+                .get(new GenericType<>() {});
+        return response.readEntity(InputStream.class);
     }
 
 
