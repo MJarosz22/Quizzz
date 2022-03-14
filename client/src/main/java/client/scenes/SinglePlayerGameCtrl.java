@@ -135,23 +135,16 @@ public class SinglePlayerGameCtrl {
      * set current game, reset the board and  generates 20 questions in a 'smart' way.
      */
     public void initialize() {
-        colorsRefresh();
-        setOptions(false);
-        setTimerImage(timerImage);
-
         if (this.mainCtrl.getPlayer() != null) {
             this.player = mainCtrl.getPlayer();
             currentGame = new GameInstance(this.player.getGameInstanceId(), 0);
-
             currentGame.generateQuestions(server.getActivitiesRandomly());
-
+            setTimerImage(timerImage);
             progressBar.setProgress(-0.05);
             score.setText("Your score: 0");
-            infoRefresh();
             roundCounter = 1;
             loadNextQuestion();
         }
-
     }
 
     /**
