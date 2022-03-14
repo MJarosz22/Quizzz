@@ -38,7 +38,6 @@ public class MultiPlayerCtrl {
             mainCtrl.setPlayer(player);
             LobbyCtrl lobbyCtrl = mainCtrl.getLobbyCtrl();
 
-            System.out.println(server.getPlayerList(server.getLastGIId()).size());
             System.out.println(player);
             lobbyCtrl.changePrompt();
             this.textfieldName.clear();
