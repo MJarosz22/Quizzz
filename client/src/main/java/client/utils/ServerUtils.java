@@ -3,6 +3,7 @@ package client.utils;
 import commons.Activity;
 import communication.RequestToJoin;
 import commons.player.SimpleUser;
+import jakarta.ws.rs.ClientErrorException;
 import jakarta.ws.rs.client.Client;
 import jakarta.ws.rs.client.ClientBuilder;
 import jakarta.ws.rs.client.Entity;
@@ -54,13 +55,13 @@ public class ServerUtils {
                 .post(Entity.entity(activity, APPLICATION_JSON), Activity.class);
     }
 
-    public SimpleUser addPlayer(RequestToJoin request) {
+    public SimpleUser addPlayer(RequestToJoin request) throws ClientErrorException{
         Client client = ClientBuilder.newClient(new ClientConfig());
         return client //
-                .target(SERVER).path("api/game/join") //
-                .request(APPLICATION_JSON) //
-                .accept(APPLICATION_JSON) //
-                .post(Entity.entity(request, APPLICATION_JSON), SimpleUser.class);
+                    .target(SERVER).path("api/game/join") //
+                    .request(APPLICATION_JSON) //
+                    .accept(APPLICATION_JSON) //
+                    .post(Entity.entity(request, APPLICATION_JSON), SimpleUser.class);
     }
 
     public Activity updateActivity(Activity activity) {
@@ -81,23 +82,4 @@ public class ServerUtils {
                 });
     }
 
-    public int getLastGIId() {
-        Client client = ClientBuilder.newClient(new ClientConfig());
-        return client //
-                .target(SERVER).path("api/game/getLastGIId") //
-                .request(APPLICATION_JSON) //
-                .accept(APPLICATION_JSON) //
-                .get(new GenericType<>() {
-                });
-    }
-
-    public static List<SimpleUser> getPlayerList(int gIId) {
-        Client client = ClientBuilder.newClient(new ClientConfig());
-        return client //
-                .target(SERVER).path("api/game/ " + gIId + "/playerlist") //
-                .request(APPLICATION_JSON) //
-                .accept(APPLICATION_JSON) //
-                .get(new GenericType<>() {
-                });
-    }
 }

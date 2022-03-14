@@ -93,6 +93,9 @@ public class GameController {
 
             case GameInstance.MULTI_PLAYER:
                 GameInstance currGameInstance = gameInstances.get(currentMPGIId);
+                if(currGameInstance.getPlayers().stream().map(SimpleUser::getName).anyMatch(x -> x.equals(request.getName()))){
+                    return  ResponseEntity.unprocessableEntity().build();
+                }
                 savedPlayer = new SimpleUser(players.size(), request.getName(),
                         currGameInstance.getId(), tokenCookie.getValue());
                 players.add(savedPlayer);
@@ -166,18 +169,5 @@ public class GameController {
         Optional<Player> optPlayer = currGI.getPlayers().stream().filter(p -> p.getCookie().equals(cookie)).findFirst();
         if (optPlayer.isEmpty()) return null;
         else return optPlayer.get();
-    }
-
-    @GetMapping("/getLastGIId")
-    public ResponseEntity<Integer> getLastGIId() {
-        int lastGIId = gameInstances.get(gameInstances.size() - 1).getId();
-        logger.info("[GI " + lastGIId);
-        return ResponseEntity.ok(lastGIId);
-    }
-
-    @GetMapping("/{gameInstanceId}/playerlist")
-    public ResponseEntity<List<SimpleUser>> getPlayerList(@PathVariable int gameInstanceId) {
-        return ResponseEntity.ok(gameInstances.get(gameInstanceId).getPlayers()
-                .stream().map(p -> p.toSimpleUser().unsafe()).collect(Collectors.toList()));
     }
 }

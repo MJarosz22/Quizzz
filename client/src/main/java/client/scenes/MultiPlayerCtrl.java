@@ -5,6 +5,7 @@ import com.google.inject.Inject;
 import commons.GameInstance;
 import commons.player.SimpleUser;
 import communication.RequestToJoin;
+import jakarta.ws.rs.ClientErrorException;
 import javafx.fxml.FXML;
 import javafx.scene.control.Alert;
 import javafx.scene.control.TextField;
@@ -32,42 +33,26 @@ public class MultiPlayerCtrl {
 
     // To be added when making the main game scene, in order for the player to play
     public void join() {
-        if (!getTextFieldName().equals("") && !containsName(getTextFieldName())) {
-
-            SimpleUser player = server.addPlayer(new RequestToJoin(getTextFieldName(), GameInstance.MULTI_PLAYER));
-            mainCtrl.setPlayer(player);
-            LobbyCtrl lobbyCtrl = mainCtrl.getLobbyCtrl();
-
-            System.out.println(player);
-            lobbyCtrl.changePrompt();
-            this.textfieldName.clear();
-            mainCtrl.showLobby();
-            //TODO Make it so that player goes directly into game instead of going to lobby
-        } else {
-            Alert alert = new Alert(Alert.AlertType.ERROR,"This name already exists. Try a different one");
+        if (!getTextFieldName().equals("")) {
+            try{
+                SimpleUser player = server.addPlayer(new RequestToJoin(getTextFieldName(), GameInstance.MULTI_PLAYER));
+                mainCtrl.setPlayer(player);
+                LobbyCtrl lobbyCtrl = mainCtrl.getLobbyCtrl();
+                lobbyCtrl.changePrompt();
+                this.textfieldName.clear();
+                mainCtrl.showLobby();
+            }catch (ClientErrorException e){
+                Alert alert = new Alert(Alert.AlertType.ERROR,"This name already exists. Try a different one");
+                alert.show();
+            }
+        }else{
+            Alert alert = new Alert(Alert.AlertType.ERROR, "Please type in a name!");
             alert.show();
-            System.out.println("NAME ALREADY EXISTS!"); //We must make an actual pop-up
         }
-
     }
 
     public String getTextFieldName() {
         return textfieldName.getText();
-    }
-
-    private boolean containsName(String name) {
-        boolean nameExists = false;
-        int lastGIId = server.getLastGIId();
-        List<SimpleUser> simpleUserList = server.getPlayerList(lastGIId);
-        int i = 0;
-        while (!nameExists && i < simpleUserList.size()){
-            if (simpleUserList.get(i).getName().toLowerCase().trim().equals(name.toLowerCase().trim())){
-                nameExists = true;
-            }
-                i++;
-        }
-
-        return nameExists;
     }
 
 }

@@ -73,10 +73,6 @@ public class LobbyCtrl implements Initializable {
         tablePlayers.setItems(FXCollections.observableList(players));
     }
 
-    public int getPersons() {
-        return server.getPlayerList(server.getLastGIId()).size();
-    }
-
     public void setPersons(int persons) {
         this.persons = persons;
     }
@@ -106,10 +102,11 @@ public class LobbyCtrl implements Initializable {
      */
 
     public void changePrompt() {
-        if (getPersons() > 1)
-            personsText.setText("There are " + getPersons() + " players out of the maximum capacity of 50");
+        List<SimpleUser> players = ServerUtils.getPlayers(mainCtrl.getPlayer());
+        if (players.size() > 1)
+            personsText.setText("There are " + players.size() + " players out of the maximum capacity of 50");
         else
-            personsText.setText("There is " + getPersons() + " player out of the maximum capacity of 50");
+            personsText.setText("There is " + players.size() + " player out of the maximum capacity of 50");
     }
 
     /**
