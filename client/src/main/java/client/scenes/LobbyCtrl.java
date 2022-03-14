@@ -56,7 +56,6 @@ public class LobbyCtrl implements Initializable {
         System.out.println(player.getName() + " disconnected!");
         decreaseNumberOfPlayers();
         mainCtrl.showSplash();
-        server.disconnect(mainCtrl.getPlayer());
     }
 
     // To be added when making the main game scene, in order for the player to play
