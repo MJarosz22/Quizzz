@@ -94,7 +94,7 @@ public class ServerUtils {
     public static List<SimpleUser> getPlayerList(int gIId) {
         Client client = ClientBuilder.newClient(new ClientConfig());
         return client //
-                .target(SERVER).path("api/game/ " + gIId + "/players") //
+                .target(SERVER).path("api/game/ " + gIId + "/playerlist") //
                 .request(APPLICATION_JSON) //
                 .accept(APPLICATION_JSON) //
                 .get(new GenericType<>() {

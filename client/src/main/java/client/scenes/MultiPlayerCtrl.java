@@ -42,8 +42,10 @@ public class MultiPlayerCtrl {
             this.textfieldName.clear();
             mainCtrl.showLobby();
             //TODO Make it so that player goes directly into game instead of going to lobby
+        } else {
+            System.out.println("NAME ALREADY EXISTS!"); //We must make an actual pop-up
         }
-        mainCtrl.showLobby();
+
     }
 
     public String getTextFieldName() {
@@ -56,7 +58,7 @@ public class MultiPlayerCtrl {
         List<SimpleUser> simpleUserList = server.getPlayerList(lastGIId);
         int i = 0;
         while (!nameExists && i < simpleUserList.size()){
-            if (simpleUserList.get(i).getName().equals(name)){
+            if (simpleUserList.get(i).getName().toLowerCase().trim().equals(name.toLowerCase().trim())){
                 nameExists = true;
             }
                 i++;
