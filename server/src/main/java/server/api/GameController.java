@@ -1,7 +1,8 @@
 package server.api;
 
 
-import commons.*;
+import commons.GameInstance;
+import commons.Question;
 import commons.player.Player;
 import commons.player.SimpleUser;
 import communication.RequestToJoin;
@@ -14,14 +15,12 @@ import org.springframework.util.DigestUtils;
 import org.springframework.web.bind.annotation.*;
 import server.database.ActivityRepository;
 
-import javax.persistence.criteria.CriteriaBuilder;
 import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 import java.util.Random;
 import java.util.stream.Collectors;
-
 
 
 @RestController
@@ -69,6 +68,7 @@ public class GameController {
 
     /**
      * Lets a client join a gameInstance as a player
+     *
      * @param request Request of player (includes name of player and gameType(Singleplayer or Multiplayer))
      * @return Simple User (Including name, cookie and gameInstanceID)
      */
@@ -79,7 +79,7 @@ public class GameController {
                 (request.getName() + System.currentTimeMillis()).getBytes(StandardCharsets.UTF_8))).build();
 
         SimpleUser savedPlayer;
-        switch (request.getGameType()){
+        switch (request.getGameType()) {
             case GameInstance.SINGLE_PLAYER:
                 GameInstance gameInstance = new GameInstance(gameInstances.size(), GameInstance.SINGLE_PLAYER);
                 gameInstances.add(gameInstance);
@@ -109,9 +109,10 @@ public class GameController {
 
     /**
      * Gets a question from gameInstance
+     *
      * @param gameInstanceId The gameInstance you want a question from
      * @param questionNumber Number of question you request
-     * @param cookie Cookie of player
+     * @param cookie         Cookie of player
      * @return Requested question
      */
     @GetMapping("/{gameInstanceId}/q{questionNumber}")
@@ -131,8 +132,9 @@ public class GameController {
 
     /**
      * Returns all players from a gameInstance (if you are also connected to that gameInstance)
+     *
      * @param gameInstanceId ID of GameInstance
-     * @param cookie Cookie of player
+     * @param cookie         Cookie of player
      * @return List of all players connected to gameInstance
      */
     @GetMapping("/{gameInstanceId}/players")
@@ -147,15 +149,16 @@ public class GameController {
     public ResponseEntity<Boolean> disconnect(@PathVariable int gameInstanceId,
                                               @CookieValue(name = "user-id", defaultValue = "null") String cookie) {
         Player removePlayer = getPlayerFromGameInstance(gameInstanceId, cookie);
-        if(removePlayer == null) return ResponseEntity.badRequest().build();
+        if (removePlayer == null) return ResponseEntity.badRequest().build();
         logger.info("[GI " + (gameInstanceId) + "] PLAYER (" + removePlayer.getId() + ") DISCONNECTED");
         return ResponseEntity.ok(gameInstances.get(gameInstanceId).getPlayers().remove(removePlayer));
     }
 
     /**
      * Additional method that checks whether cookie given is from a player connected to gameInstance with ID
+     *
      * @param gameInstanceId ID of GameInstance
-     * @param cookie Cookie of player
+     * @param cookie         Cookie of player
      * @return An instance of class 'Player' if exists, otherwise null
      */
     private Player getPlayerFromGameInstance(int gameInstanceId, String cookie) {
@@ -166,7 +169,7 @@ public class GameController {
     }
 
     @GetMapping("/getLastGIId")
-    public ResponseEntity<Integer> getLastGIId(){
+    public ResponseEntity<Integer> getLastGIId() {
         int lastGIId = gameInstances.get(gameInstances.size() - 1).getId();
         logger.info("[GI " + lastGIId);
         return ResponseEntity.ok(lastGIId);
