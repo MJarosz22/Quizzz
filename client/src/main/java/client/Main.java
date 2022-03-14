@@ -54,8 +54,10 @@ public class Main extends Application {
         primaryStage.setOnCloseRequest(event -> {
             Alert alert = new Alert(Alert.AlertType.CONFIRMATION, "Do you want to close the game?", ButtonType.YES, ButtonType.NO);
             ButtonType result = alert.showAndWait().orElse(ButtonType.NO);
-            if(ButtonType.NO.equals(result)) event.consume();
-            Platform.exit();
+            if (ButtonType.NO.equals(result))
+                event.consume();
+            else
+                Platform.exit();
         });
     }
 
