@@ -5,12 +5,10 @@ import commons.*;
 import commons.player.Player;
 import commons.player.SimpleUser;
 import communication.RequestToJoin;
-import org.apache.tomcat.util.http.fileupload.IOUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.core.io.InputStreamResource;
 import org.springframework.http.HttpHeaders;
-import org.springframework.http.MediaType;
 import org.springframework.http.ResponseCookie;
 import org.springframework.http.ResponseEntity;
 import org.springframework.util.DigestUtils;
@@ -18,7 +16,6 @@ import org.springframework.web.bind.annotation.*;
 import server.database.ActivityLoader;
 import server.database.ActivityRepository;
 
-import java.awt.image.BufferedImage;
 import java.io.*;
 import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
@@ -26,7 +23,6 @@ import java.util.List;
 import java.util.Optional;
 import java.util.Random;
 import java.util.stream.Collectors;
-
 
 
 @RestController
@@ -51,7 +47,6 @@ public class GameController {
     public GameController(Random random, ActivityRepository activityRepository) {
         this.random = random;
         this.activityRepository = activityRepository;
-        System.out.println(this.activityRepository.findAll());
         gameInstances = new ArrayList<>();
         gameInstances.add(new GameInstance(gameInstances.size(), GameInstance.MULTI_PLAYER));
 /*
@@ -158,13 +153,13 @@ public class GameController {
     }
 
     @GetMapping(value = "/activities/{activityFolder}/{activityFile}",
-    produces = "image/png")
+    produces = "image/jpg")
     public ResponseEntity<InputStreamResource> getImage(@PathVariable String activityFolder, @PathVariable String activityFile){
         try{
             InputStream inputStream = new FileInputStream(ActivityLoader.path + activityFolder + "/" + activityFile);
             return ResponseEntity.ok(new InputStreamResource(inputStream));
         } catch (FileNotFoundException e) {
-            e.printStackTrace();
+            logger.debug("Image " + activityFolder + "/" + activityFile + " not found!");
         }
         return ResponseEntity.notFound().build();
     }

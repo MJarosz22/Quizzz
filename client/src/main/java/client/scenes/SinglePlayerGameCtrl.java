@@ -4,12 +4,10 @@ import client.utils.ServerUtils;
 import com.google.inject.Inject;
 import commons.*;
 import commons.player.SimpleUser;
+import jakarta.ws.rs.NotFoundException;
 import javafx.application.Platform;
 import javafx.fxml.FXML;
-import javafx.scene.control.Button;
-import javafx.scene.control.ProgressBar;
-import javafx.scene.control.RadioButton;
-import javafx.scene.control.TextField;
+import javafx.scene.control.*;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.AnchorPane;
@@ -139,7 +137,14 @@ public class SinglePlayerGameCtrl {
         if (this.mainCtrl.getPlayer() != null) {
             this.player = mainCtrl.getPlayer();
             currentGame = new GameInstance(this.player.getGameInstanceId(), 0);
-            currentGame.generateQuestions(server.getActivitiesRandomly());
+            try {
+                currentGame.generateQuestions(server.getActivitiesRandomly());
+            }catch (NotFoundException e){
+                Alert alert = new Alert(Alert.AlertType.ERROR, "No activities found on server! Returning to lobby");
+                alert.show();
+                back();
+                return;
+            }
             setTimerImage(timerImage);
             progressBar.setProgress(-0.05);
             score.setText("Your score: 0");
@@ -457,8 +462,7 @@ public class SinglePlayerGameCtrl {
                 image1.setImage(new Image(server.getImage(((QuestionMoreExpensive) currentQuestion).getActivities()[0])));
                 image2.setImage(new Image(server.getImage(((QuestionMoreExpensive) currentQuestion).getActivities()[1])));
                 image3.setImage(new Image(server.getImage(((QuestionMoreExpensive) currentQuestion).getActivities()[2])));
-            } catch (Exception e) {
-                e.printStackTrace();
+            } catch (FileNotFoundException e) {
                 System.out.println("Image not found!");
             }
         }
@@ -470,7 +474,7 @@ public class SinglePlayerGameCtrl {
             image4.setVisible(true);
             try {
                 image4.setImage(new Image(server.getImage(((QuestionWhichOne) currentQuestion).getActivity())));
-            } catch (Exception e) {
+            } catch (FileNotFoundException e) {
                 System.out.println("Image not found!");
             }
         }
@@ -483,7 +487,7 @@ public class SinglePlayerGameCtrl {
             try {
                 image4.setImage(new Image(server.getImage(((QuestionHowMuch) currentQuestion)
                         .getActivity())));
-            } catch (Exception e) {
+            } catch (FileNotFoundException e) {
                 System.out.println("Image not found!");
             }
         }

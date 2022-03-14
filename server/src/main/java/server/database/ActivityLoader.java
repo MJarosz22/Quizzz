@@ -4,16 +4,11 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import commons.Activity;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.boot.ApplicationArguments;
 import org.springframework.boot.ApplicationRunner;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-import server.api.GameController;
 
-import java.io.File;
-import java.io.FileInputStream;
-import java.io.IOException;
-import java.io.InputStream;
+import java.io.*;
 import java.nio.file.FileAlreadyExistsException;
 import java.nio.file.Files;
 import java.nio.file.Path;
@@ -63,22 +58,22 @@ public class ActivityLoader {
             unzip(new FileInputStream(new File(relativePath + "activities.zip")), new File(relativePath + location).toPath());
             logger.info("Successfully unzipped activities.zip");
         }catch (IOException e){
-            logger.error("Activities.zip is missing (or something else went wrong while loading activities.zip)");
-            e.printStackTrace();
+            logger.warn("Activities.zip is missing (or something else went wrong while loading activities.zip)");
+            logger.info("It should be located at resources/activities.zip");
         }
-        return new ApplicationRunner() {
-            @Override
-            public void run(ApplicationArguments args) throws Exception {
-                ObjectMapper mapper = new ObjectMapper();
-                try {
-                    List<Activity> activities = Arrays.asList(mapper.readValue(Paths
-                            .get(relativePath + location + "/activities.json").toFile(), Activity[].class));
-                    activities = activities.stream().filter(x -> x.getSource().length() < 150).collect(Collectors.toList());
-                    repo.saveAll(activities);
-                    logger.info("Activities added to repo");
-                }catch (IllegalArgumentException ex) {
-                    logger.error("Something went wrong while loading activities.json");
-                }
+        return args -> {
+            ObjectMapper mapper = new ObjectMapper();
+            try {
+                List<Activity> activities = Arrays.asList(mapper.readValue(Paths
+                        .get(relativePath + location + "/activities.json").toFile(), Activity[].class));
+                activities = activities.stream().filter(x -> x.getSource().length() < 150).collect(Collectors.toList());
+                repo.saveAll(activities);
+                logger.info("Activities added to repo");
+            }catch (IllegalArgumentException ex) {
+                logger.error("Something went wrong while loading activities.json");
+            }catch (FileNotFoundException e){
+                logger.warn("activities.json not found");
+                logger.info("It should be located at resources/activities/activities.json");
             }
         };
     }
