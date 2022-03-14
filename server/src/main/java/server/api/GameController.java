@@ -171,7 +171,7 @@ public class GameController {
     @GetMapping("/getLastGIId")
     public ResponseEntity<Integer> getLastGIId() {
         int lastGIId = gameInstances.get(gameInstances.size() - 1).getId();
-        logger.info("[GI " + lastGIId );
+        logger.info("[GI " + lastGIId);
         return ResponseEntity.ok(lastGIId);
     }
 

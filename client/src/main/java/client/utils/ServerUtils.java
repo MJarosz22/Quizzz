@@ -77,7 +77,7 @@ public class ServerUtils {
                 .target(SERVER).path("api/game/ " + player.getGameInstanceId() + "/disconnect") //
                 .request(APPLICATION_JSON).cookie("user-id", player.getCookie()) //
                 .accept(APPLICATION_JSON) //
-                .delete(new GenericType<Boolean>() {
+                .delete(new GenericType<>() {
                 });
     }
 
