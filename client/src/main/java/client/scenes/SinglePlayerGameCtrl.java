@@ -138,7 +138,7 @@ public class SinglePlayerGameCtrl {
             }catch (NotFoundException e){
                 Alert alert = new Alert(Alert.AlertType.ERROR, "No activities found on server! Returning to lobby");
                 alert.show();
-                back();
+                leaveGame();
                 return;
             }
             setTimerImage(timerImage);
