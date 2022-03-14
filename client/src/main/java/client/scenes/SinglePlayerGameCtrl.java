@@ -44,73 +44,22 @@ public class SinglePlayerGameCtrl {
     private int roundCounter;
 
     @FXML
-    private Text questionTitle;
+    private Text questionTitle, timer, score, points, answer, option4, correct_guess, questionCount;
 
     @FXML
-    private Text timer;
+    private AnchorPane timerImage, emoji;
 
     @FXML
-    private AnchorPane timerImage;
-
-    @FXML
-    private Text score;
-
-    @FXML
-    private Text points;
-
-    @FXML
-    private Text answer;
-
-    @FXML
-    private AnchorPane emoji;
-
-    @FXML
-    private Button option1Button;
-
-    @FXML
-    private Button option2Button;
-
-    @FXML
-    private Button option3Button;
-
-    @FXML
-    private Text option4;
-
-    @FXML
-    private Button correct_answer;
+    private Button option1Button, option2Button, option3Button, correct_answer, submit_guess;
 
     @FXML
     private TextField player_answer;
 
     @FXML
-    private Text correct_guess;
+    private RadioButton answer1, answer2, answer3;
 
     @FXML
-    private Button submit_guess;
-
-    @FXML
-    private RadioButton answer1;
-
-    @FXML
-    private RadioButton answer2;
-
-    @FXML
-    private RadioButton answer3;
-
-    @FXML
-    private ImageView image1;
-
-    @FXML
-    private ImageView image2;
-
-    @FXML
-    private ImageView image3;
-
-    @FXML
-    private ImageView image4;
-
-    @FXML
-    private Text questionCount;
+    private ImageView image1, image2, image3, image4;
 
     @FXML
     private ProgressBar progressBar;
@@ -158,25 +107,22 @@ public class SinglePlayerGameCtrl {
         currentQuestion = currentGame.getRandomQuestion();
         setImages();
 
-        Platform.runLater(new Runnable() {
-            @Override
-            public void run() {
-                timeLeft = 20;
+        Platform.runLater(() -> {
+            timeLeft = 20;
 
-                timer.setText(String.valueOf(timeLeft));
-                questionTitle.setText(currentQuestion.getTitle());
-                if (currentQuestion instanceof QuestionMoreExpensive) {
-                    setScene1();
-                }
-                if (currentQuestion instanceof QuestionHowMuch) {
-                    setScene2();
-                }
-                if (currentQuestion instanceof QuestionWhichOne) {
-                    setScene3();
-                }
-                answered = false;
-                startTimer(20);
+            timer.setText(String.valueOf(timeLeft));
+            questionTitle.setText(currentQuestion.getTitle());
+            if (currentQuestion instanceof QuestionMoreExpensive) {
+                setScene1();
             }
+            if (currentQuestion instanceof QuestionHowMuch) {
+                setScene2();
+            }
+            if (currentQuestion instanceof QuestionWhichOne) {
+                setScene3();
+            }
+            answered = false;
+            startTimer(20);
         });
 
         //TODO: implement power-ups
@@ -412,14 +358,10 @@ public class SinglePlayerGameCtrl {
         displayWrongAnswerUpdates();
 
         CompletableFuture.delayedExecutor(1, SECONDS).execute(() -> {
-            if (!isGameOver())
-                loadNextQuestion();
+            if (!isGameOver()) loadNextQuestion();
         });
 
-
-        if (roundCounter >= 20) {
-            gameOver(2000);
-        }
+        if (roundCounter >= 20) gameOver(2000);
     }
 
     /**
@@ -548,7 +490,7 @@ public class SinglePlayerGameCtrl {
     public void setTimerImage(AnchorPane timerImage) {
         File file = new File(timerPath);
         URI uri = file.toURI();
-        timerImage.setStyle("-fx-background-image: url(" + uri.toString() + ");");
+        timerImage.setStyle("-fx-background-image: url(" + uri + ");");
     }
 
     /**
@@ -561,13 +503,13 @@ public class SinglePlayerGameCtrl {
      */
     public void setEmoji(AnchorPane emoji, boolean correct) {
         emoji.setVisible(true);
-        File file = null;
+        File file;
         if (correct)
             file = new File(correctEmojiPath);
         else
             file = new File(wrongEmojiPath);
         URI uri = file.toURI();
-        emoji.setStyle("-fx-background-image: url(" + uri.toString() + ");");
+        emoji.setStyle("-fx-background-image: url(" + uri + ");");
     }
 
     /**
@@ -784,24 +726,19 @@ public class SinglePlayerGameCtrl {
      * @param timer - an integer value representing the number of miliseconds after which the thread get executed.
      */
     public void gameOver(int timer) {
-        Thread thread = new Thread(new Runnable() {
+        Thread thread = new Thread(() -> {
 
-            public void run() {
-
-                try {
-                    Thread.sleep(timer);
-                } catch (InterruptedException e) {
-                    e.printStackTrace();
-                }
-
-                Platform.runLater(new Runnable() {
-                    public void run() {
-                        mainCtrl.showSinglePlayerGameOver();
-                        progressBar.setProgress(1);
-                    }
-                });
-
+            try {
+                Thread.sleep(timer);
+            } catch (InterruptedException e) {
+                e.printStackTrace();
             }
+
+            Platform.runLater(() -> {
+                mainCtrl.showSinglePlayerGameOver();
+                progressBar.setProgress(1);
+            });
+
         });
         thread.start();
     }

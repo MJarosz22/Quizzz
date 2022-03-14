@@ -151,9 +151,7 @@ public class ActivityController {
             i++;
         }
         if (setOfActivities.size() == 0) return ResponseEntity.notFound().build();
-        List<Optional<Activity>> listOfActivities = new ArrayList<>();
-        for (Optional<Activity> activity : setOfActivities)
-            listOfActivities.add(activity);
+        List<Optional<Activity>> listOfActivities = new ArrayList<>(setOfActivities);
         return ResponseEntity.ok(listOfActivities);
     }
 
