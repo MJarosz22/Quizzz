@@ -171,4 +171,10 @@ public class GameController {
         logger.info("[GI " + lastGIId);
         return ResponseEntity.ok(lastGIId);
     }
+
+    @GetMapping("/{gameInstanceId}/playerlist")
+    public ResponseEntity<List<SimpleUser>> getPlayerList(@PathVariable int gameInstanceId) {
+        return ResponseEntity.ok(gameInstances.get(gameInstanceId).getPlayers()
+                .stream().map(p -> p.toSimpleUser().unsafe()).collect(Collectors.toList()));
+    }
 }

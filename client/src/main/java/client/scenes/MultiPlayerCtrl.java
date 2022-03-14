@@ -31,7 +31,7 @@ public class MultiPlayerCtrl {
 
     // To be added when making the main game scene, in order for the player to play
     public void join() {
-        if (!getTextFieldName().equals("")) {
+        if (!getTextFieldName().equals("") && !containsName(getTextFieldName())) {
 
             SimpleUser player = server.addPlayer(new RequestToJoin(getTextFieldName(), GameInstance.MULTI_PLAYER));
             mainCtrl.setPlayer(player);
@@ -50,16 +50,19 @@ public class MultiPlayerCtrl {
         return textfieldName.getText();
     }
 
-    private boolean containsName() {
+    private boolean containsName(String name) {
         boolean nameExists = false;
-        List<SimpleUser> simpleUserList = server.getPlayers();
+        int lastGIId = server.getLastGIId();
+        List<SimpleUser> simpleUserList = server.getPlayerList(lastGIId);
         int i = 0;
-        while (!nameExists && i < list.size()){
-            if (list.get(i).getName().equals(name)){
+        while (!nameExists && i < simpleUserList.size()){
+            if (simpleUserList.get(i).getName().equals(name)){
                 nameExists = true;
             }
                 i++;
         }
+
+        return nameExists;
     }
 
 }
