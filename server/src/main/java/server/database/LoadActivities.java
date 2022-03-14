@@ -4,11 +4,9 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import commons.Activity;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.boot.ApplicationArguments;
 import org.springframework.boot.ApplicationRunner;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-import server.api.GameController;
 
 import java.nio.file.Paths;
 import java.util.Arrays;
