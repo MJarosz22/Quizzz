@@ -56,7 +56,6 @@ public class LobbyCtrl implements Initializable {
         System.out.println(player.getName() + " disconnected!");
         //decreaseNumberOfPlayers();
         mainCtrl.showSplash();
-        server.disconnect(mainCtrl.getPlayer());
     }
 
     // To be added when making the main game scene, in order for the player to play
@@ -74,7 +73,7 @@ public class LobbyCtrl implements Initializable {
     }
 
     public int getPersons() {
-        return server.getPlayerList(server.getLastGIId()).size();
+        return server.getPlayerList(server.getLastGIIdMult()).size();
     }
 
     public void setPersons(int persons) {
@@ -85,21 +84,21 @@ public class LobbyCtrl implements Initializable {
      * Additional method that decreases the number of players that are currently in the lobby, when a player leaves.
      */
     /**
-    public void decreaseNumberOfPlayers() {
-        setPersons(getPersons() - 1);
-        changePrompt();
-    }
+     public void decreaseNumberOfPlayers() {
+     setPersons(getPersons() - 1);
+     changePrompt();
+     }
      */
     /**
      * Additional method that increases the number of players that are currently in the lobby, when a player joins.
      */
 
     /**
-    public void increaseNumberOfPlayers() {
-        setPersons(getPersons() + 1);
-        changePrompt();
-    }
-    **/
+     public void increaseNumberOfPlayers() {
+     setPersons(getPersons() + 1);
+     changePrompt();
+     }
+     **/
 
     /**
      * Additional method that changes the prompt that gets called whenever a player joins/leaves the lobby
@@ -114,7 +113,7 @@ public class LobbyCtrl implements Initializable {
 
     /**
      public void setPersonsText(String s) {
-        this.personsText.setText(s);
+     this.personsText.setText(s);
      }
      **/
 

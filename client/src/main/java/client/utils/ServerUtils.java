@@ -1,8 +1,8 @@
 package client.utils;
 
 import commons.Activity;
-import communication.RequestToJoin;
 import commons.player.SimpleUser;
+import communication.RequestToJoin;
 import jakarta.ws.rs.client.Client;
 import jakarta.ws.rs.client.ClientBuilder;
 import jakarta.ws.rs.client.Entity;
@@ -35,6 +35,7 @@ public class ServerUtils {
                 .get(new GenericType<>() {
                 });
     }
+
     public List<Activity> getActivitiesRandomly() {
         return ClientBuilder.newClient(new ClientConfig())
                 .target(SERVER).path("api/activities/random60")
@@ -78,6 +79,16 @@ public class ServerUtils {
                 .request(APPLICATION_JSON).cookie("user-id", player.getCookie()) //
                 .accept(APPLICATION_JSON) //
                 .delete(new GenericType<>() {
+                });
+    }
+
+    public int getLastGIIdMult() {
+        Client client = ClientBuilder.newClient(new ClientConfig());
+        return client //
+                .target(SERVER).path("api/game/getLastGIIdMult") //
+                .request(APPLICATION_JSON) //
+                .accept(APPLICATION_JSON) //
+                .get(new GenericType<>() {
                 });
     }
 

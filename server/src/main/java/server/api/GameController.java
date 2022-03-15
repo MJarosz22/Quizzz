@@ -89,6 +89,9 @@ public class GameController {
                 gameInstance.getPlayers().add(savedPlayer.toPlayer(gameInstance));
                 logger.info("[GI " + (gameInstance.getId()) + "] PLAYER (" + savedPlayer.getId() +
                         ") STARTED SP GAME: NAME=" + savedPlayer.getName());
+                GameInstance newGameInstance = new GameInstance(gameInstances.size(), GameInstance.SINGLE_PLAYER);
+                gameInstances.add(newGameInstance);
+                currentMPGIId = newGameInstance.getId();
                 break;
 
             case GameInstance.MULTI_PLAYER:
@@ -168,16 +171,21 @@ public class GameController {
         else return optPlayer.get();
     }
 
-    @GetMapping("/getLastGIId")
-    public ResponseEntity<Integer> getLastGIId() {
-        int lastGIId = gameInstances.get(gameInstances.size() - 1).getId();
-        logger.info("[GI " + lastGIId);
-        return ResponseEntity.ok(lastGIId);
+    @GetMapping("/getLastGIIdMult")
+    public ResponseEntity<Integer> getLastGIIdMult() {
+        return ResponseEntity.ok(currentMPGIId);
     }
 
     @GetMapping("/{gameInstanceId}/playerlist")
     public ResponseEntity<List<SimpleUser>> getPlayerList(@PathVariable int gameInstanceId) {
         return ResponseEntity.ok(gameInstances.get(gameInstanceId).getPlayers()
                 .stream().map(p -> p.toSimpleUser().unsafe()).collect(Collectors.toList()));
+    }
+
+    @GetMapping("/getLastGIId")
+    public ResponseEntity<Integer> getLastGIId() {
+        int lastGIId = gameInstances.get(gameInstances.size() - 1).getId();
+        logger.info("[GI " + lastGIId);
+        return ResponseEntity.ok(lastGIId);
     }
 }
