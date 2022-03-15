@@ -41,8 +41,12 @@ Secretary: Marcin Jarosz
 ## Questions for the TA
 
 - Petra: Must-have questions official backlog
+- Sophie: Administrative interface
 
 ## Question round
 
 ## Closing
 - I hope everyone's midterms went well and good job on all the progress!
+
+## TODO
+- Reflect on task distribution
