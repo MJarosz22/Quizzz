@@ -92,6 +92,7 @@ public class ServerUtils {
                 });
     }
 
+    /*
     public int getLastGIId() {
         Client client = ClientBuilder.newClient(new ClientConfig());
         return client //
@@ -101,6 +102,7 @@ public class ServerUtils {
                 .get(new GenericType<>() {
                 });
     }
+    */
 
     public static List<SimpleUser> getPlayerList(int gIId) {
         Client client = ClientBuilder.newClient(new ClientConfig());

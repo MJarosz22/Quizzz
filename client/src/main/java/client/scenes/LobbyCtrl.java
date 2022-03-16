@@ -64,7 +64,8 @@ public class LobbyCtrl implements Initializable {
 //        mainCtrl.showPlayMode();
     }
 
-    /*public void setLabelName(String name) {
+    /*
+    public void setLabelName(String name) {
         labelName.setText(name);
     }*/
 
@@ -83,22 +84,23 @@ public class LobbyCtrl implements Initializable {
     /**
      * Additional method that decreases the number of players that are currently in the lobby, when a player leaves.
      */
-    /**
+    /*
      public void decreaseNumberOfPlayers() {
      setPersons(getPersons() - 1);
      changePrompt();
      }
      */
+
     /**
      * Additional method that increases the number of players that are currently in the lobby, when a player joins.
      */
 
-    /**
+    /*
      public void increaseNumberOfPlayers() {
      setPersons(getPersons() + 1);
      changePrompt();
      }
-     **/
+     */
 
     /**
      * Additional method that changes the prompt that gets called whenever a player joins/leaves the lobby
@@ -111,11 +113,11 @@ public class LobbyCtrl implements Initializable {
             personsText.setText("There is " + getPersons() + " player out of the maximum capacity of 50");
     }
 
-    /**
+    /*
      public void setPersonsText(String s) {
      this.personsText.setText(s);
      }
-     **/
+     */
 
 
 }

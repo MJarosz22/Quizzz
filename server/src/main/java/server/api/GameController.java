@@ -33,7 +33,7 @@ public class GameController {
     private final Random random;
     private final List<GameInstance> gameInstances;
     private final List<SimpleUser> players;
-    private static int currentMPGIId; //Current ID of gameInstance for multiplayer
+    private static int currentMPGIId = 0; //Current ID of gameInstance for multiplayer
 
 
     /**
@@ -89,9 +89,9 @@ public class GameController {
                 gameInstance.getPlayers().add(savedPlayer.toPlayer(gameInstance));
                 logger.info("[GI " + (gameInstance.getId()) + "] PLAYER (" + savedPlayer.getId() +
                         ") STARTED SP GAME: NAME=" + savedPlayer.getName());
-                GameInstance newGameInstance = new GameInstance(gameInstances.size(), GameInstance.SINGLE_PLAYER);
-                gameInstances.add(newGameInstance);
-                currentMPGIId = newGameInstance.getId();
+                //GameInstance newGameInstance = new GameInstance(gameInstances.size(), GameInstance.SINGLE_PLAYER);
+                //gameInstances.add(newGameInstance);
+                //currentMPGIId = newGameInstance.getId();
                 break;
 
             case GameInstance.MULTI_PLAYER:
@@ -171,21 +171,36 @@ public class GameController {
         else return optPlayer.get();
     }
 
+    /**
+     * Method that returns last instance of a multiplayer ID
+     *
+     * @return the ID of the last Multiplayer Game Instance
+     */
     @GetMapping("/getLastGIIdMult")
     public ResponseEntity<Integer> getLastGIIdMult() {
+        if (currentMPGIId < 0 || currentMPGIId > gameInstances.size()) return  ResponseEntity.badRequest().build();
         return ResponseEntity.ok(currentMPGIId);
     }
 
+    /**
+     * Additional method that returns the player list of a game instance
+     *
+     * @param gameInstanceId ID of GameInstance
+     * @return the ID of the last Multiplayer Game Instance
+     */
     @GetMapping("/{gameInstanceId}/playerlist")
     public ResponseEntity<List<SimpleUser>> getPlayerList(@PathVariable int gameInstanceId) {
+        if (currentMPGIId < 0 || currentMPGIId > gameInstances.size()) return  ResponseEntity.badRequest().build();
         return ResponseEntity.ok(gameInstances.get(gameInstanceId).getPlayers()
                 .stream().map(p -> p.toSimpleUser().unsafe()).collect(Collectors.toList()));
     }
 
+    /*
     @GetMapping("/getLastGIId")
     public ResponseEntity<Integer> getLastGIId() {
         int lastGIId = gameInstances.get(gameInstances.size() - 1).getId();
         logger.info("[GI " + lastGIId);
         return ResponseEntity.ok(lastGIId);
     }
+     */
 }
