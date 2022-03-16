@@ -44,6 +44,16 @@ Secretary: Marcin Jarosz
 
 ## Question round
 
+## Tips and Tops
+
+### Team
+ Tips: Split the tasks evenly between team members, so that each all peers work on a similar number of issues.
+ Tops: Ahead when it comes to code workload, keep it like that. 
+
+### Chairman
+Tips: Present points of action slower, so that the mintue taker does not miss anything.
+Tops: The meeting was conducted as intended, every point of action was discussed, all deadlines were addressed,  the agenda was posted on time (by Monday) and is well-structured.
+
 ## Closing
 - I hope everyone's midterms went well and good job on all the progress!
 
