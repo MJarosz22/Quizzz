@@ -46,3 +46,80 @@ Secretary: Marcin Jarosz
 
 ## Closing
 - I hope everyone's midterms went well and good job on all the progress!
+
+# Minutes week 3.2
+
+2.45 start of the meeting. Everyone is present.
+
+## Agenda items
+
+
+### This week
+
+Sprint 3, Assignments 6A and 6B, choose the next chairman and secretary, meeting on Wednesday.
+
+### Reflection on last week
+Everyone did the BuddyCheck, not everyone read their review.
+Activity bank- fully completed.
+
+Rafael: Player class; one of the question classes; name validation
+Vlad: Merge reviews; last chairman; HCI assignment; TIPs and TOPs; Validate activity; Validate input; public to private conversion; testing classes
+Petra: Activity importing; Player class; Questions and point distribution; LoadActivity class (changed by Joshua); Refractorized parts of the code
+Sophie: Lobby scene; Deleting players after they disconnect; Issues and backlog
+Joshua: Last secretary; Chairman, prepared agenda; HCI assignment; GameInstance class; image loading; Websockets
+Marcin: Merge reviews; Secretary; Created game scene; Implemented basic game logic; Worked on timer with Vlad
+
+### TIP and TOP session
+
+Joshua: big contribution, big knowledge
+        let others know when you edit their work
+Vlad: big contribution
+      let others work too
+Marcin: good contribution
+        split the work, say what you are doing
+Sophie: great work done on the issues
+        be more consistent, more active on discord
+Petra:  good contribution
+        talk about what you are doing
+Rafael: asks a lot of quesions, tries to do something
+        work on client
+
+### Check on code of conduct
+
+Everything is fine, noone has any remarks.
+
+### TA discussion
+
+Quesion: How do we design Sprint?
+Our response: We don't have any conflicts, we work as a team, we think what to do next and someone assigns themselves to the given task.
+
+FLAGS:
+
+**RED FLAG** on task distribution
+**RED FLAG** on splitting the big tasks
+Advice given:
+* Have a meeting; choose a topic; choose, say, 15 issues and distribute them equally. Have in mind that some issues are bigger than other.
+* Split the issues into smaller ones. Create subissues.
+* Look at previous sprints' boards. Let people who did less then do more now.
+* Look at the gitInspector file send on mattermost- not equal distribution of work.
+* Create new issues as soon as new tasks appear.
+
+Flags will be reflected in the final grade.
+
+MERGE REQUESTS: At least one merge request per person every week.
+
+TESTING: some methods are not tested. 
+
+SET OUR OWN DEADLINES: we decided the deadline for all the must-haves is this week, all the should-haves next week (we might be done earlier).
+
+Remark to Joshua: discuss before you replace someone else's code.
+General advice: First give feedback to the person. Then let THEM change.
+
+### Question round
+
+- Petra: Picking 20 questions at the beginning of the game.
+- Answer: The way we do it is fine.
+
+## Closing
+
+Closed at 3.30.
