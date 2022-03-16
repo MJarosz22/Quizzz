@@ -132,18 +132,18 @@ public class ActivityController {
      * @return 200 OK - in case there is at least one activity that can be chosen, or 404 NOT_FOUND otherwise
      */
     @GetMapping("/random60")
-    public ResponseEntity<List<Optional<Activity>>> getRandom60() {
+    public ResponseEntity<List<Activity>> getRandom60() {
         //hard coded -> size of all activities - 60
         long countIds = activityRepository.count();
 
         int idRandom = (int) Math.abs(Math.random() * countIds) - 60;
-        Set<Optional<Activity>> setOfActivities = new HashSet<>();
+        Set<Activity> setOfActivities = new HashSet<>();
         int limit = 60;
         int i = 0;
         while (i < limit) {
             Optional<Activity> a = activityRepository.findById((long) idRandom);
             if (a.isPresent() && !setOfActivities.contains(a)) {
-                setOfActivities.add(a);
+                setOfActivities.add(a.get());
             } else {
                 limit++;
             }
@@ -151,7 +151,7 @@ public class ActivityController {
             i++;
         }
         if (setOfActivities.size() == 0) return ResponseEntity.notFound().build();
-        List<Optional<Activity>> listOfActivities = new ArrayList<>(setOfActivities);
+        List<Activity> listOfActivities = new ArrayList<Activity>(setOfActivities);
         return ResponseEntity.ok(listOfActivities);
     }
 

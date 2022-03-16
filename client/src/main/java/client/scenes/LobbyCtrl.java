@@ -3,6 +3,7 @@ package client.scenes;
 import client.utils.ServerUtils;
 import com.google.inject.Inject;
 import commons.player.SimpleUser;
+import javafx.application.Platform;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.collections.FXCollections;
 import javafx.fxml.FXML;
@@ -58,8 +59,22 @@ public class LobbyCtrl implements Initializable {
         mainCtrl.showSplash();
     }
 
+    public void init(){
+        ServerUtils.initWebsocket();
+        registerForMessages();
+    }
+
+    public void registerForMessages(){
+        server.registerForMessages("/topic/time", Integer.class , time -> {
+            Platform.runLater(()->{labelName.setText(time.toString());});
+            System.out.println(time);
+        });
+    }
+
     // To be added when making the main game scene, in order for the player to play
     public void play() {
+        server.startGame(mainCtrl.getPlayer());
+        System.out.println("PLAYING");
         //TODO CONNECT TO SERVER
 //        mainCtrl.showPlayMode();
     }

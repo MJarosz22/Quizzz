@@ -18,6 +18,7 @@ public class GameInstance {
     private int type;
     private List<Player> players;
     private List<Question> questions;
+    private GameState state = GameState.INLOBBY;
 
     public GameInstance(int id, int type) {
         this.id = id;
@@ -81,6 +82,14 @@ public class GameInstance {
 
     public void setQuestions(List<Question> questions) {
         this.questions = questions;
+    }
+
+    public GameState getState() {
+        return state;
+    }
+
+    public void setState(GameState state) {
+        this.state = state;
     }
 
     @Override

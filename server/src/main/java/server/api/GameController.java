@@ -10,16 +10,16 @@ import org.slf4j.LoggerFactory;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.ResponseCookie;
 import org.springframework.http.ResponseEntity;
+import org.springframework.messaging.Message;
 import org.springframework.messaging.handler.annotation.MessageMapping;
+import org.springframework.messaging.handler.annotation.SendTo;
+import org.springframework.messaging.simp.SimpMessagingTemplate;
 import org.springframework.util.DigestUtils;
 import org.springframework.web.bind.annotation.*;
 import server.database.ActivityRepository;
 
 import java.nio.charset.StandardCharsets;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Optional;
-import java.util.Random;
+import java.util.*;
 import java.util.stream.Collectors;
 
 
@@ -31,8 +31,10 @@ public class GameController {
     private final Logger logger = LoggerFactory.getLogger(GameController.class);
 
     private final ActivityRepository activityRepository;
+    private SimpMessagingTemplate msgs;
+    protected ActivityController activityController;
     private final Random random;
-    private final List<GameInstance> gameInstances;
+    private final List<ServerGameInstance> gameInstances;
     private final List<SimpleUser> players;
     private static int currentMPGIId; //Current ID of gameInstance for multiplayer
 
@@ -43,11 +45,13 @@ public class GameController {
      * @param random             Random class
      * @param activityRepository Repository of all Activities
      */
-    public GameController(Random random, ActivityRepository activityRepository) {
+    public GameController(Random random, ActivityRepository activityRepository, SimpMessagingTemplate msgs, ActivityController activityController) {
         this.random = random;
         this.activityRepository = activityRepository;
+        this.msgs = msgs;
+        this.activityController = activityController;
         gameInstances = new ArrayList<>();
-        gameInstances.add(new GameInstance(gameInstances.size(), GameInstance.MULTI_PLAYER));
+        gameInstances.add(new ServerGameInstance(gameInstances.size(), GameInstance.MULTI_PLAYER, this, msgs));
 /*
         //TODO Make it so that these activities actually get merged into 20 questions and ensure there are no duplicates (if possible)
         // TODO: In order to make sure there are no duplicates, we can get use of "seeds".
@@ -80,7 +84,7 @@ public class GameController {
         SimpleUser savedPlayer;
         switch (request.getGameType()){
             case GameInstance.SINGLE_PLAYER:
-                GameInstance gameInstance = new GameInstance(gameInstances.size(), GameInstance.SINGLE_PLAYER);
+                ServerGameInstance gameInstance = new ServerGameInstance(gameInstances.size(), GameInstance.SINGLE_PLAYER, this, msgs);
                 gameInstances.add(gameInstance);
                 savedPlayer = new SimpleUser(players.size(), request.getName(),
                         gameInstance.getId(), tokenCookie.getValue());
@@ -151,9 +155,22 @@ public class GameController {
         return ResponseEntity.ok(gameInstances.get(gameInstanceId).getPlayers().remove(removePlayer));
     }
 
-    @MessageMapping("/time")
-    public void addTime(){
+    @GetMapping("/{gameInstanceId}/start")
+    public ResponseEntity<Boolean> startGame(@PathVariable int gameInstanceId,
+                                             @CookieValue(name = "user-id", defaultValue = "null") String cookie){
+        if(gameInstances.get(gameInstanceId).getState().equals(GameState.STARTING)) return ResponseEntity.ok(true);
+        Player reqPlayer = getPlayerFromGameInstance(gameInstanceId, cookie);
+        if(reqPlayer == null) return ResponseEntity.badRequest().build();
+        logger.info("[GI " + (gameInstanceId) + "] Game is starting in 5 seconds...");
+        gameInstances.get(gameInstanceId).startCountdown();
 
+        return ResponseEntity.ok(true);
+    }
+
+    @MessageMapping("/time")
+    @SendTo("/topic/time")
+    public int setTime(int time){
+        return time;
     }
 
     /**

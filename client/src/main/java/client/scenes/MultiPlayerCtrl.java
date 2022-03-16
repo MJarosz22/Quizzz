@@ -5,6 +5,7 @@ import com.google.inject.Inject;
 import commons.GameInstance;
 import commons.player.SimpleUser;
 import communication.RequestToJoin;
+import javafx.application.Platform;
 import javafx.fxml.FXML;
 import javafx.scene.control.TextField;
 
@@ -34,11 +35,9 @@ public class MultiPlayerCtrl {
             mainCtrl.setPlayer(player);
             LobbyCtrl lobbyCtrl = mainCtrl.getLobbyCtrl();
             lobbyCtrl.increaseNumberOfPlayers();
-
-            System.out.println(player);
             this.textfieldName.clear();
+            mainCtrl.getLobbyCtrl().init();
             mainCtrl.showLobby();
-            //TODO Make it so that player goes directly into game instead of going to lobby
         }
         mainCtrl.showLobby();
     }
