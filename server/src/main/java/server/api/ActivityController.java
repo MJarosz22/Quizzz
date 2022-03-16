@@ -1,6 +1,8 @@
 package server.api;
 
 import commons.Activity;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.propertyeditors.URLEditor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -16,6 +18,7 @@ public class ActivityController {
     private final Random random;
 
     private final ActivityRepository activityRepository;
+    private final Logger logger = LoggerFactory.getLogger(ActivityController.class);
 
     public ActivityController(Random random, ActivityRepository activityRepository) {
         this.random = random;
@@ -135,7 +138,10 @@ public class ActivityController {
     public ResponseEntity<List<Optional<Activity>>> getRandom60() {
         //hard coded -> size of all activities - 60
         long countIds = activityRepository.count();
-
+        if(activityRepository.count() == 0) {
+            logger.error("No activities found for lobby...");
+            return ResponseEntity.notFound().build();
+        }
         int idRandom = (int) Math.abs(Math.random() * countIds) - 60;
         Set<Optional<Activity>> setOfActivities = new HashSet<>();
         int limit = 60;
