@@ -98,15 +98,15 @@ Everything is fine, noone has any remarks.
 Quesion: How do we design Sprint?<br>
 Our response: We don't have any conflicts, we work as a team, we think what to do next and someone assigns themselves to the given task.
 
-FLAGS:
+**FLAGS**:
 
 **RED FLAG** on task distribution<br>
-**RED FLAG** on splitting the big tasks<br>
+**RED FLAG** on splitting the big tasks<br><br>
 Advice given:
 * Have a meeting; choose a topic; choose, say, 15 issues and distribute them equally. Have in mind that some issues are bigger than other.
 * Split the issues into smaller ones. Create subissues.
 * Look at previous sprints' boards. Let people who did less then do more now.
-* Look at the gitInspector file send on mattermost- not equal distribution of work.
+* Look at the gitInspector file sent on mattermost- not equal distribution of work.
 * Create new issues as soon as new tasks appear.
 
 Flags will be reflected in the final grade.
@@ -115,7 +115,7 @@ Flags will be reflected in the final grade.
 
 **TESTING**: some methods are not tested. 
 
-**SET OUR OWN DEADLINES**: we decided the deadline for all the must-haves is this week, all the should-haves next week (we might be done earlier).
+**SET OUR OWN DEADLINES**: we decided the deadline for all the must-haves is this week, all the should-haves next week (we might be done earlier).<br>
 
 Remark to Joshua: discuss before you replace someone else's code.<br>
 General advice: First give feedback to the person. Then let THEM change.
