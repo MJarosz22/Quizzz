@@ -7,6 +7,7 @@ import commons.player.SimpleUser;
 import communication.RequestToJoin;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.core.io.InputStreamResource;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.ResponseCookie;
 import org.springframework.http.ResponseEntity;
@@ -16,12 +17,13 @@ import org.springframework.messaging.handler.annotation.SendTo;
 import org.springframework.messaging.simp.SimpMessagingTemplate;
 import org.springframework.util.DigestUtils;
 import org.springframework.web.bind.annotation.*;
+import server.database.ActivityLoader;
 import server.database.ActivityRepository;
 
+import java.io.*;
 import java.nio.charset.StandardCharsets;
 import java.util.*;
 import java.util.stream.Collectors;
-
 
 
 @RestController
@@ -155,6 +157,18 @@ public class GameController {
         return ResponseEntity.ok(gameInstances.get(gameInstanceId).getPlayers().remove(removePlayer));
     }
 
+    @GetMapping(value = "/activities/{activityFolder}/{activityFile}",
+    produces = "image/jpg")
+    public ResponseEntity<InputStreamResource> getImage(@PathVariable String activityFolder, @PathVariable String activityFile){
+        try{
+            InputStream inputStream = new FileInputStream(ActivityLoader.path + activityFolder + "/" + activityFile);
+            return ResponseEntity.ok(new InputStreamResource(inputStream));
+        } catch (FileNotFoundException e) {
+            logger.debug("Image " + activityFolder + "/" + activityFile + " not found!");
+        }
+        return ResponseEntity.notFound().build();
+    }
+
     @GetMapping("/{gameInstanceId}/start")
     public ResponseEntity<Boolean> startGame(@PathVariable int gameInstanceId,
                                              @CookieValue(name = "user-id", defaultValue = "null") String cookie){
@@ -185,4 +199,6 @@ public class GameController {
         if (optPlayer.isEmpty()) return null;
         else return optPlayer.get();
     }
+
+
 }
