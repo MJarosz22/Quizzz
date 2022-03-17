@@ -1,7 +1,6 @@
 package commons;
 
 import commons.player.Player;
-import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 
 import java.util.ArrayList;
@@ -10,7 +9,6 @@ import java.util.List;
 import static org.junit.jupiter.api.Assertions.*;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
-//TODO: Test generateQuestion() (by hard-coding  a list of 60 activities).
 public class GameInstanceTest {
     @Test
     public void checkConstructor() {
