@@ -36,7 +36,6 @@ public class SinglePlayerCtrl {
         if (!getTextField().equals("")) {
             SimpleUser player = server.addPlayer(new RequestToJoin(getTextField(), GameInstance.SINGLE_PLAYER));
             mainCtrl.setPlayer(player);
-            System.out.println(player);
             playerName = player.getName();
             this.textField.clear();
             mainCtrl.showSinglePlayerGame();

@@ -20,10 +20,10 @@ import client.utils.ServerUtils;
 import com.google.inject.Injector;
 import commons.player.SimpleUser;
 import javafx.application.Application;
+import javafx.application.Platform;
+import javafx.scene.control.Alert;
+import javafx.scene.control.ButtonType;
 import javafx.stage.Stage;
-
-import java.io.IOException;
-import java.net.URISyntaxException;
 
 import static com.google.inject.Guice.createInjector;
 
@@ -32,12 +32,12 @@ public class Main extends Application {
     private static final Injector INJECTOR = createInjector(new MyModule());
     private static final MyFXML FXML = new MyFXML(INJECTOR);
 
-    public static void main(String[] args) throws URISyntaxException, IOException {
+    public static void main(String[] args) {
         launch();
     }
 
     @Override
-    public void start(Stage primaryStage) throws IOException {
+    public void start(Stage primaryStage) {
         var home = FXML.load(SplashScreenCtrl.class, "client", "scenes", "SplashScreen.fxml");
         var single = FXML.load(SinglePlayerCtrl.class, "client", "scenes", "SinglePlayer.fxml");
         var singleGame = FXML.load(SinglePlayerGameCtrl.class, "client", "scenes", "SinglePlayerGame.fxml");
@@ -48,6 +48,14 @@ public class Main extends Application {
         var lobby = FXML.load(LobbyCtrl.class, "client", "scenes", "Lobby.fxml");
 
         mainCtrl.initialize(primaryStage, home, single, singleGame, singleGameOver, multi, leaderboard, lobby);
+        primaryStage.setOnCloseRequest(event -> {
+            Alert alert = new Alert(Alert.AlertType.CONFIRMATION, "Do you want to close the game?", ButtonType.YES, ButtonType.NO);
+            ButtonType result = alert.showAndWait().orElse(ButtonType.NO);
+            if (ButtonType.NO.equals(result))
+                event.consume();
+            else
+                Platform.exit();
+        });
     }
 
     /**

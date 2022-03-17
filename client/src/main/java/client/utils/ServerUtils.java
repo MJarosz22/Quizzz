@@ -7,8 +7,11 @@ import jakarta.ws.rs.client.Client;
 import jakarta.ws.rs.client.ClientBuilder;
 import jakarta.ws.rs.client.Entity;
 import jakarta.ws.rs.core.GenericType;
+import jakarta.ws.rs.core.Response;
 import org.glassfish.jersey.client.ClientConfig;
 
+import java.io.FileNotFoundException;
+import java.io.InputStream;
 import java.util.List;
 
 import static jakarta.ws.rs.core.MediaType.APPLICATION_JSON;
@@ -43,6 +46,17 @@ public class ServerUtils {
                 .accept(APPLICATION_JSON)
                 .get(new GenericType<>() {
                 });
+
+    }
+
+    public InputStream getImage(Activity activity) throws FileNotFoundException {
+        Response response = ClientBuilder.newClient(new ClientConfig())
+                .target(SERVER).path("api/game/activities/" + activity.getImage_path())
+                .request("image/*")
+                .accept("image/*")
+                .get(new GenericType<>() {});
+        if(response.getStatus() == 404) throw new FileNotFoundException();
+        return response.readEntity(InputStream.class);
     }
 
 
