@@ -84,7 +84,7 @@ public class SinglePlayerGameCtrl {
             currentGame = new GameInstance(this.player.getGameInstanceId(), 0);
             try {
                 currentGame.generateQuestions(server.getActivitiesRandomly());
-            }catch (NotFoundException e){
+            } catch (NotFoundException e) {
                 Alert alert = new Alert(Alert.AlertType.ERROR, "No activities found on server! Returning to lobby");
                 alert.show();
                 leaveGame();
@@ -767,6 +767,7 @@ public class SinglePlayerGameCtrl {
      * Works the same as 'back' method from previous version.
      */
     public void leaveGame() {
+        server.disconnect(player);
         mainCtrl.showSplash();
     }
 

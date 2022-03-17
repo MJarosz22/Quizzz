@@ -54,8 +54,9 @@ public class ServerUtils {
                 .target(SERVER).path("api/game/activities/" + activity.getImage_path())
                 .request("image/*")
                 .accept("image/*")
-                .get(new GenericType<>() {});
-        if(response.getStatus() == 404) throw new FileNotFoundException();
+                .get(new GenericType<>() {
+                });
+        if (response.getStatus() == 404) throw new FileNotFoundException();
         return response.readEntity(InputStream.class);
     }
 
@@ -106,17 +107,17 @@ public class ServerUtils {
                 });
     }
 
-    /*
-    public int getLastGIId() {
+
+    public int getLastGIIdSingle() {
         Client client = ClientBuilder.newClient(new ClientConfig());
         return client //
-                .target(SERVER).path("api/game/getLastGIId") //
+                .target(SERVER).path("api/game/getLastGIIdSingle") //
                 .request(APPLICATION_JSON) //
                 .accept(APPLICATION_JSON) //
                 .get(new GenericType<>() {
                 });
     }
-    */
+
 
     public static List<SimpleUser> getPlayerList(int gIId) {
         Client client = ClientBuilder.newClient(new ClientConfig());
@@ -126,5 +127,20 @@ public class ServerUtils {
                 .accept(APPLICATION_JSON) //
                 .get(new GenericType<>() {
                 });
+    }
+
+    // ------------------------------------ ADDITIONAL METHODS ------------------------------------ //
+
+    /**
+     * Additional method that checks whether a player hasn't disconnected from a game
+     *
+     * @param player - SimpleUser object that represents the player we are interested in
+     * @return true, if the player has not disconnected yet, or false otherwise
+     */
+    public boolean containsPlayer(SimpleUser player) {
+        return (player != null
+                && getPlayerList(player.getGameInstanceId()) != null
+                && getPlayerList(player.getGameInstanceId()).contains(player)
+        );
     }
 }

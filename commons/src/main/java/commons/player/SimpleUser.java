@@ -120,7 +120,7 @@ public class SimpleUser {
     }
 
     public SimpleUser unsafe() {
-        return new SimpleUser(id, name, gameInstanceId, null);
+        return new SimpleUser(id, name, gameInstanceId, cookie);
     }
 
 }

@@ -37,6 +37,7 @@ public class GameController {
     private final List<GameInstance> gameInstances;
     private final List<SimpleUser> players;
     private static int currentMPGIId = 0; //Current ID of gameInstance for multiplayer
+    private static int currentSPGIId = 0; //Current ID of gameInstance for singleplayer
 
 
     /**
@@ -85,15 +86,13 @@ public class GameController {
             case GameInstance.SINGLE_PLAYER:
                 GameInstance gameInstance = new GameInstance(gameInstances.size(), GameInstance.SINGLE_PLAYER);
                 gameInstances.add(gameInstance);
+                currentSPGIId = gameInstance.getId();
                 savedPlayer = new SimpleUser(players.size(), request.getName(),
                         gameInstance.getId(), tokenCookie.getValue());
                 players.add(savedPlayer);
                 gameInstance.getPlayers().add(savedPlayer.toPlayer(gameInstance));
                 logger.info("[GI " + (gameInstance.getId()) + "] PLAYER (" + savedPlayer.getId() +
                         ") STARTED SP GAME: NAME=" + savedPlayer.getName());
-                //GameInstance newGameInstance = new GameInstance(gameInstances.size(), GameInstance.SINGLE_PLAYER);
-                //gameInstances.add(newGameInstance);
-                //currentMPGIId = newGameInstance.getId();
                 break;
 
             case GameInstance.MULTI_PLAYER:
@@ -103,7 +102,7 @@ public class GameController {
                 players.add(savedPlayer);
                 currGameInstance.getPlayers().add(savedPlayer.toPlayer(currGameInstance));
                 logger.info("[GI " + (currGameInstance.getId()) + "] PLAYER (" + savedPlayer.getId() +
-                        ") JOINED: NAME=" + savedPlayer.getName());
+                        ") STARTED MP GAME: NAME=" + savedPlayer.getName());
                 break;
 
             default:
@@ -160,9 +159,9 @@ public class GameController {
     }
 
     @GetMapping(value = "/activities/{activityFolder}/{activityFile}",
-    produces = "image/jpg")
-    public ResponseEntity<InputStreamResource> getImage(@PathVariable String activityFolder, @PathVariable String activityFile){
-        try{
+            produces = "image/jpg")
+    public ResponseEntity<InputStreamResource> getImage(@PathVariable String activityFolder, @PathVariable String activityFile) {
+        try {
             InputStream inputStream = new FileInputStream(ActivityLoader.path + activityFolder + "/" + activityFile);
             return ResponseEntity.ok(new InputStreamResource(inputStream));
         } catch (FileNotFoundException e) {
@@ -192,7 +191,7 @@ public class GameController {
      */
     @GetMapping("/getLastGIIdMult")
     public ResponseEntity<Integer> getLastGIIdMult() {
-        if (currentMPGIId < 0 || currentMPGIId > gameInstances.size()) return  ResponseEntity.badRequest().build();
+        if (currentMPGIId < 0 || currentMPGIId > gameInstances.size()) return ResponseEntity.badRequest().build();
         return ResponseEntity.ok(currentMPGIId);
     }
 
@@ -204,17 +203,22 @@ public class GameController {
      */
     @GetMapping("/{gameInstanceId}/playerlist")
     public ResponseEntity<List<SimpleUser>> getPlayerList(@PathVariable int gameInstanceId) {
-        if (currentMPGIId < 0 || currentMPGIId > gameInstances.size()) return  ResponseEntity.badRequest().build();
+        if (currentMPGIId < 0 || currentMPGIId > gameInstances.size()) return ResponseEntity.badRequest().build();
         return ResponseEntity.ok(gameInstances.get(gameInstanceId).getPlayers()
                 .stream().map(p -> p.toSimpleUser().unsafe()).collect(Collectors.toList()));
     }
 
-    /*
-    @GetMapping("/getLastGIId")
-    public ResponseEntity<Integer> getLastGIId() {
-        int lastGIId = gameInstances.get(gameInstances.size() - 1).getId();
-        logger.info("[GI " + lastGIId);
-        return ResponseEntity.ok(lastGIId);
-    }
+
+    /**
+     * Method that returns last instance of a singleplayer ID
+     *
+     * @return the ID of the last SinglePlayer Game Instance
      */
+    @GetMapping("/getLastGIIdSingle")
+    public ResponseEntity<Integer> getLastGIIdSingle() {
+        if (currentSPGIId < 0 || currentSPGIId > gameInstances.size()) return ResponseEntity.badRequest().build();
+        return ResponseEntity.ok(currentSPGIId);
+
+    }
+
 }
