@@ -17,7 +17,7 @@ import javafx.scene.text.Text;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.net.URI;
-import java.util.*;
+import java.util.Random;
 import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
@@ -48,7 +48,7 @@ public class SinglePlayerGameCtrl {
     private AnchorPane timerImage, emoji;
 
     @FXML
-    private Button option1Button, option2Button, option3Button, correct_answer, submit_guess;
+    private Button option1Button, option2Button, option3Button, correct_answer, submit_guess, heart, cry, laugh, angry, glasses;
 
     @FXML
     private TextField player_answer;
@@ -57,7 +57,7 @@ public class SinglePlayerGameCtrl {
     private RadioButton answer1, answer2, answer3;
 
     @FXML
-    private ImageView image1, image2, image3, image4;
+    private ImageView image1, image2, image3, image4, heartPic, cryPic, laughPic, angryPic, glassesPic;
 
     @FXML
     private ProgressBar progressBar;
@@ -84,7 +84,7 @@ public class SinglePlayerGameCtrl {
             currentGame = new GameInstance(this.player.getGameInstanceId(), 0);
             try {
                 currentGame.generateQuestions(server.getActivitiesRandomly());
-            }catch (NotFoundException e){
+            } catch (NotFoundException e) {
                 Alert alert = new Alert(Alert.AlertType.ERROR, "No activities found on server! Returning to lobby");
                 alert.show();
                 leaveGame();
@@ -243,7 +243,7 @@ public class SinglePlayerGameCtrl {
     /**
      * Randomly choose which one of the three RadioButtons(answer1, answer2, answer3) will hold the correct answer
      * The other 2 wrong answers are somewhat randomly generated
-     * * TODO: Work on a 'smarter' randoml generation of wrong answers
+     * * TODO: Work on a 'smarter' random generation of wrong answers
      */
     private void randomlyChooseCorrectAnswerButton() {
         Random random = new Random();
@@ -456,7 +456,7 @@ public class SinglePlayerGameCtrl {
     }
 
     /**
-     * Sets buttons as eanbled / disabled, depending on the value of parameter.
+     * Sets buttons as enabled / disabled, depending on the value of parameter.
      *
      * @param value boolean value that disables our buttons if 'true', or makes them functional otherwise
      */
@@ -787,5 +787,47 @@ public class SinglePlayerGameCtrl {
         confirmationExit.setVisible(true);
         confirmationExit.setDisable(false);
         confirmationExit.setStyle("-fx-background-color: #91e4fb; ");
+    }
+
+    public void heartBold(){
+        emojiBold(heart, heartPic);
+    }
+
+    public void glassesBold(){
+        emojiBold(glasses, glassesPic);
+    }
+
+    public void angryBold(){
+        emojiBold(angry, angryPic);
+    }
+
+    public void cryBold(){
+        emojiBold(cry, cryPic);
+    }
+
+    public void laughBold(){
+        emojiBold(laugh, laughPic);
+    }
+
+
+    public void emojiBold(Button emojiButton, ImageView emojiPic) {
+        Thread thread = new Thread(() -> {
+
+            try {
+
+                emojiButton.setStyle("-fx-pref-height: 50; -fx-pref-width: 50; -fx-background-color: transparent; ");
+                emojiPic.setFitWidth(50);
+                emojiPic.setFitHeight(50);
+                Thread.sleep(3000);
+                emojiButton.setStyle("-fx-pref-height: 30; -fx-pref-width: 30; -fx-background-color: transparent; ");
+                emojiPic.setFitWidth(30);
+                emojiPic.setFitHeight(30);
+
+            } catch (InterruptedException e) {
+                e.printStackTrace();
+            }
+        });
+
+        thread.start();
     }
 }
