@@ -10,6 +10,7 @@
 <?import javafx.scene.text.Font?>
 <?import javafx.scene.text.Text?>
 
+<?import javafx.scene.image.Image?>
 <AnchorPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="540.0" prefWidth="960.0" style="-fx-background-color: #91e4fb;" xmlns="http://javafx.com/javafx/17" xmlns:fx="http://javafx.com/fxml/1" fx:controller="client.scenes.SinglePlayerGameCtrl">
     <children>
         <Text fx:id="score" layoutX="62.0" layoutY="51.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Score">
@@ -84,6 +85,46 @@
                 <Font name="Courier New Bold Italic" size="14.0" />
             </font>
         </Text>
+      <Pane layoutX="690.0" layoutY="20.0" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="50.0" prefWidth="250.0">
+         <children>
+            <Button cacheShape="false" centerShape="false" contentDisplay="GRAPHIC_ONLY" focusTraversable="false" layoutX="150.0" maxHeight="50.0" maxWidth="50.0" minHeight="30.0" minWidth="30.0" mnemonicParsing="false" prefHeight="30.0" prefWidth="30.0" scaleShape="false" styleClass="emoji" text="Button" visible="false">
+               <graphic>
+                  <ImageView fitHeight="150.0" fitWidth="200.0" pickOnBounds="true" preserveRatio="true">
+                      <Image url="@/images/emojis/Loudly Crying Face Emoji.png"/>
+                  </ImageView>
+               </graphic>
+            </Button>
+            <Button cacheShape="false" centerShape="false" contentDisplay="GRAPHIC_ONLY" focusTraversable="false" layoutX="100.0" maxHeight="50.0" maxWidth="50.0" minHeight="30.0" minWidth="30.0" mnemonicParsing="false" prefHeight="30.0" prefWidth="30.0" scaleShape="false" styleClass="emoji" text="Button" visible="false">
+               <graphic>
+                   <ImageView fitHeight="150.0" fitWidth="200.0" pickOnBounds="true" preserveRatio="true">
+                       <Image url="@/images/emojis/Heart Eyes Emoji.png"/>
+                   </ImageView>
+
+               </graphic>
+            </Button>
+            <Button cacheShape="false" centerShape="false" contentDisplay="GRAPHIC_ONLY" focusTraversable="false" layoutX="50.0" maxHeight="50.0" maxWidth="50.0" minHeight="30.0" minWidth="30.0" mnemonicParsing="false" prefHeight="30.0" prefWidth="30.0" scaleShape="false" styleClass="emoji" text="Button" visible="false">
+               <graphic>
+                  <ImageView fitHeight="150.0" fitWidth="200.0" pickOnBounds="true" preserveRatio="true">
+                      <Image url="@/images/emojis/Sunglasses Emoji.png"/>
+                  </ImageView>
+               </graphic>
+            </Button>
+            <Button cacheShape="false" centerShape="false" contentDisplay="GRAPHIC_ONLY" focusTraversable="false" layoutX="200.0" maxHeight="50.0" maxWidth="50.0" minHeight="30.0" minWidth="30.0" mnemonicParsing="false" prefHeight="30.0" prefWidth="30.0" scaleShape="false" snapToPixel="false" styleClass="emoji" text="Button" visible="false">
+               <graphic>
+                  <ImageView fitHeight="150.0" fitWidth="200.0" pickOnBounds="true" preserveRatio="true">
+                      <Image url="@/images/emojis/Tears of Joy Emoji.png"/>
+                  </ImageView>
+               </graphic>
+            </Button>
+          <Button cacheShape="false" centerShape="false" contentDisplay="GRAPHIC_ONLY" focusTraversable="false" maxHeight="50.0" maxWidth="50.0" minHeight="30.0" minWidth="30.0" mnemonicParsing="false" prefHeight="30.0" prefWidth="30.0" scaleShape="false" snapToPixel="false" styleClass="emoji" text="Button" visible="false">
+               <graphic>
+                  <ImageView fitHeight="150.0" fitWidth="200.0" pickOnBounds="true" preserveRatio="true">
+                      <Image url="@/images/emojis/Very Angry Emoji.png"/>
+                  </ImageView>
+               </graphic>
+            </Button>
+         </children>
+      </Pane>
       <Pane fx:id="confirmationExit" layoutY="1.0" prefHeight="540.0" prefWidth="960.0">
          <children>
             <Button layoutX="545.0" layoutY="336.0" mnemonicParsing="false" onAction="#leaveGame" prefHeight="158.0" prefWidth="349.0" text="YES" />
