@@ -37,6 +37,8 @@ public class GameInstance {
      * @param activities List of 60 activities
      */
     public void generateQuestions(List<Activity> activities) {
+        /*TODO Make it so that these activities actually get merged into 20 questions and ensure there are no duplicates (if possible)
+         In order to make sure there are no duplicates, we can get use of "seeds". */
         if (activities.size() != 60) throw new IllegalArgumentException();
         List<Question> questions = new ArrayList<>();
         for (int i = 0; i < 20; i++) {

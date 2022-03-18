@@ -1,12 +1,9 @@
 package server.api;
 
 
-import commons.*;
-import commons.player.Player;
-import commons.player.SimpleUser;
-import commons.question.Question;
+import commons.GameInstance;
 import commons.communication.RequestToJoin;
-import org.apache.catalina.Server;
+import commons.player.SimpleUser;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.core.io.InputStreamResource;
@@ -21,10 +18,13 @@ import org.springframework.web.bind.annotation.*;
 import server.database.ActivityLoader;
 import server.database.ActivityRepository;
 
-import java.io.*;
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
+import java.io.InputStream;
 import java.nio.charset.StandardCharsets;
-import java.util.*;
-import java.util.stream.Collectors;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Random;
 
 
 @RestController
@@ -55,23 +55,10 @@ public class GameController {
         this.activityController = activityController;
         gameInstances = new ArrayList<>();
         gameInstances.add(new ServerGameInstance(gameInstances.size(), GameInstance.MULTI_PLAYER, this, msgs));
-/*
-        //TODO Make it so that these activities actually get merged into 20 questions and ensure there are no duplicates (if possible)
-        // TODO: In order to make sure there are no duplicates, we can get use of "seeds".
-        Activity[] activities = new Activity[60];
-        List<Activity> allActivities = activityRepository.findAll();
-        for (int i = 0; i < 60; i++) {
-            activities[i] = allActivities.get(random.nextInt(allActivities.size()));
-        }
-        gameInstances.get(0).generateQuestions(activities);
 
- */
         players = new ArrayList<>();
     }
 
-//    ---------------------------------------------------------------------------
-//    ---------------------------     PRE-LOBBY     -----------------------------
-//    ---------------------------------------------------------------------------
 
     /**
      * Lets a client join a gameInstance as a player
@@ -113,51 +100,6 @@ public class GameController {
         return ResponseEntity.ok().header(HttpHeaders.SET_COOKIE, tokenCookie.toString()).body(savedPlayer);
     }
 
-    /**
-     * Gets a question from gameInstance
-     * @param gameInstanceId The gameInstance you want a question from
-     * @param questionNumber Number of question you request
-     * @param cookie Cookie of player
-     * @return Requested question
-     */
-    @GetMapping("/{gameInstanceId}/q{questionNumber}")
-    public ResponseEntity<Question> getQuestion(@PathVariable int gameInstanceId, @PathVariable int questionNumber,
-                                                @CookieValue(name = "user-id", defaultValue = "null") String cookie) {
-        if (gameInstanceId < 0 || gameInstanceId > gameInstances.size() - 1
-                || questionNumber > 19 || questionNumber < 0) return ResponseEntity.badRequest().build();
-
-        Player currentPlayer = getPlayerFromGameInstance(gameInstanceId, cookie);
-        if (currentPlayer == null) return ResponseEntity.badRequest().build();
-        GameInstance currGI = gameInstances.get(gameInstanceId);
-        logger.info("[GI " + (currGI.getId()) + "] PLAYER (" + currentPlayer.getId() + ") REQUESTED QUESTION N. " + questionNumber);
-        Question question = currGI.getQuestions().get(questionNumber);
-        return ResponseEntity.ok(question);
-    }
-
-
-    /**
-     * Returns all players from a gameInstance (if you are also connected to that gameInstance)
-     * @param gameInstanceId ID of GameInstance
-     * @param cookie Cookie of player
-     * @return List of all players connected to gameInstance
-     */
-    @GetMapping("/{gameInstanceId}/players")
-    public ResponseEntity<List<SimpleUser>> getPlayers(@PathVariable int gameInstanceId,
-                                                       @CookieValue(name = "user-id", defaultValue = "null") String cookie) {
-        if (getPlayerFromGameInstance(gameInstanceId, cookie) == null) return ResponseEntity.badRequest().build();
-        return ResponseEntity.ok(gameInstances.get(gameInstanceId).getPlayers()
-                .stream().map(p -> p.toSimpleUser().unsafe()).collect(Collectors.toList()));
-    }
-
-    @DeleteMapping("/{gameInstanceId}/disconnect")
-    public ResponseEntity<Boolean> disconnect(@PathVariable int gameInstanceId,
-                                              @CookieValue(name = "user-id", defaultValue = "null") String cookie) {
-        Player removePlayer = getPlayerFromGameInstance(gameInstanceId, cookie);
-        if(removePlayer == null) return ResponseEntity.badRequest().build();
-        logger.info("[GI " + (gameInstanceId) + "] PLAYER (" + removePlayer.getId() + ") DISCONNECTED");
-        return ResponseEntity.ok(gameInstances.get(gameInstanceId).getPlayers().remove(removePlayer));
-    }
-
     @GetMapping(value = "/activities/{activityFolder}/{activityFile}",
     produces = "image/jpg")
     public ResponseEntity<InputStreamResource> getImage(@PathVariable String activityFolder, @PathVariable String activityFile){
@@ -170,17 +112,6 @@ public class GameController {
         return ResponseEntity.notFound().build();
     }
 
-    @GetMapping("/{gameInstanceId}/start")
-    public ResponseEntity<Boolean> startGame(@PathVariable int gameInstanceId,
-                                             @CookieValue(name = "user-id", defaultValue = "null") String cookie){
-        if(gameInstances.get(gameInstanceId).getState().equals(GameState.STARTING)) return ResponseEntity.ok(true);
-        Player reqPlayer = getPlayerFromGameInstance(gameInstanceId, cookie);
-        if(reqPlayer == null) return ResponseEntity.badRequest().build();
-        logger.info("[GI " + (gameInstanceId) + "] Game is starting in 5 seconds...");
-        gameInstances.get(gameInstanceId).startCountdown();
-
-        return ResponseEntity.ok(true);
-    }
 
     @MessageMapping("/time")
     @SendTo("/topic/time")
@@ -188,37 +119,8 @@ public class GameController {
         return time;
     }
 
-    @GetMapping("/{gameInstanceId}/question")
-    public ResponseEntity<Question> getQuestion(@PathVariable int gameInstanceId,
-                                                @CookieValue(name = "user-id", defaultValue = "null") String cookie){
-        Player player = getPlayerFromGameInstance(gameInstanceId, cookie);
-        if(player == null) return ResponseEntity.badRequest().build();
-        ServerGameInstance gameInstance = gameInstances.get(player.getGameInstanceId());
-        if(gameInstance.getState() != GameState.INQUESTION) return ResponseEntity.notFound().build();
-        return ResponseEntity.ok(gameInstance.getCurrentQuestion());
-    }
-
-    @GetMapping("/{gameInstanceId}/timeleft")
-    public ResponseEntity<Integer> getTimeLeft(@PathVariable int gameInstanceId,
-                                               @CookieValue(name = "user-id", defaultValue = "null") String cookie){
-        Player player = getPlayerFromGameInstance(gameInstanceId, cookie);
-        if(player == null) return ResponseEntity.badRequest().build();
-        ServerGameInstance gameInstance = gameInstances.get(player.getGameInstanceId());
-        if(gameInstance.getState() != GameState.INQUESTION) return ResponseEntity.notFound().build();
-        return ResponseEntity.ok(gameInstance.getTimeLeft());
-    }
-
-    /**
-     * Additional method that checks whether cookie given is from a player connected to gameInstance with ID
-     * @param gameInstanceId ID of GameInstance
-     * @param cookie Cookie of player
-     * @return An instance of class 'Player' if exists, otherwise null
-     */
-    private Player getPlayerFromGameInstance(int gameInstanceId, String cookie) {
-        GameInstance currGI = gameInstances.get(gameInstanceId);
-        Optional<Player> optPlayer = currGI.getPlayers().stream().filter(p -> p.getCookie().equals(cookie)).findFirst();
-        if (optPlayer.isEmpty()) return null;
-        else return optPlayer.get();
+    public List<ServerGameInstance> getGameInstances(){
+        return gameInstances;
     }
 
 }
