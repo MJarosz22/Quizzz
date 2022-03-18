@@ -84,7 +84,7 @@ public class SinglePlayerGameCtrl {
             currentGame = new GameInstance(this.player.getGameInstanceId(), 0);
             try {
                 currentGame.generateQuestions(server.getActivitiesRandomly());
-            }catch (NotFoundException e){
+            } catch (NotFoundException e) {
                 Alert alert = new Alert(Alert.AlertType.ERROR, "No activities found on server! Returning to lobby");
                 alert.show();
                 leaveGame();
@@ -248,10 +248,11 @@ public class SinglePlayerGameCtrl {
     private void randomlyChooseCorrectAnswerButton() {
         Random random = new Random();
         int random_correct_answer = random.nextInt(3 - 1 + 1) + 1;
+        long consumption_correct_answer = ((QuestionWhichOne) currentQuestion).getActivity().getConsumption_in_wh();
 
-        long other_answer1 = Math.abs(((QuestionWhichOne) currentQuestion).getActivity().getConsumption_in_wh() - 500);
-        long other_answer2 = Math.abs(((QuestionWhichOne) currentQuestion).getActivity().getConsumption_in_wh() + 700);
-        long other_answer3 = Math.abs(((QuestionWhichOne) currentQuestion).getActivity().getConsumption_in_wh() - 200);
+        long other_answer1 = Math.abs((60 * consumption_correct_answer) / 100); // -40%
+        long other_answer2 = Math.abs((130 * consumption_correct_answer) / 100); // +30%
+        long other_answer3 = Math.abs((150 * consumption_correct_answer) / 100); // +50%
 
         if (random_correct_answer == 1)
             answer1.setText(((QuestionWhichOne) currentQuestion).getActivity().getConsumption_in_wh().toString());
