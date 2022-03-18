@@ -91,7 +91,7 @@ public class SinglePlayerGameCtrl {
                 return;
             }
             setTimerImage(timerImage);
-            progressBar.setProgress(-0.05);
+            progressBar.setProgress(0);
             score.setText("Your score: 0");
             roundCounter = 1;
             loadNextQuestion();
