@@ -15,7 +15,17 @@
  */
 package client;
 
-import client.scenes.*;
+import client.game.scenes.LeaderBoardCtrl;
+import client.game.scenes.MainCtrl;
+import client.activity.scenes.ActivityOverviewCtrl;
+import client.activity.scenes.AddActivityCtrl;
+import client.activity.scenes.MainActivityCtrl;
+import client.game.scenes.pregame.LobbyCtrl;
+import client.game.scenes.pregame.MultiPlayerCtrl;
+import client.game.scenes.pregame.SinglePlayerCtrl;
+import client.game.scenes.pregame.SplashScreenCtrl;
+import client.game.scenes.singleplayer.SinglePlayerGameCtrl;
+import client.game.scenes.singleplayer.SinglePlayerGameOverCtrl;
 import com.google.inject.Binder;
 import com.google.inject.Module;
 import com.google.inject.Scopes;

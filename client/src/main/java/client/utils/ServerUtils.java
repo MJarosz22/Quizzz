@@ -1,7 +1,7 @@
 package client.utils;
 
 import commons.Activity;
-import communication.RequestToJoin;
+import commons.communication.RequestToJoin;
 import commons.player.SimpleUser;
 import jakarta.ws.rs.NotFoundException;
 import jakarta.ws.rs.client.Client;
@@ -132,7 +132,7 @@ public class ServerUtils {
     }
 
 
-    public <T> void registerForMessages(String dest, Class<T> type, Consumer<T> consumer){
+    public static <T> void registerForMessages(String dest, Class<T> type, Consumer<T> consumer){
         session.subscribe(dest, new StompFrameHandler() {
             @Override
             public Type getPayloadType(StompHeaders headers) {
@@ -144,6 +144,10 @@ public class ServerUtils {
                 consumer.accept((T) payload);
             }
         });
+    }
+
+    public static void disconnectWebsocket(){
+        session.disconnect();
     }
 
     public void send(String dest, Object o){

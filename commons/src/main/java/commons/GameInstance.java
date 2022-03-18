@@ -1,6 +1,10 @@
 package commons;
 
 import commons.player.Player;
+import commons.question.Question;
+import commons.question.QuestionHowMuch;
+import commons.question.QuestionMoreExpensive;
+import commons.question.QuestionWhichOne;
 import org.apache.commons.lang3.builder.EqualsBuilder;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
 import org.apache.commons.lang3.builder.ToStringBuilder;

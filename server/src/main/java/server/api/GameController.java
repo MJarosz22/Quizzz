@@ -4,14 +4,15 @@ package server.api;
 import commons.*;
 import commons.player.Player;
 import commons.player.SimpleUser;
-import communication.RequestToJoin;
+import commons.question.Question;
+import commons.communication.RequestToJoin;
+import org.apache.catalina.Server;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.core.io.InputStreamResource;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.ResponseCookie;
 import org.springframework.http.ResponseEntity;
-import org.springframework.messaging.Message;
 import org.springframework.messaging.handler.annotation.MessageMapping;
 import org.springframework.messaging.handler.annotation.SendTo;
 import org.springframework.messaging.simp.SimpMessagingTemplate;
@@ -187,6 +188,26 @@ public class GameController {
         return time;
     }
 
+    @GetMapping("/{gameInstanceId}/question")
+    public ResponseEntity<Question> getQuestion(@PathVariable int gameInstanceId,
+                                                @CookieValue(name = "user-id", defaultValue = "null") String cookie){
+        Player player = getPlayerFromGameInstance(gameInstanceId, cookie);
+        if(player == null) return ResponseEntity.badRequest().build();
+        ServerGameInstance gameInstance = gameInstances.get(player.getGameInstanceId());
+        if(gameInstance.getState() != GameState.INQUESTION) return ResponseEntity.notFound().build();
+        return ResponseEntity.ok(gameInstance.getCurrentQuestion());
+    }
+
+    @GetMapping("/{gameInstanceId}/timeleft")
+    public ResponseEntity<Integer> getTimeLeft(@PathVariable int gameInstanceId,
+                                               @CookieValue(name = "user-id", defaultValue = "null") String cookie){
+        Player player = getPlayerFromGameInstance(gameInstanceId, cookie);
+        if(player == null) return ResponseEntity.badRequest().build();
+        ServerGameInstance gameInstance = gameInstances.get(player.getGameInstanceId());
+        if(gameInstance.getState() != GameState.INQUESTION) return ResponseEntity.notFound().build();
+        return ResponseEntity.ok(gameInstance.getTimeLeft());
+    }
+
     /**
      * Additional method that checks whether cookie given is from a player connected to gameInstance with ID
      * @param gameInstanceId ID of GameInstance
@@ -199,6 +220,5 @@ public class GameController {
         if (optPlayer.isEmpty()) return null;
         else return optPlayer.get();
     }
-
 
 }
