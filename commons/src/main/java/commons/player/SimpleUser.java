@@ -60,7 +60,7 @@ public class SimpleUser {
         this.id = id;
     }
 
-    public long getScore() {
+    public int getScore() {
         return score;
     }
 

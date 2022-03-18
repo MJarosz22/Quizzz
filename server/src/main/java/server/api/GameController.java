@@ -1,6 +1,7 @@
 package server.api;
 
 
+import commons.Activity;
 import commons.GameInstance;
 import commons.Question;
 import commons.player.Player;
@@ -191,7 +192,7 @@ public class GameController {
      */
     @GetMapping("/getLastGIIdMult")
     public ResponseEntity<Integer> getLastGIIdMult() {
-        if (currentMPGIId < 0 || currentMPGIId > gameInstances.size()) return ResponseEntity.badRequest().build();
+        if (currentMPGIId < 0 || currentMPGIId >= gameInstances.size()) return ResponseEntity.badRequest().build();
         return ResponseEntity.ok(currentMPGIId);
     }
 
@@ -203,7 +204,7 @@ public class GameController {
      */
     @GetMapping("/{gameInstanceId}/playerlist")
     public ResponseEntity<List<SimpleUser>> getPlayerList(@PathVariable int gameInstanceId) {
-        if (currentMPGIId < 0 || currentMPGIId > gameInstances.size()) return ResponseEntity.badRequest().build();
+        if (gameInstanceId < 0 || gameInstanceId >= gameInstances.size()) return ResponseEntity.badRequest().build();
         return ResponseEntity.ok(gameInstances.get(gameInstanceId).getPlayers()
                 .stream().map(p -> p.toSimpleUser().unsafe()).collect(Collectors.toList()));
     }
@@ -216,8 +217,24 @@ public class GameController {
      */
     @GetMapping("/getLastGIIdSingle")
     public ResponseEntity<Integer> getLastGIIdSingle() {
-        if (currentSPGIId < 0 || currentSPGIId > gameInstances.size()) return ResponseEntity.badRequest().build();
+        if (currentSPGIId < 0 || currentSPGIId >= gameInstances.size()) return ResponseEntity.badRequest().build();
         return ResponseEntity.ok(currentSPGIId);
+
+    }
+
+    @PutMapping("/{id}/updatePlayer")
+    public ResponseEntity<SimpleUser> updatePlayer(@PathVariable("id") long id, @RequestBody SimpleUser player) {
+        if (player == null || id != player.getId())
+            return ResponseEntity.badRequest().build();
+
+        Optional<SimpleUser> playerToModify = players.stream().filter(pl -> pl.getCookie().equals(player.getCookie())).findFirst();
+        if (!playerToModify.isPresent())
+            return ResponseEntity.notFound().build();
+        else {
+            playerToModify.get().setScore(player.getScore());
+            gameInstances.get(player.getGameInstanceId()).getPlayers().get(0).setScore(player.getScore());
+            return ResponseEntity.ok(playerToModify.get());
+        }
 
     }
 

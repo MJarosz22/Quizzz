@@ -1,6 +1,7 @@
 package client.utils;
 
 import commons.Activity;
+import commons.player.Player;
 import commons.player.SimpleUser;
 import communication.RequestToJoin;
 import jakarta.ws.rs.client.Client;
@@ -8,11 +9,13 @@ import jakarta.ws.rs.client.ClientBuilder;
 import jakarta.ws.rs.client.Entity;
 import jakarta.ws.rs.core.GenericType;
 import jakarta.ws.rs.core.Response;
+import javassist.Loader;
 import org.glassfish.jersey.client.ClientConfig;
 
 import java.io.FileNotFoundException;
 import java.io.InputStream;
 import java.util.List;
+import java.util.Optional;
 
 import static jakarta.ws.rs.core.MediaType.APPLICATION_JSON;
 
@@ -129,18 +132,30 @@ public class ServerUtils {
                 });
     }
 
+    public SimpleUser updatePlayer(SimpleUser player) {
+        return ClientBuilder.newClient(new ClientConfig())
+                .target(SERVER).path("api/game/" + player.getId() + "/updatePlayer")
+                .request(APPLICATION_JSON)
+                .accept(APPLICATION_JSON)
+                .put(Entity.entity(player, APPLICATION_JSON), SimpleUser.class);
+
+    }
+
     // ------------------------------------ ADDITIONAL METHODS ------------------------------------ //
 
     /**
-     * Additional method that checks whether a player hasn't disconnected from a game
+     * Additional method that checks whether a player hasn't disconnected from a game, by comparing cookies, which are
+     * used as identifiers (as each player has an unique cookie).
      *
      * @param player - SimpleUser object that represents the player we are interested in
      * @return true, if the player has not disconnected yet, or false otherwise
      */
     public boolean containsPlayer(SimpleUser player) {
+        Optional<Boolean> contains = getPlayerList(player.getGameInstanceId())
+                .stream().map(x -> x.getCookie().equals(player.getCookie())).findFirst();
         return (player != null
                 && getPlayerList(player.getGameInstanceId()) != null
-                && getPlayerList(player.getGameInstanceId()).contains(player)
+                && contains.isPresent()
         );
     }
 }
