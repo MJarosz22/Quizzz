@@ -774,7 +774,7 @@ public class SinglePlayerGameCtrl {
      * Makes the confirmation pop-up invisible
      */
     public void disablePopUp() {
-        confirmationExit.setVisible(false);
+        confirmationExit.setOpacity(0);
         confirmationExit.setDisable(true);
     }
 
@@ -784,7 +784,7 @@ public class SinglePlayerGameCtrl {
      * TODO: trigger the same method when clicking on 'x' of the window
      */
     public void enablePopUp() {
-        confirmationExit.setVisible(true);
+        confirmationExit.setOpacity(1);
         confirmationExit.setDisable(false);
         confirmationExit.setStyle("-fx-background-color: #91e4fb; ");
     }
