@@ -1,7 +1,6 @@
 package server.api;
 
 
-import commons.Activity;
 import commons.GameInstance;
 import commons.Question;
 import commons.player.Player;
@@ -200,13 +199,15 @@ public class GameController {
      * Additional method that returns the player list of a game instance
      *
      * @param gameInstanceId ID of GameInstance
-     * @return the ID of the last Multiplayer Game Instance
+     * @return ResponseEntity object that reutrns 400 BAD SYNTAX if the gameInstanceId is not in the appropriate range, or
+     * 200 STATUS OK with a body consisting of the list of all players that are currently playing in a game uniquely identfied
+     * by gameInstanceID
      */
     @GetMapping("/{gameInstanceId}/playerlist")
     public ResponseEntity<List<SimpleUser>> getPlayerList(@PathVariable int gameInstanceId) {
         if (gameInstanceId < 0 || gameInstanceId >= gameInstances.size()) return ResponseEntity.badRequest().build();
-        return ResponseEntity.ok(gameInstances.get(gameInstanceId).getPlayers()
-                .stream().map(p -> p.toSimpleUser().unsafe()).collect(Collectors.toList()));
+        List<SimpleUser> playerList = players.stream().filter(x -> x.getGameInstanceId() == gameInstanceId).collect(Collectors.toList());
+        return ResponseEntity.ok(playerList);
     }
 
 
@@ -222,18 +223,38 @@ public class GameController {
 
     }
 
+    /**
+     * Method that updates the score of a given player on the server-side
+     *
+     * @param id     long primitive that uniquely identifies our SimpleUser instance
+     * @param player SimpleUser instance that needs to have his/her score updated
+     * @return ResponseEntity that returns 404 NOT_FOUND if the player does not exist, or 200 STATUS OK with a body
+     * consisting of information regarding modified player
+     */
     @PutMapping("/{id}/updatePlayer")
     public ResponseEntity<SimpleUser> updatePlayer(@PathVariable("id") long id, @RequestBody SimpleUser player) {
-        if (player == null || id != player.getId())
-            return ResponseEntity.badRequest().build();
+        if (player == null)
+            return ResponseEntity.notFound().build();
 
-        Optional<SimpleUser> playerToModify = players.stream().filter(pl -> pl.getCookie().equals(player.getCookie())).findFirst();
-        if (!playerToModify.isPresent())
+        SimpleUser playerToModify = null;
+
+        for (SimpleUser pl : players)
+            if (pl.getId() == player.getId()) {
+                playerToModify = pl;
+                break;
+            }
+        if (playerToModify == null)
             return ResponseEntity.notFound().build();
         else {
-            playerToModify.get().setScore(player.getScore());
-            gameInstances.get(player.getGameInstanceId()).getPlayers().get(0).setScore(player.getScore());
-            return ResponseEntity.ok(playerToModify.get());
+            playerToModify.setScore(player.getScore());
+            List<Player> listOfPlayers = gameInstances.get(player.getGameInstanceId()).getPlayers();
+            for (Player pl : listOfPlayers)
+                if (pl.getId() == player.getId()) {
+                    pl.setScore(player.getScore());
+                    break;
+                }
+            logger.info("[GI " + (player.getGameInstanceId()) + "] PLAYER (" + player.getId() + ") HAS NOW: " + player.getScore() + " POINTS!");
+            return ResponseEntity.ok(playerToModify);
         }
 
     }

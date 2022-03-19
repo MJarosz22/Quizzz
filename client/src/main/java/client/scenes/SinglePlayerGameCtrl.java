@@ -2,7 +2,6 @@ package client.scenes;
 
 import client.utils.ServerUtils;
 import com.google.inject.Inject;
-import com.sun.javafx.geom.AreaOp;
 import commons.*;
 import commons.player.SimpleUser;
 import jakarta.ws.rs.NotFoundException;
@@ -18,7 +17,6 @@ import javafx.scene.text.Text;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.net.URI;
-import java.sql.SQLOutput;
 import java.util.*;
 import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.Executors;
@@ -344,7 +342,7 @@ public class SinglePlayerGameCtrl {
         answered = true;
         int numberOfPoints = calculatePoints(timeLeft);
         player.addScore(numberOfPoints);
-        player = server.updatePlayer(player);
+        server.updatePlayer(player);
         score.setText("Your score: " + player.getScore());
         points.setText("+" + numberOfPoints + "points");
         answer.setText("Correct answer");
@@ -590,7 +588,7 @@ public class SinglePlayerGameCtrl {
                 }
             }
         }
-        player = server.updatePlayer(player);
+        server.updatePlayer(player);
     }
 
     /**
@@ -648,7 +646,7 @@ public class SinglePlayerGameCtrl {
         if (response == ((QuestionWhichOne) currentQuestion).getActivity().getConsumption_in_wh()) {
             int numberOfPoints = calculatePoints(timeLeft);
             player.addScore(numberOfPoints);
-            player = server.updatePlayer(player);
+            server.updatePlayer(player);
             score.setText("Your score: " + player.getScore());
             points.setText("+" + numberOfPoints + "points");
             answer.setText("Correct answer");
@@ -716,10 +714,6 @@ public class SinglePlayerGameCtrl {
                     setTimeLeft(countdown);
                     timer.setText(String.valueOf(countdown--));
                 }
-
-                System.out.println(player);
-                System.out.println(ServerUtils.getPlayerList(player.getGameInstanceId()).get(0));
-
             }
         };
         scheduler.scheduleAtFixedRate(runnable, 0, 1, SECONDS);
