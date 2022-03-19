@@ -1,17 +1,14 @@
 package client.game.scenes.multiplayer;
 
-import client.game.Main;
 import client.game.scenes.MainCtrl;
 import client.utils.ServerUtils;
 import commons.question.Answer;
-import commons.question.Question;
 import commons.question.QuestionWhichOne;
 import javafx.application.Platform;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.scene.control.ProgressBar;
 import javafx.scene.control.RadioButton;
-import javafx.scene.control.TextField;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.AnchorPane;
