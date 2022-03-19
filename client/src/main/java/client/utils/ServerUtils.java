@@ -40,7 +40,8 @@ public class ServerUtils {
                 .get(new GenericType<>() {
                 });
     }
-    public List<Activity> getActivitiesRandomly() throws NotFoundException{
+
+    public List<Activity> getActivitiesRandomly() throws NotFoundException {
         return ClientBuilder.newClient(new ClientConfig())
                 .target(SERVER).path("api/activities/random60")
                 .request(APPLICATION_JSON)
@@ -149,11 +150,9 @@ public class ServerUtils {
      * @return true, if the player has not disconnected yet, or false otherwise
      */
     public boolean containsPlayer(SimpleUser player) {
+        if (player == null || getPlayerList(player.getGameInstanceId()) == null) return false;
         Optional<Boolean> contains = getPlayerList(player.getGameInstanceId())
                 .stream().map(x -> x.getCookie().equals(player.getCookie())).findFirst();
-        return (player != null
-                && getPlayerList(player.getGameInstanceId()) != null
-                && contains.isPresent()
-        );
+        return (contains.isPresent());
     }
 }
