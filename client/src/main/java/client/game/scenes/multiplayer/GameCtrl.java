@@ -6,18 +6,17 @@ import java.util.function.Consumer;
 
 public class GameCtrl {
 
-    public void start(){
+    public void start() {
         ServerUtils.initWebsocket();
     }
 
-    public <T> void subscribe(String destination, Class<T> type, Consumer<T> consumer){
+    public <T> void subscribe(String destination, Class<T> type, Consumer<T> consumer) {
         ServerUtils.registerForMessages(destination, type, consumer);
     }
 
-    public void disconnect(){
+    public void disconnect() {
         ServerUtils.disconnectWebsocket();
     }
-
 
 
 }

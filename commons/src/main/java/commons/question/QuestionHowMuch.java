@@ -23,8 +23,6 @@ public class QuestionHowMuch extends Question {
     }
 
 
-
-
     public Activity getActivity() {
         return activity;
     }

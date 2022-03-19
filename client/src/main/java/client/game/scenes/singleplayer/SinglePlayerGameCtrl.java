@@ -3,7 +3,7 @@ package client.game.scenes.singleplayer;
 import client.game.scenes.MainCtrl;
 import client.utils.ServerUtils;
 import com.google.inject.Inject;
-import commons.*;
+import commons.GameInstance;
 import commons.player.SimpleUser;
 import commons.question.Question;
 import commons.question.QuestionHowMuch;
@@ -22,7 +22,7 @@ import javafx.scene.text.Text;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.net.URI;
-import java.util.*;
+import java.util.Random;
 import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
@@ -89,7 +89,7 @@ public class SinglePlayerGameCtrl {
             currentGame = new GameInstance(this.player.getGameInstanceId(), 0);
             try {
                 currentGame.generateQuestions(server.getActivitiesRandomly());
-            }catch (NotFoundException e){
+            } catch (NotFoundException e) {
                 Alert alert = new Alert(Alert.AlertType.ERROR, "No activities found on server! Returning to lobby");
                 alert.show();
                 leaveGame();

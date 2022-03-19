@@ -15,11 +15,11 @@
  */
 package client;
 
-import client.game.scenes.LeaderBoardCtrl;
-import client.game.scenes.MainCtrl;
 import client.activity.scenes.ActivityOverviewCtrl;
 import client.activity.scenes.AddActivityCtrl;
 import client.activity.scenes.MainActivityCtrl;
+import client.game.scenes.LeaderBoardCtrl;
+import client.game.scenes.MainCtrl;
 import client.game.scenes.pregame.LobbyCtrl;
 import client.game.scenes.pregame.MultiPlayerCtrl;
 import client.game.scenes.pregame.SinglePlayerCtrl;

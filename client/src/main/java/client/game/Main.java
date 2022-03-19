@@ -35,8 +35,6 @@ import javafx.scene.control.Alert;
 import javafx.scene.control.ButtonType;
 import javafx.stage.Stage;
 
-import static com.google.inject.Guice.createInjector;
-
 public class Main extends Application {
 
     private static final Injector INJECTOR = Guice.createInjector(new MyModule());

@@ -1,7 +1,6 @@
 package commons.communication;
 
 import commons.GameInstance;
-import commons.communication.RequestToJoin;
 import org.junit.jupiter.api.Test;
 
 import static org.junit.jupiter.api.Assertions.*;

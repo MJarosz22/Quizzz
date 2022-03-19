@@ -7,7 +7,6 @@ import java.util.ArrayList;
 import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.*;
-import static org.junit.jupiter.api.Assertions.assertTrue;
 
 //TODO: Test the getQuesiton, setQuesiton and generateQuestion methods (after we finish designing Question class).
 public class GameInstanceTest {

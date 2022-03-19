@@ -62,6 +62,7 @@ public class GameController {
 
     /**
      * Lets a client join a gameInstance as a player
+     *
      * @param request Request of player (includes name of player and gameType(Singleplayer or Multiplayer))
      * @return Simple User (Including name, cookie and gameInstanceID)
      */
@@ -72,7 +73,7 @@ public class GameController {
                 (request.getName() + System.currentTimeMillis()).getBytes(StandardCharsets.UTF_8))).build();
 
         SimpleUser savedPlayer;
-        switch (request.getGameType()){
+        switch (request.getGameType()) {
             case GameInstance.SINGLE_PLAYER:
                 ServerGameInstance gameInstance = new ServerGameInstance(gameInstances.size(), GameInstance.SINGLE_PLAYER, this, msgs);
                 gameInstances.add(gameInstance);
@@ -101,9 +102,9 @@ public class GameController {
     }
 
     @GetMapping(value = "/activities/{activityFolder}/{activityFile}",
-    produces = "image/jpg")
-    public ResponseEntity<InputStreamResource> getImage(@PathVariable String activityFolder, @PathVariable String activityFile){
-        try{
+            produces = "image/jpg")
+    public ResponseEntity<InputStreamResource> getImage(@PathVariable String activityFolder, @PathVariable String activityFile) {
+        try {
             InputStream inputStream = new FileInputStream(ActivityLoader.path + activityFolder + "/" + activityFile);
             return ResponseEntity.ok(new InputStreamResource(inputStream));
         } catch (FileNotFoundException e) {
@@ -115,11 +116,11 @@ public class GameController {
 
     @MessageMapping("/time")
     @SendTo("/topic/time")
-    public int setTime(int time){
+    public int setTime(int time) {
         return time;
     }
 
-    public List<ServerGameInstance> getGameInstances(){
+    public List<ServerGameInstance> getGameInstances() {
         return gameInstances;
     }
 

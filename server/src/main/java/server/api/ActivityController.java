@@ -138,7 +138,7 @@ public class ActivityController {
     public ResponseEntity<List<Activity>> getRandom60() {
         //hard coded -> size of all activities - 60
         long countIds = activityRepository.count();
-        if(activityRepository.count() == 0) {
+        if (activityRepository.count() == 0) {
             logger.error("No activities found for lobby...");
             return ResponseEntity.notFound().build();
         }

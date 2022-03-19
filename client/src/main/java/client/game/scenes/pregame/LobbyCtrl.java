@@ -60,14 +60,16 @@ public class LobbyCtrl implements Initializable {
         mainCtrl.showSplash();
     }
 
-    public void init(){
+    public void init() {
         ServerUtils.initWebsocket();
         registerForMessages();
     }
 
-    public void registerForMessages(){
-        server.registerForMessages("/topic/time", Integer.class , time -> {
-            Platform.runLater(()->{labelName.setText(time.toString());});
+    public void registerForMessages() {
+        server.registerForMessages("/topic/time", Integer.class, time -> {
+            Platform.runLater(() -> {
+                labelName.setText(time.toString());
+            });
             System.out.println(time);
         });
     }
