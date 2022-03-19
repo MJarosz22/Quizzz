@@ -22,6 +22,8 @@ import javafx.scene.Scene;
 import javafx.stage.Stage;
 import javafx.util.Pair;
 
+import java.util.Properties;
+
 public class MainCtrl {
 
     private Stage primaryStage;
@@ -105,11 +107,13 @@ public class MainCtrl {
 
     public void showLeaderBoard() {
         primaryStage.setTitle("Quizzz leader board");
+        leaderBoardCtrl.setTablePlayers(ServerUtils.getLeaderboard(player));
         primaryStage.setScene(leaderboard);
     }
 
     public void showSinglePlayerGameOver() {
         primaryStage.setTitle("GAME OVER");
+        singlePlayerGameOverCtrl.setTablePlayers(ServerUtils.getLeaderboard(player));
         primaryStage.setScene(singleGameOver);
     }
 
@@ -135,4 +139,5 @@ public class MainCtrl {
     public void setPlayer(SimpleUser player) {
         this.player = player;
     }
+
 }

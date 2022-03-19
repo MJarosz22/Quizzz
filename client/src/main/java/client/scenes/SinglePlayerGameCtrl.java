@@ -94,9 +94,11 @@ public class SinglePlayerGameCtrl {
             progressBar.setProgress(-0.05);
             score.setText("Your score: 0");
             roundCounter = 1;
+
             loadNextQuestion();
         }
     }
+
 
     /**
      * This method gets called before every round. Load next question, update the board.
@@ -731,6 +733,8 @@ public class SinglePlayerGameCtrl {
             } catch (InterruptedException e) {
                 e.printStackTrace();
             }
+
+            server.addPlayerToLeaderboard(new SimpleUser(player.getName(), (int) player.getScore()));
 
             Platform.runLater(() -> {
                 mainCtrl.showSinglePlayerGameOver();

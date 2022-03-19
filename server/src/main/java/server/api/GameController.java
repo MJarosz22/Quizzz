@@ -40,7 +40,6 @@ public class GameController {
 
     /**
      * Creates the GameController and initializes the first gameInstance
-     *
      * @param random             Random class
      * @param activityRepository Repository of all Activities
      */

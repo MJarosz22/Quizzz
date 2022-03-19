@@ -95,4 +95,22 @@ public class ServerUtils {
                 .delete(new GenericType<>() {
                 });
     }
+
+    public SimpleUser addPlayerToLeaderboard(SimpleUser player){
+        Client client = ClientBuilder.newClient(new ClientConfig());
+        return client
+                .target(SERVER).path("api/leaderboard/addPlayer")
+                .request(APPLICATION_JSON)
+                .accept(APPLICATION_JSON)
+                .post(Entity.entity(player, APPLICATION_JSON), SimpleUser.class);
+    }
+
+    public static List<SimpleUser> getLeaderboard(SimpleUser player) {
+        Client client = ClientBuilder.newClient(new ClientConfig());
+        return client //
+                .target(SERVER).path("api/leaderboard")
+                .request(APPLICATION_JSON)
+                .get(new GenericType<>() {
+                });
+    }
 }
