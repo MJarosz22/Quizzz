@@ -32,7 +32,7 @@ public class ServerUtils {
 
     private static final String location = "localhost:8080";
     private static final String SERVER = "http://localhost:8080/";
-    private static StompSession session;
+    private StompSession session;
 
     public static List<SimpleUser> getPlayers(SimpleUser player) {
         Client client = ClientBuilder.newClient(new ClientConfig());
@@ -163,11 +163,11 @@ public class ServerUtils {
                 });
     }
 
-    public static void initWebsocket() {
+    public void initWebsocket() {
         session = connect("ws://" + location + "/websocket");
     }
 
-    private static StompSession connect(String url) {
+    private StompSession connect(String url) {
         var client = new StandardWebSocketClient();
         var stomp = new WebSocketStompClient(client);
         stomp.setMessageConverter(new MappingJackson2MessageConverter());
@@ -182,7 +182,7 @@ public class ServerUtils {
     }
 
 
-    public static <T> void registerForMessages(String dest, Class<T> type, Consumer<T> consumer) {
+    public <T> void registerForMessages(String dest, Class<T> type, Consumer<T> consumer) {
 //        if(!session.isConnected()) initWebsocket();
         session.subscribe(dest, new StompFrameHandler() {
             @Override
@@ -208,7 +208,7 @@ public class ServerUtils {
                 .post(Entity.entity(answer, APPLICATION_JSON), Boolean.class);
     }
 
-    public static void disconnectWebsocket() {
+    public void disconnectWebsocket() {
         session.disconnect();
     }
 

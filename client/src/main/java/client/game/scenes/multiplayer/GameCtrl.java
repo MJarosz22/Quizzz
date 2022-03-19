@@ -61,7 +61,7 @@ public class GameCtrl {
     }
 
     public <T> void subscribe(String destination, Class<T> type, Consumer<T> consumer) {
-        ServerUtils.registerForMessages(destination, type, consumer);
+        server.registerForMessages(destination, type, consumer);
     }
 
     public void disconnect() {
@@ -87,10 +87,10 @@ public class GameCtrl {
     }
 
     private void goToMoreExpensive(QuestionMoreExpensive question) {
-        mainCtrl.showMoreExpensive();
+        mainCtrl.showMoreExpensive(question);
     }
 
     private void goToWhichOne(QuestionWhichOne question) {
-        mainCtrl.showWhichOne();
+        mainCtrl.showWhichOne(question);
     }
 }

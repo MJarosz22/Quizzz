@@ -27,6 +27,8 @@ import client.game.scenes.singleplayer.SinglePlayerGameCtrl;
 import client.game.scenes.singleplayer.SinglePlayerGameOverCtrl;
 import client.utils.ServerUtils;
 import commons.question.QuestionHowMuch;
+import commons.question.QuestionMoreExpensive;
+import commons.question.QuestionWhichOne;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.stage.Stage;
@@ -174,8 +176,9 @@ public class MainCtrl {
         return lobbyCtrl;
     }
 
-    public void showMoreExpensive() {
+    public void showMoreExpensive(QuestionMoreExpensive question) {
         primaryStage.setTitle("Quizzz More Expensive");
+        moreExpensiveCtrl.init(question);
         primaryStage.setScene(moreExpensive);
     }
 
@@ -185,8 +188,9 @@ public class MainCtrl {
         primaryStage.setScene(howMuch);
     }
 
-    public void showWhichOne() {
+    public void showWhichOne(QuestionWhichOne question) {
         primaryStage.setTitle("Quizzz Which One");
+        whichOneCtrl.init(question);
         primaryStage.setScene(whichOne);
     }
 
