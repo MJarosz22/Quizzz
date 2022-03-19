@@ -84,15 +84,15 @@
                 <Font name="Courier New Bold Italic" size="14.0" />
             </font>
         </Text>
-      <Pane fx:id="confirmationExit" layoutY="1.0" prefHeight="540.0" prefWidth="960.0">
+      <Pane fx:id="confirmationExit" layoutY="1.0" opacity="0.0" prefHeight="540.0" prefWidth="960.0">
          <children>
-            <Button layoutX="545.0" layoutY="336.0" mnemonicParsing="false" onAction="#leaveGame" prefHeight="158.0" prefWidth="349.0" text="YES" />
-            <Button layoutX="102.0" layoutY="337.0" mnemonicParsing="false" onAction="#disablePopUp" prefHeight="158.0" prefWidth="367.0" text="NO" />
-            <Text layoutX="257.0" layoutY="206.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Are you sure you want to leave the game? " wrappingWidth="576.4140625">
+            <Text layoutX="266.0" layoutY="248.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Are you sure you want to leave the game? " wrappingWidth="492.4140625">
                <font>
                   <Font size="28.0" />
                </font>
             </Text>
+            <Button layoutX="50.0" layoutY="300.0" mnemonicParsing="false" onAction="#disablePopUp" prefHeight="150.0" prefWidth="350.0" text="NO" />
+            <Button layoutX="550.0" layoutY="300.0" mnemonicParsing="false" onAction="#leaveGame" prefHeight="150.0" prefWidth="350.0" text="YES" />
          </children>
       </Pane>
     </children>

@@ -4,6 +4,8 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.jsontype.BasicPolymorphicTypeValidator;
 import com.fasterxml.jackson.databind.jsontype.PolymorphicTypeValidator;
 import commons.Activity;
+import commons.player.SimpleUser;
+import communication.RequestToJoin;
 import commons.communication.RequestToJoin;
 import commons.player.SimpleUser;
 import commons.question.Answer;
@@ -107,6 +109,38 @@ public class ServerUtils {
                 .request(APPLICATION_JSON).cookie("user-id", player.getCookie()) //
                 .accept(APPLICATION_JSON) //
                 .delete(new GenericType<>() {
+                });
+    }
+
+    public int getLastGIIdMult() {
+        Client client = ClientBuilder.newClient(new ClientConfig());
+        return client //
+                .target(SERVER).path("api/game/getLastGIIdMult") //
+                .request(APPLICATION_JSON) //
+                .accept(APPLICATION_JSON) //
+                .get(new GenericType<>() {
+                });
+    }
+
+    /*
+    public int getLastGIId() {
+        Client client = ClientBuilder.newClient(new ClientConfig());
+        return client //
+                .target(SERVER).path("api/game/getLastGIId") //
+                .request(APPLICATION_JSON) //
+                .accept(APPLICATION_JSON) //
+                .get(new GenericType<>() {
+                });
+    }
+    */
+
+    public static List<SimpleUser> getPlayerList(int gIId) {
+        Client client = ClientBuilder.newClient(new ClientConfig());
+        return client //
+                .target(SERVER).path("api/game/ " + gIId + "/playerlist") //
+                .request(APPLICATION_JSON) //
+                .accept(APPLICATION_JSON) //
+                .get(new GenericType<>() {
                 });
     }
 

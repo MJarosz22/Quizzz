@@ -59,7 +59,7 @@ public class LobbyCtrl implements Initializable {
         SimpleUser player = gameCtrl.getPlayer();
         server.disconnect(player);
         System.out.println(player.getName() + " disconnected!");
-        decreaseNumberOfPlayers();
+        //decreaseNumberOfPlayers();
         mainCtrl.showSplash();
     }
 
@@ -80,7 +80,8 @@ public class LobbyCtrl implements Initializable {
 //        mainCtrl.showPlayMode();
     }
 
-    /*public void setLabelName(String name) {
+    /*
+    public void setLabelName(String name) {
         labelName.setText(name);
     }*/
 
@@ -89,7 +90,7 @@ public class LobbyCtrl implements Initializable {
     }
 
     public int getPersons() {
-        return persons;
+        return server.getPlayerList(server.getLastGIIdMult()).size();
     }
 
     public void setPersons(int persons) {
@@ -99,22 +100,28 @@ public class LobbyCtrl implements Initializable {
     /**
      * Additional method that decreases the number of players that are currently in the lobby, when a player leaves.
      */
-    public void decreaseNumberOfPlayers() {
-        setPersons(getPersons() - 1);
-        changePrompt();
-    }
+    /*
+     public void decreaseNumberOfPlayers() {
+     setPersons(getPersons() - 1);
+     changePrompt();
+     }
+     */
 
     /**
      * Additional method that increases the number of players that are currently in the lobby, when a player joins.
      */
-    public void increaseNumberOfPlayers() {
-        setPersons(getPersons() + 1);
-        changePrompt();
-    }
+
+    /*
+     public void increaseNumberOfPlayers() {
+     setPersons(getPersons() + 1);
+     changePrompt();
+     }
+     */
 
     /**
      * Additional method that changes the prompt that gets called whenever a player joins/leaves the lobby
      */
+
     public void changePrompt() {
         if (getPersons() > 1)
             personsText.setText("There are " + getPersons() + " players out of the maximum capacity of 50");
@@ -122,9 +129,12 @@ public class LobbyCtrl implements Initializable {
             personsText.setText("There is " + getPersons() + " player out of the maximum capacity of 50");
     }
 
-    public void setPersonsText(String s) {
-        this.personsText.setText(s);
-    }
+    /*
+     public void setPersonsText(String s) {
+     this.personsText.setText(s);
+     }
+     */
+
 
     public void setCountdown(int time){
         labelName.setText(String.valueOf(time));
