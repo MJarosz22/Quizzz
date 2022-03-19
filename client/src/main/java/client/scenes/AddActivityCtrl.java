@@ -53,6 +53,7 @@ public class AddActivityCtrl {
     }
 
     public void back() {
+        clearFields();
         mainCtrl.showAdmin();
     }
 

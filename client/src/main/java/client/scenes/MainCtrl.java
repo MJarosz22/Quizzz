@@ -134,6 +134,7 @@ public class MainCtrl {
 
     public void showAdmin() {
         primaryStage.setTitle("Activity overview");
+        activityOverviewCtrl.refresh();
         primaryStage.setScene(overview);
     }
 

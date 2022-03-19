@@ -80,7 +80,7 @@ public class ServerUtils {
 
     public Activity updateActivity(Activity activity) {
         return ClientBuilder.newClient(new ClientConfig())
-                .target(SERVER).path("api/activities/" + activity.getId())
+                .target(SERVER).path("api/activities/" + activity.getActivityID())
                 .request(APPLICATION_JSON)
                 .accept(APPLICATION_JSON)
                 .put(Entity.entity(activity, APPLICATION_JSON), Activity.class);
