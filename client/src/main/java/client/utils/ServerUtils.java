@@ -1,7 +1,6 @@
 package client.utils;
 
 import commons.Activity;
-import commons.player.Player;
 import commons.player.SimpleUser;
 import communication.RequestToJoin;
 import jakarta.ws.rs.client.Client;
@@ -9,7 +8,6 @@ import jakarta.ws.rs.client.ClientBuilder;
 import jakarta.ws.rs.client.Entity;
 import jakarta.ws.rs.core.GenericType;
 import jakarta.ws.rs.core.Response;
-import javassist.Loader;
 import org.glassfish.jersey.client.ClientConfig;
 
 import java.io.FileNotFoundException;
