@@ -1,4 +1,4 @@
-image: gradle:7.3.3-jdk17-alpine
+image: 07joshua03/gitinspector
 
 variables:
   # Disable the Gradle daemon to ensure isolated runs of the CI pipeline.
@@ -16,3 +16,7 @@ build:
     paths:
       - ./coverage
   coverage: /TestCoverage:(\d+)%/
+
+gitinspector:
+  script:
+    - gitinspector -HTlrmw -F html > gitinspector.html
