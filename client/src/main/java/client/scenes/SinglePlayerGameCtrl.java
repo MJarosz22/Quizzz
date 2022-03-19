@@ -734,8 +734,6 @@ public class SinglePlayerGameCtrl {
      */
     public void gameOver(int timer) {
         gameIsOver = true;
-        server.addPlayerToLeaderboard(new SimpleUser(player.getName(), (int) player.getScore()));
-        server.disconnect(player);
         Thread thread = new Thread(() -> {
 
             try {
@@ -751,7 +749,8 @@ public class SinglePlayerGameCtrl {
 
         });
         thread.start();
-
+        server.addPlayerToLeaderboard(new SimpleUser(player.getName(), (int) player.getScore()));
+        server.disconnect(player);
     }
 
     /**
