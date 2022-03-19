@@ -127,4 +127,12 @@ public class ServerUtils {
                 .get(new GenericType<>() {
                 });
     }
+
+    public Activity deleteActivity(Activity activity) {
+        return ClientBuilder.newClient(new ClientConfig())
+                .target(SERVER).path("api/activities/" + activity.getActivityID())
+                .request(APPLICATION_JSON)
+                .accept(APPLICATION_JSON)
+                .delete(new GenericType<>(){});
+    }
 }

@@ -103,6 +103,12 @@ public class ActivityOverviewCtrl implements Initializable {
         refresh();
     }
 
+    public void delete() {
+        Activity activity = table.getSelectionModel().getSelectedItem();
+        server.deleteActivity(activity);
+        refresh();
+    }
+
     public void refresh() {
         var activities = server.getActivities();
         data = FXCollections.observableList(activities);

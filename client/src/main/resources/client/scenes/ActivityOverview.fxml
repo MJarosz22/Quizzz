@@ -24,14 +24,19 @@
             <TableColumn fx:id="columnSource" onEditCommit="#editSource" prefWidth="134.800048828125" text="Source" />
         </columns>
     </TableView>
-    <Button layoutX="396.0" layoutY="485.0" mnemonicParsing="false" onAction="#refresh" style="-fx-background-color: #fff;" text="REFRESH">
+    <Button layoutX="559.0" layoutY="485.0" mnemonicParsing="false" onAction="#refresh" style="-fx-background-color: #fff;" text="REFRESH">
         <font>
             <Font name="Courier New" size="15.0" />
         </font>
     </Button>
-    <Button layoutX="396.0" layoutY="485.0" mnemonicParsing="false" onAction="#addActivity" style="-fx-background-color: #fff;" text="ADD ACTIVITY">
+    <Button layoutX="300.0" layoutY="485.0" mnemonicParsing="false" onAction="#addActivity" style="-fx-background-color: #fff;" text="ADD ACTIVITY">
         <font>
             <Font name="Courier New" size="15.0" />
         </font>
     </Button>
+   <Button layoutX="457.0" layoutY="485.0" mnemonicParsing="false" onAction="#delete" style="-fx-background-color: #fff;" text="DELETE">
+      <font>
+         <Font name="Courier New" size="15.0" />
+      </font>
+   </Button>
 </AnchorPane>
