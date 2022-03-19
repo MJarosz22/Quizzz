@@ -10,6 +10,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.messaging.handler.annotation.MessageMapping;
+import org.springframework.messaging.handler.annotation.SendTo;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -22,8 +23,10 @@ public class GameInstanceController {
 
     private final Logger logger = LoggerFactory.getLogger(GameInstanceController.class);
     private final List<ServerGameInstance> gameInstances;
+    private final GameController gameController;
 
     public GameInstanceController(GameController gameController){
+        this.gameController = gameController;
         gameInstances = gameController.getGameInstances();
     }
 
@@ -70,8 +73,11 @@ public class GameInstanceController {
         Player removePlayer = getPlayerFromGameInstance(gameInstanceId, cookie);
         if(removePlayer == null) return ResponseEntity.status(HttpStatus.FORBIDDEN).build();
         logger.info("[GI " + (gameInstanceId) + "] PLAYER (" + removePlayer.getId() + ") DISCONNECTED");
+        gameInstances.get(gameInstanceId).updatePlayerList();
         return ResponseEntity.ok(gameInstances.get(gameInstanceId).getPlayers().remove(removePlayer));
     }
+
+
 
     @GetMapping("/question")
     public ResponseEntity<Question> getQuestion(@PathVariable int gameInstanceId,
@@ -114,6 +120,7 @@ public class GameInstanceController {
 
         return ResponseEntity.ok(true);
     }
+
 
     /**
      * Additional method that checks whether cookie given is from a player connected to gameInstance with ID

@@ -55,7 +55,6 @@ public class GameController {
         this.activityController = activityController;
         gameInstances = new ArrayList<>();
         gameInstances.add(new ServerGameInstance(gameInstances.size(), GameInstance.MULTI_PLAYER, this, msgs));
-
         players = new ArrayList<>();
     }
 
@@ -85,13 +84,14 @@ public class GameController {
                 break;
 
             case GameInstance.MULTI_PLAYER:
-                GameInstance currGameInstance = gameInstances.get(currentMPGIId);
+                ServerGameInstance currGameInstance = gameInstances.get(currentMPGIId);
                 savedPlayer = new SimpleUser(players.size(), request.getName(),
                         currGameInstance.getId(), tokenCookie.getValue());
                 players.add(savedPlayer);
                 currGameInstance.getPlayers().add(savedPlayer.toPlayer(currGameInstance));
                 logger.info("[GI " + (currGameInstance.getId()) + "] PLAYER (" + savedPlayer.getId() +
                         ") JOINED: NAME=" + savedPlayer.getName());
+                currGameInstance.updatePlayerList();
                 break;
 
             default:
@@ -99,6 +99,8 @@ public class GameController {
         }
         return ResponseEntity.ok().header(HttpHeaders.SET_COOKIE, tokenCookie.toString()).body(savedPlayer);
     }
+
+
 
     @GetMapping(value = "/activities/{activityFolder}/{activityFile}",
     produces = "image/jpg")
@@ -117,6 +119,12 @@ public class GameController {
     @SendTo("/topic/time")
     public int setTime(int time){
         return time;
+    }
+
+    public void createNewMultiplayerLobby(){
+        ServerGameInstance newGameInstance = new ServerGameInstance(gameInstances.size(), GameInstance.MULTI_PLAYER, this, msgs);
+        gameInstances.add(newGameInstance);
+        currentMPGIId = newGameInstance.getId();
     }
 
     public List<ServerGameInstance> getGameInstances(){

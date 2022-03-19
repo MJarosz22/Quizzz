@@ -3,8 +3,12 @@ package server.api;
 import commons.Activity;
 import commons.GameInstance;
 import commons.GameState;
+import commons.player.SimpleUser;
 import commons.question.Answer;
 import commons.question.Question;
+import org.apache.commons.lang3.builder.EqualsBuilder;
+import org.apache.commons.lang3.builder.HashCodeBuilder;
+import org.springframework.messaging.handler.annotation.SendTo;
 import org.springframework.messaging.simp.SimpMessagingTemplate;
 import org.springframework.scheduling.annotation.Async;
 import org.springframework.util.StopWatch;
@@ -12,6 +16,7 @@ import org.springframework.util.StopWatch;
 import java.util.List;
 import java.util.Timer;
 import java.util.TimerTask;
+import java.util.stream.Collectors;
 
 public class ServerGameInstance extends GameInstance{
 
@@ -48,6 +53,7 @@ public class ServerGameInstance extends GameInstance{
 
     @Async
     public void startGame(List<Activity> activities){
+        gameController.createNewMultiplayerLobby();
         setState(GameState.INQUESTION);
         generateQuestions(activities);
         nextQuestion();
@@ -89,4 +95,24 @@ public class ServerGameInstance extends GameInstance{
         return getQuestions().get(questionNumber).getAnswer();
     }
 
+    @SendTo("/topic/players")
+    public List<SimpleUser> updatePlayerList(){
+        return getPlayers().stream().map(SimpleUser.class::cast).collect(Collectors.toList());
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+
+        if (o == null || getClass() != o.getClass()) return false;
+
+        ServerGameInstance that = (ServerGameInstance) o;
+
+        return new EqualsBuilder().appendSuper(super.equals(o)).append(questionNumber, that.questionNumber).append(questionTime, that.questionTime).append(gameController, that.gameController).append(msgs, that.msgs).append(stopWatch, that.stopWatch).isEquals();
+    }
+
+    @Override
+    public int hashCode() {
+        return new HashCodeBuilder(17, 37).appendSuper(super.hashCode()).append(gameController).append(msgs).append(questionNumber).append(stopWatch).append(questionTime).toHashCode();
+    }
 }
