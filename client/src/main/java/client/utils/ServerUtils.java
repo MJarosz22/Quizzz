@@ -34,7 +34,7 @@ public class ServerUtils {
     public static List<SimpleUser> getPlayers(SimpleUser player) {
         Client client = ClientBuilder.newClient(new ClientConfig());
         return client //
-                .target(SERVER).path("api/game/ " + player.getGameInstanceId() + "/players") //
+                .target(SERVER).path("api/gameinstance/ " + player.getGameInstanceId() + "/players") //
                 .request(APPLICATION_JSON).cookie("user-id", player.getCookie()) //
                 .accept(APPLICATION_JSON) //
                 .get(new GenericType<>() {
@@ -99,7 +99,7 @@ public class ServerUtils {
     public boolean disconnect(SimpleUser player) {
         Client client = ClientBuilder.newClient(new ClientConfig());
         return client //
-                .target(SERVER).path("api/game/ " + player.getGameInstanceId() + "/disconnect") //
+                .target(SERVER).path("api/gameinstance/ " + player.getGameInstanceId() + "/disconnect") //
                 .request(APPLICATION_JSON).cookie("user-id", player.getCookie()) //
                 .accept(APPLICATION_JSON) //
                 .delete(new GenericType<>() {
@@ -109,7 +109,7 @@ public class ServerUtils {
     public boolean startGame(SimpleUser player){
         Client client = ClientBuilder.newClient(new ClientConfig());
         return client //
-                .target(SERVER).path("api/game/ " + player.getGameInstanceId() + "/start") //
+                .target(SERVER).path("api/gameinstance/ " + player.getGameInstanceId() + "/start") //
                 .request(APPLICATION_JSON).cookie("user-id", player.getCookie()) //
                 .accept(APPLICATION_JSON) //
                 .get(new GenericType<>(){});
@@ -151,7 +151,7 @@ public class ServerUtils {
         return ClientBuilder
                 .newClient(new ClientConfig())
                 .target(SERVER)
-                .path("api/game/" + player.getGameInstanceId() + "/answer")
+                .path("api/gameinstance/" + player.getGameInstanceId() + "/answer")
                 .request(APPLICATION_JSON).cookie("user-id", player.getCookie())
                 .accept(APPLICATION_JSON)
                 .post(Entity.entity(answer, APPLICATION_JSON), Boolean.class);

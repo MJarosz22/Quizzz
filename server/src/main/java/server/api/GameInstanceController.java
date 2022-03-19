@@ -19,7 +19,7 @@ import java.util.Optional;
 import java.util.stream.Collectors;
 
 @RestController
-@MessageMapping("api/game/{gameInstanceId}")
+@RequestMapping("api/gameinstance")
 public class GameInstanceController {
 
     //TODO ADD SCORING
@@ -35,13 +35,13 @@ public class GameInstanceController {
 
 
     /**
-     * Gets a questioosn from gameInstance
+     * Gets a question from gameInstance
      * @param gameInstanceId The gameInstance you want a question from
      * @param questionNumber Number of question you request
      * @param cookie Cookie of player
      * @return Requested question
      */
-    @GetMapping("/q{questionNumber}")
+    @GetMapping("/{gameInstanceId}/q{questionNumber}")
     public ResponseEntity<Question> getQuestion(@PathVariable int gameInstanceId, @PathVariable int questionNumber,
                                                 @CookieValue(name = "user-id", defaultValue = "null") String cookie) {
         if (gameInstanceId < 0 || gameInstanceId > gameInstances.size() - 1
@@ -62,7 +62,7 @@ public class GameInstanceController {
      * @param cookie Cookie of player
      * @return List of all players connected to gameInstance
      */
-    @GetMapping("/players")
+    @GetMapping("/{gameInstanceId}/players")
     public ResponseEntity<List<SimpleUser>> getPlayers(@PathVariable int gameInstanceId,
                                                        @CookieValue(name = "user-id", defaultValue = "null") String cookie) {
         if (getPlayerFromGameInstance(gameInstanceId, cookie) == null) return ResponseEntity.badRequest().build();
@@ -70,7 +70,7 @@ public class GameInstanceController {
                 .stream().map(p -> p.toSimpleUser().unsafe()).collect(Collectors.toList()));
     }
 
-    @DeleteMapping("/disconnect")
+    @DeleteMapping("/{gameInstanceId}/disconnect")
     public ResponseEntity<Boolean> disconnect(@PathVariable int gameInstanceId,
                                               @CookieValue(name = "user-id", defaultValue = "null") String cookie) {
         Player removePlayer = getPlayerFromGameInstance(gameInstanceId, cookie);
@@ -82,7 +82,7 @@ public class GameInstanceController {
 
 
 
-    @GetMapping("/question")
+    @GetMapping("/{gameInstanceId}/question")
     public ResponseEntity<Question> getQuestion(@PathVariable int gameInstanceId,
                                                 @CookieValue(name = "user-id", defaultValue = "null") String cookie){
         Player player = getPlayerFromGameInstance(gameInstanceId, cookie);
@@ -92,7 +92,7 @@ public class GameInstanceController {
         return ResponseEntity.ok(gameInstance.getCurrentQuestion());
     }
 
-    @GetMapping("/timeleft")
+    @GetMapping("/{gameInstanceId}/timeleft")
     public ResponseEntity<Integer> getTimeLeft(@PathVariable int gameInstanceId,
                                                @CookieValue(name = "user-id", defaultValue = "null") String cookie){
         Player player = getPlayerFromGameInstance(gameInstanceId, cookie);
@@ -102,7 +102,7 @@ public class GameInstanceController {
         return ResponseEntity.ok(gameInstance.getTimeLeft());
     }
 
-    @PostMapping("/answer")
+    @PostMapping("/{gameInstanceId}/answer")
     public ResponseEntity<Boolean> answerQuestion(@PathVariable int gameInstanceId, @RequestBody Answer answer,
                                                @CookieValue(name = "user-id", defaultValue = "null") String cookie){
         Player player = getPlayerFromGameInstance(gameInstanceId, cookie);
@@ -112,7 +112,7 @@ public class GameInstanceController {
         return ResponseEntity.ok(gameInstance.answerQuestion(player, answer));
     }
 
-    @GetMapping("/correctanswer")
+    @GetMapping("/{gameInstanceId}/correctanswer")
     public ResponseEntity<Long> getCorrectAnswer(@PathVariable int gameInstanceId,
                                                  @CookieValue(name = "user-id", defaultValue = "null") String cookie){
         Player player = getPlayerFromGameInstance(gameInstanceId, cookie);
@@ -122,7 +122,7 @@ public class GameInstanceController {
         return ResponseEntity.ok(gameInstance.getCorrectAnswer());
     }
 
-    @GetMapping("/start")
+    @GetMapping("/{gameInstanceId}/start")
     public ResponseEntity<Boolean> startGame(@PathVariable int gameInstanceId,
                                              @CookieValue(name = "user-id", defaultValue = "null") String cookie){
         if(gameInstances.get(gameInstanceId).getState().equals(GameState.STARTING)) return ResponseEntity.ok(true);
