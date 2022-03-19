@@ -47,13 +47,20 @@ public class MainCtrl {
     private LeaderBoardCtrl leaderBoardCtrl;
     private Scene leaderboard;
 
+    private ActivityOverviewCtrl activityOverviewCtrl;
+    private Scene overview;
+
+    private AddActivityCtrl addActivityCtrl;
+    private Scene add;
+
     private SimpleUser player;
 
     public void initialize(Stage primaryStage, Pair<SplashScreenCtrl, Parent> splash, Pair<SinglePlayerCtrl,
             Parent> single, Pair<SinglePlayerGameCtrl, Parent> singleGame,
                            Pair<SinglePlayerGameOverCtrl, Parent> singleGameOver,
                            Pair<MultiPlayerCtrl, Parent> multi,
-                           Pair<LeaderBoardCtrl, Parent> leaderboard, Pair<LobbyCtrl, Parent> lobby) {
+                           Pair<LeaderBoardCtrl, Parent> leaderboard, Pair<LobbyCtrl, Parent> lobby,
+                           Pair<ActivityOverviewCtrl, Parent> overview, Pair<AddActivityCtrl, Parent> add) {
 
         this.primaryStage = primaryStage;
         this.splashCtrl = splash.getKey();
@@ -77,6 +84,11 @@ public class MainCtrl {
         this.lobbyCtrl = lobby.getKey();
         this.lobby = new Scene(lobby.getValue());
 
+        this.activityOverviewCtrl = overview.getKey();
+        this.overview = new Scene(overview.getValue());
+
+        this.addActivityCtrl = add.getKey();
+        this.add = new Scene(add.getValue());
 
         showSplash();
         primaryStage.show();
@@ -118,6 +130,16 @@ public class MainCtrl {
         //lobbyCtrl.setLabelName(player.getName());
         lobbyCtrl.setTablePlayers(ServerUtils.getPlayers(player));
         primaryStage.setScene(lobby);
+    }
+
+    public void showAdmin() {
+        primaryStage.setTitle("Activity overview");
+        primaryStage.setScene(overview);
+    }
+
+    public void showAddActivity() {
+        primaryStage.setTitle("Add activity");
+        primaryStage.setScene(add);
     }
 
     public SimpleUser getPlayer() {

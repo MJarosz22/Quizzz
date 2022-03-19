@@ -20,7 +20,7 @@ import java.util.ResourceBundle;
 public class ActivityOverviewCtrl implements Initializable {
 
     private final ServerUtils server;
-    private final MainActivityCtrl mainActivityCtrl;
+    private final MainCtrl mainCtrl;
 
     private ObservableList<Activity> data;
 
@@ -44,9 +44,9 @@ public class ActivityOverviewCtrl implements Initializable {
 
     @Inject
 
-    public ActivityOverviewCtrl(ServerUtils server, MainActivityCtrl mainActivityCtrl) {
+    public ActivityOverviewCtrl(ServerUtils server, MainCtrl mainCtrl) {
         this.server = server;
-        this.mainActivityCtrl = mainActivityCtrl;
+        this.mainCtrl = mainCtrl;
     }
 
     @Override
@@ -66,11 +66,6 @@ public class ActivityOverviewCtrl implements Initializable {
         columnSource.setCellValueFactory(q -> new SimpleStringProperty(q.getValue().getSource()));
         columnSource.setCellFactory(TextFieldTableCell.forTableColumn());
     }
-
-    public void addActivity() {
-        mainActivityCtrl.showAdd();
-    }
-
 
     public void editID(TableColumn.CellEditEvent<Activity, String> productStringCellEditEvent) {
         Activity activity = table.getSelectionModel().getSelectedItem();
@@ -112,5 +107,13 @@ public class ActivityOverviewCtrl implements Initializable {
         var activities = server.getActivities();
         data = FXCollections.observableList(activities);
         table.setItems(data);
+    }
+
+    public void addActivity() {
+        mainCtrl.showAddActivity();
+    }
+
+    public void back() {
+        mainCtrl.showSplash();
     }
 }
