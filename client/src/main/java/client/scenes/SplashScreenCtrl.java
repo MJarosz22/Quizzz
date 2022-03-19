@@ -27,5 +27,5 @@ public class SplashScreenCtrl {
     public void showLB() {
         mainCtrl.showLeaderBoard();
     }
-
+    
 }
