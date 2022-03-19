@@ -733,6 +733,10 @@ public class SinglePlayerGameCtrl {
      * @param timer - an integer value representing the number of miliseconds after which the thread get executed.
      */
     public void gameOver(int timer) {
+        if(gameIsOver==false){
+            server.addPlayerToLeaderboard(new SimpleUser(player.getName(), (int) player.getScore()));
+            server.disconnect(player);
+        }
         gameIsOver = true;
         Thread thread = new Thread(() -> {
 
@@ -749,8 +753,6 @@ public class SinglePlayerGameCtrl {
 
         });
         thread.start();
-        server.addPlayerToLeaderboard(new SimpleUser(player.getName(), (int) player.getScore()));
-        server.disconnect(player);
     }
 
     /**
