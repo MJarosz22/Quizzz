@@ -17,9 +17,10 @@ public class QuestionMoreExpensive extends Question {
 
     private Activity[] activities = new Activity[3];
 
-    public QuestionMoreExpensive(Activity[] activities) {
+    public QuestionMoreExpensive(Activity[] activities, int number) {
         this.setTitle("What requires more energy?");
         this.activities = activities;
+        setNumber(number);
     }
 
     public QuestionMoreExpensive() {

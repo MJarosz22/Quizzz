@@ -4,15 +4,23 @@ import client.game.scenes.MainCtrl;
 import client.utils.ServerUtils;
 import com.google.inject.Inject;
 import commons.question.Answer;
+import commons.question.Question;
+import commons.question.QuestionHowMuch;
+import javafx.application.Platform;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.scene.control.Button;
 import javafx.scene.control.ProgressBar;
 import javafx.scene.control.TextField;
+import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.Pane;
 import javafx.scene.text.Text;
+
+import java.io.FileNotFoundException;
+import java.util.Timer;
+import java.util.TimerTask;
 
 public class HowMuchCtrl {
 
@@ -41,11 +49,39 @@ public class HowMuchCtrl {
     private MainCtrl mainCtrl;
     private GameCtrl gameCtrl;
 
+    private QuestionHowMuch question;
+
     @Inject
     public HowMuchCtrl(ServerUtils server, MainCtrl mainCtrl, GameCtrl gameCtrl) {
         this.server = server;
         this.mainCtrl = mainCtrl;
         this.gameCtrl = gameCtrl;
+    }
+
+    public void init(QuestionHowMuch question)  {
+        disablePopUp(null);
+        player_answer.clear();
+        this.question = question;
+        questionTitle.setText(question.getTitle());
+        questionCount.setText("Question " + question.getNumber() + "/20");
+        option4.setText(question.getActivity().getTitle());
+        progressBar.setProgress(question.getNumber() / 20.0d + 0.05);
+        try {
+            Image image = new Image(server.getImage(question.getActivity()));
+            image4.setImage(image);
+        } catch (FileNotFoundException e) {
+            System.out.println("Couldn't find image");
+        }
+        Timer scheduler = new Timer();
+        scheduler.scheduleAtFixedRate(new TimerTask() {
+            @Override
+            public void run() {
+                int timeLeft = server.getTimeLeft(gameCtrl.getPlayer());
+                Platform.runLater(()->{
+                    timer.setText(String.valueOf(timeLeft));
+                });
+            }
+        }, 0, 100);
     }
 
     public void disablePopUp(ActionEvent actionEvent) {

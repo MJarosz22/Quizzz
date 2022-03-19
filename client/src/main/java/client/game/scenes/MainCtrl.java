@@ -26,6 +26,7 @@ import client.game.scenes.pregame.SplashScreenCtrl;
 import client.game.scenes.singleplayer.SinglePlayerGameCtrl;
 import client.game.scenes.singleplayer.SinglePlayerGameOverCtrl;
 import client.utils.ServerUtils;
+import commons.question.QuestionHowMuch;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.stage.Stage;
@@ -178,8 +179,9 @@ public class MainCtrl {
         primaryStage.setTitle("Quizzz More Expensive");
         primaryStage.setScene(moreExpensive);
     }
-    public void showHowMuch() {
+    public void showHowMuch(QuestionHowMuch question) {
         primaryStage.setTitle("Quizzz How Much");
+        howMuchCtrl.init(question);
         primaryStage.setScene(howMuch);
     }
     public void showWhichOne() {

@@ -28,8 +28,9 @@ public class GameInstanceServer extends GameInstance{
     SimpMessagingTemplate msgs;
     int questionNumber = 1;
     StopWatch stopWatch;
-    int questionTime = 8000;
+    int questionTime = 12000;
     private List<ServerAnswer> answers;
+    private long startingTime;
     Logger logger = LoggerFactory.getLogger(GameInstanceServer.class);
 
     public GameInstanceServer(int id, int type, GameController controller, SimpMessagingTemplate msgs) {
@@ -48,13 +49,11 @@ public class GameInstanceServer extends GameInstance{
             @Override
             public void run() {
                 time--;
-                msgs.convertAndSend("/topic/time", time);
+                msgs.convertAndSend("/topic/" + getId() + "/time", time);
                 if(time == 0) {
                     timer.cancel();
                     //TODO START GAME
-                    List<Activity> activitysixty = gameController.activityController.getRandom60().getBody();
-                    System.out.println(activitysixty.size());
-                    startGame(activitysixty);
+                    startGame(gameController.activityController.getRandom60().getBody());
                 }
             }
         }, 0, 1000);
@@ -72,16 +71,17 @@ public class GameInstanceServer extends GameInstance{
         Question currentQuestion = getQuestions().get(questionNumber);
         logger.info("Question " + questionNumber + " sent" + currentQuestion);
         if(currentQuestion instanceof QuestionHowMuch){
-            msgs.convertAndSend("/topic/questionhowmuch", getQuestions().get(questionNumber));
+            msgs.convertAndSend("/topic/" + getId() + "/questionhowmuch", getQuestions().get(questionNumber));
         }else if (currentQuestion instanceof QuestionMoreExpensive){
-            msgs.convertAndSend("/topic/questionmoreexpensive", getQuestions().get(questionNumber));
+            msgs.convertAndSend("/topic/" + getId() + "/questionmoreexpensive", getQuestions().get(questionNumber));
         }else if(currentQuestion instanceof QuestionWhichOne){
-            msgs.convertAndSend("/topic/questionwhichone", getQuestions().get(questionNumber));
+            msgs.convertAndSend("/topic/" + getId() + "/questionwhichone", getQuestions().get(questionNumber));
         }else throw new IllegalStateException();
     }
 
     private void nextQuestion(){
         goToQuestion(questionNumber);
+        startingTime = System.currentTimeMillis();
         questionNumber++;
         stopWatch.start();
         Timer timer = new Timer();
@@ -97,11 +97,12 @@ public class GameInstanceServer extends GameInstance{
                 stopWatch.stop();
                 nextQuestion();
             }
-        }, 8000);
+        }, 12500);
     }
 
     public int getTimeLeft(){
-        int timeSpent = (int) stopWatch.getLastTaskTimeMillis();
+        int timeSpent = (int) (System.currentTimeMillis() - startingTime);
+//        int timeSpent = (int) stopWatch.getLastTaskTimeMillis();
         return questionTime - timeSpent;
     }
 
@@ -114,9 +115,11 @@ public class GameInstanceServer extends GameInstance{
         return getQuestions().get(questionNumber).getAnswer();
     }
 
-    @SendTo("/topic/players")
+
     public List<SimpleUser> updatePlayerList(){
-        return getPlayers().stream().map(SimpleUser.class::cast).collect(Collectors.toList());
+        ArrayList<SimpleUser> players = getPlayers().stream().map(SimpleUser.class::cast).collect(Collectors.toCollection(ArrayList::new));
+        msgs.convertAndSend("/topic/" + getId() + "/players", players);
+        return players;
     }
 
     public boolean answerQuestion(Player player, Answer answer){

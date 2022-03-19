@@ -19,6 +19,20 @@ public abstract class Question {
 
     private String title;
 
+    public void setId(long id) {
+        this.id = id;
+    }
+
+    public int getNumber() {
+        return number;
+    }
+
+    public void setNumber(int number) {
+        this.number = number;
+    }
+
+    private int number;
+
 
     public Question(){}
 

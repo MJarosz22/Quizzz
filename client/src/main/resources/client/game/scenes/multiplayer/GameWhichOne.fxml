@@ -5,7 +5,7 @@
 <?import javafx.scene.layout.*?>
 <?import javafx.scene.text.*?>
 
-<AnchorPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="540.0" prefWidth="960.0" style="-fx-background-color: #91e4fb;" xmlns="http://javafx.com/javafx/11.0.2" xmlns:fx="http://javafx.com/fxml/1" fx:controller="client.game.scenes.multiplayer.WhichOneCtrl">
+<AnchorPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="540.0" prefWidth="960.0" style="-fx-background-color: #91e4fb;" xmlns="http://javafx.com/javafx/11.0.14-internal" xmlns:fx="http://javafx.com/fxml/1" fx:controller="client.game.scenes.multiplayer.WhichOneCtrl">
     <children>
         <Text fx:id="score" layoutX="62.0" layoutY="51.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Score">
             <font>
@@ -33,9 +33,6 @@
                 <Font size="20.0" />
             </font>
         </Text>
-        <ImageView fx:id="image1" fitHeight="130.0" fitWidth="190.0" layoutX="123.0" layoutY="206.0" pickOnBounds="true" preserveRatio="true" />
-        <ImageView fx:id="image2" fitHeight="130.0" fitWidth="190.0" layoutX="388.0" layoutY="206.0" pickOnBounds="true" preserveRatio="true" />
-        <ImageView fx:id="image3" fitHeight="130.0" fitWidth="190.0" layoutX="690.0" layoutY="205.0" pickOnBounds="true" preserveRatio="true" />
         <Button layoutX="41.0" layoutY="434.0" mnemonicParsing="false" onAction="#enablePopUp" prefHeight="68.0" prefWidth="94.0" style="-fx-background-radius: 25;" text="LEAVE &#10;GAME" textAlignment="JUSTIFY" />
         <ProgressBar fx:id="progressBar" layoutX="12.0" layoutY="508.0" prefHeight="18.0" prefWidth="942.0" progress="0.0" />
         <Text fx:id="questionCount" layoutX="423.0" layoutY="522.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Question 0/20" wrappingWidth="115.0">

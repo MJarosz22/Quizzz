@@ -15,6 +15,7 @@ import org.apache.catalina.Server;
 
 import javax.inject.Inject;
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.function.Consumer;
 
 public class GameCtrl {
@@ -40,29 +41,28 @@ public class GameCtrl {
 
     public void start(){
         server.initWebsocket();
-        subscribe("/topic/time", Integer.class , time -> {
+        subscribe("/topic/" + getPlayer().getGameInstanceId() + "/time", Integer.class , time -> {
             Platform.runLater(()->{
                 mainCtrl.getLobbyCtrl().setCountdown(time);
             });
-            System.out.println(time);
         });
+
         //TODO FIND WAY TO DEAL WITH SUBCLASSES OF QUESTION
-        subscribe("/topic/questionhowmuch", QuestionHowMuch.class, question -> {
+        subscribe("/topic/" + getPlayer().getGameInstanceId() + "/questionhowmuch", QuestionHowMuch.class, question -> {
             Platform.runLater(()->{
-                System.out.println("how much");
+                goToHowMuch(question);
             });
         });
-        subscribe("/topic/questionmoreexpensive", QuestionMoreExpensive.class, question -> {
+        subscribe("/topic/" + getPlayer().getGameInstanceId() + "/questionmoreexpensive", QuestionMoreExpensive.class, question -> {
             Platform.runLater(()->{
-                System.out.println("more epxensive");
+                goToMoreExpensive(question);
             });
         });
-        subscribe("/topic/questionwhichone", QuestionWhichOne.class, question -> {
+        subscribe("/topic/" + getPlayer().getGameInstanceId() + "/questionwhichone", QuestionWhichOne.class, question -> {
             Platform.runLater(()->{
-                System.out.println("which one");
+                goToWhichOne(question);
             });
         });
-        System.out.println("subscribed");
     }
 
     public <T> void subscribe(String destination, Class<T> type, Consumer<T> consumer){
@@ -87,15 +87,15 @@ public class GameCtrl {
         this.player = player;
     }
 
-    private void goToHowMuch(){
-
+    private void goToHowMuch(QuestionHowMuch question){
+        mainCtrl.showHowMuch(question);
     }
 
-    private void goToMoreExpensive(){
-
+    private void goToMoreExpensive(QuestionMoreExpensive question){
+        mainCtrl.showMoreExpensive();
     }
 
-    private void goToWhichOne(){
-
+    private void goToWhichOne(QuestionWhichOne question){
+        mainCtrl.showWhichOne();
     }
 }

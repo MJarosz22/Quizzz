@@ -19,9 +19,10 @@ public class QuestionWhichOne extends Question {
 
     private Activity activity;
 
-    public QuestionWhichOne(Activity activity) {
+    public QuestionWhichOne(Activity activity, int number) {
         this.setTitle("How much energy does it take?");
         this.activity = activity;
+        setNumber(number);
     }
 
     public QuestionWhichOne(){}

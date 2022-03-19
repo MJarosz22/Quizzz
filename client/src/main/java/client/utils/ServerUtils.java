@@ -119,6 +119,15 @@ public class ServerUtils {
                 .get(new GenericType<>(){});
     }
 
+    public int getTimeLeft(SimpleUser player){
+        Client client = ClientBuilder.newClient(new ClientConfig());
+        return client //
+                .target(SERVER).path("api/gameinstance/ " + player.getGameInstanceId() + "/timeleft") //
+                .request(APPLICATION_JSON).cookie("user-id", player.getCookie()) //
+                .accept(APPLICATION_JSON) //
+                .get(new GenericType<>(){});
+    }
+
     public static void initWebsocket(){
         session = connect("ws://" + location + "/websocket");
     }
