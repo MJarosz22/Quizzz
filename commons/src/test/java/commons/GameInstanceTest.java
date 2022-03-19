@@ -9,7 +9,6 @@ import java.util.List;
 import static org.junit.jupiter.api.Assertions.*;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
-//TODO: Test the getQuesiton, setQuesiton and generateQuestion methods (after we finish designing Question class).
 public class GameInstanceTest {
     @Test
     public void checkConstructor() {
@@ -95,5 +94,81 @@ public class GameInstanceTest {
         assertTrue(s.contains("type="));
         assertTrue(s.contains("players="));
         assertTrue(s.contains("questions="));
+    }
+
+    @Test
+    public void generateQuestionFailsTest() {
+        GameInstance gameInstance = new GameInstance(0, GameInstance.SINGLE_PLAYER);
+        assertThrows(IllegalArgumentException.class, () -> {
+            gameInstance.generateQuestions(new ArrayList<Activity>());
+        });
+    }
+
+    @Test
+    public void generateQuestionTest() {
+        GameInstance gameInstance = new GameInstance(0, GameInstance.SINGLE_PLAYER);
+        List<Activity> activities = this.generateActivities();
+        gameInstance.generateQuestions(activities);
+        assertTrue(gameInstance.getQuestions().get(0) instanceof Question);
+    }
+
+    @Test
+    public void getQuestionsTest() {
+        GameInstance gameInstance = new GameInstance(0, GameInstance.SINGLE_PLAYER);
+        List<Activity> activities = this.generateActivities();
+        gameInstance.generateQuestions(activities);
+        Activity expectedActivity = new Activity("Activity-ID0", "0/test.png", "Title #0", 0L, "https://www.the-same-source.com");
+        QuestionWhichOne expectedQuestion = new QuestionWhichOne(expectedActivity);
+        assertEquals(expectedQuestion, gameInstance.getQuestions().get(0));
+    }
+
+    @Test
+    public void setQuestionsTest() {
+        GameInstance gameInstance = new GameInstance(0, GameInstance.SINGLE_PLAYER);
+        List<Activity> activities = this.generateActivities();
+        gameInstance.generateQuestions(activities);
+        List<Question> questions = new ArrayList<>();
+        Activity activity = new Activity("Activity-ID0", "0/test.png", "Title #0", 0L, "https://www.the-same-source.com");
+        QuestionWhichOne question = new QuestionWhichOne(activity);
+        questions.add(question);
+        gameInstance.setQuestions(questions);
+        assertEquals(gameInstance.getQuestions().size(), 1);
+        assertEquals(gameInstance.getQuestions().get(0), question);
+    }
+
+    @Test
+    public void questionsTestHardcode() {
+        GameInstance gameInstance = new GameInstance(0, GameInstance.SINGLE_PLAYER);
+        List<Question> questions = new ArrayList<>();
+        Activity act1 = new Activity("Activity-ID", "00/test.png", "Title", 6L, "https://www.google.com");
+        Activity act2 = new Activity("Activity-ID2", "01/test.png", "Other-title", 12L, "https://www.essay.com");
+
+        Question q1 = new QuestionHowMuch(act1);
+        Question q2 = new QuestionWhichOne(act1);
+        questions.add(q1);
+        questions.add(q2);
+
+        gameInstance.setQuestions(questions);
+        assertEquals(2, gameInstance.getQuestions().size());
+    }
+
+    //------------------------------------------------ ADDITIONAL METHODS ----------------------------------------------
+
+    public List<Activity> generateActivities() {
+        List<Activity> activities = new ArrayList<>();
+        Activity baseActivity = new Activity("Activity-ID", "00/test.png", "Title", 6L, "https://www.google.com");
+        for (int i = 0; i < 60; ++i) {
+            String counter = String.valueOf(i);
+            Activity generatedActivity = new Activity(
+                    baseActivity.getId() + counter,
+                    counter + "/test.png",
+                    "Title #" + counter,
+                    Long.parseLong(counter),
+                    "https://www.the-same-source.com"
+            );
+            activities.add(generatedActivity);
+        }
+
+        return activities;
     }
 }

@@ -48,3 +48,7 @@ quizzzz.trace.db
 
 # images #
 /client/src/main/resources/images/activities/
+
+# zip files #
+*.zip
+/server/src/main/resources/activities/
