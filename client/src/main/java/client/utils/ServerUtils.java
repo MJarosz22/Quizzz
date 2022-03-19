@@ -147,7 +147,7 @@ public class ServerUtils {
      * used as identifiers (as each player has an unique cookie).
      *
      * @param player - SimpleUser object that represents the player we are interested in
-     * @return true, if the player has not disconnected yet, or false otherwise
+     * @return false, if the player has disconnected, or true otherwise
      */
     public boolean containsPlayer(SimpleUser player) {
         if (player == null || getPlayerList(player.getGameInstanceId()) == null) return false;
