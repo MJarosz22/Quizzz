@@ -52,19 +52,25 @@ public class Main extends Application {
     public void start(Stage primaryStage) {
         var home = FXML.load(SplashScreenCtrl.class, "client/game/scenes/pregame", "SplashScreen.fxml");
         var single = FXML.load(SinglePlayerCtrl.class, "client/game/scenes/pregame", "SinglePlayer.fxml");
-        var singleGame = FXML.load(SinglePlayerGameCtrl.class, "client/game/scenes/singleplayer", "SinglePlayerGame.fxml");
-        var singleGameOver = FXML.load(SinglePlayerGameOverCtrl.class, "client/game/scenes/singleplayer", "SinglePlayerGameOver.fxml");
-        var multi = FXML.load(MultiPlayerCtrl.class, "client/game/scenes/pregame", "Multiplayer.fxml");
-        var leaderboard = FXML.load(LeaderBoardCtrl.class, "client/game/scenes/pregame", "LeaderBoard.fxml");
+        var singleGame = FXML.load(SinglePlayerGameCtrl.class,
+                "client/game/scenes/singleplayer", "SinglePlayerGame.fxml");
+        var singleGameOver = FXML.load(SinglePlayerGameOverCtrl.class,
+                "client/game/scenes/singleplayer", "SinglePlayerGameOver.fxml");
+        var multi = FXML.load(MultiPlayerCtrl.class,
+                "client/game/scenes/pregame", "Multiplayer.fxml");
+        var leaderboard = FXML.load(LeaderBoardCtrl.class,
+                "client/game/scenes/pregame", "LeaderBoard.fxml");
         var mainCtrl = INJECTOR.getInstance(MainCtrl.class);
         var gameCtrl = INJECTOR.getInstance(GameCtrl.class);
-        var moreExpensive = FXML.load(MoreExpensiveCtrl.class, "client", "game", "scenes", "multiplayer", "GameMoreExpensive.fxml");
+        var moreExpensive = FXML.load(MoreExpensiveCtrl.class,
+                "client", "game", "scenes", "multiplayer", "GameMoreExpensive.fxml");
         var howMuch = FXML.load(HowMuchCtrl.class, "client", "game", "scenes", "multiplayer", "GameHowMuch.fxml");
         var whichOne = FXML.load(WhichOneCtrl.class, "client", "game", "scenes", "multiplayer", "GameWhichOne.fxml");
         var lobby = FXML.load(LobbyCtrl.class, "client/game/scenes/pregame", "Lobby.fxml");
 
 
-        mainCtrl.initialize(primaryStage, home, single, singleGame, singleGameOver, multi, leaderboard, lobby, gameCtrl, moreExpensive, howMuch, whichOne);
+        mainCtrl.initialize(primaryStage, home, single, singleGame, singleGameOver, multi,
+                leaderboard, lobby, gameCtrl, moreExpensive, howMuch, whichOne);
         primaryStage.setOnCloseRequest(event -> {
             Alert alert = new Alert(Alert.AlertType.CONFIRMATION, "Do you want to close the game?", ButtonType.YES, ButtonType.NO);
             ButtonType result = alert.showAndWait().orElse(ButtonType.NO);
@@ -77,7 +83,6 @@ public class Main extends Application {
 
     /**
      * Method called whenever a client is closed (by pressing the 'x' button of the window).
-     * TODO: POP-UP asking for confirmation of closing the client.
      */
     @Override
     public void stop() {

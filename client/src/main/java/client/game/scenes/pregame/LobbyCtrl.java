@@ -75,8 +75,6 @@ public class LobbyCtrl implements Initializable {
     public void play() {
         server.startGame(gameCtrl.getPlayer());
         System.out.println("PLAYING");
-        //TODO CONNECT TO SERVER
-//        mainCtrl.showPlayMode();
     }
 
     /*
