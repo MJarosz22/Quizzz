@@ -14,7 +14,9 @@ public class SplashScreenCtrl {
         this.mainCtrl = mainCtrl;
     }
 
-    public void adminView() { mainCtrl.showAdmin(); }
+    public void adminView() {
+        mainCtrl.showAdmin();
+    }
 
     public void playSingle() {
         mainCtrl.showSinglePlayerMode();
