@@ -726,6 +726,7 @@ public class SinglePlayerGameCtrl {
      * @param timer - an integer value representing the number of miliseconds after which the thread get executed.
      */
     public void gameOver(int timer) {
+        server.addPlayerToLeaderboard(new SimpleUser(player.getName(), (int) player.getScore()));
         Thread thread = new Thread(() -> {
 
             try {
@@ -734,7 +735,7 @@ public class SinglePlayerGameCtrl {
                 e.printStackTrace();
             }
 
-            server.addPlayerToLeaderboard(new SimpleUser(player.getName(), (int) player.getScore()));
+
 
             Platform.runLater(() -> {
                 mainCtrl.showSinglePlayerGameOver();

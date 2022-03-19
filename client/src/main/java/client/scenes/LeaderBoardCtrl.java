@@ -17,8 +17,6 @@ import javafx.scene.control.TableView;
 import javafx.scene.control.cell.PropertyValueFactory;
 
 
-import java.util.ArrayList;
-import java.util.Collection;
 import java.util.Comparator;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -55,32 +53,35 @@ public class LeaderBoardCtrl {
     public void setTablePlayers(List<SimpleUser> players) {
         nameColumn.setCellValueFactory(new PropertyValueFactory<>("name"));
         scoreColumn.setCellValueFactory(new PropertyValueFactory<>("score"));
+
+        //show player positions
         positionColumn.setCellFactory(col -> {
-            TableCell<String, Integer> indexCell = new TableCell<>();
-            ReadOnlyObjectProperty<TableRow<String>> rowProperty = indexCell.tableRowProperty();
-            ObjectBinding<String> rowBinding = Bindings.createObjectBinding(() -> {
-                TableRow<String> row = rowProperty.get();
-                if (row != null) {
-                    int rowIndex = row.getIndex();
-                    if (rowIndex < row.getTableView().getItems().size()) {
-                        return Integer.toString(rowIndex);
-                    }
+            TableCell<String,Integer> cell = new TableCell<>();
+            cell.textProperty().bind(Bindings.createStringBinding(() -> {
+                if (cell.isEmpty()) {
+                    return null ;
+                } else {
+                    return Integer.toString(cell.getIndex() + 1);
                 }
-                return null;
-            }, rowProperty);
-            indexCell.textProperty().bind(rowBinding);
-            return indexCell;
+            }, cell.emptyProperty(), cell.indexProperty()));
+            return cell ;
         });
+
 
         //sort players
         var sortedPlayers = players.stream().sorted(Comparator
                 .comparingLong(SimpleUser::getScore).reversed())
                 .collect(Collectors.toList());
-        // Load objects into table
+
+
+        // Load players into table
         ObservableList<SimpleUser> data = FXCollections.observableList(sortedPlayers);
         tablePlayers.setItems(data);
-        /**for (SimpleUser simpleUser : sortedPlayers){
+
+
+        // alternative for loading players
+        /*for (SimpleUser simpleUser : sortedPlayers){
             tablePlayers.getItems().add(simpleUser);
-        }**/
+        }*/
     }
 }
