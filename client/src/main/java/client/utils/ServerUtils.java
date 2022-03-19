@@ -1,8 +1,8 @@
 package client.utils;
 
 import commons.Activity;
-import communication.RequestToJoin;
 import commons.player.SimpleUser;
+import communication.RequestToJoin;
 import jakarta.ws.rs.NotFoundException;
 import jakarta.ws.rs.client.Client;
 import jakarta.ws.rs.client.ClientBuilder;
@@ -93,6 +93,38 @@ public class ServerUtils {
                 .request(APPLICATION_JSON).cookie("user-id", player.getCookie()) //
                 .accept(APPLICATION_JSON) //
                 .delete(new GenericType<>() {
+                });
+    }
+
+    public int getLastGIIdMult() {
+        Client client = ClientBuilder.newClient(new ClientConfig());
+        return client //
+                .target(SERVER).path("api/game/getLastGIIdMult") //
+                .request(APPLICATION_JSON) //
+                .accept(APPLICATION_JSON) //
+                .get(new GenericType<>() {
+                });
+    }
+
+    /*
+    public int getLastGIId() {
+        Client client = ClientBuilder.newClient(new ClientConfig());
+        return client //
+                .target(SERVER).path("api/game/getLastGIId") //
+                .request(APPLICATION_JSON) //
+                .accept(APPLICATION_JSON) //
+                .get(new GenericType<>() {
+                });
+    }
+    */
+
+    public static List<SimpleUser> getPlayerList(int gIId) {
+        Client client = ClientBuilder.newClient(new ClientConfig());
+        return client //
+                .target(SERVER).path("api/game/ " + gIId + "/playerlist") //
+                .request(APPLICATION_JSON) //
+                .accept(APPLICATION_JSON) //
+                .get(new GenericType<>() {
                 });
     }
 }
