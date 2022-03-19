@@ -109,7 +109,8 @@ public class ActivityOverviewCtrl implements Initializable {
     public void delete() {
         Activity activity = table.getSelectionModel().getSelectedItem();
         try {
-            Alert alert = new Alert(Alert.AlertType.CONFIRMATION, "Do you want to delete event " + activity.getTitle() + "?", ButtonType.YES, ButtonType.NO);
+            Alert alert = new Alert(Alert.AlertType.CONFIRMATION, "Do you want to delete event " +
+                    activity.getTitle() + "?", ButtonType.YES, ButtonType.NO);
             ButtonType result = alert.showAndWait().orElse(ButtonType.NO);
             if (ButtonType.NO.equals(result))
                 return;
@@ -117,8 +118,7 @@ public class ActivityOverviewCtrl implements Initializable {
                 server.deleteActivity(activity);
                 refresh();
             }
-        }
-        catch(NullPointerException e) {
+        } catch(NullPointerException e) {
             return;
         }
     }
