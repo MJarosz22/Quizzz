@@ -1,6 +1,7 @@
 package client.game.scenes.pregame;
 
 import client.game.scenes.MainCtrl;
+import client.game.scenes.multiplayer.GameCtrl;
 import client.utils.ServerUtils;
 import com.google.inject.Inject;
 import commons.player.SimpleUser;
@@ -22,6 +23,7 @@ public class LobbyCtrl implements Initializable {
 
     private final ServerUtils server;
     private final MainCtrl mainCtrl;
+    private final GameCtrl gameCtrl;
     private static int persons;
 
     @FXML
@@ -37,9 +39,10 @@ public class LobbyCtrl implements Initializable {
     private TableColumn<SimpleUser, String> columnName;
 
     @Inject
-    public LobbyCtrl(ServerUtils server, MainCtrl mainCtrl) {
+    public LobbyCtrl(ServerUtils server, MainCtrl mainCtrl, GameCtrl gameCtrl) {
         this.server = server;
         this.mainCtrl = mainCtrl;
+        this.gameCtrl = gameCtrl;
     }
 
     @Override
@@ -53,7 +56,7 @@ public class LobbyCtrl implements Initializable {
      * in the singleplayer variant, the player should be disconnected and guided back to the splash screen.
      */
     public void back() {
-        SimpleUser player = mainCtrl.getPlayer();
+        SimpleUser player = gameCtrl.getPlayer();
         server.disconnect(player);
         System.out.println(player.getName() + " disconnected!");
         decreaseNumberOfPlayers();
@@ -74,7 +77,7 @@ public class LobbyCtrl implements Initializable {
 
     // To be added when making the main game scene, in order for the player to play
     public void play() {
-        server.startGame(mainCtrl.getPlayer());
+        server.startGame(gameCtrl.getPlayer());
         System.out.println("PLAYING");
         //TODO CONNECT TO SERVER
 //        mainCtrl.showPlayMode();

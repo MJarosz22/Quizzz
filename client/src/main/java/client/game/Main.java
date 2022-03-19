@@ -19,6 +19,7 @@ import client.MyFXML;
 import client.MyModule;
 import client.game.scenes.LeaderBoardCtrl;
 import client.game.scenes.MainCtrl;
+import client.game.scenes.multiplayer.GameCtrl;
 import client.game.scenes.pregame.LobbyCtrl;
 import client.game.scenes.pregame.MultiPlayerCtrl;
 import client.game.scenes.pregame.SinglePlayerCtrl;
@@ -48,16 +49,16 @@ public class Main extends Application {
 
     @Override
     public void start(Stage primaryStage) {
-        var home = FXML.load(SplashScreenCtrl.class, "client", "client/game/scenes", "SplashScreen.fxml");
-        var single = FXML.load(SinglePlayerCtrl.class, "client", "client/game/scenes", "SinglePlayer.fxml");
-        var singleGame = FXML.load(SinglePlayerGameCtrl.class, "client", "client/game/scenes", "SinglePlayerGame.fxml");
-        var singleGameOver = FXML.load(SinglePlayerGameOverCtrl.class, "client", "client/game/scenes", "SinglePlayerGameOver.fxml");
-        var multi = FXML.load(MultiPlayerCtrl.class, "client", "client/game/scenes", "Multiplayer.fxml");
-        var leaderboard = FXML.load(LeaderBoardCtrl.class, "client", "client/game/scenes", "LeaderBoard.fxml");
+        var home = FXML.load(SplashScreenCtrl.class, "client/game/scenes/pregame", "SplashScreen.fxml");
+        var single = FXML.load(SinglePlayerCtrl.class,  "client/game/scenes/pregame", "SinglePlayer.fxml");
+        var singleGame = FXML.load(SinglePlayerGameCtrl.class,  "client/game/scenes/singleplayer", "SinglePlayerGame.fxml");
+        var singleGameOver = FXML.load(SinglePlayerGameOverCtrl.class,  "client/game/scenes/singleplayer", "SinglePlayerGameOver.fxml");
+        var multi = FXML.load(MultiPlayerCtrl.class, "client/game/scenes/pregame", "Multiplayer.fxml");
+        var leaderboard = FXML.load(LeaderBoardCtrl.class, "client/game/scenes/pregame", "LeaderBoard.fxml");
         var mainCtrl = INJECTOR.getInstance(MainCtrl.class);
-        var lobby = FXML.load(LobbyCtrl.class, "client", "client/game/scenes", "Lobby.fxml");
+        var lobby = FXML.load(LobbyCtrl.class, "client/game/scenes/pregame", "Lobby.fxml");
 
-        mainCtrl.initialize(primaryStage, home, single, singleGame, singleGameOver, multi, leaderboard, lobby);
+        mainCtrl.initialize(primaryStage, home, single, singleGame, singleGameOver, multi, leaderboard, lobby, INJECTOR.getInstance(GameCtrl.class));
         primaryStage.setOnCloseRequest(event -> {
             Alert alert = new Alert(Alert.AlertType.CONFIRMATION, "Do you want to close the game?", ButtonType.YES, ButtonType.NO);
             ButtonType result = alert.showAndWait().orElse(ButtonType.NO);
@@ -74,11 +75,11 @@ public class Main extends Application {
      */
     @Override
     public void stop() {
-        var mainCtrl = INJECTOR.getInstance(MainCtrl.class);
+        var gameCtrl = INJECTOR.getInstance(GameCtrl.class);
         ServerUtils serverUtils = new ServerUtils();
-        SimpleUser player = mainCtrl.getPlayer();
+        SimpleUser player = gameCtrl.getPlayer();
         if (player != null) {
-            serverUtils.disconnect(mainCtrl.getPlayer());
+            gameCtrl.disconnect();
             System.out.println(player.getName() + " disconnected!");
         }
     }

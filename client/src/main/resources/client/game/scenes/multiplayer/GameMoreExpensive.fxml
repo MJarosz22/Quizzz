@@ -5,7 +5,7 @@
 <?import javafx.scene.layout.*?>
 <?import javafx.scene.text.*?>
 
-<AnchorPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="540.0" prefWidth="960.0" style="-fx-background-color: #91e4fb;" xmlns="http://javafx.com/javafx/11.0.2" xmlns:fx="http://javafx.com/fxml/1" fx:controller="client.scenes.MultiPlayerGameCtrl">
+<AnchorPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="540.0" prefWidth="960.0" style="-fx-background-color: #91e4fb;" xmlns="http://javafx.com/javafx/11.0.2" xmlns:fx="http://javafx.com/fxml/1" fx:controller="client.game.scenes.multiplayer.MoreExpensiveCtrl">
     <children>
         <Text fx:id="score" layoutX="62.0" layoutY="51.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Score">
             <font>
@@ -36,6 +36,21 @@
         <ImageView fx:id="image1" fitHeight="130.0" fitWidth="190.0" layoutX="123.0" layoutY="206.0" pickOnBounds="true" preserveRatio="true" />
         <ImageView fx:id="image2" fitHeight="130.0" fitWidth="190.0" layoutX="388.0" layoutY="206.0" pickOnBounds="true" preserveRatio="true" />
         <ImageView fx:id="image3" fitHeight="130.0" fitWidth="190.0" layoutX="690.0" layoutY="205.0" pickOnBounds="true" preserveRatio="true" />
+        <Button fx:id="option1Button" layoutX="119.0" layoutY="341.0" mnemonicParsing="false" onAction="#option1Selected" prefHeight="83.0" prefWidth="196.0" style="-fx-background-color: #91e4fb;" text="Option 1" textFill="WHITE" wrapText="true">
+            <font>
+                <Font name="Courier New Bold Italic" size="14.0" />
+            </font>
+        </Button>
+        <Button fx:id="option2Button" layoutX="382.0" layoutY="342.0" mnemonicParsing="false" onAction="#option2Selected" prefHeight="83.0" prefWidth="196.0" style="-fx-background-color: #91e4fb;" text="Option 2" textFill="WHITE" wrapText="true">
+            <font>
+                <Font name="Courier New Bold Italic" size="14.0" />
+            </font>
+        </Button>
+        <Button fx:id="option3Button" layoutX="687.0" layoutY="342.0" mnemonicParsing="false" onAction="#option3Selected" prefHeight="83.0" prefWidth="196.0" style="-fx-background-color: #91e4fb;" text="Option 3" textFill="WHITE" wrapText="true">
+            <font>
+                <Font name="Courier New Bold Italic" size="14.0" />
+            </font>
+        </Button>
         <Button layoutX="41.0" layoutY="434.0" mnemonicParsing="false" onAction="#enablePopUp" prefHeight="68.0" prefWidth="94.0" style="-fx-background-radius: 25;" text="LEAVE &#10;GAME" textAlignment="JUSTIFY" />
         <ProgressBar fx:id="progressBar" layoutX="12.0" layoutY="508.0" prefHeight="18.0" prefWidth="942.0" progress="0.0" />
         <Text fx:id="questionCount" layoutX="423.0" layoutY="522.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Question 0/20" wrappingWidth="115.0">
@@ -44,23 +59,12 @@
             </font>
         </Text>
         <AnchorPane fx:id="emoji" layoutX="187.0" layoutY="84.0" prefHeight="30.0" prefWidth="30.0" style="-fx-background-size: contain;" />
-        <TextField fx:id="player_answer" layoutX="761.0" layoutY="226.0" />
         <Text fx:id="correct_guess" layoutX="730.0" layoutY="205.0" strokeType="OUTSIDE" strokeWidth="0.0" text="The correct answer is ..." wrappingWidth="211.0">
             <font>
                 <Font name="Courier New" size="12.0" />
             </font>
         </Text>
-        <Button fx:id="submit_guess" layoutX="805.0" layoutY="270.0" mnemonicParsing="false" onAction="#isGuessCorrect" text="SUBMIT">
-            <font>
-                <Font name="Courier New" size="12.0" />
-            </font>
-        </Button>
         <ImageView fx:id="image4" fitHeight="200.0" fitWidth="309.0" layoutX="205.0" layoutY="160.0" pickOnBounds="true" preserveRatio="true" />
-        <Text fx:id="option4" fill="WHITE" layoutX="202.0" layoutY="396.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Option 4 " wrappingWidth="315.2109375">
-            <font>
-                <Font name="Courier New Bold Italic" size="14.0" />
-            </font>
-        </Text>
         <Button layoutX="286.0" layoutY="434.0" mnemonicParsing="false" onAction="#enablePopUp" prefHeight="68.0" prefWidth="94.0" style="-fx-background-radius: 25;" text="REMOVE &#10;INCORRECT&#10;ANSWER" textAlignment="CENTER" />
         <Button layoutX="433.0" layoutY="434.0" mnemonicParsing="false" onAction="#enablePopUp" prefHeight="68.0" prefWidth="94.0" style="-fx-background-radius: 25;" text="DOUBLE&#10;POINTS" textAlignment="CENTER" />
         <Button layoutX="580.0" layoutY="434.0" mnemonicParsing="false" onAction="#enablePopUp" prefHeight="68.0" prefWidth="94.0" style="-fx-background-radius: 25;" text="DECREASE&#10;OPPONENTS'&#10;TIME" textAlignment="CENTER" />

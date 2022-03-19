@@ -3,6 +3,8 @@ package server.api;
 import commons.Activity;
 import commons.GameInstance;
 import commons.GameState;
+import commons.player.Player;
+import commons.player.ServerAnswer;
 import commons.player.SimpleUser;
 import commons.question.Answer;
 import commons.question.Question;
@@ -13,6 +15,7 @@ import org.springframework.messaging.simp.SimpMessagingTemplate;
 import org.springframework.scheduling.annotation.Async;
 import org.springframework.util.StopWatch;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Timer;
 import java.util.TimerTask;
@@ -25,12 +28,14 @@ public class ServerGameInstance extends GameInstance{
     int questionNumber = 1;
     StopWatch stopWatch;
     int questionTime = 8000;
+    private List<ServerAnswer> answers;
 
     public ServerGameInstance(int id, int type, GameController controller, SimpMessagingTemplate msgs) {
         super(id, type);
         this.gameController = controller;
         this.msgs = msgs;
         stopWatch = new StopWatch();
+        answers = new ArrayList<>();
     }
 
     public void startCountdown(){
@@ -76,6 +81,7 @@ public class ServerGameInstance extends GameInstance{
                     return;
                 }
                 //TODO ADD POST-QUESTION SCREEN
+                answers.clear();
                 nextQuestion();
             }
         }, 8000);
@@ -98,6 +104,11 @@ public class ServerGameInstance extends GameInstance{
     @SendTo("/topic/players")
     public List<SimpleUser> updatePlayerList(){
         return getPlayers().stream().map(SimpleUser.class::cast).collect(Collectors.toList());
+    }
+
+    public boolean answerQuestion(Player player, Answer answer){
+        answers.add(new ServerAnswer(answer.getAnswer(), player));
+        return true;
     }
 
     @Override

@@ -4,6 +4,7 @@ import commons.GameInstance;
 import commons.GameState;
 import commons.player.Player;
 import commons.player.SimpleUser;
+import commons.question.Answer;
 import commons.question.Question;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -20,6 +21,8 @@ import java.util.stream.Collectors;
 @RestController
 @MessageMapping("api/game/{gameInstanceId}")
 public class GameInstanceController {
+
+    //TODO ADD SCORING
 
     private final Logger logger = LoggerFactory.getLogger(GameInstanceController.class);
     private final List<ServerGameInstance> gameInstances;
@@ -97,6 +100,16 @@ public class GameInstanceController {
         ServerGameInstance gameInstance = gameInstances.get(player.getGameInstanceId());
         if(gameInstance.getState() != GameState.INQUESTION) return ResponseEntity.notFound().build();
         return ResponseEntity.ok(gameInstance.getTimeLeft());
+    }
+
+    @PostMapping("/answer")
+    public ResponseEntity<Boolean> answerQuestion(@PathVariable int gameInstanceId, @RequestBody Answer answer,
+                                               @CookieValue(name = "user-id", defaultValue = "null") String cookie){
+        Player player = getPlayerFromGameInstance(gameInstanceId, cookie);
+        if(player == null) return ResponseEntity.status(HttpStatus.FORBIDDEN).build();
+        ServerGameInstance gameInstance = gameInstances.get(player.getGameInstanceId());
+        if(gameInstance.getState() != GameState.INQUESTION) return ResponseEntity.ok(false);
+        return ResponseEntity.ok(gameInstance.answerQuestion(player, answer));
     }
 
     @GetMapping("/correctanswer")

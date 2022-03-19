@@ -3,6 +3,7 @@ package client.utils;
 import commons.Activity;
 import commons.communication.RequestToJoin;
 import commons.player.SimpleUser;
+import commons.question.Answer;
 import jakarta.ws.rs.NotFoundException;
 import jakarta.ws.rs.client.Client;
 import jakarta.ws.rs.client.ClientBuilder;
@@ -144,6 +145,16 @@ public class ServerUtils {
                 consumer.accept((T) payload);
             }
         });
+    }
+
+    public boolean submitAnswer(SimpleUser player, Answer answer){
+        return ClientBuilder
+                .newClient(new ClientConfig())
+                .target(SERVER)
+                .path("api/game/" + player.getGameInstanceId() + "/answer")
+                .request(APPLICATION_JSON).cookie("user-id", player.getCookie())
+                .accept(APPLICATION_JSON)
+                .post(Entity.entity(answer, APPLICATION_JSON), Boolean.class);
     }
 
     public static void disconnectWebsocket(){

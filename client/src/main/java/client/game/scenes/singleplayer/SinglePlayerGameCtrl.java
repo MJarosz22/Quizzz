@@ -1,6 +1,7 @@
 package client.game.scenes.singleplayer;
 
 import client.game.scenes.MainCtrl;
+import client.game.scenes.multiplayer.GameCtrl;
 import client.utils.ServerUtils;
 import com.google.inject.Inject;
 import commons.*;
@@ -34,6 +35,7 @@ public class SinglePlayerGameCtrl {
 
     private final ServerUtils server;
     private final MainCtrl mainCtrl;
+    private final GameCtrl gameCtrl;
     private final String correctEmojiPath = "client/src/main/resources/images/correct-answer.png";
     private final String wrongEmojiPath = "client/src/main/resources/images/wrong-answer.png";
     private final String timerPath = "client/src/main/resources/images/timer.png";
@@ -72,9 +74,10 @@ public class SinglePlayerGameCtrl {
 
 
     @Inject
-    public SinglePlayerGameCtrl(ServerUtils server, MainCtrl mainCtrl) {
+    public SinglePlayerGameCtrl(ServerUtils server, MainCtrl mainCtrl, GameCtrl gameCtrl) {
         this.server = server;
         this.mainCtrl = mainCtrl;
+        this.gameCtrl = gameCtrl;
     }
 
 
@@ -83,8 +86,8 @@ public class SinglePlayerGameCtrl {
      * set current game, reset the board and  generates 20 questions in a 'smart' way.
      */
     public void initialize() {
-        if (this.mainCtrl.getPlayer() != null) {
-            this.player = mainCtrl.getPlayer();
+        if (gameCtrl.getPlayer() != null) {
+            this.player = gameCtrl.getPlayer();
             disablePopUp();
             currentGame = new GameInstance(this.player.getGameInstanceId(), 0);
             try {

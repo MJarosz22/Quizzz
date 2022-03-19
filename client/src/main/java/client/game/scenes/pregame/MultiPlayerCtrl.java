@@ -1,6 +1,7 @@
 package client.game.scenes.pregame;
 
 import client.game.scenes.MainCtrl;
+import client.game.scenes.multiplayer.GameCtrl;
 import client.utils.ServerUtils;
 import com.google.inject.Inject;
 import commons.GameInstance;
@@ -13,14 +14,16 @@ public class MultiPlayerCtrl {
 
     private final ServerUtils server;
     private final MainCtrl mainCtrl;
+    private final GameCtrl gameCtrl;
 
     @FXML
     private TextField textfieldName;
 
     @Inject
-    public MultiPlayerCtrl(ServerUtils server, MainCtrl mainCtrl) {
+    public MultiPlayerCtrl(ServerUtils server, MainCtrl mainCtrl, GameCtrl gameCtrl) {
         this.server = server;
         this.mainCtrl = mainCtrl;
+        this.gameCtrl = gameCtrl;
     }
 
     public void back() {
@@ -32,7 +35,7 @@ public class MultiPlayerCtrl {
     public void join() {
         if (!getTextFieldName().equals("")) {
             SimpleUser player = server.addPlayer(new RequestToJoin(getTextFieldName(), GameInstance.MULTI_PLAYER));
-            mainCtrl.setPlayer(player);
+            gameCtrl.setPlayer(player);
             LobbyCtrl lobbyCtrl = mainCtrl.getLobbyCtrl();
             lobbyCtrl.increaseNumberOfPlayers();
             this.textfieldName.clear();

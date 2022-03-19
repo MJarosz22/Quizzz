@@ -1,9 +1,11 @@
-package client.scenes;
+package client.game.scenes.multiplayer;
 
+import client.game.scenes.MainCtrl;
 import client.utils.ServerUtils;
 import com.google.inject.Inject;
 import commons.*;
 import commons.player.SimpleUser;
+import commons.question.Question;
 import jakarta.ws.rs.NotFoundException;
 import javafx.application.Platform;
 import javafx.fxml.FXML;
@@ -34,7 +36,6 @@ public class MultiPlayerGameCtrl {
     private final String timerPath = "client/src/main/resources/images/timer.png";
 
     private SimpleUser player;
-    private GameInstance currentGame;
     private Question currentQuestion;
 
     private boolean answered;

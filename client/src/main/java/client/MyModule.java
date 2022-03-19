@@ -20,6 +20,8 @@ import client.game.scenes.MainCtrl;
 import client.activity.scenes.ActivityOverviewCtrl;
 import client.activity.scenes.AddActivityCtrl;
 import client.activity.scenes.MainActivityCtrl;
+import client.game.scenes.multiplayer.GameCtrl;
+import client.game.scenes.multiplayer.HowMuchCtrl;
 import client.game.scenes.pregame.LobbyCtrl;
 import client.game.scenes.pregame.MultiPlayerCtrl;
 import client.game.scenes.pregame.SinglePlayerCtrl;
@@ -47,6 +49,7 @@ public class MyModule implements Module {
         binder.bind(SinglePlayerGameCtrl.class).in(Scopes.SINGLETON);
         binder.bind(SinglePlayerGameOverCtrl.class).in(Scopes.SINGLETON);
         binder.bind(LobbyCtrl.class).in(Scopes.SINGLETON);
-        binder.bind(MultiPlayerGameCtrl.class).in(Scopes.SINGLETON);
+        binder.bind(HowMuchCtrl.class).in(Scopes.SINGLETON);
+        binder.bind(GameCtrl.class).in(Scopes.SINGLETON);
     }
 }

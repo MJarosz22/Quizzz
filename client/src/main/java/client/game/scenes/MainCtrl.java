@@ -15,6 +15,7 @@
  */
 package client.game.scenes;
 
+import client.game.scenes.multiplayer.GameCtrl;
 import client.game.scenes.pregame.LobbyCtrl;
 import client.game.scenes.pregame.MultiPlayerCtrl;
 import client.game.scenes.pregame.SinglePlayerCtrl;
@@ -22,7 +23,6 @@ import client.game.scenes.pregame.SplashScreenCtrl;
 import client.game.scenes.singleplayer.SinglePlayerGameCtrl;
 import client.game.scenes.singleplayer.SinglePlayerGameOverCtrl;
 import client.utils.ServerUtils;
-import commons.player.SimpleUser;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.stage.Stage;
@@ -47,23 +47,19 @@ public class MainCtrl {
     private MultiPlayerCtrl multiPlayerCtrl;
     private Scene multi;
 
-    private MultiPlayerGameCtrl multiPlayerGameCtrl;
-    private Scene multiGame;
-
     private LobbyCtrl lobbyCtrl;
     private Scene lobby;
 
     private LeaderBoardCtrl leaderBoardCtrl;
     private Scene leaderboard;
 
-    private SimpleUser player;
+    private GameCtrl gameCtrl;
 
     public void initialize(Stage primaryStage, Pair<SplashScreenCtrl, Parent> splash, Pair<SinglePlayerCtrl,
             Parent> single, Pair<SinglePlayerGameCtrl, Parent> singleGame,
                            Pair<SinglePlayerGameOverCtrl, Parent> singleGameOver,
                            Pair<MultiPlayerCtrl, Parent> multi,
-                           Pair<LeaderBoardCtrl, Parent> leaderboard, Pair<LobbyCtrl, Parent> lobby,
-                           Pair<MultiPlayerGameCtrl, Parent> multiGame) {
+                           Pair<LeaderBoardCtrl, Parent> leaderboard, Pair<LobbyCtrl, Parent> lobby, GameCtrl gameCtrl) {
 
         this.primaryStage = primaryStage;
         this.splashCtrl = splash.getKey();
@@ -81,15 +77,13 @@ public class MainCtrl {
         this.multiPlayerCtrl = multi.getKey();
         this.multi = new Scene(multi.getValue());
 
-        this.multiPlayerGameCtrl = multiGame.getKey();
-        this.multiGame = new Scene(multiGame.getValue());
-
         this.leaderBoardCtrl = leaderboard.getKey();
         this.leaderboard = new Scene(leaderboard.getValue());
 
         this.lobbyCtrl = lobby.getKey();
         this.lobby = new Scene(lobby.getValue());
 
+        this.gameCtrl = gameCtrl;
 
         showSplash();
         primaryStage.show();
@@ -116,11 +110,11 @@ public class MainCtrl {
         primaryStage.setScene(multi);
     }
 
-    public void showMultiPlayerGame() {
-        primaryStage.setTitle("Quizzz multi");
-        primaryStage.setScene(multiGame);
-        multiPlayerGameCtrl.initialize();
-    }
+//    public void showMultiPlayerGame() {
+//        primaryStage.setTitle("Quizzz multi");
+//        primaryStage.setScene(multiGame);
+//        multiPlayerGameCtrl.initialize();
+//    }
 
     public void showLeaderBoard() {
         primaryStage.setTitle("Quizzz leader board");
@@ -135,12 +129,8 @@ public class MainCtrl {
     public void showLobby() {
         primaryStage.setTitle("Quizzz lobby");
         //lobbyCtrl.setLabelName(player.getName());
-        lobbyCtrl.setTablePlayers(ServerUtils.getPlayers(player));
+        lobbyCtrl.setTablePlayers(ServerUtils.getPlayers(gameCtrl.getPlayer()));
         primaryStage.setScene(lobby);
-    }
-
-    public SimpleUser getPlayer() {
-        return player;
     }
 
     public LobbyCtrl getLobbyCtrl() {
@@ -149,9 +139,5 @@ public class MainCtrl {
 
     public SinglePlayerCtrl getSinglePlayerCtrl() {
         return singlePlayerCtrl;
-    }
-
-    public void setPlayer(SimpleUser player) {
-        this.player = player;
     }
 }
