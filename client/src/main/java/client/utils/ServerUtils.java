@@ -14,6 +14,7 @@ import org.glassfish.jersey.client.ClientConfig;
 import java.io.FileNotFoundException;
 import java.io.InputStream;
 import java.util.List;
+import java.util.Optional;
 
 import static jakarta.ws.rs.core.MediaType.APPLICATION_JSON;
 
@@ -113,4 +114,61 @@ public class ServerUtils {
                 .get(new GenericType<>() {
                 });
     }
+
+    public int getLastGIIdMult() {
+        Client client = ClientBuilder.newClient(new ClientConfig());
+        return client //
+                .target(SERVER).path("api/game/getLastGIIdMult") //
+                .request(APPLICATION_JSON) //
+                .accept(APPLICATION_JSON) //
+                .get(new GenericType<>() {
+                });
+    }
+
+    public int getLastGIIdSingle() {
+        Client client = ClientBuilder.newClient(new ClientConfig());
+        return client //
+                .target(SERVER).path("api/game/getLastGIIdSingle") //
+                .request(APPLICATION_JSON) //
+                .accept(APPLICATION_JSON) //
+                .get(new GenericType<>() {
+                });
+    }
+
+
+    public static List<SimpleUser> getPlayerList(int gIId) {
+        Client client = ClientBuilder.newClient(new ClientConfig());
+        return client //
+                .target(SERVER).path("api/game/ " + gIId + "/playerlist") //
+                .request(APPLICATION_JSON) //
+                .accept(APPLICATION_JSON) //
+                .get(new GenericType<>() {
+                });
+    }
+
+    public SimpleUser updatePlayer(SimpleUser player) {
+        return ClientBuilder.newClient(new ClientConfig())
+                .target(SERVER).path("api/game/" + player.getId() + "/updatePlayer")
+                .request(APPLICATION_JSON)
+                .accept(APPLICATION_JSON)
+                .put(Entity.entity(player, APPLICATION_JSON), SimpleUser.class);
+
+    }
+
+    // ------------------------------------ ADDITIONAL METHODS ------------------------------------ //
+
+    /**
+     * Additional method that checks whether a player hasn't disconnected from a game, by comparing cookies, which are
+     * used as identifiers (as each player has an unique cookie).
+     *
+     * @param player - SimpleUser object that represents the player we are interested in
+     * @return true, if the player has not disconnected yet, or false otherwise
+     */
+    public boolean containsPlayer(SimpleUser player) {
+        if (player == null || getPlayerList(player.getGameInstanceId()) == null) return false;
+        Optional<Boolean> contains = getPlayerList(player.getGameInstanceId())
+                .stream().map(x -> x.getCookie().equals(player.getCookie())).findFirst();
+        return (contains.isPresent());
+    }
+
 }

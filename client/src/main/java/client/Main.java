@@ -59,17 +59,17 @@ public class Main extends Application {
     }
 
     /**
-     * Method called whenever a client is closed (by pressing the 'x' button of the window).
-     * TODO: POP-UP asking for confirmation of closing the client.
+     * Method called whenever a client is closed(by pressing the 'x' button of the window).
+     * If there exists a player that did not disconnect (left game) already and he/she pressed the 'x' button, he/she
+     * must be removed from the server.
      */
     @Override
     public void stop() {
         var mainCtrl = INJECTOR.getInstance(MainCtrl.class);
-        ServerUtils serverUtils = new ServerUtils();
         SimpleUser player = mainCtrl.getPlayer();
-        if (player != null) {
-            serverUtils.disconnect(mainCtrl.getPlayer());
-            System.out.println(player.getName() + " disconnected!");
-        }
+        ServerUtils server = new ServerUtils();
+        if (server.containsPlayer(player) && SinglePlayerGameCtrl.getGameIsOver() == false )
+            server.disconnect(player);
     }
+
 }

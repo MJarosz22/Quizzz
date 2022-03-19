@@ -64,7 +64,7 @@ public class SimpleUser {
         this.id = id;
     }
 
-    public long getScore() {
+    public int getScore() {
         return score;
     }
 
@@ -124,7 +124,7 @@ public class SimpleUser {
     }
 
     public SimpleUser unsafe() {
-        return new SimpleUser(id, name, gameInstanceId, null);
+        return new SimpleUser(id, name, gameInstanceId, cookie);
     }
 
 }
