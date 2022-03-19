@@ -2,12 +2,15 @@ package client.scenes;
 
 import client.utils.ServerUtils;
 import commons.Activity;
+import javafx.application.Platform;
 import javafx.beans.property.SimpleLongProperty;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
+import javafx.scene.control.Alert;
+import javafx.scene.control.ButtonType;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
 import javafx.scene.control.cell.TextFieldTableCell;
@@ -105,8 +108,19 @@ public class ActivityOverviewCtrl implements Initializable {
 
     public void delete() {
         Activity activity = table.getSelectionModel().getSelectedItem();
-        server.deleteActivity(activity);
-        refresh();
+        try {
+            Alert alert = new Alert(Alert.AlertType.CONFIRMATION, "Do you want to delete event " + activity.getTitle() + "?", ButtonType.YES, ButtonType.NO);
+            ButtonType result = alert.showAndWait().orElse(ButtonType.NO);
+            if (ButtonType.NO.equals(result))
+                return;
+            else {
+                server.deleteActivity(activity);
+                refresh();
+            }
+        }
+        catch(NullPointerException e) {
+            return;
+        }
     }
 
     public void refresh() {
