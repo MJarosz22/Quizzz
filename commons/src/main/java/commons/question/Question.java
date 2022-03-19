@@ -34,7 +34,8 @@ public abstract class Question {
     private int number;
 
 
-    public Question(){}
+    public Question() {
+    }
 
     public abstract long getAnswer();
 

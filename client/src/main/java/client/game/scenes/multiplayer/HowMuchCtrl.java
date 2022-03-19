@@ -4,7 +4,6 @@ import client.game.scenes.MainCtrl;
 import client.utils.ServerUtils;
 import com.google.inject.Inject;
 import commons.question.Answer;
-import commons.question.Question;
 import commons.question.QuestionHowMuch;
 import javafx.application.Platform;
 import javafx.event.ActionEvent;
@@ -58,7 +57,7 @@ public class HowMuchCtrl {
         this.gameCtrl = gameCtrl;
     }
 
-    public void init(QuestionHowMuch question)  {
+    public void init(QuestionHowMuch question) {
         disablePopUp(null);
         player_answer.clear();
         this.question = question;
@@ -77,7 +76,7 @@ public class HowMuchCtrl {
             @Override
             public void run() {
                 int timeLeft = server.getTimeLeft(gameCtrl.getPlayer());
-                Platform.runLater(()->{
+                Platform.runLater(() -> {
                     timer.setText(String.valueOf(timeLeft));
                 });
             }

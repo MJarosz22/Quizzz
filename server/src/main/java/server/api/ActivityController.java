@@ -138,7 +138,7 @@ public class ActivityController {
     public ResponseEntity<List<Activity>> getRandom60() {
         //hard coded -> size of all activities - 60
         long countIds = activityRepository.count();
-        if(activityRepository.count() == 0) {
+        if (activityRepository.count() == 0) {
             logger.error("No activities found for lobby...");
             return ResponseEntity.notFound().build();
         }
@@ -147,12 +147,12 @@ public class ActivityController {
         int limit = 60;
         int i = 0;
         long random_consumption = (long) ((Math.random() * (10000 - 50)) + 50);
-        long random_consumption_max = random_consumption +(50*random_consumption)/ 100;
-        long random_consumption_min = random_consumption -(50*random_consumption)/ 100;
+        long random_consumption_max = random_consumption + (50 * random_consumption) / 100;
+        long random_consumption_min = random_consumption - (50 * random_consumption) / 100;
         while (i < limit) {
             Optional<Activity> a = activityRepository.findById((long) idRandom);
-            if (a.isPresent() && !setOfActivities.contains(a.get()) && a.get().getConsumption_in_wh() <=random_consumption_max
-                    && a.get().getConsumption_in_wh()>=random_consumption_min) {
+            if (a.isPresent() && !setOfActivities.contains(a.get()) && a.get().getConsumption_in_wh() <= random_consumption_max
+                    && a.get().getConsumption_in_wh() >= random_consumption_min) {
                 setOfActivities.add(a.get());
                 i++;
             }

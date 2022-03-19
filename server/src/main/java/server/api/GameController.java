@@ -2,9 +2,6 @@ package server.api;
 
 
 import commons.GameInstance;
-import commons.Question;
-import commons.player.Player;
-import commons.GameInstance;
 import commons.communication.RequestToJoin;
 import commons.player.SimpleUser;
 import commons.question.Question;
@@ -14,7 +11,6 @@ import org.springframework.core.io.InputStreamResource;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.ResponseCookie;
 import org.springframework.http.ResponseEntity;
-import org.springframework.messaging.converter.MessageConverter;
 import org.springframework.messaging.handler.annotation.MessageMapping;
 import org.springframework.messaging.handler.annotation.SendTo;
 import org.springframework.messaging.simp.SimpMessagingTemplate;
@@ -30,6 +26,7 @@ import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
+import java.util.stream.Collectors;
 
 
 @RestController
@@ -109,48 +106,11 @@ public class GameController {
         return ResponseEntity.ok().header(HttpHeaders.SET_COOKIE, tokenCookie.toString()).body(savedPlayer);
     }
 
-    /**
-     * Gets a question from gameInstance
-     * @param gameInstanceId The gameInstance you want a question from
-     * @param questionNumber Number of question you request
-     * @param cookie Cookie of player
-     * @return Requested question
-     */
-    @GetMapping("/{gameInstanceId}/q{questionNumber}")
-    public ResponseEntity<Question> getQuestion(@PathVariable int gameInstanceId, @PathVariable int questionNumber,
-                                                @CookieValue(name = "user-id", defaultValue = "null") String cookie) {
-        if (gameInstanceId < 0 || gameInstanceId > gameInstances.size() - 1
-                || questionNumber > 19 || questionNumber < 0) return ResponseEntity.badRequest().build();
-
-
-
-    /**
-     * Returns all players from a gameInstance (if you are also connected to that gameInstance)
-     * @param gameInstanceId ID of GameInstance
-     * @param cookie Cookie of player
-     * @return List of all players connected to gameInstance
-     */
-    @GetMapping("/{gameInstanceId}/players")
-    public ResponseEntity<List<SimpleUser>> getPlayers(@PathVariable int gameInstanceId,
-                                                       @CookieValue(name = "user-id", defaultValue = "null") String cookie) {
-        if (getPlayerFromGameInstance(gameInstanceId, cookie) == null) return ResponseEntity.badRequest().build();
-        return ResponseEntity.ok(gameInstances.get(gameInstanceId).getPlayers()
-                .stream().map(p -> p.toSimpleUser().unsafe()).collect(Collectors.toList()));
-    }
-
-    @DeleteMapping("/{gameInstanceId}/disconnect")
-    public ResponseEntity<Boolean> disconnect(@PathVariable int gameInstanceId,
-                                              @CookieValue(name = "user-id", defaultValue = "null") String cookie) {
-        Player removePlayer = getPlayerFromGameInstance(gameInstanceId, cookie);
-        if(removePlayer == null) return ResponseEntity.badRequest().build();
-        logger.info("[GI " + (gameInstanceId) + "] PLAYER (" + removePlayer.getId() + ") DISCONNECTED");
-        return ResponseEntity.ok(gameInstances.get(gameInstanceId).getPlayers().remove(removePlayer));
-    }
 
     @GetMapping(value = "/activities/{activityFolder}/{activityFile}",
-    produces = "image/jpg")
-    public ResponseEntity<InputStreamResource> getImage(@PathVariable String activityFolder, @PathVariable String activityFile){
-        try{
+            produces = "image/jpg")
+    public ResponseEntity<InputStreamResource> getImage(@PathVariable String activityFolder, @PathVariable String activityFile) {
+        try {
             InputStream inputStream = new FileInputStream(ActivityLoader.path + activityFolder + "/" + activityFile);
             return ResponseEntity.ok(new InputStreamResource(inputStream));
         } catch (FileNotFoundException e) {
@@ -159,24 +119,6 @@ public class GameController {
         return ResponseEntity.notFound().build();
     }
 
-    /**
-     * Additional method that checks whether cookie given is from a player connected to gameInstance with ID
-     *
-     * @param gameInstanceId ID of GameInstance
-     * @param cookie         Cookie of player
-     * @return An instance of class 'Player' if exists, otherwise null
-     */
-    private Player getPlayerFromGameInstance(int gameInstanceId, String cookie) {
-        GameInstance currGI = gameInstances.get(gameInstanceId);
-        Optional<Player> optPlayer = currGI.getPlayers().stream().filter(p -> p.getCookie().equals(cookie)).findFirst();
-        if (optPlayer.isEmpty()) return null;
-        else return optPlayer.get();
-
-    @MessageMapping("/time")
-    @SendTo("/topic/time")
-    public int setTime(int time){
-        return time;
-    }
 
     /**
      * Method that returns last instance of a multiplayer ID
@@ -185,12 +127,13 @@ public class GameController {
      */
     @GetMapping("/getLastGIIdMult")
     public ResponseEntity<Integer> getLastGIIdMult() {
-        if (currentMPGIId < 0 || currentMPGIId > gameInstances.size()) return  ResponseEntity.badRequest().build();
+        if (currentMPGIId < 0 || currentMPGIId > gameInstances.size()) return ResponseEntity.badRequest().build();
         return ResponseEntity.ok(currentMPGIId);
     }
+
     @MessageMapping("/question")
     @SendTo("/topic/question")
-    public Question test(Question question){
+    public Question test(Question question) {
         return question;
     }
 
@@ -202,7 +145,7 @@ public class GameController {
      */
     @GetMapping("/{gameInstanceId}/playerlist")
     public ResponseEntity<List<SimpleUser>> getPlayerList(@PathVariable int gameInstanceId) {
-        if (currentMPGIId < 0 || currentMPGIId > gameInstances.size()) return  ResponseEntity.badRequest().build();
+        if (currentMPGIId < 0 || currentMPGIId > gameInstances.size()) return ResponseEntity.badRequest().build();
         return ResponseEntity.ok(gameInstances.get(gameInstanceId).getPlayers()
                 .stream().map(p -> p.toSimpleUser().unsafe()).collect(Collectors.toList()));
     }
@@ -215,13 +158,13 @@ public class GameController {
         return ResponseEntity.ok(lastGIId);
     }
      */
-    public void createNewMultiplayerLobby(){
+    public void createNewMultiplayerLobby() {
         GameInstanceServer newGameInstance = new GameInstanceServer(gameInstances.size(), GameInstance.MULTI_PLAYER, this, msgs);
         gameInstances.add(newGameInstance);
         currentMPGIId = newGameInstance.getId();
     }
 
-    public List<GameInstanceServer> getGameInstances(){
+    public List<GameInstanceServer> getGameInstances() {
         return gameInstances;
     }
 

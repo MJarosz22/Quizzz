@@ -10,8 +10,6 @@ import com.google.inject.Injector;
 import javafx.application.Application;
 import javafx.stage.Stage;
 
-import static com.google.inject.Guice.createInjector;
-
 public class ActivityMain extends Application {
 
     private static final Injector INJECTOR = Guice.createInjector(new MyModule());

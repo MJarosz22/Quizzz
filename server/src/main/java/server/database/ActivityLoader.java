@@ -44,7 +44,7 @@ public class ActivityLoader {
                     Files.createDirectories(resolvedPath.getParent());
                     try {
                         Files.copy(zipIn, resolvedPath);
-                    }catch (FileAlreadyExistsException e){
+                    } catch (FileAlreadyExistsException e) {
                         logger.debug("File " + ze.getName() + " already exists.");
                     }
                 }
@@ -53,11 +53,11 @@ public class ActivityLoader {
     }
 
     @Bean
-    ApplicationRunner init(ActivityRepository repo){
-        try{
+    ApplicationRunner init(ActivityRepository repo) {
+        try {
             unzip(new FileInputStream(new File(relativePath + "activities.zip")), new File(relativePath + location).toPath());
             logger.info("Successfully unzipped activities.zip");
-        }catch (IOException e){
+        } catch (IOException e) {
             logger.warn("Activities.zip is missing (or something else went wrong while loading activities.zip)");
             logger.info("It should be located at resources/activities.zip");
         }
@@ -69,9 +69,9 @@ public class ActivityLoader {
                 activities = activities.stream().filter(x -> x.getSource().length() < 150).collect(Collectors.toList());
                 repo.saveAll(activities);
                 logger.info("Activities added to repo");
-            }catch (IllegalArgumentException ex) {
+            } catch (IllegalArgumentException ex) {
                 logger.error("Something went wrong while loading activities.json");
-            }catch (FileNotFoundException e){
+            } catch (FileNotFoundException e) {
                 logger.warn("activities.json not found");
                 logger.info("It should be located at resources/activities/activities.json");
             }

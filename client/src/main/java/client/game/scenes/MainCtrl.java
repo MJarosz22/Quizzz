@@ -81,7 +81,6 @@ public class MainCtrl {
     }
 
 
-
     public void initialize(Stage primaryStage, Pair<SplashScreenCtrl, Parent> splash, Pair<SinglePlayerCtrl,
             Parent> single, Pair<SinglePlayerGameCtrl, Parent> singleGame,
                            Pair<SinglePlayerGameOverCtrl, Parent> singleGameOver,
@@ -179,11 +178,13 @@ public class MainCtrl {
         primaryStage.setTitle("Quizzz More Expensive");
         primaryStage.setScene(moreExpensive);
     }
+
     public void showHowMuch(QuestionHowMuch question) {
         primaryStage.setTitle("Quizzz How Much");
         howMuchCtrl.init(question);
         primaryStage.setScene(howMuch);
     }
+
     public void showWhichOne() {
         primaryStage.setTitle("Quizzz Which One");
         primaryStage.setScene(whichOne);

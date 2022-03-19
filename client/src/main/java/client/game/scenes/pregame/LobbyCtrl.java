@@ -5,7 +5,6 @@ import client.game.scenes.multiplayer.GameCtrl;
 import client.utils.ServerUtils;
 import com.google.inject.Inject;
 import commons.player.SimpleUser;
-import javafx.application.Platform;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.collections.FXCollections;
 import javafx.fxml.FXML;
@@ -63,12 +62,12 @@ public class LobbyCtrl implements Initializable {
         mainCtrl.showSplash();
     }
 
-    public void init(){
+    public void init() {
         ServerUtils.initWebsocket();
         registerForMessages();
     }
 
-    public void registerForMessages(){
+    public void registerForMessages() {
 
     }
 
@@ -136,7 +135,7 @@ public class LobbyCtrl implements Initializable {
      */
 
 
-    public void setCountdown(int time){
+    public void setCountdown(int time) {
         labelName.setText(String.valueOf(time));
     }
 

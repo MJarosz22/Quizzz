@@ -11,7 +11,6 @@ import org.apache.commons.lang3.builder.EqualsBuilder;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.messaging.handler.annotation.SendTo;
 import org.springframework.messaging.simp.SimpMessagingTemplate;
 import org.springframework.scheduling.annotation.Async;
 import org.springframework.util.StopWatch;
@@ -22,7 +21,7 @@ import java.util.Timer;
 import java.util.TimerTask;
 import java.util.stream.Collectors;
 
-public class GameInstanceServer extends GameInstance{
+public class GameInstanceServer extends GameInstance {
 
     GameController gameController;
     SimpMessagingTemplate msgs;
@@ -41,16 +40,17 @@ public class GameInstanceServer extends GameInstance{
         answers = new ArrayList<>();
     }
 
-    public void startCountdown(){
+    public void startCountdown() {
         setState(GameState.STARTING);
         Timer timer = new Timer();
         timer.scheduleAtFixedRate(new TimerTask() {
             int time = 6;
+
             @Override
             public void run() {
                 time--;
                 msgs.convertAndSend("/topic/" + getId() + "/time", time);
-                if(time == 0) {
+                if (time == 0) {
                     timer.cancel();
                     //TODO START GAME
                     startGame(gameController.activityController.getRandom60().getBody());
@@ -60,26 +60,26 @@ public class GameInstanceServer extends GameInstance{
     }
 
     @Async
-    public void startGame(List<Activity> activities){
+    public void startGame(List<Activity> activities) {
         gameController.createNewMultiplayerLobby();
         setState(GameState.INQUESTION);
         generateQuestions(activities);
         nextQuestion();
     }
 
-    private void goToQuestion(int questionNumber){
+    private void goToQuestion(int questionNumber) {
         Question currentQuestion = getQuestions().get(questionNumber);
         logger.info("Question " + questionNumber + " sent" + currentQuestion);
-        if(currentQuestion instanceof QuestionHowMuch){
+        if (currentQuestion instanceof QuestionHowMuch) {
             msgs.convertAndSend("/topic/" + getId() + "/questionhowmuch", getQuestions().get(questionNumber));
-        }else if (currentQuestion instanceof QuestionMoreExpensive){
+        } else if (currentQuestion instanceof QuestionMoreExpensive) {
             msgs.convertAndSend("/topic/" + getId() + "/questionmoreexpensive", getQuestions().get(questionNumber));
-        }else if(currentQuestion instanceof QuestionWhichOne){
+        } else if (currentQuestion instanceof QuestionWhichOne) {
             msgs.convertAndSend("/topic/" + getId() + "/questionwhichone", getQuestions().get(questionNumber));
-        }else throw new IllegalStateException();
+        } else throw new IllegalStateException();
     }
 
-    private void nextQuestion(){
+    private void nextQuestion() {
         goToQuestion(questionNumber);
         startingTime = System.currentTimeMillis();
         questionNumber++;
@@ -88,7 +88,7 @@ public class GameInstanceServer extends GameInstance{
         timer.schedule(new TimerTask() {
             @Override
             public void run() {
-                if(questionNumber > 20) {
+                if (questionNumber > 20) {
                     /*TODO CREATE POSTGAME STUFF*/
                     return;
                 }
@@ -100,29 +100,29 @@ public class GameInstanceServer extends GameInstance{
         }, 12500);
     }
 
-    public int getTimeLeft(){
+    public int getTimeLeft() {
         int timeSpent = (int) (System.currentTimeMillis() - startingTime);
 //        int timeSpent = (int) stopWatch.getLastTaskTimeMillis();
         return questionTime - timeSpent;
     }
 
-    public Question getCurrentQuestion(){
+    public Question getCurrentQuestion() {
         return getQuestions().get(questionNumber);
     }
 
 
-    public long getCorrectAnswer(){
+    public long getCorrectAnswer() {
         return getQuestions().get(questionNumber).getAnswer();
     }
 
 
-    public List<SimpleUser> updatePlayerList(){
+    public List<SimpleUser> updatePlayerList() {
         ArrayList<SimpleUser> players = getPlayers().stream().map(SimpleUser.class::cast).collect(Collectors.toCollection(ArrayList::new));
         msgs.convertAndSend("/topic/" + getId() + "/players", players);
         return players;
     }
 
-    public boolean answerQuestion(Player player, Answer answer){
+    public boolean answerQuestion(Player player, Answer answer) {
         answers.add(new ServerAnswer(answer.getAnswer(), player));
         return true;
     }

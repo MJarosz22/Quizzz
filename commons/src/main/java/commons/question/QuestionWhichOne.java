@@ -25,7 +25,8 @@ public class QuestionWhichOne extends Question {
         setNumber(number);
     }
 
-    public QuestionWhichOne(){}
+    public QuestionWhichOne() {
+    }
 
     @Override
     public long getAnswer() {

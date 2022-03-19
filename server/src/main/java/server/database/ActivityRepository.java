@@ -7,5 +7,6 @@ import org.springframework.data.jpa.repository.JpaRepository;
 
 public interface ActivityRepository extends JpaRepository<Activity, Long> {
     long count();
+
     Page<Activity> findAll(Pageable pageable);
 }

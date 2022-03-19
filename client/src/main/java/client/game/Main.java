@@ -39,8 +39,6 @@ import javafx.scene.control.Alert;
 import javafx.scene.control.ButtonType;
 import javafx.stage.Stage;
 
-import static com.google.inject.Guice.createInjector;
-
 public class Main extends Application {
 
     private static final Injector INJECTOR = Guice.createInjector(new MyModule());
@@ -53,9 +51,9 @@ public class Main extends Application {
     @Override
     public void start(Stage primaryStage) {
         var home = FXML.load(SplashScreenCtrl.class, "client/game/scenes/pregame", "SplashScreen.fxml");
-        var single = FXML.load(SinglePlayerCtrl.class,  "client/game/scenes/pregame", "SinglePlayer.fxml");
-        var singleGame = FXML.load(SinglePlayerGameCtrl.class,  "client/game/scenes/singleplayer", "SinglePlayerGame.fxml");
-        var singleGameOver = FXML.load(SinglePlayerGameOverCtrl.class,  "client/game/scenes/singleplayer", "SinglePlayerGameOver.fxml");
+        var single = FXML.load(SinglePlayerCtrl.class, "client/game/scenes/pregame", "SinglePlayer.fxml");
+        var singleGame = FXML.load(SinglePlayerGameCtrl.class, "client/game/scenes/singleplayer", "SinglePlayerGame.fxml");
+        var singleGameOver = FXML.load(SinglePlayerGameOverCtrl.class, "client/game/scenes/singleplayer", "SinglePlayerGameOver.fxml");
         var multi = FXML.load(MultiPlayerCtrl.class, "client/game/scenes/pregame", "Multiplayer.fxml");
         var leaderboard = FXML.load(LeaderBoardCtrl.class, "client/game/scenes/pregame", "LeaderBoard.fxml");
         var mainCtrl = INJECTOR.getInstance(MainCtrl.class);
