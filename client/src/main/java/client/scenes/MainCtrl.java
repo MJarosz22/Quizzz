@@ -41,6 +41,9 @@ public class MainCtrl {
     private MultiPlayerCtrl multiPlayerCtrl;
     private Scene multi;
 
+    private MultiPlayerGameCtrl multiPlayerGameCtrl;
+    private Scene multiGame;
+
     private LobbyCtrl lobbyCtrl;
     private Scene lobby;
 
@@ -53,7 +56,8 @@ public class MainCtrl {
             Parent> single, Pair<SinglePlayerGameCtrl, Parent> singleGame,
                            Pair<SinglePlayerGameOverCtrl, Parent> singleGameOver,
                            Pair<MultiPlayerCtrl, Parent> multi,
-                           Pair<LeaderBoardCtrl, Parent> leaderboard, Pair<LobbyCtrl, Parent> lobby) {
+                           Pair<LeaderBoardCtrl, Parent> leaderboard, Pair<LobbyCtrl, Parent> lobby,
+                           Pair<MultiPlayerGameCtrl, Parent> multiGame) {
 
         this.primaryStage = primaryStage;
         this.splashCtrl = splash.getKey();
@@ -70,6 +74,9 @@ public class MainCtrl {
 
         this.multiPlayerCtrl = multi.getKey();
         this.multi = new Scene(multi.getValue());
+
+        this.multiPlayerGameCtrl = multiGame.getKey();
+        this.multiGame = new Scene(multiGame.getValue());
 
         this.leaderBoardCtrl = leaderboard.getKey();
         this.leaderboard = new Scene(leaderboard.getValue());
@@ -101,6 +108,12 @@ public class MainCtrl {
     public void showMultiPlayerMode() {
         primaryStage.setTitle("Quizzz multi");
         primaryStage.setScene(multi);
+    }
+
+    public void showMultiPlayerGame() {
+        primaryStage.setTitle("Quizzz multi");
+        primaryStage.setScene(multiGame);
+        multiPlayerGameCtrl.initialize();
     }
 
     public void showLeaderBoard() {

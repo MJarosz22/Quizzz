@@ -37,5 +37,6 @@ public class MyModule implements Module {
         binder.bind(SinglePlayerGameCtrl.class).in(Scopes.SINGLETON);
         binder.bind(SinglePlayerGameOverCtrl.class).in(Scopes.SINGLETON);
         binder.bind(LobbyCtrl.class).in(Scopes.SINGLETON);
+        binder.bind(MultiPlayerGameCtrl.class).in(Scopes.SINGLETON);
     }
 }
