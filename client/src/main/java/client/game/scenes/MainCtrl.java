@@ -16,6 +16,9 @@
 package client.game.scenes;
 
 import client.game.scenes.multiplayer.GameCtrl;
+import client.game.scenes.multiplayer.HowMuchCtrl;
+import client.game.scenes.multiplayer.MoreExpensiveCtrl;
+import client.game.scenes.multiplayer.WhichOneCtrl;
 import client.game.scenes.pregame.LobbyCtrl;
 import client.game.scenes.pregame.MultiPlayerCtrl;
 import client.game.scenes.pregame.SinglePlayerCtrl;
@@ -55,11 +58,35 @@ public class MainCtrl {
 
     private GameCtrl gameCtrl;
 
+    private MoreExpensiveCtrl moreExpensiveCtrl;
+    private Scene moreExpensive;
+
+    private HowMuchCtrl howMuchCtrl;
+    private Scene howMuch;
+
+    private WhichOneCtrl whichOneCtrl;
+    private Scene whichOne;
+
+    public MoreExpensiveCtrl getMoreExpensiveCtrl() {
+        return moreExpensiveCtrl;
+    }
+
+    public HowMuchCtrl getHowMuchCtrl() {
+        return howMuchCtrl;
+    }
+
+    public WhichOneCtrl getWhichOneCtrl() {
+        return whichOneCtrl;
+    }
+
+
+
     public void initialize(Stage primaryStage, Pair<SplashScreenCtrl, Parent> splash, Pair<SinglePlayerCtrl,
             Parent> single, Pair<SinglePlayerGameCtrl, Parent> singleGame,
                            Pair<SinglePlayerGameOverCtrl, Parent> singleGameOver,
                            Pair<MultiPlayerCtrl, Parent> multi,
-                           Pair<LeaderBoardCtrl, Parent> leaderboard, Pair<LobbyCtrl, Parent> lobby, GameCtrl gameCtrl) {
+                           Pair<LeaderBoardCtrl, Parent> leaderboard, Pair<LobbyCtrl, Parent> lobby, GameCtrl gameCtrl,
+                           Pair<MoreExpensiveCtrl, Parent> moreExpensive, Pair<HowMuchCtrl, Parent> howMuch, Pair<WhichOneCtrl, Parent> whichOne) {
 
         this.primaryStage = primaryStage;
         this.splashCtrl = splash.getKey();
@@ -84,6 +111,16 @@ public class MainCtrl {
         this.lobby = new Scene(lobby.getValue());
 
         this.gameCtrl = gameCtrl;
+
+        this.moreExpensiveCtrl = moreExpensive.getKey();
+        this.moreExpensive = new Scene(moreExpensive.getValue());
+
+        this.howMuchCtrl = howMuch.getKey();
+        this.howMuch = new Scene(howMuch.getValue());
+
+        this.whichOneCtrl = whichOne.getKey();
+        this.whichOne = new Scene(whichOne.getValue());
+
 
         showSplash();
         primaryStage.show();
@@ -136,6 +173,20 @@ public class MainCtrl {
     public LobbyCtrl getLobbyCtrl() {
         return lobbyCtrl;
     }
+
+    public void showMoreExpensive() {
+        primaryStage.setTitle("Quizzz More Expensive");
+        primaryStage.setScene(moreExpensive);
+    }
+    public void showHowMuch() {
+        primaryStage.setTitle("Quizzz How Much");
+        primaryStage.setScene(howMuch);
+    }
+    public void showWhichOne() {
+        primaryStage.setTitle("Quizzz Which One");
+        primaryStage.setScene(whichOne);
+    }
+
 
     public SinglePlayerCtrl getSinglePlayerCtrl() {
         return singlePlayerCtrl;

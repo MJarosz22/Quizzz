@@ -4,12 +4,14 @@ package server.api;
 import commons.GameInstance;
 import commons.communication.RequestToJoin;
 import commons.player.SimpleUser;
+import commons.question.Question;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.core.io.InputStreamResource;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.ResponseCookie;
 import org.springframework.http.ResponseEntity;
+import org.springframework.messaging.converter.MessageConverter;
 import org.springframework.messaging.handler.annotation.MessageMapping;
 import org.springframework.messaging.handler.annotation.SendTo;
 import org.springframework.messaging.simp.SimpMessagingTemplate;
@@ -37,7 +39,7 @@ public class GameController {
     private SimpMessagingTemplate msgs;
     protected ActivityController activityController;
     private final Random random;
-    private final List<ServerGameInstance> gameInstances;
+    private final List<GameInstanceServer> gameInstances;
     private final List<SimpleUser> players;
     private static int currentMPGIId; //Current ID of gameInstance for multiplayer
 
@@ -54,7 +56,7 @@ public class GameController {
         this.msgs = msgs;
         this.activityController = activityController;
         gameInstances = new ArrayList<>();
-        gameInstances.add(new ServerGameInstance(gameInstances.size(), GameInstance.MULTI_PLAYER, this, msgs));
+        gameInstances.add(new GameInstanceServer(gameInstances.size(), GameInstance.MULTI_PLAYER, this, msgs));
         players = new ArrayList<>();
     }
 
@@ -73,7 +75,7 @@ public class GameController {
         SimpleUser savedPlayer;
         switch (request.getGameType()){
             case GameInstance.SINGLE_PLAYER:
-                ServerGameInstance gameInstance = new ServerGameInstance(gameInstances.size(), GameInstance.SINGLE_PLAYER, this, msgs);
+                GameInstanceServer gameInstance = new GameInstanceServer(gameInstances.size(), GameInstance.SINGLE_PLAYER, this, msgs);
                 gameInstances.add(gameInstance);
                 savedPlayer = new SimpleUser(players.size(), request.getName(),
                         gameInstance.getId(), tokenCookie.getValue());
@@ -84,7 +86,7 @@ public class GameController {
                 break;
 
             case GameInstance.MULTI_PLAYER:
-                ServerGameInstance currGameInstance = gameInstances.get(currentMPGIId);
+                GameInstanceServer currGameInstance = gameInstances.get(currentMPGIId);
                 savedPlayer = new SimpleUser(players.size(), request.getName(),
                         currGameInstance.getId(), tokenCookie.getValue());
                 players.add(savedPlayer);
@@ -121,13 +123,19 @@ public class GameController {
         return time;
     }
 
+    @MessageMapping("/question")
+    @SendTo("/topic/question")
+    public Question test(Question question){
+        return question;
+    }
+
     public void createNewMultiplayerLobby(){
-        ServerGameInstance newGameInstance = new ServerGameInstance(gameInstances.size(), GameInstance.MULTI_PLAYER, this, msgs);
+        GameInstanceServer newGameInstance = new GameInstanceServer(gameInstances.size(), GameInstance.MULTI_PLAYER, this, msgs);
         gameInstances.add(newGameInstance);
         currentMPGIId = newGameInstance.getId();
     }
 
-    public List<ServerGameInstance> getGameInstances(){
+    public List<GameInstanceServer> getGameInstances(){
         return gameInstances;
     }
 

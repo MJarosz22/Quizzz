@@ -20,6 +20,9 @@ import client.MyModule;
 import client.game.scenes.LeaderBoardCtrl;
 import client.game.scenes.MainCtrl;
 import client.game.scenes.multiplayer.GameCtrl;
+import client.game.scenes.multiplayer.HowMuchCtrl;
+import client.game.scenes.multiplayer.MoreExpensiveCtrl;
+import client.game.scenes.multiplayer.WhichOneCtrl;
 import client.game.scenes.pregame.LobbyCtrl;
 import client.game.scenes.pregame.MultiPlayerCtrl;
 import client.game.scenes.pregame.SinglePlayerCtrl;
@@ -56,9 +59,14 @@ public class Main extends Application {
         var multi = FXML.load(MultiPlayerCtrl.class, "client/game/scenes/pregame", "Multiplayer.fxml");
         var leaderboard = FXML.load(LeaderBoardCtrl.class, "client/game/scenes/pregame", "LeaderBoard.fxml");
         var mainCtrl = INJECTOR.getInstance(MainCtrl.class);
+        var gameCtrl = INJECTOR.getInstance(GameCtrl.class);
+        var moreExpensive = FXML.load(MoreExpensiveCtrl.class, "client", "game", "scenes", "multiplayer", "GameMoreExpensive.fxml");
+        var howMuch = FXML.load(HowMuchCtrl.class, "client", "game", "scenes", "multiplayer", "GameHowMuch.fxml");
+        var whichOne = FXML.load(WhichOneCtrl.class, "client", "game", "scenes", "multiplayer", "GameWhichOne.fxml");
         var lobby = FXML.load(LobbyCtrl.class, "client/game/scenes/pregame", "Lobby.fxml");
 
-        mainCtrl.initialize(primaryStage, home, single, singleGame, singleGameOver, multi, leaderboard, lobby, INJECTOR.getInstance(GameCtrl.class));
+
+        mainCtrl.initialize(primaryStage, home, single, singleGame, singleGameOver, multi, leaderboard, lobby, gameCtrl, moreExpensive, howMuch, whichOne);
         primaryStage.setOnCloseRequest(event -> {
             Alert alert = new Alert(Alert.AlertType.CONFIRMATION, "Do you want to close the game?", ButtonType.YES, ButtonType.NO);
             ButtonType result = alert.showAndWait().orElse(ButtonType.NO);

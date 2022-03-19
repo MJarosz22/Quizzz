@@ -17,13 +17,12 @@ public class QuestionHowMuch extends Question {
 
     private Activity activity;
 
+    public QuestionHowMuch(){}
+
     public QuestionHowMuch(Activity activity) {
         this.setTitle("How much energy does it take?");
         this.activity = activity;
     }
-
-
-
 
     public Activity getActivity() {
         return activity;

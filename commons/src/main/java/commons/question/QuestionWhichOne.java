@@ -24,6 +24,8 @@ public class QuestionWhichOne extends Question {
         this.activity = activity;
     }
 
+    public QuestionWhichOne(){}
+
     @Override
     public long getAnswer() {
         return activity.getConsumption_in_wh();

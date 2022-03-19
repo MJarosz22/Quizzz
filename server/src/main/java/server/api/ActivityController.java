@@ -148,16 +148,14 @@ public class ActivityController {
         int i = 0;
         while (i < limit) {
             Optional<Activity> a = activityRepository.findById((long) idRandom);
-            if (a.isPresent() && !setOfActivities.contains(a)) {
+            if (a.isPresent() && !setOfActivities.contains(a.get())) {
                 setOfActivities.add(a.get());
-            } else {
-                limit++;
+                i++;
             }
             idRandom = (int) Math.abs(Math.random() * countIds) - 60;
-            i++;
         }
-        if (setOfActivities.size() == 0) return ResponseEntity.notFound().build();
-        List<Activity> listOfActivities = new ArrayList<Activity>(setOfActivities);
+        if (setOfActivities.isEmpty()) return ResponseEntity.notFound().build();
+        List<Activity> listOfActivities = new ArrayList<>(setOfActivities);
         return ResponseEntity.ok(listOfActivities);
     }
 

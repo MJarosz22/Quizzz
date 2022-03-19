@@ -1,5 +1,6 @@
 package server.api;
 
+import jdk.jfr.Frequency;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.messaging.simp.config.MessageBrokerRegistry;
 import org.springframework.web.socket.config.annotation.EnableWebSocketMessageBroker;
@@ -20,8 +21,10 @@ public class WebSocketConfig implements WebSocketMessageBrokerConfigurer {
     @Override
     public void configureMessageBroker(MessageBrokerRegistry registry) {
         this.messageBrokerRegistry = registry;
-        registry.enableSimpleBroker("/topic");
+
+//        registry.enableSimpleBroker("/topic");
         registry.setApplicationDestinationPrefixes("/game");
+        registry.enableSimpleBroker("/topic");
     }
 
 }

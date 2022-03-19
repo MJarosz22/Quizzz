@@ -1,9 +1,13 @@
 package client.utils;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.databind.jsontype.BasicPolymorphicTypeValidator;
+import com.fasterxml.jackson.databind.jsontype.PolymorphicTypeValidator;
 import commons.Activity;
 import commons.communication.RequestToJoin;
 import commons.player.SimpleUser;
 import commons.question.Answer;
+import commons.question.Question;
 import jakarta.ws.rs.NotFoundException;
 import jakarta.ws.rs.client.Client;
 import jakarta.ws.rs.client.ClientBuilder;
@@ -134,12 +138,14 @@ public class ServerUtils {
 
 
     public static <T> void registerForMessages(String dest, Class<T> type, Consumer<T> consumer){
+//        if(!session.isConnected()) initWebsocket();
         session.subscribe(dest, new StompFrameHandler() {
             @Override
             public Type getPayloadType(StompHeaders headers) {
                 return type;
             }
 
+            //TODO TYPE CHECKING
             @Override
             public void handleFrame(StompHeaders headers, Object payload) {
                 consumer.accept((T) payload);

@@ -6,10 +6,11 @@ import commons.GameState;
 import commons.player.Player;
 import commons.player.ServerAnswer;
 import commons.player.SimpleUser;
-import commons.question.Answer;
-import commons.question.Question;
+import commons.question.*;
 import org.apache.commons.lang3.builder.EqualsBuilder;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.messaging.handler.annotation.SendTo;
 import org.springframework.messaging.simp.SimpMessagingTemplate;
 import org.springframework.scheduling.annotation.Async;
@@ -21,7 +22,7 @@ import java.util.Timer;
 import java.util.TimerTask;
 import java.util.stream.Collectors;
 
-public class ServerGameInstance extends GameInstance{
+public class GameInstanceServer extends GameInstance{
 
     GameController gameController;
     SimpMessagingTemplate msgs;
@@ -29,8 +30,9 @@ public class ServerGameInstance extends GameInstance{
     StopWatch stopWatch;
     int questionTime = 8000;
     private List<ServerAnswer> answers;
+    Logger logger = LoggerFactory.getLogger(GameInstanceServer.class);
 
-    public ServerGameInstance(int id, int type, GameController controller, SimpMessagingTemplate msgs) {
+    public GameInstanceServer(int id, int type, GameController controller, SimpMessagingTemplate msgs) {
         super(id, type);
         this.gameController = controller;
         this.msgs = msgs;
@@ -50,7 +52,9 @@ public class ServerGameInstance extends GameInstance{
                 if(time == 0) {
                     timer.cancel();
                     //TODO START GAME
-                    startGame(gameController.activityController.getRandom60().getBody());
+                    List<Activity> activitysixty = gameController.activityController.getRandom60().getBody();
+                    System.out.println(activitysixty.size());
+                    startGame(activitysixty);
                 }
             }
         }, 0, 1000);
@@ -65,7 +69,15 @@ public class ServerGameInstance extends GameInstance{
     }
 
     private void goToQuestion(int questionNumber){
-        msgs.convertAndSend("/topic/" + getId() + "/question", getQuestions().get(questionNumber));
+        Question currentQuestion = getQuestions().get(questionNumber);
+        logger.info("Question " + questionNumber + " sent" + currentQuestion);
+        if(currentQuestion instanceof QuestionHowMuch){
+            msgs.convertAndSend("/topic/questionhowmuch", getQuestions().get(questionNumber));
+        }else if (currentQuestion instanceof QuestionMoreExpensive){
+            msgs.convertAndSend("/topic/questionmoreexpensive", getQuestions().get(questionNumber));
+        }else if(currentQuestion instanceof QuestionWhichOne){
+            msgs.convertAndSend("/topic/questionwhichone", getQuestions().get(questionNumber));
+        }else throw new IllegalStateException();
     }
 
     private void nextQuestion(){
@@ -82,6 +94,7 @@ public class ServerGameInstance extends GameInstance{
                 }
                 //TODO ADD POST-QUESTION SCREEN
                 answers.clear();
+                stopWatch.stop();
                 nextQuestion();
             }
         }, 8000);
@@ -117,7 +130,7 @@ public class ServerGameInstance extends GameInstance{
 
         if (o == null || getClass() != o.getClass()) return false;
 
-        ServerGameInstance that = (ServerGameInstance) o;
+        GameInstanceServer that = (GameInstanceServer) o;
 
         return new EqualsBuilder().appendSuper(super.equals(o)).append(questionNumber, that.questionNumber).append(questionTime, that.questionTime).append(gameController, that.gameController).append(msgs, that.msgs).append(stopWatch, that.stopWatch).isEquals();
     }

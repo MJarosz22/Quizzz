@@ -10,8 +10,6 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.messaging.handler.annotation.MessageMapping;
-import org.springframework.messaging.handler.annotation.SendTo;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -25,7 +23,7 @@ public class GameInstanceController {
     //TODO ADD SCORING
 
     private final Logger logger = LoggerFactory.getLogger(GameInstanceController.class);
-    private final List<ServerGameInstance> gameInstances;
+    private final List<GameInstanceServer> gameInstances;
     private final GameController gameController;
 
     public GameInstanceController(GameController gameController){
@@ -87,7 +85,7 @@ public class GameInstanceController {
                                                 @CookieValue(name = "user-id", defaultValue = "null") String cookie){
         Player player = getPlayerFromGameInstance(gameInstanceId, cookie);
         if(player == null) return ResponseEntity.status(HttpStatus.FORBIDDEN).build();
-        ServerGameInstance gameInstance = gameInstances.get(player.getGameInstanceId());
+        GameInstanceServer gameInstance = gameInstances.get(player.getGameInstanceId());
         if(gameInstance.getState() != GameState.INQUESTION) return ResponseEntity.notFound().build();
         return ResponseEntity.ok(gameInstance.getCurrentQuestion());
     }
@@ -97,7 +95,7 @@ public class GameInstanceController {
                                                @CookieValue(name = "user-id", defaultValue = "null") String cookie){
         Player player = getPlayerFromGameInstance(gameInstanceId, cookie);
         if(player == null) return ResponseEntity.status(HttpStatus.FORBIDDEN).build();
-        ServerGameInstance gameInstance = gameInstances.get(player.getGameInstanceId());
+        GameInstanceServer gameInstance = gameInstances.get(player.getGameInstanceId());
         if(gameInstance.getState() != GameState.INQUESTION) return ResponseEntity.notFound().build();
         return ResponseEntity.ok(gameInstance.getTimeLeft());
     }
@@ -107,7 +105,7 @@ public class GameInstanceController {
                                                @CookieValue(name = "user-id", defaultValue = "null") String cookie){
         Player player = getPlayerFromGameInstance(gameInstanceId, cookie);
         if(player == null) return ResponseEntity.status(HttpStatus.FORBIDDEN).build();
-        ServerGameInstance gameInstance = gameInstances.get(player.getGameInstanceId());
+        GameInstanceServer gameInstance = gameInstances.get(player.getGameInstanceId());
         if(gameInstance.getState() != GameState.INQUESTION) return ResponseEntity.ok(false);
         return ResponseEntity.ok(gameInstance.answerQuestion(player, answer));
     }
@@ -117,7 +115,7 @@ public class GameInstanceController {
                                                  @CookieValue(name = "user-id", defaultValue = "null") String cookie){
         Player player = getPlayerFromGameInstance(gameInstanceId, cookie);
         if(player == null) return ResponseEntity.status(HttpStatus.FORBIDDEN).build();
-        ServerGameInstance gameInstance = gameInstances.get(player.getGameInstanceId());
+        GameInstanceServer gameInstance = gameInstances.get(player.getGameInstanceId());
         if(gameInstance.getState() != GameState.POSTQUESTION) return ResponseEntity.notFound().build();
         return ResponseEntity.ok(gameInstance.getCorrectAnswer());
     }

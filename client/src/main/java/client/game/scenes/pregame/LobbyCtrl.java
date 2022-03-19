@@ -69,10 +69,7 @@ public class LobbyCtrl implements Initializable {
     }
 
     public void registerForMessages(){
-        server.registerForMessages("/topic/time", Integer.class , time -> {
-            Platform.runLater(()->{labelName.setText(time.toString());});
-            System.out.println(time);
-        });
+
     }
 
     // To be added when making the main game scene, in order for the player to play
@@ -127,6 +124,10 @@ public class LobbyCtrl implements Initializable {
 
     public void setPersonsText(String s) {
         this.personsText.setText(s);
+    }
+
+    public void setCountdown(int time){
+        labelName.setText(String.valueOf(time));
     }
 
 }
