@@ -37,7 +37,6 @@ public class MultiPlayerCtrl {
             SimpleUser player = server.addPlayer(new RequestToJoin(getTextFieldName(), GameInstance.MULTI_PLAYER));
             mainCtrl.setPlayer(player);
             LobbyCtrl lobbyCtrl = mainCtrl.getLobbyCtrl();
-
             System.out.println(player);
             lobbyCtrl.changePrompt();
             this.textfieldName.clear();

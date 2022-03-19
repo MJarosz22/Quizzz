@@ -3,6 +3,7 @@ package client.utils;
 import commons.Activity;
 import commons.player.SimpleUser;
 import communication.RequestToJoin;
+import jakarta.ws.rs.NotFoundException;
 import jakarta.ws.rs.client.Client;
 import jakarta.ws.rs.client.ClientBuilder;
 import jakarta.ws.rs.client.Entity;
@@ -39,8 +40,7 @@ public class ServerUtils {
                 .get(new GenericType<>() {
                 });
     }
-
-    public List<Activity> getActivitiesRandomly() {
+    public List<Activity> getActivitiesRandomly() throws NotFoundException{
         return ClientBuilder.newClient(new ClientConfig())
                 .target(SERVER).path("api/activities/random60")
                 .request(APPLICATION_JSON)
