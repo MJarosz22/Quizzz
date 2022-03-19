@@ -55,12 +55,12 @@ public class SinglePlayerGameOverCtrl {
             TableCell<String,Integer> cell = new TableCell<>();
             cell.textProperty().bind(Bindings.createStringBinding(() -> {
                 if (cell.isEmpty()) {
-                    return null ;
+                    return null;
                 } else {
                     return Integer.toString(cell.getIndex() + 1);
                 }
             }, cell.emptyProperty(), cell.indexProperty()));
-            return cell ;
+            return cell;
         });
 
 
