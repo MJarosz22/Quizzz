@@ -117,7 +117,9 @@ public class GameInstanceServer extends GameInstance {
 
 
     public List<SimpleUser> updatePlayerList() {
-        ArrayList<SimpleUser> players = getPlayers().stream().map(SimpleUser.class::cast).collect(Collectors.toCollection(ArrayList::new));
+        ArrayList<SimpleUser> players = getPlayers()
+                .stream().map(SimpleUser.class::cast)
+                .collect(Collectors.toCollection(ArrayList::new));
         msgs.convertAndSend("/topic/" + getId() + "/players", players);
         return players;
     }
@@ -135,11 +137,15 @@ public class GameInstanceServer extends GameInstance {
 
         GameInstanceServer that = (GameInstanceServer) o;
 
-        return new EqualsBuilder().appendSuper(super.equals(o)).append(questionNumber, that.questionNumber).append(questionTime, that.questionTime).append(gameController, that.gameController).append(msgs, that.msgs).append(stopWatch, that.stopWatch).isEquals();
+        return new EqualsBuilder().appendSuper(super.equals(o)).append(questionNumber, that.questionNumber)
+                .append(questionTime, that.questionTime).append(gameController, that.gameController)
+                .append(msgs, that.msgs).append(stopWatch, that.stopWatch).isEquals();
     }
 
     @Override
     public int hashCode() {
-        return new HashCodeBuilder(17, 37).appendSuper(super.hashCode()).append(gameController).append(msgs).append(questionNumber).append(stopWatch).append(questionTime).toHashCode();
+        return new HashCodeBuilder(17, 37).appendSuper(super.hashCode())
+                .append(gameController).append(msgs).append(questionNumber).append(stopWatch)
+                .append(questionTime).toHashCode();
     }
 }

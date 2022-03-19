@@ -52,3 +52,4 @@ quizzzz.trace.db
 # zip files #
 *.zip
 /server/src/main/resources/activities/
+gitinspector.html
