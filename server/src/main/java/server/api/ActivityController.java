@@ -1,6 +1,8 @@
 package server.api;
 
 import commons.Activity;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.propertyeditors.URLEditor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -16,6 +18,7 @@ public class ActivityController {
     private final Random random;
 
     private final ActivityRepository activityRepository;
+    private final Logger logger = LoggerFactory.getLogger(ActivityController.class);
 
     public ActivityController(Random random, ActivityRepository activityRepository) {
         this.random = random;
@@ -135,14 +138,21 @@ public class ActivityController {
     public ResponseEntity<List<Optional<Activity>>> getRandom60() {
         //hard coded -> size of all activities - 60
         long countIds = activityRepository.count();
-
+        if(activityRepository.count() == 0) {
+            logger.error("No activities found for lobby...");
+            return ResponseEntity.notFound().build();
+        }
         int idRandom = (int) Math.abs(Math.random() * countIds) - 60;
         Set<Optional<Activity>> setOfActivities = new HashSet<>();
         int limit = 60;
         int i = 0;
+        long random_consumption = (long) ((Math.random() * (10000 - 50)) + 50);
+        long random_consumption_max = random_consumption +(50*random_consumption)/ 100;
+        long random_consumption_min = random_consumption -(50*random_consumption)/ 100;
         while (i < limit) {
             Optional<Activity> a = activityRepository.findById((long) idRandom);
-            if (a.isPresent() && !setOfActivities.contains(a)) {
+            if (a.isPresent() && !setOfActivities.contains(a) && a.get().getConsumption_in_wh() <=random_consumption_max
+                    && a.get().getConsumption_in_wh()>=random_consumption_min) {
                 setOfActivities.add(a);
             } else {
                 limit++;
@@ -151,9 +161,7 @@ public class ActivityController {
             i++;
         }
         if (setOfActivities.size() == 0) return ResponseEntity.notFound().build();
-        List<Optional<Activity>> listOfActivities = new ArrayList<>();
-        for (Optional<Activity> activity : setOfActivities)
-            listOfActivities.add(activity);
+        List<Optional<Activity>> listOfActivities = new ArrayList<>(setOfActivities);
         return ResponseEntity.ok(listOfActivities);
     }
 

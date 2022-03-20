@@ -9,11 +9,11 @@
 
 <AnchorPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="540.0" prefWidth="960.0" style="-fx-background-color: #91e4fb;" xmlns="http://javafx.com/javafx/17" xmlns:fx="http://javafx.com/fxml/1" fx:controller="client.scenes.SinglePlayerGameOverCtrl">
     <children>
-        <TableView layoutX="342.0" layoutY="208.0" prefHeight="287.0" prefWidth="291.0">
+        <TableView fx:id="tablePlayers" layoutX="342.0" layoutY="208.0" prefHeight="287.0" prefWidth="291.0">
             <columns>
-                <TableColumn prefWidth="51.0" text="Position" />
-                <TableColumn prefWidth="145.0" text="Name" />
-                <TableColumn prefWidth="95.0" text="Score" />
+                <TableColumn fx:id="positionColumn" prefWidth="51.0" text="Position" />
+                <TableColumn fx:id="nameColumn" prefWidth="145.0" text="Name" />
+                <TableColumn fx:id="scoreColumn" prefWidth="95.0" text="Score" />
             </columns>
         </TableView>
         <Button layoutX="804.0" layoutY="53.0" mnemonicParsing="false" onAction="#back" prefHeight="56.0" prefWidth="96.0" style="-fx-background-color: #fff;" text="PLAY AGAIN" textAlignment="CENTER" wrapText="true">

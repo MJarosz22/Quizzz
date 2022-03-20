@@ -3,13 +3,18 @@ package client.utils;
 import commons.Activity;
 import communication.RequestToJoin;
 import commons.player.SimpleUser;
+import jakarta.ws.rs.NotFoundException;
 import jakarta.ws.rs.client.Client;
 import jakarta.ws.rs.client.ClientBuilder;
 import jakarta.ws.rs.client.Entity;
 import jakarta.ws.rs.core.GenericType;
+import jakarta.ws.rs.core.Response;
 import org.glassfish.jersey.client.ClientConfig;
 
+import java.io.FileNotFoundException;
+import java.io.InputStream;
 import java.util.List;
+import java.util.Optional;
 
 import static jakarta.ws.rs.core.MediaType.APPLICATION_JSON;
 
@@ -35,13 +40,24 @@ public class ServerUtils {
                 .get(new GenericType<>() {
                 });
     }
-    public List<Activity> getActivitiesRandomly() {
+    public List<Activity> getActivitiesRandomly() throws NotFoundException{
         return ClientBuilder.newClient(new ClientConfig())
                 .target(SERVER).path("api/activities/random60")
                 .request(APPLICATION_JSON)
                 .accept(APPLICATION_JSON)
                 .get(new GenericType<>() {
                 });
+
+    }
+
+    public InputStream getImage(Activity activity) throws FileNotFoundException {
+        Response response = ClientBuilder.newClient(new ClientConfig())
+                .target(SERVER).path("api/game/activities/" + activity.getImage_path())
+                .request("image/*")
+                .accept("image/*")
+                .get(new GenericType<>() {});
+        if(response.getStatus() == 404) throw new FileNotFoundException();
+        return response.readEntity(InputStream.class);
     }
 
 
@@ -65,7 +81,7 @@ public class ServerUtils {
 
     public Activity updateActivity(Activity activity) {
         return ClientBuilder.newClient(new ClientConfig())
-                .target(SERVER).path("api/activities/" + activity.getId())
+                .target(SERVER).path("api/activities/" + activity.getActivityID())
                 .request(APPLICATION_JSON)
                 .accept(APPLICATION_JSON)
                 .put(Entity.entity(activity, APPLICATION_JSON), Activity.class);
@@ -79,5 +95,88 @@ public class ServerUtils {
                 .accept(APPLICATION_JSON) //
                 .delete(new GenericType<>() {
                 });
+    }
+
+    public SimpleUser addPlayerToLeaderboard(SimpleUser player){
+        Client client = ClientBuilder.newClient(new ClientConfig());
+        return client
+                .target(SERVER).path("api/leaderboard/addPlayer")
+                .request(APPLICATION_JSON)
+                .accept(APPLICATION_JSON)
+                .post(Entity.entity(player, APPLICATION_JSON), SimpleUser.class);
+    }
+
+    public static List<SimpleUser> getLeaderboard(SimpleUser player) {
+        Client client = ClientBuilder.newClient(new ClientConfig());
+        return client //
+                .target(SERVER).path("api/leaderboard")
+                .request(APPLICATION_JSON)
+                .get(new GenericType<>() {
+                });
+    }
+
+    public int getLastGIIdMult() {
+        Client client = ClientBuilder.newClient(new ClientConfig());
+        return client //
+                .target(SERVER).path("api/game/getLastGIIdMult") //
+                .request(APPLICATION_JSON) //
+                .accept(APPLICATION_JSON) //
+                .get(new GenericType<>() {
+                });
+    }
+
+    public int getLastGIIdSingle() {
+        Client client = ClientBuilder.newClient(new ClientConfig());
+        return client //
+                .target(SERVER).path("api/game/getLastGIIdSingle") //
+                .request(APPLICATION_JSON) //
+                .accept(APPLICATION_JSON) //
+                .get(new GenericType<>() {
+                });
+    }
+
+
+    public static List<SimpleUser> getPlayerList(int gIId) {
+        Client client = ClientBuilder.newClient(new ClientConfig());
+        return client //
+                .target(SERVER).path("api/game/ " + gIId + "/playerlist") //
+                .request(APPLICATION_JSON) //
+                .accept(APPLICATION_JSON) //
+                .get(new GenericType<>() {
+                });
+    }
+
+    public SimpleUser updatePlayer(SimpleUser player) {
+        return ClientBuilder.newClient(new ClientConfig())
+                .target(SERVER).path("api/game/" + player.getId() + "/updatePlayer")
+                .request(APPLICATION_JSON)
+                .accept(APPLICATION_JSON)
+                .put(Entity.entity(player, APPLICATION_JSON), SimpleUser.class);
+
+    }
+
+    // ------------------------------------ ADDITIONAL METHODS ------------------------------------ //
+
+    /**
+     * Additional method that checks whether a player hasn't disconnected from a game, by comparing cookies, which are
+     * used as identifiers (as each player has an unique cookie).
+     *
+     * @param player - SimpleUser object that represents the player we are interested in
+     * @return true, if the player has not disconnected yet, or false otherwise
+     */
+    public boolean containsPlayer(SimpleUser player) {
+        if (player == null || getPlayerList(player.getGameInstanceId()) == null) return false;
+        Optional<Boolean> contains = getPlayerList(player.getGameInstanceId())
+                .stream().map(x -> x.getCookie().equals(player.getCookie())).findFirst();
+        return (contains.isPresent());
+    }
+
+
+    public Activity deleteActivity(Activity activity) {
+        return ClientBuilder.newClient(new ClientConfig())
+                .target(SERVER).path("api/activities/" + activity.getActivityID())
+                .request(APPLICATION_JSON)
+                .accept(APPLICATION_JSON)
+                .delete(new GenericType<>(){});
     }
 }

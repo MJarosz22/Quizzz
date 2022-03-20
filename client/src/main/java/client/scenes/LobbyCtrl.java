@@ -6,21 +6,22 @@ import commons.player.SimpleUser;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.collections.FXCollections;
 import javafx.fxml.FXML;
-import javafx.fxml.Initializable;
 import javafx.scene.control.Label;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
 import javafx.scene.text.Text;
 
-import java.net.URL;
 import java.util.List;
-import java.util.ResourceBundle;
+import java.util.concurrent.Executors;
+import java.util.concurrent.ScheduledExecutorService;
+import java.util.concurrent.TimeUnit;
 
-public class LobbyCtrl implements Initializable {
+public class LobbyCtrl {
 
     private final ServerUtils server;
     private final MainCtrl mainCtrl;
     private static int persons;
+    private boolean sceneChanged;
 
     @FXML
     private Label labelName;
@@ -40,11 +41,31 @@ public class LobbyCtrl implements Initializable {
         this.mainCtrl = mainCtrl;
     }
 
-    @Override
-    public void initialize(URL location, ResourceBundle resources) {
+    public void initialize() {
         persons = 0;
         columnName.setCellValueFactory(q -> new SimpleStringProperty(q.getValue().getName()));
+        this.sceneChanged = false;
+        startPolling();
     }
+
+    public void startPolling() {
+        ScheduledExecutorService executor = Executors.newScheduledThreadPool(1);
+        Runnable poller = new Runnable() {
+            @Override
+            public void run() {
+                if (mainCtrl.getPlayer() != null) {
+                    if (sceneChanged)
+                        executor.shutdown();
+                    setTablePlayers(ServerUtils.getPlayers(mainCtrl.getPlayer()));
+                    changePrompt();
+                }
+            }
+        };
+
+
+        executor.scheduleAtFixedRate(poller, 0, 1, TimeUnit.SECONDS);
+    }
+
 
     /**
      * When you press "LEAVE LOBBY" for the multi-player variant of the game, or "BACK"
@@ -52,20 +73,22 @@ public class LobbyCtrl implements Initializable {
      */
     public void back() {
         SimpleUser player = mainCtrl.getPlayer();
+        this.sceneChanged = true;
         server.disconnect(player);
         System.out.println(player.getName() + " disconnected!");
-        decreaseNumberOfPlayers();
+        //decreaseNumberOfPlayers();
         mainCtrl.showSplash();
-        server.disconnect(mainCtrl.getPlayer());
     }
 
     // To be added when making the main game scene, in order for the player to play
     public void play() {
+        this.sceneChanged = true;
         //TODO CONNECT TO SERVER
 //        mainCtrl.showPlayMode();
     }
 
-    /*public void setLabelName(String name) {
+    /*
+    public void setLabelName(String name) {
         labelName.setText(name);
     }*/
 
@@ -74,7 +97,7 @@ public class LobbyCtrl implements Initializable {
     }
 
     public int getPersons() {
-        return persons;
+        return server.getPlayerList(server.getLastGIIdMult()).size();
     }
 
     public void setPersons(int persons) {
@@ -84,22 +107,28 @@ public class LobbyCtrl implements Initializable {
     /**
      * Additional method that decreases the number of players that are currently in the lobby, when a player leaves.
      */
-    public void decreaseNumberOfPlayers() {
-        setPersons(getPersons() - 1);
-        changePrompt();
-    }
+    /*
+     public void decreaseNumberOfPlayers() {
+     setPersons(getPersons() - 1);
+     changePrompt();
+     }
+     */
 
     /**
      * Additional method that increases the number of players that are currently in the lobby, when a player joins.
      */
-    public void increaseNumberOfPlayers() {
-        setPersons(getPersons() + 1);
-        changePrompt();
-    }
+
+    /*
+     public void increaseNumberOfPlayers() {
+     setPersons(getPersons() + 1);
+     changePrompt();
+     }
+     */
 
     /**
      * Additional method that changes the prompt that gets called whenever a player joins/leaves the lobby
      */
+
     public void changePrompt() {
         if (getPersons() > 1)
             personsText.setText("There are " + getPersons() + " players out of the maximum capacity of 50");
@@ -107,8 +136,11 @@ public class LobbyCtrl implements Initializable {
             personsText.setText("There is " + getPersons() + " player out of the maximum capacity of 50");
     }
 
-    public void setPersonsText(String s) {
-        this.personsText.setText(s);
-    }
+    /*
+     public void setPersonsText(String s) {
+     this.personsText.setText(s);
+     }
+     */
+
 
 }
