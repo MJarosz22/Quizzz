@@ -59,6 +59,9 @@ public class WhichOneCtrl {
         questionCount.setText("Question " + question.getNumber() + "/20");
         option4.setText(question.getActivity().getTitle());
         progressBar.setProgress(question.getNumber() / 20.0d + 0.05);
+        answer1.setText(String.valueOf(question.getAnswers()[0]));
+        answer2.setText(String.valueOf(question.getAnswers()[1]));
+        answer3.setText(String.valueOf(question.getAnswers()[2]));
         try {
             Image image = new Image(server.getImage(question.getActivity()));
             image4.setImage(image);
