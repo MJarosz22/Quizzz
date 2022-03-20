@@ -26,6 +26,7 @@ import client.game.scenes.pregame.SplashScreenCtrl;
 import client.game.scenes.singleplayer.SinglePlayerGameCtrl;
 import client.game.scenes.singleplayer.SinglePlayerGameOverCtrl;
 import client.utils.ServerUtils;
+import commons.player.SimpleUser;
 import commons.question.QuestionHowMuch;
 import commons.question.QuestionMoreExpensive;
 import commons.question.QuestionWhichOne;
@@ -33,6 +34,8 @@ import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.stage.Stage;
 import javafx.util.Pair;
+
+import java.util.List;
 
 public class MainCtrl {
 
@@ -149,11 +152,6 @@ public class MainCtrl {
         primaryStage.setScene(multi);
     }
 
-//    public void showMultiPlayerGame() {
-//        primaryStage.setTitle("Quizzz multi");
-//        primaryStage.setScene(multiGame);
-//        multiPlayerGameCtrl.initialize();
-//    }
 
     public void showLeaderBoard() {
         primaryStage.setTitle("Quizzz leader board");
@@ -167,8 +165,9 @@ public class MainCtrl {
 
     public void showLobby() {
         primaryStage.setTitle("Quizzz lobby");
-        //lobbyCtrl.setLabelName(player.getName());
-        lobbyCtrl.setTablePlayers(ServerUtils.getPlayers(gameCtrl.getPlayer()));
+        List<SimpleUser> players = ServerUtils.getPlayers(gameCtrl.getPlayer());
+        lobbyCtrl.setTablePlayers(players);
+        lobbyCtrl.setPersons(players.size());
         primaryStage.setScene(lobby);
     }
 

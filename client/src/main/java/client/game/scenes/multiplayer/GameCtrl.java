@@ -11,6 +11,7 @@ import commons.question.QuestionWhichOne;
 import javafx.application.Platform;
 
 import javax.inject.Inject;
+import java.util.List;
 import java.util.function.Consumer;
 
 public class GameCtrl {
@@ -36,9 +37,31 @@ public class GameCtrl {
 
     public void start() {
         server.initWebsocket();
-        subscribe("/topic/" + getPlayer().getGameInstanceId() + "/time", Integer.class, time -> {
+        subscribeToWebsockets();
+    }
+
+    public <T> void subscribe(String destination, Class<T> type, Consumer<T> consumer) {
+        server.registerForMessages(destination, type, consumer);
+    }
+
+    public void disconnect() {
+        server.disconnectWebsocket();
+        server.disconnect(player);
+    }
+
+    private void subscribeToWebsockets(){
+        subscribe("/topic/" + player.getGameInstanceId() + "/time", Integer.class, time -> {
             Platform.runLater(() -> {
                 mainCtrl.getLobbyCtrl().setCountdown(time);
+            });
+        });
+        subscribe("/topic/" + player.getGameInstanceId() + "/players", Integer.class, amountOfPlayers -> {
+            System.out.println("test");
+
+            List<SimpleUser> players = server.getPlayers(player);
+            Platform.runLater(() -> {
+                mainCtrl.getLobbyCtrl().setPersons(amountOfPlayers);
+                mainCtrl.getLobbyCtrl().setTablePlayers(players);
             });
         });
 
@@ -59,16 +82,6 @@ public class GameCtrl {
             });
         });
     }
-
-    public <T> void subscribe(String destination, Class<T> type, Consumer<T> consumer) {
-        server.registerForMessages(destination, type, consumer);
-    }
-
-    public void disconnect() {
-        server.disconnectWebsocket();
-        server.disconnect(player);
-    }
-
 
     public void submitAnswer(Answer answer) {
         server.submitAnswer(player, answer);

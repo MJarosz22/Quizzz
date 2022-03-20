@@ -64,6 +64,7 @@ public class LobbyCtrl implements Initializable {
 
     public void init() {
         server.initWebsocket();
+        changePrompt();
         registerForMessages();
     }
 
@@ -92,6 +93,7 @@ public class LobbyCtrl implements Initializable {
 
     public void setPersons(int persons) {
         this.persons = persons;
+        changePrompt();
     }
 
     /**

@@ -3,7 +3,6 @@ package server.api;
 import commons.Activity;
 import commons.GameInstance;
 import commons.GameState;
-import commons.player.Player;
 import commons.player.ServerAnswer;
 import commons.player.SimpleUser;
 import commons.question.*;
@@ -19,7 +18,6 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Timer;
 import java.util.TimerTask;
-import java.util.stream.Collectors;
 
 public class GameInstanceServer extends GameInstance {
 
@@ -116,16 +114,14 @@ public class GameInstanceServer extends GameInstance {
     }
 
 
-    public List<SimpleUser> updatePlayerList() {
-        ArrayList<SimpleUser> players = getPlayers()
-                .stream().map(SimpleUser.class::cast)
-                .collect(Collectors.toCollection(ArrayList::new));
-        msgs.convertAndSend("/topic/" + getId() + "/players", players);
-        return players;
+    public void updatePlayerList() {
+        System.out.println("update player list");
+        msgs.convertAndSend("/topic/" + getId() + "/players", getPlayers().size());
     }
 
-    public boolean answerQuestion(Player player, Answer answer) {
+    public boolean answerQuestion(SimpleUser player, Answer answer) {
         answers.add(new ServerAnswer(answer.getAnswer(), player));
+        logger.info("Answer received from " + player.getName());
         return true;
     }
 

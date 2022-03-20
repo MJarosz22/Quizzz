@@ -7,14 +7,14 @@ import org.apache.commons.lang3.builder.ToStringBuilder;
 
 public class ServerAnswer extends Answer {
 
-    private Player player;
+    private SimpleUser player;
 
-    public ServerAnswer(Long answer, Player player) {
+    public ServerAnswer(Long answer, SimpleUser player) {
         super(answer);
         this.player = player;
     }
 
-    public Player getPlayer() {
+    public SimpleUser getPlayer() {
         return player;
     }
 
