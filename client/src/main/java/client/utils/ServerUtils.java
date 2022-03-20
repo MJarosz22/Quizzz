@@ -1,8 +1,8 @@
 package client.utils;
 
 import commons.Activity;
-import commons.player.SimpleUser;
 import communication.RequestToJoin;
+import commons.player.SimpleUser;
 import jakarta.ws.rs.NotFoundException;
 import jakarta.ws.rs.client.Client;
 import jakarta.ws.rs.client.ClientBuilder;
@@ -40,8 +40,7 @@ public class ServerUtils {
                 .get(new GenericType<>() {
                 });
     }
-
-    public List<Activity> getActivitiesRandomly() throws NotFoundException {
+    public List<Activity> getActivitiesRandomly() throws NotFoundException{
         return ClientBuilder.newClient(new ClientConfig())
                 .target(SERVER).path("api/activities/random60")
                 .request(APPLICATION_JSON)
@@ -56,9 +55,8 @@ public class ServerUtils {
                 .target(SERVER).path("api/game/activities/" + activity.getImage_path())
                 .request("image/*")
                 .accept("image/*")
-                .get(new GenericType<>() {
-                });
-        if (response.getStatus() == 404) throw new FileNotFoundException();
+                .get(new GenericType<>() {});
+        if(response.getStatus() == 404) throw new FileNotFoundException();
         return response.readEntity(InputStream.class);
     }
 
@@ -99,6 +97,24 @@ public class ServerUtils {
                 });
     }
 
+    public SimpleUser addPlayerToLeaderboard(SimpleUser player){
+        Client client = ClientBuilder.newClient(new ClientConfig());
+        return client
+                .target(SERVER).path("api/leaderboard/addPlayer")
+                .request(APPLICATION_JSON)
+                .accept(APPLICATION_JSON)
+                .post(Entity.entity(player, APPLICATION_JSON), SimpleUser.class);
+    }
+
+    public static List<SimpleUser> getLeaderboard(SimpleUser player) {
+        Client client = ClientBuilder.newClient(new ClientConfig());
+        return client //
+                .target(SERVER).path("api/leaderboard")
+                .request(APPLICATION_JSON)
+                .get(new GenericType<>() {
+                });
+    }
+
     public int getLastGIIdMult() {
         Client client = ClientBuilder.newClient(new ClientConfig());
         return client //
@@ -108,7 +124,6 @@ public class ServerUtils {
                 .get(new GenericType<>() {
                 });
     }
-
 
     public int getLastGIIdSingle() {
         Client client = ClientBuilder.newClient(new ClientConfig());
@@ -147,7 +162,7 @@ public class ServerUtils {
      * used as identifiers (as each player has an unique cookie).
      *
      * @param player - SimpleUser object that represents the player we are interested in
-     * @return false, if the player has disconnected, or true otherwise
+     * @return true, if the player has not disconnected yet, or false otherwise
      */
     public boolean containsPlayer(SimpleUser player) {
         if (player == null || getPlayerList(player.getGameInstanceId()) == null) return false;
@@ -155,4 +170,5 @@ public class ServerUtils {
                 .stream().map(x -> x.getCookie().equals(player.getCookie())).findFirst();
         return (contains.isPresent());
     }
+
 }

@@ -65,6 +65,8 @@ public class SinglePlayerGameCtrl {
     @FXML
     private Pane confirmationExit;
 
+    private static boolean gameIsOver;
+
 
     @Inject
     public SinglePlayerGameCtrl(ServerUtils server, MainCtrl mainCtrl) {
@@ -94,6 +96,7 @@ public class SinglePlayerGameCtrl {
             progressBar.setProgress(-0.05);
             score.setText("Your score: 0");
             roundCounter = 1;
+            gameIsOver = false;
             loadNextQuestion();
         }
     }
@@ -730,6 +733,11 @@ public class SinglePlayerGameCtrl {
      * @param timer - an integer value representing the number of miliseconds after which the thread get executed.
      */
     public void gameOver(int timer) {
+        if(gameIsOver==false){
+            server.addPlayerToLeaderboard(player);
+            server.disconnect(player);
+        }
+        gameIsOver = true;
         Thread thread = new Thread(() -> {
 
             try {
@@ -795,4 +803,9 @@ public class SinglePlayerGameCtrl {
         confirmationExit.setDisable(false);
         confirmationExit.setStyle("-fx-background-color: #91e4fb; ");
     }
+
+    public static boolean getGameIsOver(){
+        return gameIsOver;
+    }
+
 }

@@ -68,7 +68,8 @@ public class Main extends Application {
         var mainCtrl = INJECTOR.getInstance(MainCtrl.class);
         SimpleUser player = mainCtrl.getPlayer();
         ServerUtils server = new ServerUtils();
-        if (server.containsPlayer(player))
+        if (server.containsPlayer(player) && SinglePlayerGameCtrl.getGameIsOver() == false )
             server.disconnect(player);
     }
+
 }

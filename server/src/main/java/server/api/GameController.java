@@ -153,7 +153,10 @@ public class GameController {
     public ResponseEntity<Boolean> disconnect(@PathVariable int gameInstanceId,
                                               @CookieValue(name = "user-id", defaultValue = "null") String cookie) {
         Player removePlayer = getPlayerFromGameInstance(gameInstanceId, cookie);
-        if (removePlayer == null) return ResponseEntity.badRequest().build();
+        if (removePlayer == null) {
+            System.out.println("Here is the error: server/api/GameController/disconnect");
+            return ResponseEntity.badRequest().build();
+        }
         logger.info("[GI " + (gameInstanceId) + "] PLAYER (" + removePlayer.getId() + ") DISCONNECTED");
         return ResponseEntity.ok(gameInstances.get(gameInstanceId).getPlayers().remove(removePlayer));
     }
