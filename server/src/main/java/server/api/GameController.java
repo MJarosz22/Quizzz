@@ -37,6 +37,7 @@ public class GameController {
     private final List<GameInstance> gameInstances;
     private final List<SimpleUser> players;
     private static int currentMPGIId = 0; //Current ID of gameInstance for multiplayer
+    private static int currentSPGIId = 0; //Current ID of gameInstance for singleplayer
 
 
     /**
@@ -85,15 +86,13 @@ public class GameController {
             case GameInstance.SINGLE_PLAYER:
                 GameInstance gameInstance = new GameInstance(gameInstances.size(), GameInstance.SINGLE_PLAYER);
                 gameInstances.add(gameInstance);
+                currentSPGIId = gameInstance.getId();
                 savedPlayer = new SimpleUser(players.size(), request.getName(),
                         gameInstance.getId(), tokenCookie.getValue());
                 players.add(savedPlayer);
                 gameInstance.getPlayers().add(savedPlayer.toPlayer(gameInstance));
                 logger.info("[GI " + (gameInstance.getId()) + "] PLAYER (" + savedPlayer.getId() +
                         ") STARTED SP GAME: NAME=" + savedPlayer.getName());
-                //GameInstance newGameInstance = new GameInstance(gameInstances.size(), GameInstance.SINGLE_PLAYER);
-                //gameInstances.add(newGameInstance);
-                //currentMPGIId = newGameInstance.getId();
                 break;
 
             case GameInstance.MULTI_PLAYER:
@@ -103,7 +102,7 @@ public class GameController {
                 players.add(savedPlayer);
                 currGameInstance.getPlayers().add(savedPlayer.toPlayer(currGameInstance));
                 logger.info("[GI " + (currGameInstance.getId()) + "] PLAYER (" + savedPlayer.getId() +
-                        ") JOINED: NAME=" + savedPlayer.getName());
+                        ") STARTED MP GAME: NAME=" + savedPlayer.getName());
                 break;
 
             default:
@@ -160,9 +159,9 @@ public class GameController {
     }
 
     @GetMapping(value = "/activities/{activityFolder}/{activityFile}",
-    produces = "image/jpg")
-    public ResponseEntity<InputStreamResource> getImage(@PathVariable String activityFolder, @PathVariable String activityFile){
-        try{
+            produces = "image/jpg")
+    public ResponseEntity<InputStreamResource> getImage(@PathVariable String activityFolder, @PathVariable String activityFile) {
+        try {
             InputStream inputStream = new FileInputStream(ActivityLoader.path + activityFolder + "/" + activityFile);
             return ResponseEntity.ok(new InputStreamResource(inputStream));
         } catch (FileNotFoundException e) {
@@ -192,7 +191,7 @@ public class GameController {
      */
     @GetMapping("/getLastGIIdMult")
     public ResponseEntity<Integer> getLastGIIdMult() {
-        if (currentMPGIId < 0 || currentMPGIId > gameInstances.size()) return  ResponseEntity.badRequest().build();
+        if (currentMPGIId < 0 || currentMPGIId >= gameInstances.size()) return ResponseEntity.badRequest().build();
         return ResponseEntity.ok(currentMPGIId);
     }
 
@@ -200,21 +199,64 @@ public class GameController {
      * Additional method that returns the player list of a game instance
      *
      * @param gameInstanceId ID of GameInstance
-     * @return the ID of the last Multiplayer Game Instance
+     * @return ResponseEntity object that reutrns 400 BAD SYNTAX if the gameInstanceId is not in the appropriate range, or
+     * 200 STATUS OK with a body consisting of the list of all players that are currently playing in a game uniquely identfied
+     * by gameInstanceID
      */
     @GetMapping("/{gameInstanceId}/playerlist")
     public ResponseEntity<List<SimpleUser>> getPlayerList(@PathVariable int gameInstanceId) {
-        if (currentMPGIId < 0 || currentMPGIId > gameInstances.size()) return  ResponseEntity.badRequest().build();
-        return ResponseEntity.ok(gameInstances.get(gameInstanceId).getPlayers()
-                .stream().map(p -> p.toSimpleUser().unsafe()).collect(Collectors.toList()));
+        if (gameInstanceId < 0 || gameInstanceId >= gameInstances.size()) return ResponseEntity.badRequest().build();
+        List<SimpleUser> playerList = players.stream().filter(x -> x.getGameInstanceId() == gameInstanceId).collect(Collectors.toList());
+        return ResponseEntity.ok(playerList);
     }
 
-    /*
-    @GetMapping("/getLastGIId")
-    public ResponseEntity<Integer> getLastGIId() {
-        int lastGIId = gameInstances.get(gameInstances.size() - 1).getId();
-        logger.info("[GI " + lastGIId);
-        return ResponseEntity.ok(lastGIId);
-    }
+
+    /**
+     * Method that returns last instance of a singleplayer ID
+     *
+     * @return the ID of the last SinglePlayer Game Instance
      */
+    @GetMapping("/getLastGIIdSingle")
+    public ResponseEntity<Integer> getLastGIIdSingle() {
+        if (currentSPGIId < 0 || currentSPGIId >= gameInstances.size()) return ResponseEntity.badRequest().build();
+        return ResponseEntity.ok(currentSPGIId);
+
+    }
+
+    /**
+     * Method that updates the score of a given player on the server-side
+     *
+     * @param id     long primitive that uniquely identifies our SimpleUser instance
+     * @param player SimpleUser instance that needs to have his/her score updated
+     * @return ResponseEntity that returns 404 NOT_FOUND if the player does not exist, or 200 STATUS OK with a body
+     * consisting of information regarding modified player
+     */
+    @PutMapping("/{id}/updatePlayer")
+    public ResponseEntity<SimpleUser> updatePlayer(@PathVariable("id") long id, @RequestBody SimpleUser player) {
+        if (player == null)
+            return ResponseEntity.notFound().build();
+
+        SimpleUser playerToModify = null;
+
+        for (SimpleUser pl : players)
+            if (pl.getId() == player.getId()) {
+                playerToModify = pl;
+                break;
+            }
+        if (playerToModify == null)
+            return ResponseEntity.notFound().build();
+        else {
+            playerToModify.setScore(player.getScore());
+            List<Player> listOfPlayers = gameInstances.get(player.getGameInstanceId()).getPlayers();
+            for (Player pl : listOfPlayers)
+                if (pl.getId() == player.getId()) {
+                    pl.setScore(player.getScore());
+                    break;
+                }
+            logger.info("[GI " + (player.getGameInstanceId()) + "] PLAYER (" + player.getId() + ") HAS NOW: " + player.getScore() + " POINTS!");
+            return ResponseEntity.ok(playerToModify);
+        }
+
+    }
+
 }

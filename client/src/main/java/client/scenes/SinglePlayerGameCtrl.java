@@ -343,6 +343,7 @@ public class SinglePlayerGameCtrl {
         answered = true;
         int numberOfPoints = calculatePoints(timeLeft);
         player.addScore(numberOfPoints);
+        server.updatePlayer(player);
         score.setText("Your score: " + player.getScore());
         points.setText("+" + numberOfPoints + "points");
         answer.setText("Correct answer");
@@ -555,6 +556,7 @@ public class SinglePlayerGameCtrl {
     public void awardPointsQuestionHowMuch(long number, long correct_number) {
         if (number == correct_number) {
             player.addScore(100);
+            server.updatePlayer(player);
             score.setText("Your score: " + player.getScore());
             points.setText("+100 points");
             answer.setText("Correct answer");
@@ -562,6 +564,7 @@ public class SinglePlayerGameCtrl {
         } else {
             if (number <= correct_number + (25 * correct_number) / 100 && number >= correct_number - (25 * correct_number) / 100) {
                 player.addScore(75);
+                server.updatePlayer(player);
                 score.setText("Your score: " + player.getScore());
                 points.setText("+75 points");
                 answer.setText("Almost the correct answer");
@@ -569,6 +572,7 @@ public class SinglePlayerGameCtrl {
             } else {
                 if (number <= correct_number + (50 * correct_number) / 100 && number >= correct_number - (50 * correct_number) / 100) {
                     player.addScore(50);
+                    server.updatePlayer(player);
                     score.setText("Your score: " + player.getScore());
                     points.setText("+50 points");
                     answer.setText("Not quite the correct answer");
@@ -576,6 +580,7 @@ public class SinglePlayerGameCtrl {
                 } else {
                     if (number <= correct_number + (75 * correct_number) / 100 && number >= correct_number - (75 * correct_number) / 100) {
                         player.addScore(25);
+                        server.updatePlayer(player);
                         score.setText("Your score: " + player.getScore());
                         points.setText("+25 points");
                         answer.setText("Pretty far from the correct answer");
@@ -645,6 +650,7 @@ public class SinglePlayerGameCtrl {
         if (response == ((QuestionWhichOne) currentQuestion).getActivity().getConsumption_in_wh()) {
             int numberOfPoints = calculatePoints(timeLeft);
             player.addScore(numberOfPoints);
+            server.updatePlayer(player);
             score.setText("Your score: " + player.getScore());
             points.setText("+" + numberOfPoints + "points");
             answer.setText("Correct answer");
@@ -706,13 +712,12 @@ public class SinglePlayerGameCtrl {
                         wrongAnswer();
                     timer.setText(String.valueOf(countdown));
                     scheduler.shutdown();
-                } else if (currentQ != currentQuestion || answered) {
+                } else if (currentQ != currentQuestion || answered || !server.containsPlayer(player)) {
                     scheduler.shutdown();
                 } else {
                     setTimeLeft(countdown);
                     timer.setText(String.valueOf(countdown--));
                 }
-
             }
         };
         scheduler.scheduleAtFixedRate(runnable, 0, 1, SECONDS);
@@ -768,6 +773,7 @@ public class SinglePlayerGameCtrl {
      * Works the same as 'back' method from previous version.
      */
     public void leaveGame() {
+        server.disconnect(player);
         mainCtrl.showSplash();
     }
 
