@@ -93,8 +93,7 @@ public class GameController {
                 GameInstanceServer currGameInstance;
                 if (request.getServerName().equals("")) {
                     currGameInstance = gameInstances.get(currentMPGIId);
-                }
-                else if (serverNames.containsKey(request.getServerName())) {
+                } else if (serverNames.containsKey(request.getServerName())) {
                     currGameInstance = gameInstances.get(serverNames.get(request.getServerName()));
                 } else {
                     createNewMultiplayerLobby();
