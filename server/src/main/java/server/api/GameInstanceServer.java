@@ -138,7 +138,8 @@ public class GameInstanceServer extends GameInstance {
         boolean status = getPlayers().remove(player);
         updatePlayerList();
         if(getState() != GameState.INLOBBY && getPlayers().isEmpty()){
-            gameController.createNewMultiplayerLobby();
+            if(gameController.getCurrentMPGIId() == getId())
+                gameController.createNewMultiplayerLobby();
             countdownTimer.cancel();
             questionTask.cancel();
             questionTimer.cancel();

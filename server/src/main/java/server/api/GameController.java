@@ -41,7 +41,8 @@ public class GameController {
     private final Random random;
     private final List<GameInstanceServer> gameInstances;
     private final List<SimpleUser> players;
-    private static int currentMPGIId = 0; //Current ID of gameInstance for multiplayer
+
+    private int currentMPGIId = 0; //Current ID of gameInstance for multiplayer
 
 
     /**
@@ -166,6 +167,10 @@ public class GameController {
 
     public List<GameInstanceServer> getGameInstances() {
         return gameInstances;
+    }
+
+    public int getCurrentMPGIId() {
+        return currentMPGIId;
     }
 
 }
