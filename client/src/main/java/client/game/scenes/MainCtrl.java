@@ -166,11 +166,6 @@ public class MainCtrl {
 
     public void showLobby() {
         primaryStage.setTitle("Quizzz lobby");
-        Platform.runLater(()->{
-            List<SimpleUser> players = ServerUtils.getPlayers(gameCtrl.getPlayer());
-            lobbyCtrl.setTablePlayers(players);
-            lobbyCtrl.setPersons(players.size());
-        });
         primaryStage.setScene(lobby);
     }
 

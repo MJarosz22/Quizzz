@@ -34,7 +34,7 @@ public class ServerUtils {
     private static final String SERVER = "http://localhost:8080/";
     private StompSession session;
 
-    public static List<SimpleUser> getPlayers(SimpleUser player) {
+    public List<SimpleUser> getPlayers(SimpleUser player) {
         Client client = ClientBuilder.newClient(new ClientConfig());
         return client //
                 .target(SERVER).path("api/gameinstance/ " + player.getGameInstanceId() + "/players") //
@@ -133,7 +133,7 @@ public class ServerUtils {
     }
     */
 
-    public static List<SimpleUser> getPlayerList(int gIId) {
+    public List<SimpleUser> getPlayerList(int gIId) {
         Client client = ClientBuilder.newClient(new ClientConfig());
         return client //
                 .target(SERVER).path("api/game/ " + gIId + "/playerlist") //

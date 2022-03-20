@@ -30,12 +30,15 @@ public class GameInstanceServer extends GameInstance {
     private TimerTask questionTask;
     private final Timer questionTimer;
 
+    private final Timer countdownTimer;
+
     public GameInstanceServer(int id, int type, GameController controller, SimpMessagingTemplate msgs) {
         super(id, type);
         this.gameController = controller;
         this.msgs = msgs;
         answers = new ArrayList<>();
         questionTimer = new Timer();
+        countdownTimer = new Timer();
     }
 
     public void startCountdown() {
@@ -55,7 +58,7 @@ public class GameInstanceServer extends GameInstance {
             }
         };
 
-        new Timer().scheduleAtFixedRate(countdownTask, 0, 1000);
+        countdownTimer.scheduleAtFixedRate(countdownTask, 0, 1000);
     }
 
     @Async
@@ -134,6 +137,12 @@ public class GameInstanceServer extends GameInstance {
     public boolean disconnectPlayer(SimpleUser player){
         boolean status = getPlayers().remove(player);
         updatePlayerList();
+        if(getState() != GameState.INLOBBY && getPlayers().isEmpty()){
+            gameController.createNewMultiplayerLobby();
+            countdownTimer.cancel();
+            questionTask.cancel();
+            questionTimer.cancel();
+        }
         return status;
     }
 

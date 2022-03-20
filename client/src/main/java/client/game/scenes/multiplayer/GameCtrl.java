@@ -1,7 +1,6 @@
 package client.game.scenes.multiplayer;
 
 import client.game.scenes.MainCtrl;
-import client.game.scenes.pregame.LobbyCtrl;
 import client.utils.ServerUtils;
 import commons.GameInstance;
 import commons.communication.RequestToJoin;
@@ -22,19 +21,12 @@ public class GameCtrl {
 
     private final ServerUtils server;
     private final MainCtrl mainCtrl;
-    private final LobbyCtrl lobbyCtrl;
-    private final HowMuchCtrl howMuchCtrl;
-    private final MoreExpensiveCtrl moreExpensiveCtrl;
-    private final WhichOneCtrl whichOneCtrl;
+    private List<SimpleUser> players;
 
     @Inject
     public GameCtrl(ServerUtils server, MainCtrl mainCtrl) {
         this.server = server;
         this.mainCtrl = mainCtrl;
-        this.lobbyCtrl = mainCtrl.getLobbyCtrl();
-        this.howMuchCtrl = mainCtrl.getHowMuchCtrl();
-        this.moreExpensiveCtrl = mainCtrl.getMoreExpensiveCtrl();
-        this.whichOneCtrl = mainCtrl.getWhichOneCtrl();
     }
 
     public void start(String name) {
@@ -53,37 +45,21 @@ public class GameCtrl {
     }
 
     private void subscribeToWebsockets(){
-        subscribe("/topic/" + player.getGameInstanceId() + "/time", Integer.class, time -> {
-            Platform.runLater(() -> {
-                mainCtrl.getLobbyCtrl().setCountdown(time);
-            });
-        });
+        subscribe("/topic/" + player.getGameInstanceId() + "/time", Integer.class, time ->
+                Platform.runLater(() -> mainCtrl.getLobbyCtrl().setCountdown(time)));
         subscribe("/topic/" + player.getGameInstanceId() + "/players", Integer.class, amountOfPlayers -> {
-            System.out.println("test");
-
-            List<SimpleUser> players = server.getPlayers(player);
-            Platform.runLater(() -> {
-                mainCtrl.getLobbyCtrl().setPersons(amountOfPlayers);
-                mainCtrl.getLobbyCtrl().setTablePlayers(players);
-            });
+            players = server.getPlayers(player);
+            Platform.runLater(() -> mainCtrl.getLobbyCtrl().updatePlayers(players));
         });
 
         //TODO FIND WAY TO DEAL WITH SUBCLASSES OF QUESTION
-        subscribe("/topic/" + getPlayer().getGameInstanceId() + "/questionhowmuch", QuestionHowMuch.class, question -> {
-            Platform.runLater(() -> {
-                goToHowMuch(question);
-            });
-        });
-        subscribe("/topic/" + getPlayer().getGameInstanceId() + "/questionmoreexpensive", QuestionMoreExpensive.class, question -> {
-            Platform.runLater(() -> {
-                goToMoreExpensive(question);
-            });
-        });
-        subscribe("/topic/" + getPlayer().getGameInstanceId() + "/questionwhichone", QuestionWhichOne.class, question -> {
-            Platform.runLater(() -> {
-                goToWhichOne(question);
-            });
-        });
+        //TODO MAKE IT SO THAT TIMERS WITHIN QUESTION CLASSES STOP WHEN DISCONNECTED
+        subscribe("/topic/" + getPlayer().getGameInstanceId() + "/questionhowmuch", QuestionHowMuch.class, question ->
+                Platform.runLater(() -> goToHowMuch(question)));
+        subscribe("/topic/" + getPlayer().getGameInstanceId() + "/questionmoreexpensive", QuestionMoreExpensive.class, question ->
+                Platform.runLater(() -> goToMoreExpensive(question)));
+        subscribe("/topic/" + getPlayer().getGameInstanceId() + "/questionwhichone", QuestionWhichOne.class, question ->
+                Platform.runLater(() -> goToWhichOne(question)));
     }
 
     public void submitAnswer(Answer answer) {

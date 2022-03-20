@@ -5,6 +5,7 @@ import client.game.scenes.multiplayer.GameCtrl;
 import client.utils.ServerUtils;
 import com.google.inject.Inject;
 import commons.player.SimpleUser;
+import javafx.application.Platform;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.collections.FXCollections;
 import javafx.fxml.FXML;
@@ -63,11 +64,17 @@ public class LobbyCtrl implements Initializable {
     }
 
     public void init() {
-        changePrompt();
-        registerForMessages();
+        Platform.runLater(()->{
+            List<SimpleUser> players = server.getPlayers(gameCtrl.getPlayer());
+            setTablePlayers(players);
+            updatePlayers(players);
+        });
     }
 
-    public void registerForMessages() {
+    public void updatePlayers(List<SimpleUser> players) {
+        persons = players.size();
+        setTablePlayers(players);
+        changePrompt();
 
     }
 
@@ -90,10 +97,6 @@ public class LobbyCtrl implements Initializable {
         return server.getPlayerList(server.getLastGIIdMult()).size();
     }
 
-    public void setPersons(int persons) {
-        this.persons = persons;
-        changePrompt();
-    }
 
     /**
      * Additional method that decreases the number of players that are currently in the lobby, when a player leaves.
@@ -121,11 +124,13 @@ public class LobbyCtrl implements Initializable {
      */
 
     public void changePrompt() {
-        if (getPersons() > 1)
-            personsText.setText("There are " + getPersons() + " players out of the maximum capacity of 50");
+        if (persons > 1)
+            personsText.setText("There are " + persons + " players out of the maximum capacity of 50");
         else
-            personsText.setText("There is " + getPersons() + " player out of the maximum capacity of 50");
+            personsText.setText("There is " + persons + " player out of the maximum capacity of 50");
     }
+
+
 
     /*
      public void setPersonsText(String s) {
