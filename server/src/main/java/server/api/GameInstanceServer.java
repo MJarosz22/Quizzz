@@ -24,7 +24,7 @@ public class GameInstanceServer extends GameInstance {
     SimpMessagingTemplate msgs;
     int questionNumber = 1;
     int questionTime = 12000;
-    private List<ServerAnswer> answers;
+    private final List<ServerAnswer> answers;
     private long startingTime;
     Logger logger = LoggerFactory.getLogger(GameInstanceServer.class);
 
@@ -113,9 +113,14 @@ public class GameInstanceServer extends GameInstance {
     }
 
     public boolean answerQuestion(SimpleUser player, Answer answer) {
-        answers.add(new ServerAnswer(answer.getAnswer(), player));
-        logger.info("Answer received from " + player.getName() + " = " + answer.getAnswer());
-        return true;
+        if(!answers.stream()
+                .map(x -> x.getPlayer().getName())
+                .anyMatch(x-> x.equals(player.getName()))){
+            answers.add(new ServerAnswer(answer.getAnswer(), player));
+            logger.info("Answer received from " + player.getName() + " = " + answer.getAnswer());
+            return true;
+        }
+        return false;
     }
 
     public boolean disconnectPlayer(SimpleUser player){
