@@ -121,10 +121,20 @@ public class ServerUtils {
     }
 
 
-    public static List<SimpleUser> getPlayerList(int gIId) {
+    public static List<SimpleUser> allPlayers(int gIId) {
         Client client = ClientBuilder.newClient(new ClientConfig());
         return client //
-                .target(SERVER).path("api/game/ " + gIId + "/playerlist") //
+                .target(SERVER).path("api/game/ " + gIId + "/allPlayers") //
+                .request(APPLICATION_JSON) //
+                .accept(APPLICATION_JSON) //
+                .get(new GenericType<>() {
+                });
+    }
+
+    public static List<SimpleUser> connectedPlayers(int gIId) {
+        Client client = ClientBuilder.newClient(new ClientConfig());
+        return client //
+                .target(SERVER).path("api/game/ " + gIId + "/connectedPlayers") //
                 .request(APPLICATION_JSON) //
                 .accept(APPLICATION_JSON) //
                 .get(new GenericType<>() {
@@ -150,8 +160,8 @@ public class ServerUtils {
      * @return false, if the player has disconnected, or true otherwise
      */
     public boolean containsPlayer(SimpleUser player) {
-        if (player == null || getPlayerList(player.getGameInstanceId()) == null) return false;
-        Optional<Boolean> contains = getPlayerList(player.getGameInstanceId())
+        if (player == null || connectedPlayers(player.getGameInstanceId()) == null) return false;
+        Optional<Boolean> contains = connectedPlayers(player.getGameInstanceId())
                 .stream().map(x -> x.getCookie().equals(player.getCookie())).findFirst();
         return (contains.isPresent());
     }

@@ -196,17 +196,32 @@ public class GameController {
     }
 
     /**
-     * Additional method that returns the player list of a game instance
+     * Additional method that returns all the players that have participated in a given game instance
      *
      * @param gameInstanceId ID of GameInstance
-     * @return ResponseEntity object that reutrns 400 BAD SYNTAX if the gameInstanceId is not in the appropriate range, or
-     * 200 STATUS OK with a body consisting of the list of all players that are currently playing in a game uniquely identfied
+     * @return ResponseEntity object that returns 400 BAD SYNTAX if the gameInstanceId is not in the appropriate range, or
+     * 200 STATUS OK with a body consisting of the list of all players from a game uniquely identified
      * by gameInstanceID
      */
-    @GetMapping("/{gameInstanceId}/playerlist")
-    public ResponseEntity<List<SimpleUser>> getPlayerList(@PathVariable int gameInstanceId) {
+    @GetMapping("/{gameInstanceId}/allPlayers")
+    public ResponseEntity<List<SimpleUser>> allPlayers(@PathVariable int gameInstanceId) {
         if (gameInstanceId < 0 || gameInstanceId >= gameInstances.size()) return ResponseEntity.badRequest().build();
         List<SimpleUser> playerList = players.stream().filter(x -> x.getGameInstanceId() == gameInstanceId).collect(Collectors.toList());
+        return ResponseEntity.ok(playerList);
+    }
+
+    /**
+     * Additional method that returns all the players that are currently playing in a given game instance
+     *
+     * @param gameInstanceId ID of GameInstanc
+     * @return ResponseEntity object that returns 400 BAD SYNTAX if the gameInstanceId is not in the appropriate range, or
+     * 200 STATUS OK with a body consisting of the list of currently playing users from a game uniquely identified
+     * by gameInstanceID
+     */
+    @GetMapping("/{gameInstanceId}/connectedPlayers")
+    public ResponseEntity<List<SimpleUser>> connectedPlayers(@PathVariable int gameInstanceId) {
+        if (gameInstanceId < 0 || gameInstanceId >= gameInstances.size()) return ResponseEntity.badRequest().build();
+        List<SimpleUser> playerList = gameInstances.get(gameInstanceId).getPlayers().stream().map(Player::toSimpleUser).collect(Collectors.toList());
         return ResponseEntity.ok(playerList);
     }
 
