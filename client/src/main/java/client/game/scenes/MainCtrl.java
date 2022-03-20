@@ -30,6 +30,7 @@ import commons.player.SimpleUser;
 import commons.question.QuestionHowMuch;
 import commons.question.QuestionMoreExpensive;
 import commons.question.QuestionWhichOne;
+import javafx.application.Platform;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.stage.Stage;
@@ -165,9 +166,11 @@ public class MainCtrl {
 
     public void showLobby() {
         primaryStage.setTitle("Quizzz lobby");
-        List<SimpleUser> players = ServerUtils.getPlayers(gameCtrl.getPlayer());
-        lobbyCtrl.setTablePlayers(players);
-        lobbyCtrl.setPersons(players.size());
+        Platform.runLater(()->{
+            List<SimpleUser> players = ServerUtils.getPlayers(gameCtrl.getPlayer());
+            lobbyCtrl.setTablePlayers(players);
+            lobbyCtrl.setPersons(players.size());
+        });
         primaryStage.setScene(lobby);
     }
 

@@ -76,8 +76,7 @@ public class GameInstanceController {
         Player removePlayer = getPlayerFromGameInstance(gameInstanceId, cookie);
         if (removePlayer == null) return ResponseEntity.status(HttpStatus.FORBIDDEN).build();
         logger.info("[GI " + (gameInstanceId) + "] PLAYER (" + removePlayer.getId() + ") DISCONNECTED");
-        gameInstances.get(gameInstanceId).updatePlayerList();
-        return ResponseEntity.ok(gameInstances.get(gameInstanceId).getPlayers().remove(removePlayer));
+        return ResponseEntity.ok(gameInstances.get(gameInstanceId).disconnectPlayer(removePlayer));
     }
 
 

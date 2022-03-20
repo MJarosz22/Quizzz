@@ -9,6 +9,8 @@ public class Answer {
 
     public Long answer;
 
+    public Answer(){}
+
     public Answer(Long answer) {
         this.answer = answer;
     }

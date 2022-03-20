@@ -63,7 +63,6 @@ public class LobbyCtrl implements Initializable {
     }
 
     public void init() {
-        server.initWebsocket();
         changePrompt();
         registerForMessages();
     }

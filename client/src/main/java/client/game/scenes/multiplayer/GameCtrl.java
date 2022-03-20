@@ -3,6 +3,8 @@ package client.game.scenes.multiplayer;
 import client.game.scenes.MainCtrl;
 import client.game.scenes.pregame.LobbyCtrl;
 import client.utils.ServerUtils;
+import commons.GameInstance;
+import commons.communication.RequestToJoin;
 import commons.player.SimpleUser;
 import commons.question.Answer;
 import commons.question.QuestionHowMuch;
@@ -35,7 +37,8 @@ public class GameCtrl {
         this.whichOneCtrl = mainCtrl.getWhichOneCtrl();
     }
 
-    public void start() {
+    public void start(String name) {
+        player = server.addPlayer(new RequestToJoin(name, GameInstance.MULTI_PLAYER));
         server.initWebsocket();
         subscribeToWebsockets();
     }

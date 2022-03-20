@@ -12,7 +12,6 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.messaging.simp.SimpMessagingTemplate;
 import org.springframework.scheduling.annotation.Async;
-import org.springframework.util.StopWatch;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -24,7 +23,6 @@ public class GameInstanceServer extends GameInstance {
     GameController gameController;
     SimpMessagingTemplate msgs;
     int questionNumber = 1;
-    StopWatch stopWatch;
     int questionTime = 12000;
     private List<ServerAnswer> answers;
     private long startingTime;
@@ -34,7 +32,6 @@ public class GameInstanceServer extends GameInstance {
         super(id, type);
         this.gameController = controller;
         this.msgs = msgs;
-        stopWatch = new StopWatch();
         answers = new ArrayList<>();
     }
 
@@ -81,7 +78,6 @@ public class GameInstanceServer extends GameInstance {
         goToQuestion(questionNumber);
         startingTime = System.currentTimeMillis();
         questionNumber++;
-        stopWatch.start();
         Timer timer = new Timer();
         timer.schedule(new TimerTask() {
             @Override
@@ -92,7 +88,6 @@ public class GameInstanceServer extends GameInstance {
                 }
                 //TODO ADD POST-QUESTION SCREEN
                 answers.clear();
-                stopWatch.stop();
                 nextQuestion();
             }
         }, 12500);
@@ -100,7 +95,6 @@ public class GameInstanceServer extends GameInstance {
 
     public int getTimeLeft() {
         int timeSpent = (int) (System.currentTimeMillis() - startingTime);
-//        int timeSpent = (int) stopWatch.getLastTaskTimeMillis();
         return questionTime - timeSpent;
     }
 
@@ -115,14 +109,19 @@ public class GameInstanceServer extends GameInstance {
 
 
     public void updatePlayerList() {
-        System.out.println("update player list");
         msgs.convertAndSend("/topic/" + getId() + "/players", getPlayers().size());
     }
 
     public boolean answerQuestion(SimpleUser player, Answer answer) {
         answers.add(new ServerAnswer(answer.getAnswer(), player));
-        logger.info("Answer received from " + player.getName());
+        logger.info("Answer received from " + player.getName() + " = " + answer.getAnswer());
         return true;
+    }
+
+    public boolean disconnectPlayer(SimpleUser player){
+        boolean status = getPlayers().remove(player);
+        updatePlayerList();
+        return status;
     }
 
     @Override
@@ -135,13 +134,13 @@ public class GameInstanceServer extends GameInstance {
 
         return new EqualsBuilder().appendSuper(super.equals(o)).append(questionNumber, that.questionNumber)
                 .append(questionTime, that.questionTime).append(gameController, that.gameController)
-                .append(msgs, that.msgs).append(stopWatch, that.stopWatch).isEquals();
+                .append(msgs, that.msgs).isEquals();
     }
 
     @Override
     public int hashCode() {
         return new HashCodeBuilder(17, 37).appendSuper(super.hashCode())
-                .append(gameController).append(msgs).append(questionNumber).append(stopWatch)
+                .append(gameController).append(msgs).append(questionNumber)
                 .append(questionTime).toHashCode();
     }
 }
