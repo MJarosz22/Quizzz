@@ -22,7 +22,7 @@ public class GameInstanceServer extends GameInstance {
 
     GameController gameController;
     SimpMessagingTemplate msgs;
-    int questionNumber = 1;
+    int questionNumber = 0;
     int questionTime = 12000;
     private final List<ServerAnswer> answers;
     private long startingTime;
@@ -84,12 +84,12 @@ public class GameInstanceServer extends GameInstance {
     private void nextQuestion() {
         setState(GameState.INQUESTION);
         if(questionTask != null) questionTask.cancel();
-        sendQuestion(questionNumber);
-        startingTime = System.currentTimeMillis();
         questionNumber++;
         if(questionNumber > 20){
             //TODO ADD POST-GAME SCREEN AND FUNCTIONALITY
         }
+        sendQuestion(questionNumber);
+        startingTime = System.currentTimeMillis();
         answers.clear();
         questionTask = new TimerTask() {
             @Override

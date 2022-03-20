@@ -20,7 +20,7 @@ import java.io.FileNotFoundException;
 import java.util.Timer;
 import java.util.TimerTask;
 
-public class MoreExpensiveCtrl {
+public class MoreExpensiveCtrl implements QuestionCtrl{
 
     @FXML
     private Text questionTitle, timer, score, points, answer, correct_guess, questionCount;
@@ -111,5 +111,30 @@ public class MoreExpensiveCtrl {
         confirmationExit.setVisible(true);
         confirmationExit.setDisable(false);
         confirmationExit.setStyle("-fx-background-color: #91e4fb; ");
+    }
+
+    @Override
+    public void postQuestion(Answer answer) {
+        switch (answer.getAnswer().intValue()){
+            case 1:
+                option1Button.setStyle("-fx-background-color: green");
+                break;
+            case 2:
+                option2Button.setStyle("-fx-background-color: green");
+                break;
+            case 3:
+                option3Button.setStyle("-fx-background-color: green");
+                break;
+            default:
+                throw new IllegalStateException();
+        }
+        new Timer().schedule(new TimerTask() {
+            @Override
+            public void run() {
+                option1Button.setStyle("");
+                option2Button.setStyle("");
+                option3Button.setStyle("");
+            }
+        }, 5000);
     }
 }

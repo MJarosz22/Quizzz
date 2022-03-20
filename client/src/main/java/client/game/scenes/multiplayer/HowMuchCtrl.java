@@ -21,7 +21,7 @@ import java.io.FileNotFoundException;
 import java.util.Timer;
 import java.util.TimerTask;
 
-public class HowMuchCtrl {
+public class HowMuchCtrl implements QuestionCtrl{
 
     @FXML
     private Text questionTitle, timer, score, points, answer, option4, correct_guess, questionCount;
@@ -102,5 +102,10 @@ public class HowMuchCtrl {
     public void submitAnswer(ActionEvent actionEvent) {
         gameCtrl.submitAnswer(new Answer(Long.valueOf(player_answer.getText())));
         //TODO ERROR HANDLING
+    }
+
+    @Override
+    public void postQuestion(Answer answer) {
+        correct_guess.setText("The correct answer is: " + answer.getAnswer());
     }
 }

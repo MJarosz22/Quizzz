@@ -64,7 +64,8 @@ public class QuestionWhichOne extends Question {
 
     @Override
     public long getCorrectAnswer() {
-        return correctAnswer;
+        System.out.println(correctAnswer);
+        return correctAnswer + 1;
     }
 
     public Activity getActivity() {

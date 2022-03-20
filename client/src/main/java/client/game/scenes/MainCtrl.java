@@ -15,10 +15,7 @@
  */
 package client.game.scenes;
 
-import client.game.scenes.multiplayer.GameCtrl;
-import client.game.scenes.multiplayer.HowMuchCtrl;
-import client.game.scenes.multiplayer.MoreExpensiveCtrl;
-import client.game.scenes.multiplayer.WhichOneCtrl;
+import client.game.scenes.multiplayer.*;
 import client.game.scenes.pregame.LobbyCtrl;
 import client.game.scenes.pregame.MultiPlayerCtrl;
 import client.game.scenes.pregame.SinglePlayerCtrl;
@@ -85,6 +82,8 @@ public class MainCtrl {
     public WhichOneCtrl getWhichOneCtrl() {
         return whichOneCtrl;
     }
+
+    private QuestionCtrl currentQuestionScene;
 
 
     public void initialize(Stage primaryStage, Pair<SplashScreenCtrl, Parent> splash, Pair<SinglePlayerCtrl,
@@ -174,23 +173,29 @@ public class MainCtrl {
     }
 
     public void showMoreExpensive(QuestionMoreExpensive question) {
+        currentQuestionScene = moreExpensiveCtrl;
         primaryStage.setTitle("Quizzz More Expensive");
         moreExpensiveCtrl.init(question);
         primaryStage.setScene(moreExpensive);
     }
 
     public void showHowMuch(QuestionHowMuch question) {
+        currentQuestionScene = howMuchCtrl;
         primaryStage.setTitle("Quizzz How Much");
         howMuchCtrl.init(question);
         primaryStage.setScene(howMuch);
     }
 
     public void showWhichOne(QuestionWhichOne question) {
+        currentQuestionScene = whichOneCtrl;
         primaryStage.setTitle("Quizzz Which One");
         whichOneCtrl.init(question);
         primaryStage.setScene(whichOne);
     }
 
+    public QuestionCtrl getCurrentQuestionScene() {
+        return currentQuestionScene;
+    }
 
     public SinglePlayerCtrl getSinglePlayerCtrl() {
         return singlePlayerCtrl;

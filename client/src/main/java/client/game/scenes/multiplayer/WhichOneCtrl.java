@@ -20,7 +20,7 @@ import java.io.FileNotFoundException;
 import java.util.Timer;
 import java.util.TimerTask;
 
-public class WhichOneCtrl {
+public class WhichOneCtrl implements QuestionCtrl{
 
     @FXML
     private Text questionTitle, timer, score, points, answer, option4, correct_guess, questionCount;
@@ -108,4 +108,29 @@ public class WhichOneCtrl {
         confirmationExit.setStyle("-fx-background-color: #91e4fb; ");
     }
 
+    @Override
+    public void postQuestion(Answer answer) {
+        switch (answer.getAnswer().intValue()){
+            case 1:
+                answer1.setStyle("-fx-background-color: green");
+                break;
+            case 2:
+                answer2.setStyle("-fx-background-color: green");
+                break;
+            case 3:
+                answer3.setStyle("-fx-background-color: green");
+                break;
+            default:
+                System.out.println(answer.getAnswer().intValue());
+                throw new IllegalStateException();
+        }
+        new Timer().schedule(new TimerTask() {
+            @Override
+            public void run() {
+                answer1.setStyle("");
+                answer2.setStyle("");
+                answer3.setStyle("");
+            }
+        }, 5000);
+    }
 }

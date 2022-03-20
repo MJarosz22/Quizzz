@@ -51,6 +51,8 @@ public class GameCtrl {
             players = server.getPlayers(player);
             Platform.runLater(() -> mainCtrl.getLobbyCtrl().updatePlayers(players));
         });
+        subscribe("/topic/" + player.getGameInstanceId() + "/postquestion", Answer.class, answer ->
+            Platform.runLater(() -> mainCtrl.getCurrentQuestionScene().postQuestion(answer)));
 
         //TODO FIND WAY TO DEAL WITH SUBCLASSES OF QUESTION
         //TODO MAKE IT SO THAT TIMERS WITHIN QUESTION CLASSES STOP WHEN DISCONNECTED
