@@ -734,7 +734,7 @@ public class SinglePlayerGameCtrl {
      */
     public void gameOver(int timer) {
         if(gameIsOver==false){
-            server.addPlayerToLeaderboard(new SimpleUser(player.getName(), (int) player.getScore()));
+            server.addPlayerToLeaderboard(player);
             server.disconnect(player);
         }
         gameIsOver = true;

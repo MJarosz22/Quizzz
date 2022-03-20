@@ -31,7 +31,7 @@ public class LeaderboardController {
             return ResponseEntity.badRequest().build();
         }
         System.out.println(player);
-        SimpleUser savedPlayer = leaderboardRepository.save(new SimpleUser(player.getName(), (int) player.getScore()));
+        SimpleUser savedPlayer = leaderboardRepository.save(player);
         return ResponseEntity.ok(savedPlayer);
     }
 
