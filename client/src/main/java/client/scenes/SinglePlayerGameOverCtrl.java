@@ -21,8 +21,6 @@ public class SinglePlayerGameOverCtrl {
         SinglePlayerCtrl singlePlayerCtrl = mainCtrl.getSinglePlayerCtrl();
         String previousTextField = singlePlayerCtrl.getPlayerName();
         singlePlayerCtrl.setTextField(previousTextField);
-        SimpleUser player = mainCtrl.getPlayer();
-        server.disconnect(player);
         mainCtrl.showSplash();
     }
 }
