@@ -27,18 +27,21 @@ public class GameInstanceServer extends GameInstance {
     private final List<ServerAnswer> answers;
     private long startingTime;
     Logger logger = LoggerFactory.getLogger(GameInstanceServer.class);
+    private TimerTask questionTask;
+    private final Timer questionTimer;
 
     public GameInstanceServer(int id, int type, GameController controller, SimpMessagingTemplate msgs) {
         super(id, type);
         this.gameController = controller;
         this.msgs = msgs;
         answers = new ArrayList<>();
+        questionTimer = new Timer();
     }
 
     public void startCountdown() {
         setState(GameState.STARTING);
-        Timer timer = new Timer();
-        timer.scheduleAtFixedRate(new TimerTask() {
+
+        TimerTask countdownTask = new TimerTask() {
             int time = 6;
 
             @Override
@@ -46,12 +49,13 @@ public class GameInstanceServer extends GameInstance {
                 time--;
                 msgs.convertAndSend("/topic/" + getId() + "/time", time);
                 if (time == 0) {
-                    timer.cancel();
-                    //TODO START GAME
+                    cancel();
                     startGame(gameController.activityController.getRandom60().getBody());
                 }
             }
-        }, 0, 1000);
+        };
+
+        new Timer().scheduleAtFixedRate(countdownTask, 0, 1000);
     }
 
     @Async
@@ -62,7 +66,7 @@ public class GameInstanceServer extends GameInstance {
         nextQuestion();
     }
 
-    private void goToQuestion(int questionNumber) {
+    private void sendQuestion(int questionNumber) {
         Question currentQuestion = getQuestions().get(questionNumber);
         logger.info("Question " + questionNumber + " sent" + currentQuestion);
         if (currentQuestion instanceof QuestionHowMuch) {
@@ -75,22 +79,22 @@ public class GameInstanceServer extends GameInstance {
     }
 
     private void nextQuestion() {
-        goToQuestion(questionNumber);
+        if(questionTask != null) questionTask.cancel();
+        sendQuestion(questionNumber);
         startingTime = System.currentTimeMillis();
         questionNumber++;
-        Timer timer = new Timer();
-        timer.schedule(new TimerTask() {
+        if(questionNumber > 20){
+            //TODO ADD POST-GAME SCREEN AND FUNCTIONALITY
+        }
+        answers.clear();
+        questionTask = new TimerTask() {
             @Override
             public void run() {
-                if (questionNumber > 20) {
-                    /*TODO CREATE POSTGAME STUFF*/
-                    return;
-                }
                 //TODO ADD POST-QUESTION SCREEN
-                answers.clear();
                 nextQuestion();
             }
-        }, 12500);
+        };
+        questionTimer.schedule(questionTask, 12500);
     }
 
     public int getTimeLeft() {
@@ -113,10 +117,14 @@ public class GameInstanceServer extends GameInstance {
     }
 
     public boolean answerQuestion(SimpleUser player, Answer answer) {
-        if(!answers.stream()
+        if(answers.stream()
                 .map(x -> x.getPlayer().getName())
-                .anyMatch(x-> x.equals(player.getName()))){
+                .noneMatch(x-> x.equals(player.getName()))){
             answers.add(new ServerAnswer(answer.getAnswer(), player));
+            if(answers.size() == getPlayers().size()) {
+                //TODO POST QUESTION
+                nextQuestion();
+            }
             logger.info("Answer received from " + player.getName() + " = " + answer.getAnswer());
             return true;
         }
