@@ -96,7 +96,8 @@ public class GameInstanceController {
         Player player = getPlayerFromGameInstance(gameInstanceId, cookie);
         if (player == null) return ResponseEntity.status(HttpStatus.FORBIDDEN).build();
         GameInstanceServer gameInstance = gameInstances.get(player.getGameInstanceId());
-        if (gameInstance.getState() != GameState.INQUESTION) return ResponseEntity.notFound().build();
+        if (gameInstance.getState() != GameState.INQUESTION && gameInstance.getState() != GameState.POSTQUESTION)
+            return ResponseEntity.notFound().build();
         return ResponseEntity.ok(gameInstance.getTimeLeft());
     }
 

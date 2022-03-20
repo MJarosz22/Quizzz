@@ -82,6 +82,7 @@ public class GameInstanceServer extends GameInstance {
     }
 
     private void nextQuestion() {
+        setState(GameState.INQUESTION);
         if(questionTask != null) questionTask.cancel();
         sendQuestion(questionNumber);
         startingTime = System.currentTimeMillis();
@@ -93,15 +94,17 @@ public class GameInstanceServer extends GameInstance {
         questionTask = new TimerTask() {
             @Override
             public void run() {
-                //TODO ADD POST-QUESTION SCREEN
-                nextQuestion();
+                postQuestion();
+//                nextQuestion();
             }
         };
         questionTimer.schedule(questionTask, 12500);
     }
 
     public void postQuestion(){
-        msgs.convertAndSend("/topic/" + getId() + "/postquestion", getCurrentQuestion().getAnswer());
+        setState(GameState.POSTQUESTION);
+        msgs.convertAndSend("/topic/" + getId() + "/postquestion", getCurrentQuestion().getCorrectAnswer());
+        startingTime = System.currentTimeMillis();
         questionTask = new TimerTask() {
             @Override
             public void run() {
@@ -113,6 +116,7 @@ public class GameInstanceServer extends GameInstance {
 
     public int getTimeLeft() {
         int timeSpent = (int) (System.currentTimeMillis() - startingTime);
+        if(getState() == GameState.POSTQUESTION) return (5000 - timeSpent);
         return Math.max(questionTime - timeSpent, 0);
     }
 
@@ -137,7 +141,8 @@ public class GameInstanceServer extends GameInstance {
             answers.add(new ServerAnswer(answer.getAnswer(), player));
             if(answers.size() == getPlayers().size()) {
                 //TODO POST QUESTION
-                nextQuestion();
+                postQuestion();
+//                nextQuestion();
             }
             logger.info("Answer received from " + player.getName() + " = " + answer.getAnswer());
             return true;

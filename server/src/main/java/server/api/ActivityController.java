@@ -122,7 +122,7 @@ public class ActivityController {
     @GetMapping("/random")
     public ResponseEntity<Activity> getRandom() {
         List<Activity> allAct = getAll();
-        if (allAct.size() == 0) return ResponseEntity.notFound().build();
+        if (allAct.isEmpty()) return ResponseEntity.notFound().build();
         int idx = random.nextInt(allAct.size());
         return ResponseEntity.ok(allAct.get(idx));
     }
