@@ -34,7 +34,7 @@ public class MultiPlayerCtrl {
     // To be added when making the main game scene, in order for the player to play
     public void join() {
         if (!getTextFieldName().equals("")) {
-            SimpleUser player = server.addPlayer(new RequestToJoin(getTextFieldName(), getTextFieldServer() , GameInstance.MULTI_PLAYER));
+            SimpleUser player = server.addPlayer(new RequestToJoin(getTextFieldName(), getTextFieldServer(), GameInstance.MULTI_PLAYER));
             gameCtrl.setPlayer(player);
             gameCtrl.start();
 
