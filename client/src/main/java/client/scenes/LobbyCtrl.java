@@ -6,21 +6,22 @@ import commons.player.SimpleUser;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.collections.FXCollections;
 import javafx.fxml.FXML;
-import javafx.fxml.Initializable;
 import javafx.scene.control.Label;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
 import javafx.scene.text.Text;
 
-import java.net.URL;
 import java.util.List;
-import java.util.ResourceBundle;
+import java.util.concurrent.Executors;
+import java.util.concurrent.ScheduledExecutorService;
+import java.util.concurrent.TimeUnit;
 
-public class LobbyCtrl implements Initializable {
+public class LobbyCtrl {
 
     private final ServerUtils server;
     private final MainCtrl mainCtrl;
     private static int persons;
+    private boolean sceneChanged;
 
     @FXML
     private Label labelName;
@@ -40,11 +41,31 @@ public class LobbyCtrl implements Initializable {
         this.mainCtrl = mainCtrl;
     }
 
-    @Override
-    public void initialize(URL location, ResourceBundle resources) {
+    public void initialize() {
         persons = 0;
         columnName.setCellValueFactory(q -> new SimpleStringProperty(q.getValue().getName()));
+        this.sceneChanged = false;
+        startPolling();
     }
+
+    public void startPolling() {
+        ScheduledExecutorService executor = Executors.newScheduledThreadPool(1);
+        Runnable poller = new Runnable() {
+            @Override
+            public void run() {
+                if (mainCtrl.getPlayer() != null) {
+                    if (sceneChanged)
+                        executor.shutdown();
+                    setTablePlayers(ServerUtils.getPlayers(mainCtrl.getPlayer()));
+                    changePrompt();
+                }
+            }
+        };
+
+
+        executor.scheduleAtFixedRate(poller, 0, 1, TimeUnit.SECONDS);
+    }
+
 
     /**
      * When you press "LEAVE LOBBY" for the multi-player variant of the game, or "BACK"
@@ -52,6 +73,7 @@ public class LobbyCtrl implements Initializable {
      */
     public void back() {
         SimpleUser player = mainCtrl.getPlayer();
+        this.sceneChanged = true;
         server.disconnect(player);
         System.out.println(player.getName() + " disconnected!");
         //decreaseNumberOfPlayers();
@@ -60,6 +82,7 @@ public class LobbyCtrl implements Initializable {
 
     // To be added when making the main game scene, in order for the player to play
     public void play() {
+        this.sceneChanged = true;
         //TODO CONNECT TO SERVER
 //        mainCtrl.showPlayMode();
     }
