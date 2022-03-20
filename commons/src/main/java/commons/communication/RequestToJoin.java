@@ -23,7 +23,6 @@ public class RequestToJoin {
     }
 
 
-
     public String getName() {
         return name;
     }
@@ -32,7 +31,9 @@ public class RequestToJoin {
         this.name = name;
     }
 
-    public String getServerName() { return serverName;}
+    public String getServerName() {
+        return serverName;
+    }
 
     public void setServerName(String serverName) {
         this.serverName = serverName;
