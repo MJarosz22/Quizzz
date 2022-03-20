@@ -8,6 +8,8 @@ import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
+import javafx.scene.control.Alert;
+import javafx.scene.control.ButtonType;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
 import javafx.scene.control.cell.TextFieldTableCell;
@@ -20,7 +22,7 @@ import java.util.ResourceBundle;
 public class ActivityOverviewCtrl implements Initializable {
 
     private final ServerUtils server;
-    private final MainActivityCtrl mainActivityCtrl;
+    private final MainCtrl mainCtrl;
 
     private ObservableList<Activity> data;
 
@@ -44,9 +46,9 @@ public class ActivityOverviewCtrl implements Initializable {
 
     @Inject
 
-    public ActivityOverviewCtrl(ServerUtils server, MainActivityCtrl mainActivityCtrl) {
+    public ActivityOverviewCtrl(ServerUtils server, MainCtrl mainCtrl) {
         this.server = server;
-        this.mainActivityCtrl = mainActivityCtrl;
+        this.mainCtrl = mainCtrl;
     }
 
     @Override
@@ -66,11 +68,6 @@ public class ActivityOverviewCtrl implements Initializable {
         columnSource.setCellValueFactory(q -> new SimpleStringProperty(q.getValue().getSource()));
         columnSource.setCellFactory(TextFieldTableCell.forTableColumn());
     }
-
-    public void addActivity() {
-        mainActivityCtrl.showAdd();
-    }
-
 
     public void editID(TableColumn.CellEditEvent<Activity, String> productStringCellEditEvent) {
         Activity activity = table.getSelectionModel().getSelectedItem();
@@ -108,9 +105,34 @@ public class ActivityOverviewCtrl implements Initializable {
         refresh();
     }
 
+    public void delete() {
+        Activity activity = table.getSelectionModel().getSelectedItem();
+        try {
+            Alert alert = new Alert(Alert.AlertType.CONFIRMATION, "Do you want to delete event " +
+                    activity.getTitle() + "?", ButtonType.YES, ButtonType.NO);
+            ButtonType result = alert.showAndWait().orElse(ButtonType.NO);
+            if (ButtonType.NO.equals(result))
+                return;
+            else {
+                server.deleteActivity(activity);
+                refresh();
+            }
+        } catch(NullPointerException e) {
+            return;
+        }
+    }
+
     public void refresh() {
         var activities = server.getActivities();
         data = FXCollections.observableList(activities);
         table.setItems(data);
+    }
+
+    public void addActivity() {
+        mainCtrl.showAddActivity();
+    }
+
+    public void back() {
+        mainCtrl.showSplash();
     }
 }
