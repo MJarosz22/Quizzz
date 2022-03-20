@@ -23,9 +23,7 @@ import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.InputStream;
 import java.nio.charset.StandardCharsets;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Random;
+import java.util.*;
 import java.util.stream.Collectors;
 
 
@@ -42,6 +40,7 @@ public class GameController {
     private final List<GameInstanceServer> gameInstances;
     private final List<SimpleUser> players;
     private static int currentMPGIId = 0; //Current ID of gameInstance for multiplayer
+    private Map<String, Integer> serverNames;
 
 
     /**
@@ -57,6 +56,7 @@ public class GameController {
         this.activityController = activityController;
         gameInstances = new ArrayList<>();
         gameInstances.add(new GameInstanceServer(gameInstances.size(), GameInstance.MULTI_PLAYER, this, msgs));
+        serverNames = new HashMap<>();
         players = new ArrayList<>();
     }
 
@@ -90,7 +90,17 @@ public class GameController {
                 break;
 
             case GameInstance.MULTI_PLAYER:
-                GameInstanceServer currGameInstance = gameInstances.get(currentMPGIId);
+                GameInstanceServer currGameInstance;
+                if (request.getServerName().equals("")) {
+                    currGameInstance = gameInstances.get(currentMPGIId);
+                }
+                else if (serverNames.containsKey(request.getServerName())) {
+                    currGameInstance = gameInstances.get(serverNames.get(request.getServerName()));
+                } else {
+                    createNewMultiplayerLobby();
+                    serverNames.put(request.getServerName(), currentMPGIId);
+                    currGameInstance = gameInstances.get(currentMPGIId);
+                }
                 savedPlayer = new SimpleUser(players.size(), request.getName(),
                         currGameInstance.getId(), tokenCookie.getValue());
                 players.add(savedPlayer);
