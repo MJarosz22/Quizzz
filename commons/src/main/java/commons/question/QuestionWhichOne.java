@@ -30,10 +30,6 @@ public class QuestionWhichOne extends Question {
         this.answers = answers;
     }
 
-    public int getCorrectAnswer() {
-        return correctAnswer;
-    }
-
     public void setCorrectAnswer(int correctAnswer) {
         this.correctAnswer = correctAnswer;
     }
@@ -64,6 +60,11 @@ public class QuestionWhichOne extends Question {
     @Override
     public long getAnswer() {
         return activity.getConsumption_in_wh();
+    }
+
+    @Override
+    public long getCorrectAnswer() {
+        return correctAnswer;
     }
 
     public Activity getActivity() {

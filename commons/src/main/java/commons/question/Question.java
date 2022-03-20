@@ -39,6 +39,8 @@ public abstract class Question {
 
     public abstract long getAnswer();
 
+    public abstract long getCorrectAnswer();
+
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;

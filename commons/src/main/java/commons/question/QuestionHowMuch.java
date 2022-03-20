@@ -39,6 +39,11 @@ public class QuestionHowMuch extends Question {
     }
 
     @Override
+    public long getCorrectAnswer() {
+        return activity.getConsumption_in_wh();
+    }
+
+    @Override
     public boolean equals(Object o) {
         if (this == o) return true;
 

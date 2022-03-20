@@ -5,6 +5,9 @@ import org.apache.commons.lang3.builder.EqualsBuilder;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
 import org.apache.commons.lang3.builder.ToStringBuilder;
 
+import java.util.Arrays;
+import java.util.Comparator;
+
 /**
  * This is a multiple-choice type of question.
  * This question type asks the user to choose from the 3 given activities the one that consumes the highest amount of energy.
@@ -46,6 +49,15 @@ public class QuestionMoreExpensive extends Question {
         if (activities[1].getConsumption_in_wh() > max) max = activities[1].getConsumption_in_wh();
         if (activities[2].getConsumption_in_wh() > max) max = activities[2].getConsumption_in_wh();
         return max;
+    }
+
+    @Override
+    public long getCorrectAnswer() {
+        Activity maxActivity = Arrays.stream(activities).max(Comparator.comparingLong(Activity::getConsumption_in_wh)).get();
+        for(int i = 0; i < 3; i++){
+            if (activities[i].equals(maxActivity)) return i+1;
+        }
+        return 0;
     }
 
     @Override

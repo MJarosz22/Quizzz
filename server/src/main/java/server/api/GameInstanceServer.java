@@ -100,9 +100,20 @@ public class GameInstanceServer extends GameInstance {
         questionTimer.schedule(questionTask, 12500);
     }
 
+    public void postQuestion(){
+        msgs.convertAndSend("/topic/" + getId() + "/postquestion", getCurrentQuestion().getAnswer());
+        questionTask = new TimerTask() {
+            @Override
+            public void run() {
+                nextQuestion();
+            }
+        };
+        questionTimer.schedule(questionTask, 5000);
+    }
+
     public int getTimeLeft() {
         int timeSpent = (int) (System.currentTimeMillis() - startingTime);
-        return questionTime - timeSpent;
+        return Math.max(questionTime - timeSpent, 0);
     }
 
     public Question getCurrentQuestion() {
