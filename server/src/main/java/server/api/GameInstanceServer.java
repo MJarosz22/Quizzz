@@ -72,7 +72,7 @@ public class GameInstanceServer extends GameInstance {
 
     private void sendQuestion(int questionNumber) {
         Question currentQuestion = getQuestions().get(questionNumber);
-        logger.info("Question " + questionNumber + " sent" + currentQuestion);
+        logger.info("[GI "+ getId() + "] Question " + questionNumber + " sent");
         if (currentQuestion instanceof QuestionHowMuch) {
             msgs.convertAndSend("/topic/" + getId() + "/questionhowmuch", getQuestions().get(questionNumber));
         } else if (currentQuestion instanceof QuestionMoreExpensive) {
@@ -146,7 +146,7 @@ public class GameInstanceServer extends GameInstance {
                 postQuestion();
 //                nextQuestion();
             }
-            logger.info("Answer received from " + player.getName() + " = " + answer.getAnswer());
+            logger.info("[GI "+ getId() + "] Answer received from " + player.getName() + " = " + answer.getAnswer());
             return true;
         }
         return false;

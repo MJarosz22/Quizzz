@@ -64,7 +64,6 @@ public class QuestionWhichOne extends Question {
 
     @Override
     public long getCorrectAnswer() {
-        System.out.println(correctAnswer);
         return correctAnswer + 1;
     }
 
