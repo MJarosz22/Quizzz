@@ -74,7 +74,7 @@ public class WhichOneCtrl implements QuestionCtrl{
             public void run() {
                 int timeLeft = server.getTimeLeft(gameCtrl.getPlayer());
                 Platform.runLater(() -> {
-                    timer.setText(String.valueOf(timeLeft));
+                    timer.setText(String.valueOf(Math.round(timeLeft / 1000d)));
                 });
             }
         }, 0, 100);
@@ -127,10 +127,18 @@ public class WhichOneCtrl implements QuestionCtrl{
         new Timer().schedule(new TimerTask() {
             @Override
             public void run() {
-                answer1.setStyle("");
-                answer2.setStyle("");
-                answer3.setStyle("");
+                resetUI();
             }
         }, 5000);
+    }
+
+    @Override
+    public void resetUI() {
+        answer1.setStyle("");
+        answer2.setStyle("");
+        answer3.setStyle("");
+        answer1.setSelected(false);
+        answer2.setSelected(false);
+        answer3.setSelected(false);
     }
 }

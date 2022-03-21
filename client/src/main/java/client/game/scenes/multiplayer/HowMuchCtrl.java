@@ -77,7 +77,7 @@ public class HowMuchCtrl implements QuestionCtrl{
             public void run() {
                 int timeLeft = server.getTimeLeft(gameCtrl.getPlayer());
                 Platform.runLater(() -> {
-                    timer.setText(String.valueOf(timeLeft));
+                    timer.setText(String.valueOf(Math.round(timeLeft / 1000d)));
                 });
             }
         }, 0, 100);
@@ -107,5 +107,19 @@ public class HowMuchCtrl implements QuestionCtrl{
     @Override
     public void postQuestion(Answer answer) {
         correct_guess.setText("The correct answer is: " + answer.getAnswer());
+        correct_guess.setVisible(true);
+        new Timer().schedule(new TimerTask() {
+            @Override
+            public void run() {
+                resetUI();
+            }
+        }, 5000);
+    }
+
+    @Override
+    public void resetUI() {
+        correct_guess.setVisible(false);
+        player_answer.clear();
+//        timer.setText("12000");
     }
 }

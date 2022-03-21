@@ -79,7 +79,7 @@ public class MoreExpensiveCtrl implements QuestionCtrl{
             public void run() {
                 int timeLeft = server.getTimeLeft(gameCtrl.getPlayer());
                 Platform.runLater(() -> {
-                    timer.setText(String.valueOf(timeLeft));
+                    timer.setText(String.valueOf(Math.round(timeLeft / 1000d)));
                 });
             }
         }, 0, 100);
@@ -131,10 +131,15 @@ public class MoreExpensiveCtrl implements QuestionCtrl{
         new Timer().schedule(new TimerTask() {
             @Override
             public void run() {
-                option1Button.setStyle("");
-                option2Button.setStyle("");
-                option3Button.setStyle("");
+                resetUI();
             }
         }, 5000);
+    }
+
+    @Override
+    public void resetUI() {
+        option1Button.setStyle("");
+        option2Button.setStyle("");
+        option3Button.setStyle("");
     }
 }

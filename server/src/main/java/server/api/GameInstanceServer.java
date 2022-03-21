@@ -22,8 +22,9 @@ public class GameInstanceServer extends GameInstance {
 
     GameController gameController;
     SimpMessagingTemplate msgs;
-    int questionNumber = 0;
-    int questionTime = 12000;
+    int questionNumber = -1;
+    private final int questionTime = 12000;
+    private final int postQuestionTime = 5000;
     private final List<ServerAnswer> answers;
     private long startingTime;
     Logger logger = LoggerFactory.getLogger(GameInstanceServer.class);
@@ -98,10 +99,11 @@ public class GameInstanceServer extends GameInstance {
 //                nextQuestion();
             }
         };
-        questionTimer.schedule(questionTask, 12500);
+        questionTimer.schedule(questionTask, questionTime);
     }
 
     public void postQuestion(){
+        questionTask.cancel();
         setState(GameState.POSTQUESTION);
         msgs.convertAndSend("/topic/" + getId() + "/postquestion", getCurrentQuestion().getCorrectAnswer());
         startingTime = System.currentTimeMillis();
@@ -111,12 +113,12 @@ public class GameInstanceServer extends GameInstance {
                 nextQuestion();
             }
         };
-        questionTimer.schedule(questionTask, 5000);
+        questionTimer.schedule(questionTask, postQuestionTime);
     }
 
     public int getTimeLeft() {
         int timeSpent = (int) (System.currentTimeMillis() - startingTime);
-        if(getState() == GameState.POSTQUESTION) return (5000 - timeSpent);
+        if(getState() == GameState.POSTQUESTION) return (postQuestionTime - timeSpent);
         return Math.max(questionTime - timeSpent, 0);
     }
 
