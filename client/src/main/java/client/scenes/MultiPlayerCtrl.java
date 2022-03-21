@@ -57,7 +57,7 @@ public class MultiPlayerCtrl {
     private boolean containsName(String name) {
         boolean nameExists = false;
         int lastGIId = server.getLastGIIdMult();
-        List<SimpleUser> simpleUserList = server.getPlayerList(lastGIId);
+        List<SimpleUser> simpleUserList = server.connectedPlayers(lastGIId);
         int i = 0;
         while (!nameExists && i < simpleUserList.size()){
             if (simpleUserList.get(i).getName().toLowerCase().trim().equals(name.toLowerCase().trim())){

@@ -747,6 +747,7 @@ public class SinglePlayerGameCtrl {
             }
 
             Platform.runLater(() -> {
+                server.disconnect(player);
                 mainCtrl.showSinglePlayerGameOver();
                 progressBar.setProgress(1);
             });

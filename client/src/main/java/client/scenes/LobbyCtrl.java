@@ -97,7 +97,7 @@ public class LobbyCtrl {
     }
 
     public int getPersons() {
-        return server.getPlayerList(server.getLastGIIdMult()).size();
+        return server.connectedPlayers(server.getLastGIIdMult()).size();
     }
 
     public void setPersons(int persons) {
