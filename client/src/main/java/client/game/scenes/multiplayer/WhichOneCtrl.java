@@ -62,7 +62,7 @@ public class WhichOneCtrl implements QuestionCtrl{
         try {
             timerImageSource = new Image(new FileInputStream("client/src/main/resources/images/timer.png"));
         } catch (FileNotFoundException e) {
-            e.printStackTrace();
+            System.out.println("Couldn't find timer image.");
         }
     }
 
