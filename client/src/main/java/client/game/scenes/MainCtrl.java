@@ -22,18 +22,13 @@ import client.game.scenes.pregame.SinglePlayerCtrl;
 import client.game.scenes.pregame.SplashScreenCtrl;
 import client.game.scenes.singleplayer.SinglePlayerGameCtrl;
 import client.game.scenes.singleplayer.SinglePlayerGameOverCtrl;
-import client.utils.ServerUtils;
-import commons.player.SimpleUser;
 import commons.question.QuestionHowMuch;
 import commons.question.QuestionMoreExpensive;
 import commons.question.QuestionWhichOne;
-import javafx.application.Platform;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.stage.Stage;
 import javafx.util.Pair;
-
-import java.util.List;
 
 public class MainCtrl {
 
