@@ -72,7 +72,7 @@ public class GameInstanceServer extends GameInstance {
 
     private void sendQuestion(int questionNumber) {
         Question currentQuestion = getQuestions().get(questionNumber);
-        logger.info("[GI "+ getId() + "] Question " + questionNumber + " sent");
+        logger.info("[GI "+ getId() + "] Question " + questionNumber + " sent.");
         if (currentQuestion instanceof QuestionHowMuch) {
             msgs.convertAndSend("/topic/" + getId() + "/questionhowmuch", getQuestions().get(questionNumber));
         } else if (currentQuestion instanceof QuestionMoreExpensive) {
@@ -156,13 +156,18 @@ public class GameInstanceServer extends GameInstance {
         boolean status = getPlayers().remove(player);
         updatePlayerList();
         if(getState() != GameState.INLOBBY && getPlayers().isEmpty()){
-            if(gameController.getCurrentMPGIId() == getId())
-                gameController.createNewMultiplayerLobby();
-            countdownTimer.cancel();
-            questionTask.cancel();
-            questionTimer.cancel();
+            stopGameInstance();
         }
         return status;
+    }
+
+    public void stopGameInstance(){
+        if(gameController.getCurrentMPGIId() == getId())
+            gameController.createNewMultiplayerLobby();
+        countdownTimer.cancel();
+        questionTask.cancel();
+        questionTimer.cancel();
+        logger.info("[GI " + getId() + "] GameInstance stopped!");
     }
 
     @Override

@@ -17,6 +17,8 @@ import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.Pane;
 import javafx.scene.text.Text;
 
+import java.io.File;
+import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.util.Timer;
 import java.util.TimerTask;
@@ -27,7 +29,10 @@ public class HowMuchCtrl implements QuestionCtrl{
     private Text questionTitle, timer, score, points, answer, option4, correct_guess, questionCount;
 
     @FXML
-    private AnchorPane timerImage, emoji;
+    private AnchorPane emoji;
+
+    @FXML
+    private ImageView timerImage;
 
     @FXML
     private Button submit_guess;
@@ -44,6 +49,10 @@ public class HowMuchCtrl implements QuestionCtrl{
     @FXML
     private Pane confirmationExit;
 
+    private Image timerImageSource;
+
+    private TimerTask scheduler;
+
     private ServerUtils server;
     private MainCtrl mainCtrl;
     private GameCtrl gameCtrl;
@@ -55,9 +64,15 @@ public class HowMuchCtrl implements QuestionCtrl{
         this.server = server;
         this.mainCtrl = mainCtrl;
         this.gameCtrl = gameCtrl;
+        try {
+            timerImageSource = new Image(new FileInputStream("client/src/main/resources/images/timer.png"));
+        } catch (FileNotFoundException e) {
+            e.printStackTrace();
+        }
     }
 
     public void init(QuestionHowMuch question) {
+        timerImage.setImage(timerImageSource);
         disablePopUp(null);
         player_answer.clear();
         this.question = question;
@@ -71,16 +86,16 @@ public class HowMuchCtrl implements QuestionCtrl{
         } catch (FileNotFoundException e) {
             System.out.println("Couldn't find image");
         }
-        Timer scheduler = new Timer();
-        scheduler.scheduleAtFixedRate(new TimerTask() {
+        scheduler = new TimerTask() {
             @Override
-            public void run() {
+            public void run () {
                 int timeLeft = server.getTimeLeft(gameCtrl.getPlayer());
                 Platform.runLater(() -> {
                     timer.setText(String.valueOf(Math.round(timeLeft / 1000d)));
                 });
             }
-        }, 0, 100);
+        };
+        new Timer().scheduleAtFixedRate(scheduler, 0, 100);
     }
 
     public void disablePopUp(ActionEvent actionEvent) {
@@ -89,6 +104,7 @@ public class HowMuchCtrl implements QuestionCtrl{
     }
 
     public void leaveGame(ActionEvent actionEvent) {
+        scheduler.cancel();
         gameCtrl.disconnect();
         mainCtrl.showSplash();
     }
@@ -111,6 +127,7 @@ public class HowMuchCtrl implements QuestionCtrl{
         new Timer().schedule(new TimerTask() {
             @Override
             public void run() {
+                scheduler.cancel();
                 resetUI();
             }
         }, 5000);

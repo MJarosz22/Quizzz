@@ -16,6 +16,8 @@ import javafx.scene.layout.Pane;
 import javafx.scene.text.Text;
 
 import javax.inject.Inject;
+import java.io.File;
+import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.util.Timer;
 import java.util.TimerTask;
@@ -26,7 +28,10 @@ public class WhichOneCtrl implements QuestionCtrl{
     private Text questionTitle, timer, score, points, answer, option4, correct_guess, questionCount;
 
     @FXML
-    private AnchorPane timerImage, emoji;
+    private AnchorPane emoji;
+
+    @FXML
+    private ImageView timerImage;
 
     @FXML
     private RadioButton answer1, answer2, answer3;
@@ -40,6 +45,10 @@ public class WhichOneCtrl implements QuestionCtrl{
     @FXML
     private Pane confirmationExit;
 
+    private Image timerImageSource;
+
+    private TimerTask scheduler;
+
     private QuestionWhichOne question;
     private final ServerUtils server;
     private final MainCtrl mainCtrl;
@@ -50,10 +59,16 @@ public class WhichOneCtrl implements QuestionCtrl{
         this.server = server;
         this.mainCtrl = mainCtrl;
         this.gameCtrl = gameCtrl;
+        try {
+            timerImageSource = new Image(new FileInputStream("client/src/main/resources/images/timer.png"));
+        } catch (FileNotFoundException e) {
+            e.printStackTrace();
+        }
     }
 
     public void init(QuestionWhichOne question){
         this.question = question;
+        timerImage.setImage(timerImageSource);
         disablePopUp(null);
         questionTitle.setText(question.getTitle());
         questionCount.setText("Question " + question.getNumber() + "/20");
@@ -68,16 +83,16 @@ public class WhichOneCtrl implements QuestionCtrl{
         } catch (FileNotFoundException e) {
             System.out.println("Couldn't find image");
         }
-        Timer scheduler = new Timer();
-        scheduler.scheduleAtFixedRate(new TimerTask() {
-            @Override
-            public void run() {
-                int timeLeft = server.getTimeLeft(gameCtrl.getPlayer());
-                Platform.runLater(() -> {
-                    timer.setText(String.valueOf(Math.round(timeLeft / 1000d)));
-                });
-            }
-        }, 0, 100);
+        scheduler = new TimerTask() {
+                @Override
+                public void run () {
+                    int timeLeft = server.getTimeLeft(gameCtrl.getPlayer());
+                    Platform.runLater(() -> {
+                        timer.setText(String.valueOf(Math.round(timeLeft / 1000d)));
+                    });
+                }
+        };
+        new Timer().scheduleAtFixedRate(scheduler, 0, 100);
     }
 
     public void answer3Selected(ActionEvent actionEvent) {
@@ -98,6 +113,7 @@ public class WhichOneCtrl implements QuestionCtrl{
     }
 
     public void leaveGame(ActionEvent actionEvent) {
+        scheduler.cancel();
         gameCtrl.disconnect();
         mainCtrl.showSplash();
     }
@@ -127,6 +143,7 @@ public class WhichOneCtrl implements QuestionCtrl{
         new Timer().schedule(new TimerTask() {
             @Override
             public void run() {
+                scheduler.cancel();
                 resetUI();
             }
         }, 5000);
