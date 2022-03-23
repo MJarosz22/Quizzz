@@ -35,7 +35,7 @@ public class ServerUtils {
     private static final String SERVER = "http://" + location + "/";
     private StompSession session;
 
-    public static List<SimpleUser> getPlayers(SimpleUser player) {
+    public List<SimpleUser> getPlayers(SimpleUser player) {
         Client client = ClientBuilder.newClient(new ClientConfig());
         return client //
                 .target(SERVER).path("api/gameinstance/ " + player.getGameInstanceId() + "/players") //

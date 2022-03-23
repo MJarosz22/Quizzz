@@ -16,6 +16,8 @@ public class QuestionHowMuch extends Question {
 
     private Activity activity;
 
+    public QuestionHowMuch() {}
+
     public QuestionHowMuch(Activity activity, int number) {
         this.setTitle("How much energy does it take?");
         this.activity = activity;
