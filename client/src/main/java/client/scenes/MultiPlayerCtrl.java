@@ -17,7 +17,7 @@ public class MultiPlayerCtrl {
     private final GameCtrl gameCtrl;
 
     @FXML
-    private TextField textfieldName;
+    private TextField textfieldName, textfieldServer;
 
     @Inject
     public MultiPlayerCtrl(ServerUtils server, MainCtrl mainCtrl, GameCtrl gameCtrl) {
@@ -34,8 +34,9 @@ public class MultiPlayerCtrl {
     // To be added when making the main game scene, in order for the player to play
     public void join() {
         if (!getTextFieldName().equals("") && !containsName(getTextFieldName())) {
-            gameCtrl.start(getTextFieldName());
+            gameCtrl.start(getTextFieldName(), getTextFieldServer());
             this.textfieldName.clear();
+            this.textfieldServer.clear();
             mainCtrl.getLobbyCtrl().init();
             mainCtrl.showLobby();
         } else {
@@ -48,6 +49,8 @@ public class MultiPlayerCtrl {
     public String getTextFieldName() {
         return textfieldName.getText();
     }
+
+    public String getTextFieldServer() { return textfieldServer.getText(); }
 
     private boolean containsName(String name) {
         boolean nameExists = false;

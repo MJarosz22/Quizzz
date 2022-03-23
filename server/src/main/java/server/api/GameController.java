@@ -21,9 +21,7 @@ import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.InputStream;
 import java.nio.charset.StandardCharsets;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Random;
+import java.util.*;
 import java.util.stream.Collectors;
 
 
@@ -39,6 +37,7 @@ public class GameController {
     private final Random random;
     private final List<GameInstanceServer> gameInstances;
     private final List<SimpleUser> players;
+    private Map<String, Integer> serverNames;
     private static int currentMPGIId = 0; //Current ID of gameInstance for multiplayer
     private static int currentSPGIId = 0; //Current ID of gameInstance for singleplayer
 
@@ -57,6 +56,7 @@ public class GameController {
         gameInstances = new ArrayList<>();
         gameInstances.add(new GameInstanceServer(gameInstances.size(), GameInstance.MULTI_PLAYER, this, msgs));
         players = new ArrayList<>();
+        serverNames = new HashMap<>();
     }
 
 //    ---------------------------------------------------------------------------
@@ -90,7 +90,14 @@ public class GameController {
                 break;
 
             case GameInstance.MULTI_PLAYER:
-                GameInstanceServer currGameInstance = gameInstances.get(currentMPGIId);
+                GameInstanceServer currGameInstance;
+                if (request.getServerName().equals("")) {
+                    currGameInstance = gameInstances.get(currentMPGIId);
+                } else if (serverNames.containsKey(request.getServerName())) {
+                    currGameInstance = gameInstances.get(serverNames.get(request.getServerName()));
+                } else {
+                    throw new IllegalArgumentException("Server not found!");
+                }
                 savedPlayer = new SimpleUser(players.size(), request.getName(),
                         currGameInstance.getId(), tokenCookie.getValue());
                 players.add(savedPlayer);
@@ -217,6 +224,14 @@ public class GameController {
 
     public List<GameInstanceServer> getGameInstances() {
         return gameInstances;
+    }
+
+    public Map<String, Integer> getServerNames() {
+        return serverNames;
+    }
+
+    public void setServerNames(Map<String, Integer> serverNames) {
+        this.serverNames = serverNames;
     }
 
     public int getCurrentMPGIId() {

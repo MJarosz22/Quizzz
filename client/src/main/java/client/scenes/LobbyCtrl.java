@@ -5,6 +5,7 @@ import client.utils.ServerUtils;
 import com.google.inject.Inject;
 import commons.player.SimpleUser;
 import javafx.application.Platform;
+import javafx.beans.property.SimpleStringProperty;
 import javafx.collections.FXCollections;
 import javafx.fxml.FXML;
 import javafx.scene.control.Label;
@@ -47,14 +48,13 @@ public class LobbyCtrl {
     public void init() {
         Platform.runLater(()->{
             List<SimpleUser> players = server.getPlayers(gameCtrl.getPlayer());
-            setTablePlayers(players);
             updatePlayers(players);
         });
     }
 
     public void initialize() {
 //        persons = 0;
-//        columnName.setCellValueFactory(q -> new SimpleStringProperty(q.getValue().getName()));
+        columnName.setCellValueFactory(q -> new SimpleStringProperty(q.getValue().getName()));
 //        this.sceneChanged = false;
 //        startPolling();
     }

@@ -67,7 +67,7 @@ public class GameInstanceController {
                                                        @CookieValue(name = "user-id", defaultValue = "null") String cookie) {
         if (getPlayerFromGameInstance(gameInstanceId, cookie) == null) return ResponseEntity.badRequest().build();
         return ResponseEntity.ok(gameInstances.get(gameInstanceId).getPlayers()
-                .stream().map(p -> p.toSimpleUser().unsafe()).collect(Collectors.toList()));
+                .stream().map(x -> x.unsafe()).collect(Collectors.toList()));
     }
 
     @DeleteMapping("/{gameInstanceId}/disconnect")
