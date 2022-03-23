@@ -4,6 +4,8 @@ import org.apache.commons.lang3.builder.EqualsBuilder;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
 import org.apache.commons.lang3.builder.ToStringBuilder;
 
+import java.util.Random;
+
 /**
  * This is a multiple-choice type of question.
  * This question type asks the user to choose, for a certain activity, the amount of energy he/she thinks the activity consumes
@@ -18,10 +20,51 @@ public class QuestionWhichOne extends Question {
 
     private Activity activity;
 
-    public QuestionWhichOne(Activity activity) {
+    private long[] answers = new long[3];
+
+    public long[] getAnswers() {
+        return answers;
+    }
+
+    public void setAnswers(long[] answers) {
+        this.answers = answers;
+    }
+
+    public void setCorrectAnswer(int correctAnswer) {
+        this.correctAnswer = correctAnswer;
+    }
+
+    private int correctAnswer;
+
+    public QuestionWhichOne() {}
+    public QuestionWhichOne(Activity activity, int number) {
         this.setTitle("How much energy does it take?");
         this.activity = activity;
+        setNumber(number);
+        Random random = new Random();
+        correctAnswer = random.nextInt(3);
+
+        for (int i = 0; i < 3; i++) {
+            double multiplier = random.nextInt(100) / 100d + 0.5;
+            if (i == correctAnswer) {
+                int imprecise = random.nextInt((int) (activity.getConsumption_in_wh() / 100)) - (int) (activity.getConsumption_in_wh() / 100);
+                answers[i] = activity.getConsumption_in_wh() + imprecise; //TO MAKE CORRECT ANSWER NOT PRECISE TOO
+            } else {
+                answers[i] = (int) (activity.getConsumption_in_wh() * multiplier);
+            }
+        }
     }
+
+    @Override
+    public long getAnswer() {
+        return activity.getConsumption_in_wh();
+    }
+
+    @Override
+    public long getCorrectAnswer() {
+        return correctAnswer + 1;
+    }
+
 
     public Activity getActivity() {
         return activity;

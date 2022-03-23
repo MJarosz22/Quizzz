@@ -15,8 +15,11 @@
  */
 package client.scenes;
 
+import client.scenes.multiplayer.*;
 import client.utils.ServerUtils;
-import commons.player.SimpleUser;
+import commons.QuestionHowMuch;
+import commons.QuestionMoreExpensive;
+import commons.QuestionWhichOne;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.stage.Stage;
@@ -54,14 +57,27 @@ public class MainCtrl {
     private AddActivityCtrl addActivityCtrl;
     private Scene add;
 
-    private SimpleUser player;
+    private GameCtrl gameCtrl;
+
+    private MoreExpensiveCtrl moreExpensiveCtrl;
+    private Scene moreExpensive;
+
+    private HowMuchCtrl howMuchCtrl;
+    private Scene howMuch;
+
+    private WhichOneCtrl whichOneCtrl;
+    private Scene whichOne;
+
+    private QuestionCtrl currentQuestionScene;
 
     public void initialize(Stage primaryStage, Pair<SplashScreenCtrl, Parent> splash, Pair<SinglePlayerCtrl,
             Parent> single, Pair<SinglePlayerGameCtrl, Parent> singleGame,
                            Pair<SinglePlayerGameOverCtrl, Parent> singleGameOver,
                            Pair<MultiPlayerCtrl, Parent> multi,
                            Pair<LeaderBoardCtrl, Parent> leaderboard, Pair<LobbyCtrl, Parent> lobby,
-                           Pair<ActivityOverviewCtrl, Parent> overview, Pair<AddActivityCtrl, Parent> add) {
+                           GameCtrl gameCtrl, Pair<MoreExpensiveCtrl, Parent> moreExpensive,
+                           Pair<HowMuchCtrl, Parent> howMuch, Pair<WhichOneCtrl, Parent> whichOne, Pair<ActivityOverviewCtrl, Parent> overview, Pair<AddActivityCtrl, Parent> add) {
+
 
         this.primaryStage = primaryStage;
         this.splashCtrl = splash.getKey();
@@ -84,6 +100,18 @@ public class MainCtrl {
 
         this.lobbyCtrl = lobby.getKey();
         this.lobby = new Scene(lobby.getValue());
+
+        this.gameCtrl = gameCtrl;
+
+        this.moreExpensiveCtrl = moreExpensive.getKey();
+        this.moreExpensive = new Scene(moreExpensive.getValue());
+
+        this.howMuchCtrl = howMuch.getKey();
+        this.howMuch = new Scene(howMuch.getValue());
+
+        this.whichOneCtrl = whichOne.getKey();
+        this.whichOne = new Scene(whichOne.getValue());
+
 
         this.activityOverviewCtrl = overview.getKey();
         this.overview = new Scene(overview.getValue());
@@ -118,22 +146,20 @@ public class MainCtrl {
 
     public void showLeaderBoard() {
         primaryStage.setTitle("Quizzz leader board");
-        leaderBoardCtrl.setTablePlayers(ServerUtils.getLeaderboard(player));
+        leaderBoardCtrl.setTablePlayers(ServerUtils.getLeaderboard(gameCtrl.getPlayer()));
         primaryStage.setScene(leaderboard);
     }
 
     public void showSinglePlayerGameOver() {
         primaryStage.setTitle("GAME OVER");
-        singlePlayerGameOverCtrl.setTablePlayers(ServerUtils.getLeaderboard(player));
+        singlePlayerGameOverCtrl.setTablePlayers(ServerUtils.getLeaderboard(gameCtrl.getPlayer()));
         primaryStage.setScene(singleGameOver);
     }
 
     public void showLobby() {
         primaryStage.setTitle("Quizzz lobby");
-        //lobbyCtrl.setLabelName(player.getName());
-        //lobbyCtrl.setTablePlayers(ServerUtils.getPlayers(player));
         primaryStage.setScene(lobby);
-        lobbyCtrl.initialize();
+//        lobbyCtrl.initialize(); //TODO LOOK AT THIS
     }
 
     public void showAdmin() {
@@ -147,8 +173,25 @@ public class MainCtrl {
         primaryStage.setScene(add);
     }
 
-    public SimpleUser getPlayer() {
-        return player;
+    public void showMoreExpensive(QuestionMoreExpensive question) {
+        currentQuestionScene = moreExpensiveCtrl;
+        primaryStage.setTitle("Quizzz More Expensive");
+        moreExpensiveCtrl.init(question);
+        primaryStage.setScene(moreExpensive);
+    }
+
+    public void showHowMuch(QuestionHowMuch question) {
+        currentQuestionScene = howMuchCtrl;
+        primaryStage.setTitle("Quizzz How Much");
+        howMuchCtrl.init(question);
+        primaryStage.setScene(howMuch);
+    }
+
+    public void showWhichOne(QuestionWhichOne question) {
+        currentQuestionScene = whichOneCtrl;
+        primaryStage.setTitle("Quizzz Which One");
+        whichOneCtrl.init(question);
+        primaryStage.setScene(whichOne);
     }
 
     public LobbyCtrl getLobbyCtrl() {
@@ -159,8 +202,20 @@ public class MainCtrl {
         return singlePlayerCtrl;
     }
 
-    public void setPlayer(SimpleUser player) {
-        this.player = player;
+    public MoreExpensiveCtrl getMoreExpensiveCtrl() {
+        return moreExpensiveCtrl;
+    }
+
+    public QuestionCtrl getCurrentQuestionScene() {
+        return currentQuestionScene;
+    }
+
+    public HowMuchCtrl getHowMuchCtrl() {
+        return howMuchCtrl;
+    }
+
+    public WhichOneCtrl getWhichOneCtrl() {
+        return whichOneCtrl;
     }
 
 }
