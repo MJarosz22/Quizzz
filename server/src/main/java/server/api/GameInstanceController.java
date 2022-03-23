@@ -16,6 +16,10 @@ import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
+/**
+ * A general controller for all requests related to the Game(-Instances)
+ * e.g. GET URL/api/gameinstance/disconnect
+ */
 @RestController
 @RequestMapping("api/gameinstance")
 public class GameInstanceController {
@@ -26,6 +30,10 @@ public class GameInstanceController {
     private final List<GameInstanceServer> gameInstances;
     private final GameController gameController;
 
+    /**
+     * Creates a new GameInstanceController (should only be done automatically by Spring Boot)
+     * @param gameController GameController created by Spring Boot (auto-init.)
+     */
     public GameInstanceController(GameController gameController) {
         this.gameController = gameController;
         gameInstances = gameController.getGameInstances();
@@ -33,7 +41,7 @@ public class GameInstanceController {
 
 
     /**
-     * Gets a question from gameInstance
+     * Gets a certain question from gameInstance
      *
      * @param gameInstanceId The gameInstance you want a question from
      * @param questionNumber Number of question you request
@@ -70,6 +78,12 @@ public class GameInstanceController {
                 .stream().map(x -> x.unsafe()).collect(Collectors.toList()));
     }
 
+    /**
+     * Disconnects a Player from the gameInstance if previously connected
+     * @param gameInstanceId ID of gameInstance player is in
+     * @param cookie Cookie(user-id) of player that wants to disconnect
+     * @return True if properly disconnected, otherwise returns status code defining why
+     */
     @DeleteMapping("/{gameInstanceId}/disconnect")
     public ResponseEntity<Boolean> disconnect(@PathVariable int gameInstanceId,
                                               @CookieValue(name = "user-id", defaultValue = "null") String cookie) {
@@ -80,6 +94,12 @@ public class GameInstanceController {
     }
 
 
+    /**
+     * Gets current question from provided gameInstance if currently in a question (gameState == GameState.INQUESTION)
+     * @param gameInstanceId ID of gameInstance player is in
+     * @param cookie Cookie(user-id) of player that wants to disconnect
+     * @return Current question if conditions met, otherwise either status-code 404 or 403
+     */
     @GetMapping("/{gameInstanceId}/question")
     public ResponseEntity<Question> getQuestion(@PathVariable int gameInstanceId,
                                                 @CookieValue(name = "user-id", defaultValue = "null") String cookie) {

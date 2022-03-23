@@ -209,6 +209,9 @@ public class GameController {
 
     }
 
+    /**
+     * Creates a new Multiplayer lobby and sets the current active lobby to this one
+     */
     public void createNewMultiplayerLobby() {
         GameInstanceServer newGameInstance = new GameInstanceServer(gameInstances.size(), GameInstance.MULTI_PLAYER, this, msgs);
         gameInstances.add(newGameInstance);

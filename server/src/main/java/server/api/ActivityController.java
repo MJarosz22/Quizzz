@@ -119,6 +119,11 @@ public class ActivityController {
         return ResponseEntity.notFound().build();
     }
 
+    /**
+     * DEPRECATED Returns a random Activity from the Activity Repository
+     * @return
+     */
+    @Deprecated(since = "23/3/22")
     @GetMapping("/random")
     public ResponseEntity<Activity> getRandom() {
         List<Activity> allAct = getAll();
