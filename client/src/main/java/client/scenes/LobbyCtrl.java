@@ -5,7 +5,6 @@ import client.utils.ServerUtils;
 import com.google.inject.Inject;
 import commons.player.SimpleUser;
 import javafx.application.Platform;
-import javafx.beans.property.SimpleStringProperty;
 import javafx.collections.FXCollections;
 import javafx.fxml.FXML;
 import javafx.scene.control.Label;

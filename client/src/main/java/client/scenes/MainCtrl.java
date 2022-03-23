@@ -76,7 +76,8 @@ public class MainCtrl {
                            Pair<MultiPlayerCtrl, Parent> multi,
                            Pair<LeaderBoardCtrl, Parent> leaderboard, Pair<LobbyCtrl, Parent> lobby,
                            GameCtrl gameCtrl, Pair<MoreExpensiveCtrl, Parent> moreExpensive,
-                           Pair<HowMuchCtrl, Parent> howMuch, Pair<WhichOneCtrl, Parent> whichOne, Pair<ActivityOverviewCtrl, Parent> overview, Pair<AddActivityCtrl, Parent> add) {
+                           Pair<HowMuchCtrl, Parent> howMuch, Pair<WhichOneCtrl, Parent> whichOne,
+                           Pair<ActivityOverviewCtrl, Parent> overview, Pair<AddActivityCtrl, Parent> add) {
 
 
         this.primaryStage = primaryStage;
