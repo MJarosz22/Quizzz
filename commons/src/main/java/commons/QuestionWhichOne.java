@@ -47,7 +47,7 @@ public class QuestionWhichOne extends Question {
         for (int i = 0; i < 3; i++) {
             double multiplier = random.nextInt(100) / 100d + 0.5;
             if (i == correctAnswer) {
-                int imprecise = random.nextInt((int) (activity.getConsumption_in_wh() / 100)) - (int) (activity.getConsumption_in_wh() / 100);
+                int imprecise = random.nextInt((int) (activity.getConsumption_in_wh() / 100) + 1) - (int) (activity.getConsumption_in_wh() / 100);
                 answers[i] = activity.getConsumption_in_wh() + imprecise; //TO MAKE CORRECT ANSWER NOT PRECISE TOO
             } else {
                 answers[i] = (int) (activity.getConsumption_in_wh() * multiplier);

@@ -7,6 +7,7 @@ import java.util.ArrayList;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotEquals;
 
+//TODO: Refactor tests in order to comply with new Question-related classes
 public class QuestionTest {
 
     @Test

@@ -36,11 +36,11 @@ public class GameInstance {
         if (activities.size() != 60) throw new IllegalArgumentException();
         List<Question> questions = new ArrayList<>();
         for (int i = 0; i < 20; i++) {
-            if(questions.size() == 20) break;
+            if (questions.size() == 20) break;
             if (i % 3 == 2) questions.add(new QuestionMoreExpensive
-                    (new Activity[]{activities.get(3 * i), activities.get(3 * i + 1), activities.get(3 * i + 2)}, i + 1));
-            else if (i % 3 == 1) questions.add(new QuestionHowMuch(activities.get(i), i + 1));
-            else questions.add(new QuestionWhichOne(activities.get(i), i + 1));
+                    (new Activity[]{activities.get(3 * i), activities.get(3 * i + 1), activities.get(3 * i + 2)}, (i + 1) % 3));
+            else if (i % 3 == 1) questions.add(new QuestionHowMuch(activities.get(i), (i + 1) % 3));
+            else questions.add(new QuestionWhichOne(activities.get(i), (i + 1) % 3));
         }
         this.questions = questions;
     }
@@ -93,7 +93,7 @@ public class GameInstance {
         this.state = state;
     }
 
-        @Override
+    @Override
     public boolean equals(Object o) {
         if (this == o) return true;
 
