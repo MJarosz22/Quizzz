@@ -28,6 +28,28 @@ public abstract class Question {
                 && Objects.equals(title, question.title);
     }
 
+    public void setId(long id) {
+        this.id = id;
+    }
+
+    public int getNumber() {
+        return number;
+    }
+
+    public void setNumber(int number) {
+        this.number = number;
+    }
+
+    private int number;
+
+
+    public Question() {
+    }
+
+    public abstract long getAnswer();
+
+    public abstract long getCorrectAnswer();
+
     @Override
     public int hashCode() {
         return Objects.hash(id, title);

@@ -16,6 +16,10 @@
 package client;
 
 import client.scenes.*;
+import client.scenes.multiplayer.GameCtrl;
+import client.scenes.multiplayer.HowMuchCtrl;
+import client.scenes.multiplayer.MoreExpensiveCtrl;
+import client.scenes.multiplayer.WhichOneCtrl;
 import com.google.inject.Binder;
 import com.google.inject.Module;
 import com.google.inject.Scopes;
@@ -37,5 +41,9 @@ public class MyModule implements Module {
         binder.bind(SinglePlayerGameCtrl.class).in(Scopes.SINGLETON);
         binder.bind(SinglePlayerGameOverCtrl.class).in(Scopes.SINGLETON);
         binder.bind(LobbyCtrl.class).in(Scopes.SINGLETON);
+        binder.bind(HowMuchCtrl.class).in(Scopes.SINGLETON);
+        binder.bind(MoreExpensiveCtrl.class).in(Scopes.SINGLETON);
+        binder.bind(WhichOneCtrl.class).in(Scopes.SINGLETON);
+        binder.bind(GameCtrl.class).in(Scopes.SINGLETON);
     }
 }

@@ -1,9 +1,10 @@
 package client.scenes;
 
+import client.scenes.multiplayer.GameCtrl;
 import client.utils.ServerUtils;
 import com.google.inject.Inject;
 import commons.player.SimpleUser;
-import javafx.beans.property.SimpleStringProperty;
+import javafx.application.Platform;
 import javafx.collections.FXCollections;
 import javafx.fxml.FXML;
 import javafx.scene.control.Label;
@@ -20,6 +21,7 @@ public class LobbyCtrl {
 
     private final ServerUtils server;
     private final MainCtrl mainCtrl;
+    private final GameCtrl gameCtrl;
     private static int persons;
     private boolean sceneChanged;
 
@@ -36,16 +38,25 @@ public class LobbyCtrl {
     private TableColumn<SimpleUser, String> columnName;
 
     @Inject
-    public LobbyCtrl(ServerUtils server, MainCtrl mainCtrl) {
+    public LobbyCtrl(ServerUtils server, MainCtrl mainCtrl, GameCtrl gameCtrl) {
         this.server = server;
         this.mainCtrl = mainCtrl;
+        this.gameCtrl = gameCtrl;
+    }
+
+    public void init() {
+        Platform.runLater(()->{
+            List<SimpleUser> players = server.getPlayers(gameCtrl.getPlayer());
+            setTablePlayers(players);
+            updatePlayers(players);
+        });
     }
 
     public void initialize() {
-        persons = 0;
-        columnName.setCellValueFactory(q -> new SimpleStringProperty(q.getValue().getName()));
-        this.sceneChanged = false;
-        startPolling();
+//        persons = 0;
+//        columnName.setCellValueFactory(q -> new SimpleStringProperty(q.getValue().getName()));
+//        this.sceneChanged = false;
+//        startPolling();
     }
 
     public void startPolling() {
@@ -53,10 +64,10 @@ public class LobbyCtrl {
         Runnable poller = new Runnable() {
             @Override
             public void run() {
-                if (mainCtrl.getPlayer() != null) {
+                if (gameCtrl.getPlayer() != null) {
                     if (sceneChanged)
                         executor.shutdown();
-                    setTablePlayers(ServerUtils.getPlayers(mainCtrl.getPlayer()));
+                    setTablePlayers(ServerUtils.getPlayers(gameCtrl.getPlayer()));
                     changePrompt();
                 }
             }
@@ -66,13 +77,17 @@ public class LobbyCtrl {
         executor.scheduleAtFixedRate(poller, 0, 1, TimeUnit.SECONDS);
     }
 
-
+    public void updatePlayers(List<SimpleUser> players) {
+        persons = players.size();
+        setTablePlayers(players);
+        changePrompt();
+    }
     /**
      * When you press "LEAVE LOBBY" for the multi-player variant of the game, or "BACK"
      * in the singleplayer variant, the player should be disconnected and guided back to the splash screen.
      */
     public void back() {
-        SimpleUser player = mainCtrl.getPlayer();
+        SimpleUser player = gameCtrl.getPlayer();
         this.sceneChanged = true;
         server.disconnect(player);
         System.out.println(player.getName() + " disconnected!");
@@ -84,6 +99,7 @@ public class LobbyCtrl {
     public void play() {
         this.sceneChanged = true;
         //TODO CONNECT TO SERVER
+        server.startGame(gameCtrl.getPlayer());
 //        mainCtrl.showPlayMode();
     }
 
@@ -98,10 +114,6 @@ public class LobbyCtrl {
 
     public int getPersons() {
         return server.connectedPlayers(server.getLastGIIdMult()).size();
-    }
-
-    public void setPersons(int persons) {
-        this.persons = persons;
     }
 
     /**
@@ -131,9 +143,13 @@ public class LobbyCtrl {
 
     public void changePrompt() {
         if (getPersons() > 1)
-            personsText.setText("There are " + getPersons() + " players out of the maximum capacity of 50");
+            personsText.setText("There are " + persons + " players out of the maximum capacity of 50");
         else
-            personsText.setText("There is " + getPersons() + " player out of the maximum capacity of 50");
+            personsText.setText("There is " + persons + " player out of the maximum capacity of 50");
+    }
+
+    public void setCountdown(int time) {
+        labelName.setText(String.valueOf(time));
     }
 
     /*

@@ -5,7 +5,7 @@
 <?import javafx.scene.layout.AnchorPane?>
 <?import javafx.scene.layout.Pane?>
 <?import javafx.scene.text.*?>
-<AnchorPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="540.0" prefWidth="960.0" style="-fx-background-color: #91e4fb;" xmlns="http://javafx.com/javafx/17" xmlns:fx="http://javafx.com/fxml/1" fx:controller="client.scenes.SinglePlayerGameCtrl">
+<AnchorPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="540.0" prefWidth="960.0" style="-fx-background-color: #91e4fb;" xmlns="http://javafx.com/javafx/11.0.14-internal" xmlns:fx="http://javafx.com/fxml/1" fx:controller="client.scenes.multiplayer.MoreExpensiveCtrl">
     <children>
         <Text fx:id="score" layoutX="62.0" layoutY="51.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Score">
             <font>
@@ -27,7 +27,7 @@
                 <Font name="Courier New Bold Italic" size="24.0" />
             </font>
         </Text>
-        <AnchorPane fx:id="timerImage" layoutX="434.0" layoutY="97.0" prefHeight="38.0" prefWidth="38.0" />
+        <ImageView fx:id="timerImage" fitHeight="37.0" fitWidth="38.0" layoutX="433.0" layoutY="98.0" pickOnBounds="true" preserveRatio="true" />
         <Text fx:id="timer" layoutX="480.0" layoutY="124.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Timer">
             <font>
                 <Font size="20.0" />
@@ -59,36 +59,24 @@
             </font>
         </Text>
         <AnchorPane fx:id="emoji" layoutX="187.0" layoutY="84.0" prefHeight="30.0" prefWidth="30.0" style="-fx-background-size: contain;" />
-        <TextField fx:id="player_answer" layoutX="761.0" layoutY="226.0" />
         <Text fx:id="correct_guess" layoutX="730.0" layoutY="205.0" strokeType="OUTSIDE" strokeWidth="0.0" text="The correct answer is ..." wrappingWidth="211.0">
             <font>
                 <Font name="Courier New" size="12.0" />
             </font>
         </Text>
-        <Button fx:id="submit_guess" layoutX="805.0" layoutY="270.0" mnemonicParsing="false" onAction="#isGuessCorrect" text="SUBMIT">
-            <font>
-                <Font name="Courier New" size="12.0" />
-            </font>
-        </Button>
-        <RadioButton fx:id="answer1" layoutX="583.0" layoutY="193.0" mnemonicParsing="false" onAction="#answer1Selected" prefHeight="18.0" prefWidth="142.0" text="answer1" />
-        <RadioButton fx:id="answer2" layoutX="581.0" layoutY="243.0" mnemonicParsing="false" onAction="#answer2Selected" prefHeight="18.0" prefWidth="142.0" text="answer2" />
-        <RadioButton fx:id="answer3" layoutX="581.0" layoutY="293.0" mnemonicParsing="false" onAction="#answer3Selected" prefHeight="18.0" prefWidth="142.0" text="answer3" />
-        <ImageView fx:id="image4" fitHeight="200.0" fitWidth="309.0" layoutX="205.0" layoutY="160.0" pickOnBounds="true" preserveRatio="true" />
-        <Text fx:id="option4" fill="WHITE" layoutX="202.0" layoutY="396.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Option 4 " wrappingWidth="315.2109375">
-            <font>
-                <Font name="Courier New Bold Italic" size="14.0" />
-            </font>
-        </Text>
-      <Pane fx:id="confirmationExit" layoutY="1.0" opacity="0.0" prefHeight="540.0" prefWidth="960.0">
-         <children>
-            <Text layoutX="266.0" layoutY="248.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Are you sure you want to leave the game? " wrappingWidth="492.4140625">
-               <font>
-                  <Font size="28.0" />
-               </font>
-            </Text>
-            <Button layoutX="50.0" layoutY="300.0" mnemonicParsing="false" onAction="#disablePopUp" prefHeight="150.0" prefWidth="350.0" text="NO" />
-            <Button layoutX="550.0" layoutY="300.0" mnemonicParsing="false" onAction="#leaveGame" prefHeight="150.0" prefWidth="350.0" text="YES" />
-         </children>
-      </Pane>
+        <Button layoutX="286.0" layoutY="434.0" mnemonicParsing="false" onAction="#enablePopUp" prefHeight="68.0" prefWidth="94.0" style="-fx-background-radius: 25;" text="REMOVE &#10;INCORRECT&#10;ANSWER" textAlignment="CENTER" />
+        <Button layoutX="433.0" layoutY="434.0" mnemonicParsing="false" onAction="#enablePopUp" prefHeight="68.0" prefWidth="94.0" style="-fx-background-radius: 25;" text="DOUBLE&#10;POINTS" textAlignment="CENTER" />
+        <Button layoutX="580.0" layoutY="434.0" mnemonicParsing="false" onAction="#enablePopUp" prefHeight="68.0" prefWidth="94.0" style="-fx-background-radius: 25;" text="DECREASE&#10;OPPONENTS'&#10;TIME" textAlignment="CENTER" />
+        <Pane fx:id="confirmationExit" layoutY="1.0" prefHeight="540.0" prefWidth="960.0">
+            <children>
+                <Button layoutX="545.0" layoutY="336.0" mnemonicParsing="false" onAction="#leaveGame" prefHeight="158.0" prefWidth="349.0" text="YES" />
+                <Button layoutX="102.0" layoutY="337.0" mnemonicParsing="false" onAction="#disablePopUp" prefHeight="158.0" prefWidth="367.0" text="NO" />
+                <Text layoutX="257.0" layoutY="206.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Are you sure you want to leave the game? " wrappingWidth="576.4140625">
+                    <font>
+                        <Font size="28.0" />
+                    </font>
+                </Text>
+            </children>
+        </Pane>
     </children>
 </AnchorPane>

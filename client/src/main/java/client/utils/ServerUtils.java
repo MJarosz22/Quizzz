@@ -1,8 +1,9 @@
 package client.utils;
 
 import commons.Activity;
-import communication.RequestToJoin;
+import commons.Answer;
 import commons.player.SimpleUser;
+import communication.RequestToJoin;
 import jakarta.ws.rs.NotFoundException;
 import jakarta.ws.rs.client.Client;
 import jakarta.ws.rs.client.ClientBuilder;
@@ -10,22 +11,34 @@ import jakarta.ws.rs.client.Entity;
 import jakarta.ws.rs.core.GenericType;
 import jakarta.ws.rs.core.Response;
 import org.glassfish.jersey.client.ClientConfig;
+import org.springframework.messaging.converter.MappingJackson2MessageConverter;
+import org.springframework.messaging.simp.stomp.StompFrameHandler;
+import org.springframework.messaging.simp.stomp.StompHeaders;
+import org.springframework.messaging.simp.stomp.StompSession;
+import org.springframework.messaging.simp.stomp.StompSessionHandlerAdapter;
+import org.springframework.web.socket.client.standard.StandardWebSocketClient;
+import org.springframework.web.socket.messaging.WebSocketStompClient;
 
 import java.io.FileNotFoundException;
 import java.io.InputStream;
+import java.lang.reflect.Type;
 import java.util.List;
 import java.util.Optional;
+import java.util.concurrent.ExecutionException;
+import java.util.function.Consumer;
 
 import static jakarta.ws.rs.core.MediaType.APPLICATION_JSON;
 
 public class ServerUtils {
 
-    private static final String SERVER = "http://localhost:8080/";
+    private static final String location = "localhost:8080";
+    private static final String SERVER = "http://" + location + "/";
+    private StompSession session;
 
     public static List<SimpleUser> getPlayers(SimpleUser player) {
         Client client = ClientBuilder.newClient(new ClientConfig());
         return client //
-                .target(SERVER).path("api/game/ " + player.getGameInstanceId() + "/players") //
+                .target(SERVER).path("api/gameinstance/ " + player.getGameInstanceId() + "/players") //
                 .request(APPLICATION_JSON).cookie("user-id", player.getCookie()) //
                 .accept(APPLICATION_JSON) //
                 .get(new GenericType<>() {
@@ -90,7 +103,7 @@ public class ServerUtils {
     public boolean disconnect(SimpleUser player) {
         Client client = ClientBuilder.newClient(new ClientConfig());
         return client //
-                .target(SERVER).path("api/game/ " + player.getGameInstanceId() + "/disconnect") //
+                .target(SERVER).path("api/gameinstance/ " + player.getGameInstanceId() + "/disconnect") //
                 .request(APPLICATION_JSON).cookie("user-id", player.getCookie()) //
                 .accept(APPLICATION_JSON) //
                 .delete(new GenericType<>() {
@@ -162,10 +175,77 @@ public class ServerUtils {
                 .request(APPLICATION_JSON)
                 .accept(APPLICATION_JSON)
                 .put(Entity.entity(player, APPLICATION_JSON), SimpleUser.class);
-
     }
 
-    // ------------------------------------ ADDITIONAL METHODS ------------------------------------ //
+    public boolean startGame(SimpleUser player) {
+        Client client = ClientBuilder.newClient(new ClientConfig());
+        return client //
+                .target(SERVER).path("api/gameinstance/ " + player.getGameInstanceId() + "/start") //
+                .request(APPLICATION_JSON).cookie("user-id", player.getCookie()) //
+                .accept(APPLICATION_JSON) //
+                .get(new GenericType<>() {});
+    }
+
+    public int getTimeLeft(SimpleUser player) {
+        Client client = ClientBuilder.newClient(new ClientConfig());
+        return client //
+                .target(SERVER).path("api/gameinstance/ " + player.getGameInstanceId() + "/timeleft") //
+                .request(APPLICATION_JSON).cookie("user-id", player.getCookie()) //
+                .accept(APPLICATION_JSON) //
+                .get(new GenericType<>() {});
+    }
+
+    public void initWebsocket() {
+        session = connect("ws://" + location + "/websocket");
+    }
+
+    private StompSession connect(String url) {
+        var client = new StandardWebSocketClient();
+        var stomp = new WebSocketStompClient(client);
+        stomp.setMessageConverter(new MappingJackson2MessageConverter());
+        try {
+            return stomp.connect(url, new StompSessionHandlerAdapter() {
+            }).get();
+        } catch (InterruptedException e) {
+            throw new RuntimeException(e);
+        } catch (ExecutionException e) {
+            throw new RuntimeException(e);
+        }
+    }
+
+    public <T> void registerForMessages(String dest, Class<T> type, Consumer<T> consumer) {
+        session.subscribe(dest, new StompFrameHandler() {
+            @Override
+            public Type getPayloadType(StompHeaders headers) {
+                return type;
+            }
+
+            //TODO TYPE CHECKING
+            @Override
+            public void handleFrame(StompHeaders headers, Object payload) {
+                consumer.accept((T) payload);
+            }
+        });
+    }
+    public boolean submitAnswer(SimpleUser player, Answer answer) {
+        return ClientBuilder
+                .newClient(new ClientConfig())
+                .target(SERVER)
+                .path("api/gameinstance/" + player.getGameInstanceId() + "/answer")
+                .request(APPLICATION_JSON).cookie("user-id", player.getCookie())
+                .accept(APPLICATION_JSON)
+                .post(Entity.entity(answer, APPLICATION_JSON), Boolean.class);
+    }
+
+    public void disconnectWebsocket() {
+        session.disconnect();
+    }
+
+    public void send(String dest, Object o) {
+        session.send(dest, o);
+    }
+
+        // ------------------------------------ ADDITIONAL METHODS ------------------------------------ //
 
     /**
      * Additional method that checks whether a player hasn't disconnected from a game, by comparing cookies, which are

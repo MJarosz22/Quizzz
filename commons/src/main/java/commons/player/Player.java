@@ -13,11 +13,6 @@ import java.util.ArrayList;
 //@Table(name = "Player")
 public class Player extends SimpleUser {
 
-    public static final int IN_LOBBY = 0;
-    public static final int NOT_ANSWERED = 1;
-    public static final int ANSWERED = 2;
-    public static final int DISCONNECTED = 3;
-
     @Column(name = "status")
     private int status;
 
