@@ -33,7 +33,6 @@ public class GameController {
 
     private final Logger logger = LoggerFactory.getLogger(GameController.class);
 
-    private final ActivityRepository activityRepository;
     private final SimpMessagingTemplate msgs;
     public ActivityController activityController;
     private final Random random;
@@ -51,11 +50,10 @@ public class GameController {
      */
     public GameController(Random random, ActivityRepository activityRepository, SimpMessagingTemplate msgs, ActivityController activityController) {
         this.random = random;
-        this.activityRepository = activityRepository;
         this.msgs = msgs;
         this.activityController = activityController;
         gameInstances = new ArrayList<>();
-        gameInstances.add(new GameInstanceServer(gameInstances.size(), GameInstance.MULTI_PLAYER, this, msgs));
+        this.createNewMultiplayerLobby(); // BY DEFAULT: creates a multiplayer lobby for gameInstanceID = 0.
         players = new ArrayList<>();
     }
 
@@ -97,7 +95,8 @@ public class GameController {
                 currGameInstance.getPlayers().add(savedPlayer.toPlayer(currGameInstance));
                 logger.info("[GI " + (currGameInstance.getId()) + "] PLAYER (" + savedPlayer.getId() +
                         ") STARTED MP GAME: NAME=" + savedPlayer.getName());
-                currGameInstance.updatePlayerList();
+                if (msgs != null)
+                    currGameInstance.updatePlayerList();
                 break;
 
             default:
@@ -114,8 +113,8 @@ public class GameController {
             return ResponseEntity.ok(new InputStreamResource(inputStream));
         } catch (FileNotFoundException e) {
             logger.debug("Image " + activityFolder + "/" + activityFile + " not found!");
+            return ResponseEntity.notFound().build();
         }
-        return ResponseEntity.notFound().build();
     }
 
 
@@ -209,6 +208,9 @@ public class GameController {
 
     }
 
+    // ------------------------------------ ADDITIONAL METHODS ------------------------------------------------------
+
+
     public void createNewMultiplayerLobby() {
         GameInstanceServer newGameInstance = new GameInstanceServer(gameInstances.size(), GameInstance.MULTI_PLAYER, this, msgs);
         gameInstances.add(newGameInstance);
@@ -217,6 +219,10 @@ public class GameController {
 
     public List<GameInstanceServer> getGameInstances() {
         return gameInstances;
+    }
+
+    public List<SimpleUser> getPlayers() {
+        return players;
     }
 
     public int getCurrentMPGIId() {
