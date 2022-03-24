@@ -2,6 +2,7 @@ package server.api;
 
 
 import commons.GameInstance;
+import commons.GameState;
 import commons.player.Player;
 import commons.player.SimpleUser;
 import communication.RequestToJoin;
@@ -54,9 +55,17 @@ public class GameController {
         this.msgs = msgs;
         this.activityController = activityController;
         gameInstances = new ArrayList<>();
-        gameInstances.add(new GameInstanceServer(gameInstances.size(), GameInstance.MULTI_PLAYER, this, msgs));
+
         players = new ArrayList<>();
         serverNames = new HashMap<>();
+
+        //hardcoded servers; perhaps we could create API for the serverNames
+        serverNames.put("default", 0);
+        serverNames.put("first", 1);
+        serverNames.put("second", 2);
+        for (String server : serverNames.keySet()) {
+            gameInstances.add(new GameInstanceServer(gameInstances.size(), GameInstance.MULTI_PLAYER, this, msgs, server));
+        }
     }
 
 //    ---------------------------------------------------------------------------
@@ -78,7 +87,7 @@ public class GameController {
         SimpleUser savedPlayer;
         switch (request.getGameType()) {
             case GameInstance.SINGLE_PLAYER:
-                GameInstanceServer gameInstance = new GameInstanceServer(gameInstances.size(), GameInstance.SINGLE_PLAYER, this, msgs);
+                GameInstanceServer gameInstance = new GameInstanceServer(gameInstances.size(), GameInstance.SINGLE_PLAYER, this, msgs, null);
                 gameInstances.add(gameInstance);
                 currentSPGIId = gameInstance.getId();
                 savedPlayer = new SimpleUser(players.size(), request.getName(),
@@ -92,12 +101,14 @@ public class GameController {
             case GameInstance.MULTI_PLAYER:
                 GameInstanceServer currGameInstance;
                 if (request.getServerName().equals("")) {
-                    currGameInstance = gameInstances.get(currentMPGIId);
+                    currGameInstance = gameInstances.get(serverNames.get("default"));
                 } else if (serverNames.containsKey(request.getServerName())) {
                     currGameInstance = gameInstances.get(serverNames.get(request.getServerName()));
                 } else {
                     throw new IllegalArgumentException("Server not found!");
                 }
+                if (currGameInstance.getState() != GameState.INLOBBY)
+                    throw new IllegalArgumentException("Wait for the game to end!");
                 savedPlayer = new SimpleUser(players.size(), request.getName(),
                         currGameInstance.getId(), tokenCookie.getValue());
                 players.add(savedPlayer);
@@ -210,16 +221,17 @@ public class GameController {
                     pl.setScore(player.getScore());
                     break;
                 }
-            logger.info("[GI " + (player.getGameInstanceId()) + "] PLAYER (" + player.getId() + ") HAS NOW: " + player.getScore() + " POINTS!");
+            logger.info("[GI " + (player.getGameInstanceId()) + " ] PLAYER (" + player.getId() + ") HAS NOW: " + player.getScore() + " POINTS!");
             return ResponseEntity.ok(playerToModify);
         }
 
     }
 
-    public void createNewMultiplayerLobby() {
-        GameInstanceServer newGameInstance = new GameInstanceServer(gameInstances.size(), GameInstance.MULTI_PLAYER, this, msgs);
+    public void createNewMultiplayerLobby(String serverName) {
+        GameInstanceServer newGameInstance = new GameInstanceServer(gameInstances.size(), GameInstance.MULTI_PLAYER, this, msgs, serverName);
         gameInstances.add(newGameInstance);
         currentMPGIId = newGameInstance.getId();
+        serverNames.put(serverName, currentMPGIId);
     }
 
     public List<GameInstanceServer> getGameInstances() {
@@ -228,10 +240,6 @@ public class GameController {
 
     public Map<String, Integer> getServerNames() {
         return serverNames;
-    }
-
-    public void setServerNames(Map<String, Integer> serverNames) {
-        this.serverNames = serverNames;
     }
 
     public int getCurrentMPGIId() {

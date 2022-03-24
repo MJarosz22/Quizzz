@@ -46,7 +46,7 @@ public class LobbyCtrl {
     }
 
     public void init() {
-        Platform.runLater(()->{
+        Platform.runLater(() -> {
             List<SimpleUser> players = server.getPlayers(gameCtrl.getPlayer());
             updatePlayers(players);
         });
@@ -82,6 +82,7 @@ public class LobbyCtrl {
         setTablePlayers(players);
         changePrompt();
     }
+
     /**
      * When you press "LEAVE LOBBY" for the multi-player variant of the game, or "BACK"
      * in the singleplayer variant, the player should be disconnected and guided back to the splash screen.
@@ -89,18 +90,16 @@ public class LobbyCtrl {
     public void back() {
         SimpleUser player = gameCtrl.getPlayer();
         this.sceneChanged = true;
-        server.disconnect(player);
+        if (server.disconnect(player)) ;
         System.out.println(player.getName() + " disconnected!");
         //decreaseNumberOfPlayers();
         mainCtrl.showSplash();
     }
 
-    // To be added when making the main game scene, in order for the player to play
     public void play() {
         this.sceneChanged = true;
-        //TODO CONNECT TO SERVER
         server.startGame(gameCtrl.getPlayer());
-//        mainCtrl.showPlayMode();
+
     }
 
     /*
