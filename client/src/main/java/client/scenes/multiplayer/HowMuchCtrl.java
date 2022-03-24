@@ -22,7 +22,7 @@ import java.io.FileNotFoundException;
 import java.util.Timer;
 import java.util.TimerTask;
 
-public class HowMuchCtrl implements QuestionCtrl{
+public class HowMuchCtrl implements QuestionCtrl {
 
     @FXML
     private Text questionTitle, timer, score, points, answer, option4, correct_guess, questionCount;
@@ -87,7 +87,7 @@ public class HowMuchCtrl implements QuestionCtrl{
         }
         scheduler = new TimerTask() {
             @Override
-            public void run () {
+            public void run() {
                 int timeLeft = server.getTimeLeft(gameCtrl.getPlayer());
                 Platform.runLater(() -> {
                     timer.setText(String.valueOf(Math.round(timeLeft / 1000d)));
@@ -139,27 +139,53 @@ public class HowMuchCtrl implements QuestionCtrl{
 //        timer.setText("12000");
     }
 
-    public void heartBold(){
+    /**
+     * Method to select heart emoji
+     */
+
+    public void heartBold() {
         emojiBold(heart, heartPic);
     }
 
-    public void glassesBold(){
+    /**
+     * Method to select glasses emoji
+     */
+
+    public void glassesBold() {
         emojiBold(glasses, glassesPic);
     }
 
-    public void angryBold(){
+    /**
+     * Method to select angry emoji
+     */
+
+    public void angryBold() {
         emojiBold(angry, angryPic);
     }
 
-    public void cryBold(){
+    /**
+     * Method to select crying emoji
+     */
+
+    public void cryBold() {
         emojiBold(cry, cryPic);
     }
 
-    public void laughBold(){
+    /**
+     * Method to select laughing emoji
+     */
+
+    public void laughBold() {
         emojiBold(laugh, laughPic);
     }
 
 
+    /**
+     * Method that boldens (enlargens) the emoji clicked, then shrinks it back into position
+     *
+     * @param emojiButton The emoji button to be enlarged
+     * @param emojiPic The corresponding image associated with that button
+     */
     public void emojiBold(Button emojiButton, ImageView emojiPic) {
         Thread thread = new Thread(() -> {
 

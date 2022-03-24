@@ -130,10 +130,10 @@ public class ServerUtils {
 
     public int getLastGIIdMult() {
         Client client = ClientBuilder.newClient(new ClientConfig());
-        return client //
-                .target(SERVER).path("api/game/getLastGIIdMult") //
-                .request(APPLICATION_JSON) //
-                .accept(APPLICATION_JSON) //
+        return client
+                .target(SERVER).path("api/game/getLastGIIdMult")
+                .request(APPLICATION_JSON)
+                .accept(APPLICATION_JSON)
                 .get(new GenericType<>() {
                 });
     }

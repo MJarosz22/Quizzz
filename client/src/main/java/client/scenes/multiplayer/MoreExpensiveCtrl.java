@@ -21,7 +21,7 @@ import java.io.FileNotFoundException;
 import java.util.Timer;
 import java.util.TimerTask;
 
-public class MoreExpensiveCtrl implements QuestionCtrl{
+public class MoreExpensiveCtrl implements QuestionCtrl {
 
     @FXML
     private Text questionTitle, timer, score, points, answer, correct_guess, questionCount;
@@ -67,7 +67,7 @@ public class MoreExpensiveCtrl implements QuestionCtrl{
         }
     }
 
-    public void init(QuestionMoreExpensive question){
+    public void init(QuestionMoreExpensive question) {
         this.question = question;
         timerImage.setImage(timerImageSource);
         disablePopUp(null);
@@ -89,7 +89,7 @@ public class MoreExpensiveCtrl implements QuestionCtrl{
         }
         scheduler = new TimerTask() {
             @Override
-            public void run () {
+            public void run() {
                 int timeLeft = server.getTimeLeft(gameCtrl.getPlayer());
                 Platform.runLater(() -> {
                     timer.setText(String.valueOf(Math.round(timeLeft / 1000d)));
@@ -130,14 +130,29 @@ public class MoreExpensiveCtrl implements QuestionCtrl{
 
     @Override
     public void postQuestion(Answer answer) {
-        switch (answer.getAnswer().intValue()){
+        switch (answer.getAnswer().intValue()) {
             case 1:
+                option1Button.setDisable(true);
+                option2Button.setDisable(true);
+                option3Button.setDisable(true);
                 option1Button.setStyle("-fx-background-color: green");
+                option2Button.setStyle("-fx-background-color: red");
+                option3Button.setStyle("-fx-background-color: red");
                 break;
             case 2:
+                option1Button.setDisable(true);
+                option2Button.setDisable(true);
+                option3Button.setDisable(true);
+                option1Button.setStyle("-fx-background-color: red");
                 option2Button.setStyle("-fx-background-color: green");
+                option3Button.setStyle("-fx-background-color: red");
                 break;
             case 3:
+                option1Button.setDisable(true);
+                option2Button.setDisable(true);
+                option3Button.setDisable(true);
+                option1Button.setStyle("-fx-background-color: red");
+                option2Button.setStyle("-fx-background-color: red");
                 option3Button.setStyle("-fx-background-color: green");
                 break;
             default:
@@ -159,27 +174,53 @@ public class MoreExpensiveCtrl implements QuestionCtrl{
         option3Button.setStyle("");
     }
 
-    public void heartBold(){
+    /**
+     * Method to select heart emoji
+     */
+
+    public void heartBold() {
         emojiBold(heart, heartPic);
     }
 
-    public void glassesBold(){
+    /**
+     * Method to select glasses emoji
+     */
+
+    public void glassesBold() {
         emojiBold(glasses, glassesPic);
     }
 
-    public void angryBold(){
+    /**
+     * Method to select angry emoji
+     */
+
+    public void angryBold() {
         emojiBold(angry, angryPic);
     }
 
-    public void cryBold(){
+    /**
+     * Method to select crying emoji
+     */
+
+    public void cryBold() {
         emojiBold(cry, cryPic);
     }
 
-    public void laughBold(){
+    /**
+     * Method to select laughing emoji
+     */
+
+    public void laughBold() {
         emojiBold(laugh, laughPic);
     }
 
 
+    /**
+     * Method that boldens (enlargens) the emoji clicked, then shrinks it back into position
+     *
+     * @param emojiButton The emoji button to be enlarged
+     * @param emojiPic The corresponding image associated with that button
+     */
     public void emojiBold(Button emojiButton, ImageView emojiPic) {
         Thread thread = new Thread(() -> {
 

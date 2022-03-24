@@ -58,7 +58,7 @@ public class WhichOneCtrl implements QuestionCtrl {
     private final GameCtrl gameCtrl;
 
     @Inject
-    public WhichOneCtrl(ServerUtils server, MainCtrl mainCtrl, GameCtrl gameCtrl){
+    public WhichOneCtrl(ServerUtils server, MainCtrl mainCtrl, GameCtrl gameCtrl) {
         this.server = server;
         this.mainCtrl = mainCtrl;
         this.gameCtrl = gameCtrl;
@@ -69,7 +69,7 @@ public class WhichOneCtrl implements QuestionCtrl {
         }
     }
 
-    public void init(QuestionWhichOne question){
+    public void init(QuestionWhichOne question) {
         this.question = question;
         timerImage.setImage(timerImageSource);
         disablePopUp(null);
@@ -88,7 +88,7 @@ public class WhichOneCtrl implements QuestionCtrl {
         }
         scheduler = new TimerTask() {
             @Override
-            public void run () {
+            public void run() {
                 int timeLeft = server.getTimeLeft(gameCtrl.getPlayer());
                 Platform.runLater(() -> {
                     timer.setText(String.valueOf(Math.round(timeLeft / 1000d)));
@@ -129,14 +129,29 @@ public class WhichOneCtrl implements QuestionCtrl {
 
     @Override
     public void postQuestion(Answer answer) {
-        switch (answer.getAnswer().intValue()){
+        switch (answer.getAnswer().intValue()) {
             case 1:
+                answer1.setDisable(true);
+                answer2.setDisable(true);
+                answer3.setDisable(true);
                 answer1.setStyle("-fx-background-color: green");
+                answer2.setStyle("-fx-background-color: red");
+                answer3.setStyle("-fx-background-color: red");
                 break;
             case 2:
+                answer1.setDisable(true);
+                answer2.setDisable(true);
+                answer3.setDisable(true);
+                answer1.setStyle("-fx-background-color: red");
                 answer2.setStyle("-fx-background-color: green");
+                answer3.setStyle("-fx-background-color: red");
                 break;
             case 3:
+                answer1.setDisable(true);
+                answer2.setDisable(true);
+                answer3.setDisable(true);
+                answer1.setStyle("-fx-background-color: red");
+                answer2.setStyle("-fx-background-color: red");
                 answer3.setStyle("-fx-background-color: green");
                 break;
             default:
@@ -162,27 +177,53 @@ public class WhichOneCtrl implements QuestionCtrl {
         answer3.setSelected(false);
     }
 
-    public void heartBold(){
+    /**
+     * Method to select heart emoji
+     */
+
+    public void heartBold() {
         emojiBold(heart, heartPic);
     }
 
-    public void glassesBold(){
+    /**
+     * Method to select glasses emoji
+     */
+
+    public void glassesBold() {
         emojiBold(glasses, glassesPic);
     }
 
-    public void angryBold(){
+    /**
+     * Method to select angry emoji
+     */
+
+    public void angryBold() {
         emojiBold(angry, angryPic);
     }
 
-    public void cryBold(){
+    /**
+     * Method to select crying emoji
+     */
+
+    public void cryBold() {
         emojiBold(cry, cryPic);
     }
 
-    public void laughBold(){
+    /**
+     * Method to select laughing emoji
+     */
+
+    public void laughBold() {
         emojiBold(laugh, laughPic);
     }
 
 
+    /**
+     * Method that boldens (enlargens) the emoji clicked, then shrinks it back into position
+     *
+     * @param emojiButton The emoji button to be enlarged
+     * @param emojiPic The corresponding image associated with that button
+     */
     public void emojiBold(Button emojiButton, ImageView emojiPic) {
         Thread thread = new Thread(() -> {
 

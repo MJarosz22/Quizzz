@@ -40,7 +40,7 @@ public class GameCtrl {
         server.disconnect(player);
     }
 
-    private void subscribeToWebsockets(){
+    private void subscribeToWebsockets() {
         subscribe("/topic/" + player.getGameInstanceId() + "/time", Integer.class, time ->
                 Platform.runLater(() -> mainCtrl.getLobbyCtrl().setCountdown(time)));
         subscribe("/topic/" + player.getGameInstanceId() + "/players", Integer.class, amountOfPlayers -> {
@@ -58,6 +58,7 @@ public class GameCtrl {
                 Platform.runLater(() -> goToMoreExpensive(question)));
         subscribe("/topic/" + getPlayer().getGameInstanceId() + "/questionwhichone", QuestionWhichOne.class, question ->
                 Platform.runLater(() -> goToWhichOne(question)));
+
     }
 
     public void submitAnswer(Answer answer) {
