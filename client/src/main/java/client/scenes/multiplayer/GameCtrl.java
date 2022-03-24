@@ -48,9 +48,9 @@ public class GameCtrl {
             Platform.runLater(() -> mainCtrl.getLobbyCtrl().updatePlayers(players));
         });
 
-        subscribe("/topic/" + player.getGameInstanceId() + "/emoji", Object.class, type -> {
-            System.out.println(type);
-            Platform.runLater(() -> mainCtrl.getCurrentQuestionScene().showEmoji((String) type));
+        subscribe("/topic/" + player.getGameInstanceId() + "/emoji", Emoji.class, emoji -> {
+            System.out.println(emoji.getType());
+            Platform.runLater(() -> mainCtrl.getCurrentQuestionScene().showEmoji(emoji.getType()));
         });
 
         subscribe("/topic/" + player.getGameInstanceId() + "/postquestion", Answer.class, answer ->

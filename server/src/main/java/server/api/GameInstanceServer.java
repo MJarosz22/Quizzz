@@ -148,7 +148,7 @@ public class GameInstanceServer extends GameInstance {
         return false;
     }
 
-    public void sendEmoji(String emoji){
+    public void sendEmoji(Emoji emoji){
         System.out.println(emoji);
         msgs.convertAndSend("/topic/" + getId() + "/emoji", emoji);
     }

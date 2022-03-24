@@ -2,6 +2,7 @@ package client.utils;
 
 import commons.Activity;
 import commons.Answer;
+import commons.Emoji;
 import commons.GameState;
 import commons.player.SimpleUser;
 import communication.RequestToJoin;
@@ -263,7 +264,7 @@ public class ServerUtils {
             .path("api/gameinstance/" + player.getGameInstanceId() + "/emoji")
             .request(APPLICATION_JSON).cookie("user-id", player.getCookie())
             .accept(APPLICATION_JSON)
-            .post(Entity.entity(emoji, APPLICATION_JSON));
+            .post(Entity.entity(new Emoji(emoji), APPLICATION_JSON));
     }
 
     public void disconnectWebsocket() {
