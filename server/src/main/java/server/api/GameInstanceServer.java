@@ -148,6 +148,11 @@ public class GameInstanceServer extends GameInstance {
         return false;
     }
 
+    public void sendEmoji(String emoji){
+        System.out.println(emoji);
+        msgs.convertAndSend("/topic/" + getId() + "/emoji", emoji);
+    }
+
     public boolean disconnectPlayer(SimpleUser player){
         boolean status = getPlayers().remove(player);
         updatePlayerList();

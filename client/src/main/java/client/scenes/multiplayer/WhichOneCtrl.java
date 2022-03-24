@@ -21,6 +21,7 @@ import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.util.Timer;
 import java.util.TimerTask;
+import java.util.function.Consumer;
 
 public class WhichOneCtrl implements QuestionCtrl {
 
@@ -69,9 +70,12 @@ public class WhichOneCtrl implements QuestionCtrl {
         }
     }
 
-    public void init(QuestionWhichOne question) {
+    public void init(QuestionWhichOne question){
         this.question = question;
         timerImage.setImage(timerImageSource);
+        answer1.setDisable(false);
+        answer2.setDisable(false);
+        answer3.setDisable(false);
         disablePopUp(null);
         questionTitle.setText(question.getTitle());
         questionCount.setText("Question " + question.getNumber() + "/20");
@@ -182,7 +186,7 @@ public class WhichOneCtrl implements QuestionCtrl {
      */
 
     public void heartBold() {
-        emojiBold(heart, heartPic);
+        server.sendEmoji(gameCtrl.getPlayer(), "heart");
     }
 
     /**
@@ -190,7 +194,7 @@ public class WhichOneCtrl implements QuestionCtrl {
      */
 
     public void glassesBold() {
-        emojiBold(glasses, glassesPic);
+        server.sendEmoji(gameCtrl.getPlayer(), "glasses");
     }
 
     /**
@@ -198,7 +202,7 @@ public class WhichOneCtrl implements QuestionCtrl {
      */
 
     public void angryBold() {
-        emojiBold(angry, angryPic);
+        server.sendEmoji(gameCtrl.getPlayer(), "angry");
     }
 
     /**
@@ -206,7 +210,7 @@ public class WhichOneCtrl implements QuestionCtrl {
      */
 
     public void cryBold() {
-        emojiBold(cry, cryPic);
+        server.sendEmoji(gameCtrl.getPlayer(), "cry");
     }
 
     /**
@@ -214,9 +218,35 @@ public class WhichOneCtrl implements QuestionCtrl {
      */
 
     public void laughBold() {
-        emojiBold(laugh, laughPic);
+        server.sendEmoji(gameCtrl.getPlayer(), "laugh");
     }
 
+    /**
+     * Switch case method to call from Websockets that associates an id with its button and a picture
+     * and makes them bold
+     *
+     * @param id id of button (and image to increase size
+     */
+    public void emojiSelector(String id){
+        System.out.println(id);
+        switch (id) {
+            case "heart":
+                emojiBold(heart, heartPic);
+                break;
+            case "glasses":
+                emojiBold(glasses, glassesPic);
+                break;
+            case "angry":
+                emojiBold(angry, angryPic);
+                break;
+            case "cry":
+                emojiBold(cry, cryPic);
+                break;
+            case "laugh":
+                emojiBold(laugh, laughPic);
+                break;
+        }
+    }
 
     /**
      * Method that boldens (enlargens) the emoji clicked, then shrinks it back into position
@@ -225,7 +255,7 @@ public class WhichOneCtrl implements QuestionCtrl {
      * @param emojiPic The corresponding image associated with that button
      */
     public void emojiBold(Button emojiButton, ImageView emojiPic) {
-        Thread thread = new Thread(() -> {
+        Platform.runLater(() -> {
 
             try {
 
@@ -247,7 +277,10 @@ public class WhichOneCtrl implements QuestionCtrl {
                 e.printStackTrace();
             }
         });
+    }
 
-        thread.start();
+    @Override
+    public void showEmoji(String type) {
+        emojiSelector(type);
     }
 }

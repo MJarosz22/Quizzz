@@ -21,6 +21,7 @@ import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.util.Timer;
 import java.util.TimerTask;
+import java.util.function.Consumer;
 
 public class HowMuchCtrl implements QuestionCtrl {
 
@@ -70,7 +71,7 @@ public class HowMuchCtrl implements QuestionCtrl {
         }
     }
 
-    public void init(QuestionHowMuch question) {
+    public void init(QuestionHowMuch question){
         timerImage.setImage(timerImageSource);
         disablePopUp(null);
         player_answer.clear();
@@ -104,6 +105,7 @@ public class HowMuchCtrl implements QuestionCtrl {
 
     public void leaveGame(ActionEvent actionEvent) {
         scheduler.cancel();
+        server.disconnectWebsocket();
         gameCtrl.disconnect();
         mainCtrl.showSplash();
     }
@@ -119,8 +121,13 @@ public class HowMuchCtrl implements QuestionCtrl {
         //TODO ERROR HANDLING
     }
 
+    public <T> void subscribe(String destination, Class<T> type, Consumer<T> consumer) {
+        server.registerForMessages(destination, type, consumer);
+    }
+
     @Override
     public void postQuestion(Answer answer) {
+
         correct_guess.setText("The correct answer is: " + answer.getAnswer());
         correct_guess.setVisible(true);
         new Timer().schedule(new TimerTask() {
@@ -144,7 +151,7 @@ public class HowMuchCtrl implements QuestionCtrl {
      */
 
     public void heartBold() {
-        emojiBold(heart, heartPic);
+        server.sendEmoji(gameCtrl.getPlayer(), "heart");
     }
 
     /**
@@ -152,7 +159,7 @@ public class HowMuchCtrl implements QuestionCtrl {
      */
 
     public void glassesBold() {
-        emojiBold(glasses, glassesPic);
+        server.sendEmoji(gameCtrl.getPlayer(), "glasses");
     }
 
     /**
@@ -160,7 +167,7 @@ public class HowMuchCtrl implements QuestionCtrl {
      */
 
     public void angryBold() {
-        emojiBold(angry, angryPic);
+        server.sendEmoji(gameCtrl.getPlayer(), "angry");
     }
 
     /**
@@ -168,7 +175,7 @@ public class HowMuchCtrl implements QuestionCtrl {
      */
 
     public void cryBold() {
-        emojiBold(cry, cryPic);
+        server.sendEmoji(gameCtrl.getPlayer(), "cry");
     }
 
     /**
@@ -176,9 +183,40 @@ public class HowMuchCtrl implements QuestionCtrl {
      */
 
     public void laughBold() {
-        emojiBold(laugh, laughPic);
+        server.sendEmoji(gameCtrl.getPlayer(), "laugh");
     }
 
+
+    /**
+     * Switch case method to call from Websockets that associates an id with its button and a picture
+     * and makes them bold
+     *
+     * @param id id of button (and image to increase size
+     */
+    public void emojiSelector(String id){
+
+        //String currentQType = server.getCurrentQType(server.getLastGIIdMult());
+        System.out.println("ID SELECTION BEGINS");
+            switch (id) {
+                case "heart":
+                    emojiBold(heart, heartPic);
+                    break;
+                case "glasses":
+                    emojiBold(glasses, glassesPic);
+                    break;
+                case "angry":
+                    emojiBold(angry, angryPic);
+                    break;
+                case "cry":
+                    emojiBold(cry, cryPic);
+                    break;
+                case "laugh":
+                    emojiBold(laugh, laughPic);
+                    break;
+                default:
+                    break;
+            }
+        }
 
     /**
      * Method that boldens (enlargens) the emoji clicked, then shrinks it back into position
@@ -187,7 +225,7 @@ public class HowMuchCtrl implements QuestionCtrl {
      * @param emojiPic The corresponding image associated with that button
      */
     public void emojiBold(Button emojiButton, ImageView emojiPic) {
-        Thread thread = new Thread(() -> {
+        Platform.runLater(() -> {
 
             try {
 
@@ -205,11 +243,15 @@ public class HowMuchCtrl implements QuestionCtrl {
                 emojiPic.setFitWidth(30);
                 emojiPic.setFitHeight(30);
 
+
             } catch (InterruptedException e) {
                 e.printStackTrace();
             }
         });
+    }
 
-        thread.start();
+    @Override
+    public void showEmoji(String type) {
+        emojiSelector(type);
     }
 }

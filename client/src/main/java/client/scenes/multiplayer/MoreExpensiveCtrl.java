@@ -20,6 +20,7 @@ import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.util.Timer;
 import java.util.TimerTask;
+import java.util.function.Consumer;
 
 public class MoreExpensiveCtrl implements QuestionCtrl {
 
@@ -67,10 +68,13 @@ public class MoreExpensiveCtrl implements QuestionCtrl {
         }
     }
 
-    public void init(QuestionMoreExpensive question) {
+    public void init(QuestionMoreExpensive question){
         this.question = question;
         timerImage.setImage(timerImageSource);
         disablePopUp(null);
+        option1Button.setDisable(false);
+        option2Button.setDisable(false);
+        option3Button.setDisable(false);
         questionTitle.setText(question.getTitle());
         questionCount.setText("Question " + question.getNumber() + "/20");
         option1Button.setText(question.getActivities()[0].getTitle());
@@ -129,7 +133,7 @@ public class MoreExpensiveCtrl implements QuestionCtrl {
     }
 
     @Override
-    public void postQuestion(Answer answer) {
+    public void postQuestion(Answer answer){
         switch (answer.getAnswer().intValue()) {
             case 1:
                 option1Button.setDisable(true);
@@ -179,7 +183,7 @@ public class MoreExpensiveCtrl implements QuestionCtrl {
      */
 
     public void heartBold() {
-        emojiBold(heart, heartPic);
+        server.sendEmoji(gameCtrl.getPlayer(), "heart");
     }
 
     /**
@@ -187,7 +191,7 @@ public class MoreExpensiveCtrl implements QuestionCtrl {
      */
 
     public void glassesBold() {
-        emojiBold(glasses, glassesPic);
+        server.sendEmoji(gameCtrl.getPlayer(), "glasses");
     }
 
     /**
@@ -195,7 +199,7 @@ public class MoreExpensiveCtrl implements QuestionCtrl {
      */
 
     public void angryBold() {
-        emojiBold(angry, angryPic);
+        server.sendEmoji(gameCtrl.getPlayer(), "angry");
     }
 
     /**
@@ -203,7 +207,7 @@ public class MoreExpensiveCtrl implements QuestionCtrl {
      */
 
     public void cryBold() {
-        emojiBold(cry, cryPic);
+        server.sendEmoji(gameCtrl.getPlayer(), "cry");
     }
 
     /**
@@ -211,7 +215,34 @@ public class MoreExpensiveCtrl implements QuestionCtrl {
      */
 
     public void laughBold() {
-        emojiBold(laugh, laughPic);
+        System.out.println("laugh should be sent");
+        server.sendEmoji(gameCtrl.getPlayer(), "laugh");
+    }
+
+    /**
+     * Switch case method to call from Websockets that associates an id with its button and a picture
+     * and makes them bold
+     *
+     * @param id id of button (and image to increase size
+     */
+    public void emojiSelector(String id){
+        switch (id) {
+            case "heart":
+                emojiBold(heart, heartPic);
+                break;
+            case "glasses":
+                emojiBold(glasses, glassesPic);
+                break;
+            case "angry":
+                emojiBold(angry, angryPic);
+                break;
+            case "cry":
+                emojiBold(cry, cryPic);
+                break;
+            case "laugh":
+                emojiBold(laugh, laughPic);
+                break;
+        }
     }
 
 
@@ -222,7 +253,7 @@ public class MoreExpensiveCtrl implements QuestionCtrl {
      * @param emojiPic The corresponding image associated with that button
      */
     public void emojiBold(Button emojiButton, ImageView emojiPic) {
-        Thread thread = new Thread(() -> {
+        Platform.runLater(() -> {
 
             try {
 
@@ -244,7 +275,10 @@ public class MoreExpensiveCtrl implements QuestionCtrl {
                 e.printStackTrace();
             }
         });
+    }
 
-        thread.start();
+    @Override
+    public void showEmoji(String type) {
+        emojiSelector(type);
     }
 }
