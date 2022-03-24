@@ -24,7 +24,7 @@ import java.util.TimerTask;
 public class InsteadOfCtrl implements QuestionCtrl {
 
     @FXML
-    private Text questionTitle, timer, score, points, answer, option4, correct_guess, questionCount;
+    private Text questionTitle, timer, score, points, answer, option4, questionCount;
 
     @FXML
     private AnchorPane emoji;

@@ -26,13 +26,13 @@ public class QuestionInsteadOf extends Question {
         this.activity = activity;
         this.activities = activities;
         setNumber(number);
-        checkIfValidAnswer();
+        checkIfValidQuestionActivity();
     }
 
     public QuestionInsteadOf() {}
 
     public Activity getActivity() {
-        return this.activity;
+        return activity;
     }
 
     public void setActivity(Activity activity) {
@@ -56,6 +56,11 @@ public class QuestionInsteadOf extends Question {
         return activities[correctAnswer - 1].getConsumption_in_wh();
     }
 
+    /**
+     * Gets the activities' titles to set them as the answers after the radio button
+     *
+     * @return a String[] with the titles
+     */
     public String[] getAnswers() {
         String[] activitiesTitles = new String[3];
         for(int i = 0; i < 3; i++) {
@@ -64,72 +69,85 @@ public class QuestionInsteadOf extends Question {
         return activitiesTitles;
     }
 
-    public void checkIfValidAnswer(){
-        long activityLowerBound = (long) (activity.getConsumption_in_wh()*0.95);
-        long activityUpperBound = (long) (activity.getConsumption_in_wh()*1.05);
-        for(int i = 0; i < 3; i++){
-            if(activityLowerBound <= activities[i].getConsumption_in_wh() ||
-                    activities[i].getConsumption_in_wh() <= activityUpperBound) {
-                correctAnswer = i + 1;
-            }
-            else {
-                Random random = new Random();
-                correctAnswer = random.nextInt(3);
-                activities[correctAnswer-1] = changeActivity(activities[correctAnswer-1]);
-            }
-        }
-    }
-
     @Override
     public long getCorrectAnswer() {
         return correctAnswer;
     }
 
-    public Activity changeActivity(Activity correctActivity) {
-        int times = (int) (activity.getConsumption_in_wh() / correctActivity.getConsumption_in_wh());
-        Activity answer = new Activity();
-        String title = correctActivity.getTitle();
-        if(title.contains("second")) {
-            answer.setTitle(changeActivityTitle(times, title, "second"));
+    /**
+     * Firstly checks if one of the activities somewhat has the same consumption, by looking in a range of 5 percent
+     * If that isn't the case, the method picks one activity to be the correct answer and then calls changeActivity
+     */
+    public void checkIfValidQuestionActivity(){
+        long activityLowerBound = (long) (activity.getConsumption_in_wh()*0.95);
+        long activityUpperBound = (long) (activity.getConsumption_in_wh()*1.05);
+        for(int i = 0; i < 3; i++){
+            if(activityLowerBound <= activities[i].getConsumption_in_wh() &&
+                    activities[i].getConsumption_in_wh() <= activityUpperBound) {
+                correctAnswer = i + 1;
+            } else if(i == 2) {
+                Random random = new Random();
+                correctAnswer = random.nextInt(3) + 1;
+                changeActivity(activities[correctAnswer - 1]);
+            }
         }
-        else if(title.contains("minute")) {
-            answer.setTitle(changeActivityTitle(times, title, "minute"));
-        }
-        else if(title.contains("hour")) {
-            answer.setTitle(changeActivityTitle(times, title, "hour"));
-        }
-        else if(title.contains("day")) {
-            answer.setTitle(changeActivityTitle(times, title, "day"));
-        }
-        else if(title.contains("month")) {
-            answer.setTitle(changeActivityTitle(times, title, "month"));
-        }
-        else if(title.contains("year")) {
-            answer.setTitle(changeActivityTitle(times, title, "year"));
-        }
-        else if(title.contains("times")) {
-            answer.setTitle(changeActivityTitle(times, title, "times"));
-        }
-        else {
-            answer.setTitle(title + " " + times + " times");
-        }
-        return answer;
     }
 
-    public String changeActivityTitle(int times, String title, String unit) {
+    /**
+     * Firstly calculates the amount of times that the given activity has to happen in order for the activity to match
+     * the activityAnswer
+     * Secondly calls changeActivityTitle
+     * If there isn't a clear unit in the question, the method just adds the amount and "times" to the title
+     *
+     * @param activityAnswer, which is the activity that is the correct answer
+     */
+    public void changeActivity(Activity activityAnswer) {
+        double times = (double) activityAnswer.getConsumption_in_wh() / activity.getConsumption_in_wh();
+        System.out.println(times);
+        String title = activity.getTitle();
+        if(title.contains("second")) {
+            activity.setTitle(changeActivityTitle(times, title, "second"));
+        } else if(title.contains("minute")) {
+            activity.setTitle(changeActivityTitle(times, title, "minute"));
+        } else if(title.contains("hour")) {
+            activity.setTitle(changeActivityTitle(times, title, "hour"));
+        } else if(title.contains("day")) {
+            activity.setTitle(changeActivityTitle(times, title, "day"));
+        } else if(title.contains("month")) {
+            activity.setTitle(changeActivityTitle(times, title, "month"));
+        } else if(title.contains("year")) {
+            activity.setTitle(changeActivityTitle(times, title, "year"));
+        } else if(title.contains("times")) {
+            activity.setTitle(changeActivityTitle(times, title, "times"));
+        } else if(times == 1) {
+            activity.setTitle(title + " " + times + " time");
+        } else {
+            activity.setTitle(title + " " + times + " time");
+        }
+    }
+
+    /**
+     * Changes the title of the given activity, so that the amount matches the consumption of the randomly chosen
+     * correct activity in checkIfValidQuestionActivity
+     *
+     * @param times, the amount of times calculated in changeActivity
+     * @param title, the title of the activity that needs to change
+     * @param unit, the unit that was in the title
+     * @return
+     */
+    public String changeActivityTitle(double times, String title, String unit) {
         String[] titleArray = title.split(" ");
         for(int i = 0; i < titleArray.length; i++) {
             if(titleArray[i].contains(unit)) {
                 try {
-                    times = times*Integer.parseInt(titleArray[i-1]);
+                    times = (int)(times*Integer.parseInt(titleArray[i-1]) * 100) / 100d;
                 } catch (NumberFormatException e) {
                      return title + " " + times + " times";
                 }
                 titleArray[i-1] = String.valueOf(times);
-                if(!unit.endsWith("s")){
+                if(!unit.endsWith("s") && times != 1){
                     titleArray[i] = unit + "s";
-                }
-                if(unit.endsWith("ly")){
+                } else if(unit.endsWith("ly")){
                     titleArray[i] = unit.split("ly")[0];
                 }
                 break;

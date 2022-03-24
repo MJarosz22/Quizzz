@@ -38,6 +38,29 @@ public class GameInstanceServer extends GameInstance {
         countdownTimer = new Timer();
     }
 
+    @Override
+    public void generateQuestions(List<Activity> activities) {
+        if (activities.size() != 60) throw new IllegalArgumentException();
+        List<Question> questions = new ArrayList<>();
+        for (int i = 0; i < 20; i++) {
+            int remainder = i % 4;
+            int mod = i / 4;
+            if(questions.size() == 20) break;
+            if (remainder == 3) questions.add(new QuestionMoreExpensive
+                    (new Activity[]{
+                            activities.get(9 * mod + 6),
+                            activities.get(9 * mod + 7),
+                            activities.get(9 * mod + 8)},
+                            i + 1));
+            else if (remainder == 2) questions.add(new QuestionHowMuch(activities.get(9 * mod + 5), i + 1));
+            else if(remainder == 1) questions.add(new QuestionWhichOne(activities.get(9 * mod + 4), i + 1));
+            else questions.add(new QuestionInsteadOf(activities.get(9 * mod),
+                        new Activity[]{activities.get(9 * mod + 1),
+                        activities.get(9 * mod + 2), activities.get(9 * mod + 3)}, i + 1));
+        }
+        setQuestions(questions);
+    }
+
     public void startCountdown() {
         setState(GameState.STARTING);
 
@@ -75,6 +98,8 @@ public class GameInstanceServer extends GameInstance {
             msgs.convertAndSend("/topic/" + getId() + "/questionmoreexpensive", getQuestions().get(questionNumber));
         } else if (currentQuestion instanceof QuestionWhichOne) {
             msgs.convertAndSend("/topic/" + getId() + "/questionwhichone", getQuestions().get(questionNumber));
+        }else if(currentQuestion instanceof  QuestionInsteadOf){
+            msgs.convertAndSend("/topic/" + getId() + "/questioninsteadof", getQuestions().get(questionNumber));
         } else throw new IllegalStateException();
     }
 
