@@ -100,9 +100,7 @@ public class GameController {
 
             case GameInstance.MULTI_PLAYER:
                 GameInstanceServer currGameInstance;
-                if (request.getServerName().equals("")) {
-                    currGameInstance = gameInstances.get(serverNames.get("default"));
-                } else if (serverNames.containsKey(request.getServerName())) {
+                if (serverNames.containsKey(request.getServerName())) {
                     currGameInstance = gameInstances.get(serverNames.get(request.getServerName()));
                 } else {
                     throw new IllegalArgumentException("Server not found!");
@@ -225,6 +223,16 @@ public class GameController {
             return ResponseEntity.ok(playerToModify);
         }
 
+    }
+
+    @GetMapping("/available-servers")
+    public ResponseEntity<List<String>> getServers() {
+        List<String> res = new ArrayList<>();
+        for (String serverName : serverNames.keySet()) {
+            if (gameInstances.get(serverNames.get(serverName)).getState() == GameState.INLOBBY)
+                res.add(serverName);
+        }
+        return ResponseEntity.ok(res);
     }
 
     public void createNewMultiplayerLobby(String serverName) {

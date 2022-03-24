@@ -10,6 +10,7 @@ import jakarta.ws.rs.client.ClientBuilder;
 import jakarta.ws.rs.client.Entity;
 import jakarta.ws.rs.core.GenericType;
 import jakarta.ws.rs.core.Response;
+import org.checkerframework.checker.units.qual.C;
 import org.glassfish.jersey.client.ClientConfig;
 import org.springframework.messaging.converter.MappingJackson2MessageConverter;
 import org.springframework.messaging.simp.stomp.StompFrameHandler;
@@ -53,7 +54,8 @@ public class ServerUtils {
                 .get(new GenericType<>() {
                 });
     }
-    public List<Activity> getActivitiesRandomly() throws NotFoundException{
+
+    public List<Activity> getActivitiesRandomly() throws NotFoundException {
         return ClientBuilder.newClient(new ClientConfig())
                 .target(SERVER).path("api/activities/random60")
                 .request(APPLICATION_JSON)
@@ -68,8 +70,9 @@ public class ServerUtils {
                 .target(SERVER).path("api/game/activities/" + activity.getImage_path())
                 .request("image/*")
                 .accept("image/*")
-                .get(new GenericType<>() {});
-        if(response.getStatus() == 404) throw new FileNotFoundException();
+                .get(new GenericType<>() {
+                });
+        if (response.getStatus() == 404) throw new FileNotFoundException();
         return response.readEntity(InputStream.class);
     }
 
@@ -110,7 +113,7 @@ public class ServerUtils {
                 });
     }
 
-    public SimpleUser addPlayerToLeaderboard(SimpleUser player){
+    public SimpleUser addPlayerToLeaderboard(SimpleUser player) {
         Client client = ClientBuilder.newClient(new ClientConfig());
         return client
                 .target(SERVER).path("api/leaderboard/addPlayer")
@@ -183,7 +186,8 @@ public class ServerUtils {
                 .target(SERVER).path("api/gameinstance/ " + player.getGameInstanceId() + "/start") //
                 .request(APPLICATION_JSON).cookie("user-id", player.getCookie()) //
                 .accept(APPLICATION_JSON) //
-                .get(new GenericType<>() {});
+                .get(new GenericType<>() {
+                });
     }
 
     public int getTimeLeft(SimpleUser player) {
@@ -192,7 +196,8 @@ public class ServerUtils {
                 .target(SERVER).path("api/gameinstance/ " + player.getGameInstanceId() + "/timeleft") //
                 .request(APPLICATION_JSON).cookie("user-id", player.getCookie()) //
                 .accept(APPLICATION_JSON) //
-                .get(new GenericType<>() {});
+                .get(new GenericType<>() {
+                });
     }
 
     public void initWebsocket() {
@@ -227,6 +232,7 @@ public class ServerUtils {
             }
         });
     }
+
     public boolean submitAnswer(SimpleUser player, Answer answer) {
         return ClientBuilder
                 .newClient(new ClientConfig())
@@ -245,7 +251,7 @@ public class ServerUtils {
         session.send(dest, o);
     }
 
-        // ------------------------------------ ADDITIONAL METHODS ------------------------------------ //
+    // ------------------------------------ ADDITIONAL METHODS ------------------------------------ //
 
     /**
      * Additional method that checks whether a player hasn't disconnected from a game, by comparing cookies, which are
@@ -261,12 +267,23 @@ public class ServerUtils {
         return (contains.isPresent());
     }
 
+    public List<String> availableServers() {
+        return ClientBuilder.newClient(new ClientConfig())
+                .target(SERVER)
+                .path("api/game/available-servers")
+                .request(APPLICATION_JSON)
+                .accept(APPLICATION_JSON)
+                .get(new GenericType<>() {
+                });
+    }
+
 
     public Activity deleteActivity(Activity activity) {
         return ClientBuilder.newClient(new ClientConfig())
                 .target(SERVER).path("api/activities/" + activity.getActivityID())
                 .request(APPLICATION_JSON)
                 .accept(APPLICATION_JSON)
-                .delete(new GenericType<>(){});
+                .delete(new GenericType<>() {
+                });
     }
 }

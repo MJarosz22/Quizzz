@@ -27,7 +27,7 @@ public class LobbyCtrl {
     private boolean sceneChanged;
 
     @FXML
-    private Label labelName;
+    private Label timer;
 
     @FXML
     private Text personsText;
@@ -47,6 +47,7 @@ public class LobbyCtrl {
 
     public void init() {
         Platform.runLater(() -> {
+            timer.setVisible(false);
             List<SimpleUser> players = server.getPlayers(gameCtrl.getPlayer());
             updatePlayers(players);
         });
@@ -91,7 +92,7 @@ public class LobbyCtrl {
         SimpleUser player = gameCtrl.getPlayer();
         this.sceneChanged = true;
         gameCtrl.disconnect();
-       // if (server.disconnect(player))
+        // if (server.disconnect(player))
         System.out.println(player.getName() + " disconnected!");
         //decreaseNumberOfPlayers();
         mainCtrl.showSplash();
@@ -149,7 +150,8 @@ public class LobbyCtrl {
     }
 
     public void setCountdown(int time) {
-        labelName.setText(String.valueOf(time));
+        timer.setVisible(true);
+        timer.setText(String.valueOf(time));
     }
 
     /*
