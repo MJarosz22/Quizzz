@@ -33,11 +33,11 @@ public class MoreExpensiveCtrl implements QuestionCtrl{
     private ImageView timerImage;
 
     @FXML
-    private Button option1Button, option2Button, option3Button;
+    private Button option1Button, option2Button, option3Button, heart, cry, laugh, angry, glasses;
 
 
     @FXML
-    private ImageView image1, image2, image3;
+    private ImageView image1, image2, image3, heartPic, cryPic, laughPic, angryPic, glassesPic;
 
     @FXML
     private ProgressBar progressBar;
@@ -157,5 +157,53 @@ public class MoreExpensiveCtrl implements QuestionCtrl{
         option1Button.setStyle("");
         option2Button.setStyle("");
         option3Button.setStyle("");
+    }
+
+    public void heartBold(){
+        emojiBold(heart, heartPic);
+    }
+
+    public void glassesBold(){
+        emojiBold(glasses, glassesPic);
+    }
+
+    public void angryBold(){
+        emojiBold(angry, angryPic);
+    }
+
+    public void cryBold(){
+        emojiBold(cry, cryPic);
+    }
+
+    public void laughBold(){
+        emojiBold(laugh, laughPic);
+    }
+
+
+    public void emojiBold(Button emojiButton, ImageView emojiPic) {
+        Thread thread = new Thread(() -> {
+
+            try {
+
+                emojiButton.setStyle("-fx-pref-height: 50; -fx-pref-width: 50; -fx-background-color: transparent; ");
+                emojiButton.setLayoutX(emojiButton.getLayoutX() - 10.0);
+                emojiButton.setLayoutY(emojiButton.getLayoutY() - 10.0);
+                emojiButton.setMouseTransparent(true);
+                emojiPic.setFitWidth(50);
+                emojiPic.setFitHeight(50);
+                Thread.sleep(3000);
+                emojiButton.setStyle("-fx-pref-height: 30; -fx-pref-width: 30; -fx-background-color: transparent; ");
+                emojiButton.setLayoutX(emojiButton.getLayoutX() + 10.0);
+                emojiButton.setLayoutY(emojiButton.getLayoutY() + 10.0);
+                emojiButton.setMouseTransparent(false);
+                emojiPic.setFitWidth(30);
+                emojiPic.setFitHeight(30);
+
+            } catch (InterruptedException e) {
+                e.printStackTrace();
+            }
+        });
+
+        thread.start();
     }
 }

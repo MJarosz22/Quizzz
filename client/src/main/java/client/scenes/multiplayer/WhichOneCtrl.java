@@ -7,6 +7,7 @@ import commons.QuestionWhichOne;
 import javafx.application.Platform;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
+import javafx.scene.control.Button;
 import javafx.scene.control.ProgressBar;
 import javafx.scene.control.RadioButton;
 import javafx.scene.image.Image;
@@ -36,7 +37,10 @@ public class WhichOneCtrl implements QuestionCtrl {
     private RadioButton answer1, answer2, answer3;
 
     @FXML
-    private ImageView image4;
+    private Button heart, cry, laugh, angry, glasses;
+
+    @FXML
+    private ImageView image4, heartPic, cryPic, laughPic, angryPic, glassesPic;
 
     @FXML
     private ProgressBar progressBar;
@@ -156,5 +160,53 @@ public class WhichOneCtrl implements QuestionCtrl {
         answer1.setSelected(false);
         answer2.setSelected(false);
         answer3.setSelected(false);
+    }
+
+    public void heartBold(){
+        emojiBold(heart, heartPic);
+    }
+
+    public void glassesBold(){
+        emojiBold(glasses, glassesPic);
+    }
+
+    public void angryBold(){
+        emojiBold(angry, angryPic);
+    }
+
+    public void cryBold(){
+        emojiBold(cry, cryPic);
+    }
+
+    public void laughBold(){
+        emojiBold(laugh, laughPic);
+    }
+
+
+    public void emojiBold(Button emojiButton, ImageView emojiPic) {
+        Thread thread = new Thread(() -> {
+
+            try {
+
+                emojiButton.setStyle("-fx-pref-height: 50; -fx-pref-width: 50; -fx-background-color: transparent; ");
+                emojiButton.setLayoutX(emojiButton.getLayoutX() - 10.0);
+                emojiButton.setLayoutY(emojiButton.getLayoutY() - 10.0);
+                emojiButton.setMouseTransparent(true);
+                emojiPic.setFitWidth(50);
+                emojiPic.setFitHeight(50);
+                Thread.sleep(3000);
+                emojiButton.setStyle("-fx-pref-height: 30; -fx-pref-width: 30; -fx-background-color: transparent; ");
+                emojiButton.setLayoutX(emojiButton.getLayoutX() + 10.0);
+                emojiButton.setLayoutY(emojiButton.getLayoutY() + 10.0);
+                emojiButton.setMouseTransparent(false);
+                emojiPic.setFitWidth(30);
+                emojiPic.setFitHeight(30);
+
+            } catch (InterruptedException e) {
+                e.printStackTrace();
+            }
+        });
+
+        thread.start();
     }
 }

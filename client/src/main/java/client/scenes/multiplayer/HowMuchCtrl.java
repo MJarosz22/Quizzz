@@ -31,10 +31,10 @@ public class HowMuchCtrl implements QuestionCtrl{
     private AnchorPane emoji;
 
     @FXML
-    private ImageView timerImage;
+    private ImageView timerImage, heartPic, cryPic, laughPic, angryPic, glassesPic;
 
     @FXML
-    private Button submit_guess;
+    private Button submit_guess, heart, cry, laugh, angry, glasses;
 
     @FXML
     private TextField player_answer;
@@ -137,5 +137,53 @@ public class HowMuchCtrl implements QuestionCtrl{
         correct_guess.setVisible(false);
         player_answer.clear();
 //        timer.setText("12000");
+    }
+
+    public void heartBold(){
+        emojiBold(heart, heartPic);
+    }
+
+    public void glassesBold(){
+        emojiBold(glasses, glassesPic);
+    }
+
+    public void angryBold(){
+        emojiBold(angry, angryPic);
+    }
+
+    public void cryBold(){
+        emojiBold(cry, cryPic);
+    }
+
+    public void laughBold(){
+        emojiBold(laugh, laughPic);
+    }
+
+
+    public void emojiBold(Button emojiButton, ImageView emojiPic) {
+        Thread thread = new Thread(() -> {
+
+            try {
+
+                emojiButton.setStyle("-fx-pref-height: 50; -fx-pref-width: 50; -fx-background-color: transparent; ");
+                emojiButton.setLayoutX(emojiButton.getLayoutX() - 10.0);
+                emojiButton.setLayoutY(emojiButton.getLayoutY() - 10.0);
+                emojiButton.setMouseTransparent(true);
+                emojiPic.setFitWidth(50);
+                emojiPic.setFitHeight(50);
+                Thread.sleep(3000);
+                emojiButton.setStyle("-fx-pref-height: 30; -fx-pref-width: 30; -fx-background-color: transparent; ");
+                emojiButton.setLayoutX(emojiButton.getLayoutX() + 10.0);
+                emojiButton.setLayoutY(emojiButton.getLayoutY() + 10.0);
+                emojiButton.setMouseTransparent(false);
+                emojiPic.setFitWidth(30);
+                emojiPic.setFitHeight(30);
+
+            } catch (InterruptedException e) {
+                e.printStackTrace();
+            }
+        });
+
+        thread.start();
     }
 }
