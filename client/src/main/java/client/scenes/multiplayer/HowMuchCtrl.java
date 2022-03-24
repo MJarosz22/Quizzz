@@ -105,7 +105,6 @@ public class HowMuchCtrl implements QuestionCtrl {
 
     public void leaveGame(ActionEvent actionEvent) {
         scheduler.cancel();
-        server.disconnectWebsocket();
         gameCtrl.disconnect();
         mainCtrl.showSplash();
     }
@@ -121,9 +120,7 @@ public class HowMuchCtrl implements QuestionCtrl {
         //TODO ERROR HANDLING
     }
 
-    public <T> void subscribe(String destination, Class<T> type, Consumer<T> consumer) {
-        server.registerForMessages(destination, type, consumer);
-    }
+
 
     @Override
     public void postQuestion(Answer answer) {
@@ -226,27 +223,27 @@ public class HowMuchCtrl implements QuestionCtrl {
      */
     public void emojiBold(Button emojiButton, ImageView emojiPic) {
         Platform.runLater(() -> {
+            emojiButton.setStyle("-fx-pref-height: 50; -fx-pref-width: 50; -fx-background-color: transparent; ");
+            emojiButton.setLayoutX(emojiButton.getLayoutX() - 10.0);
+            emojiButton.setLayoutY(emojiButton.getLayoutY() - 10.0);
+            emojiButton.setMouseTransparent(true);
+            emojiPic.setFitWidth(50);
+            emojiPic.setFitHeight(50);
 
-            try {
-
-                emojiButton.setStyle("-fx-pref-height: 50; -fx-pref-width: 50; -fx-background-color: transparent; ");
-                emojiButton.setLayoutX(emojiButton.getLayoutX() - 10.0);
-                emojiButton.setLayoutY(emojiButton.getLayoutY() - 10.0);
-                emojiButton.setMouseTransparent(true);
-                emojiPic.setFitWidth(50);
-                emojiPic.setFitHeight(50);
-                Thread.sleep(3000);
-                emojiButton.setStyle("-fx-pref-height: 30; -fx-pref-width: 30; -fx-background-color: transparent; ");
-                emojiButton.setLayoutX(emojiButton.getLayoutX() + 10.0);
-                emojiButton.setLayoutY(emojiButton.getLayoutY() + 10.0);
-                emojiButton.setMouseTransparent(false);
-                emojiPic.setFitWidth(30);
-                emojiPic.setFitHeight(30);
-
-
-            } catch (InterruptedException e) {
-                e.printStackTrace();
-            }
+            TimerTask timerTask = new TimerTask() {
+                @Override
+                public void run() {
+                    Platform.runLater(()->{
+                        emojiButton.setStyle("-fx-pref-height: 30; -fx-pref-width: 30; -fx-background-color: transparent; ");
+                        emojiButton.setLayoutX(emojiButton.getLayoutX() + 10.0);
+                        emojiButton.setLayoutY(emojiButton.getLayoutY() + 10.0);
+                        emojiButton.setMouseTransparent(false);
+                        emojiPic.setFitWidth(30);
+                        emojiPic.setFitHeight(30);
+                    });
+                }
+            };
+            new Timer().schedule(timerTask, 5000);
         });
     }
 

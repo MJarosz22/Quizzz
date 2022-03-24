@@ -1,9 +1,6 @@
 package server.api;
 
-import commons.Answer;
-import commons.GameInstance;
-import commons.GameState;
-import commons.Question;
+import commons.*;
 import commons.player.Player;
 import commons.player.SimpleUser;
 import org.slf4j.Logger;
@@ -145,7 +142,7 @@ public class GameInstanceController {
     @PostMapping("/{gameInstanceId}/emoji")
     public ResponseEntity<Boolean> sendEmoji(@PathVariable int gameInstanceId,
                                              @CookieValue(name = "user-id", defaultValue = "null") String cookie,
-                                             @RequestBody String emoji){
+                                             @RequestBody Emoji emoji){
         if (gameInstances.get(gameInstanceId).getState().equals(GameState.STARTING)) return ResponseEntity.ok(true);
         Player reqPlayer = getPlayerFromGameInstance(gameInstanceId, cookie);
         if (reqPlayer == null) return ResponseEntity.status(HttpStatus.FORBIDDEN).build();
