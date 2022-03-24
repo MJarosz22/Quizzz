@@ -15,9 +15,8 @@
  */
 package client.scenes;
 
-import com.google.inject.Inject;
-
 import client.utils.ServerUtils;
+import com.google.inject.Inject;
 import commons.Activity;
 import jakarta.ws.rs.WebApplicationException;
 import javafx.fxml.FXML;
@@ -29,7 +28,7 @@ import javafx.stage.Modality;
 public class AddActivityCtrl {
 
     private final ServerUtils server;
-    private final MainActivityCtrl mainActivityCtrl;
+    private final MainCtrl mainCtrl;
 
     @FXML
     private TextField id;
@@ -47,14 +46,18 @@ public class AddActivityCtrl {
     private TextField source;
 
     @Inject
-    public AddActivityCtrl(ServerUtils server, MainActivityCtrl mainActivityCtrl) {
-        this.mainActivityCtrl = mainActivityCtrl;
+    public AddActivityCtrl(ServerUtils server, MainCtrl mainCtrl) {
+        this.mainCtrl = mainCtrl;
         this.server = server;
+    }
+
+    public void back() {
+        clearFields();
+        mainCtrl.showAdmin();
     }
 
     public void cancel() {
         clearFields();
-        mainActivityCtrl.showOverview();
     }
 
     public void ok() {
@@ -70,7 +73,7 @@ public class AddActivityCtrl {
         }
 
         clearFields();
-        mainActivityCtrl.showOverview();
+        mainCtrl.showAdmin();
     }
 
     private Activity getActivity() {
@@ -102,7 +105,7 @@ public class AddActivityCtrl {
                 ok();
                 break;
             case ESCAPE:
-                cancel();
+                back();
                 break;
             default:
                 break;

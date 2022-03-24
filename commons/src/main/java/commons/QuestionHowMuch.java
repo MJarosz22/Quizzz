@@ -16,9 +16,12 @@ public class QuestionHowMuch extends Question {
 
     private Activity activity;
 
-    public QuestionHowMuch(Activity activity) {
+    public QuestionHowMuch() {}
+
+    public QuestionHowMuch(Activity activity, int number) {
         this.setTitle("How much energy does it take?");
         this.activity = activity;
+        setNumber(number);
     }
 
 
@@ -28,6 +31,14 @@ public class QuestionHowMuch extends Question {
 
     public void setActivity(Activity activity) {
         this.activity = activity;
+    }
+
+    public long getAnswer() {
+        return activity.getConsumption_in_wh();
+    }
+
+    public long getCorrectAnswer() {
+        return activity.getConsumption_in_wh();
     }
 
     @Override

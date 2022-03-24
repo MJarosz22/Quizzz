@@ -1,5 +1,6 @@
 package client.scenes;
 
+import client.scenes.multiplayer.GameCtrl;
 import client.utils.ServerUtils;
 import com.google.inject.Inject;
 import commons.*;
@@ -29,6 +30,8 @@ public class SinglePlayerGameCtrl {
 
     private final ServerUtils server;
     private final MainCtrl mainCtrl;
+    private final GameCtrl gameCtrl;
+
     private final String correctEmojiPath = "client/src/main/resources/images/correct-answer.png";
     private final String wrongEmojiPath = "client/src/main/resources/images/wrong-answer.png";
     private final String timerPath = "client/src/main/resources/images/timer.png";
@@ -65,11 +68,14 @@ public class SinglePlayerGameCtrl {
     @FXML
     private Pane confirmationExit;
 
+    private static boolean gameIsOver;
+
 
     @Inject
-    public SinglePlayerGameCtrl(ServerUtils server, MainCtrl mainCtrl) {
+    public SinglePlayerGameCtrl(ServerUtils server, MainCtrl mainCtrl, GameCtrl gameCtrl) {
         this.server = server;
         this.mainCtrl = mainCtrl;
+        this.gameCtrl = gameCtrl;
     }
 
 
@@ -78,8 +84,8 @@ public class SinglePlayerGameCtrl {
      * set current game, reset the board and  generates 20 questions in a 'smart' way.
      */
     public void initialize() {
-        if (this.mainCtrl.getPlayer() != null) {
-            this.player = mainCtrl.getPlayer();
+        if (gameCtrl.getPlayer() != null) {
+            this.player = gameCtrl.getPlayer();
             disablePopUp();
             currentGame = new GameInstance(this.player.getGameInstanceId(), 0);
             try {
@@ -94,6 +100,7 @@ public class SinglePlayerGameCtrl {
             progressBar.setProgress(0);
             score.setText("Your score: 0");
             roundCounter = 1;
+            gameIsOver = false;
             loadNextQuestion();
         }
     }
@@ -248,10 +255,11 @@ public class SinglePlayerGameCtrl {
     private void randomlyChooseCorrectAnswerButton() {
         Random random = new Random();
         int random_correct_answer = random.nextInt(3 - 1 + 1) + 1;
+        long consumption_correct_answer = ((QuestionWhichOne) currentQuestion).getActivity().getConsumption_in_wh();
 
-        long other_answer1 = Math.abs(((QuestionWhichOne) currentQuestion).getActivity().getConsumption_in_wh() - 500);
-        long other_answer2 = Math.abs(((QuestionWhichOne) currentQuestion).getActivity().getConsumption_in_wh() + 700);
-        long other_answer3 = Math.abs(((QuestionWhichOne) currentQuestion).getActivity().getConsumption_in_wh() - 200);
+        long other_answer1 = Math.abs((60 * consumption_correct_answer) / 100); // -40%
+        long other_answer2 = Math.abs((130 * consumption_correct_answer) / 100); // +30%
+        long other_answer3 = Math.abs((150 * consumption_correct_answer) / 100); // +50%
 
         if (random_correct_answer == 1)
             answer1.setText(((QuestionWhichOne) currentQuestion).getActivity().getConsumption_in_wh().toString());
@@ -342,6 +350,7 @@ public class SinglePlayerGameCtrl {
         answered = true;
         int numberOfPoints = calculatePoints(timeLeft);
         player.addScore(numberOfPoints);
+        server.updatePlayer(player);
         score.setText("Your score: " + player.getScore());
         points.setText("+" + numberOfPoints + "points");
         answer.setText("Correct answer");
@@ -554,6 +563,7 @@ public class SinglePlayerGameCtrl {
     public void awardPointsQuestionHowMuch(long number, long correct_number) {
         if (number == correct_number) {
             player.addScore(100);
+            server.updatePlayer(player);
             score.setText("Your score: " + player.getScore());
             points.setText("+100 points");
             answer.setText("Correct answer");
@@ -561,6 +571,7 @@ public class SinglePlayerGameCtrl {
         } else {
             if (number <= correct_number + (25 * correct_number) / 100 && number >= correct_number - (25 * correct_number) / 100) {
                 player.addScore(75);
+                server.updatePlayer(player);
                 score.setText("Your score: " + player.getScore());
                 points.setText("+75 points");
                 answer.setText("Almost the correct answer");
@@ -568,6 +579,7 @@ public class SinglePlayerGameCtrl {
             } else {
                 if (number <= correct_number + (50 * correct_number) / 100 && number >= correct_number - (50 * correct_number) / 100) {
                     player.addScore(50);
+                    server.updatePlayer(player);
                     score.setText("Your score: " + player.getScore());
                     points.setText("+50 points");
                     answer.setText("Not quite the correct answer");
@@ -575,6 +587,7 @@ public class SinglePlayerGameCtrl {
                 } else {
                     if (number <= correct_number + (75 * correct_number) / 100 && number >= correct_number - (75 * correct_number) / 100) {
                         player.addScore(25);
+                        server.updatePlayer(player);
                         score.setText("Your score: " + player.getScore());
                         points.setText("+25 points");
                         answer.setText("Pretty far from the correct answer");
@@ -644,6 +657,7 @@ public class SinglePlayerGameCtrl {
         if (response == ((QuestionWhichOne) currentQuestion).getActivity().getConsumption_in_wh()) {
             int numberOfPoints = calculatePoints(timeLeft);
             player.addScore(numberOfPoints);
+            server.updatePlayer(player);
             score.setText("Your score: " + player.getScore());
             points.setText("+" + numberOfPoints + "points");
             answer.setText("Correct answer");
@@ -705,13 +719,12 @@ public class SinglePlayerGameCtrl {
                         wrongAnswer();
                     timer.setText(String.valueOf(countdown));
                     scheduler.shutdown();
-                } else if (currentQ != currentQuestion || answered) {
+                } else if (currentQ != currentQuestion || answered || !server.containsPlayer(player)) {
                     scheduler.shutdown();
                 } else {
                     setTimeLeft(countdown);
                     timer.setText(String.valueOf(countdown--));
                 }
-
             }
         };
         scheduler.scheduleAtFixedRate(runnable, 0, 1, SECONDS);
@@ -724,6 +737,11 @@ public class SinglePlayerGameCtrl {
      * @param timer - an integer value representing the number of miliseconds after which the thread get executed.
      */
     public void gameOver(int timer) {
+        if(gameIsOver==false){
+            server.addPlayerToLeaderboard(player);
+            server.disconnect(player);
+        }
+        gameIsOver = true;
         Thread thread = new Thread(() -> {
 
             try {
@@ -733,6 +751,7 @@ public class SinglePlayerGameCtrl {
             }
 
             Platform.runLater(() -> {
+                server.disconnect(player);
                 mainCtrl.showSinglePlayerGameOver();
                 progressBar.setProgress(1);
             });
@@ -767,6 +786,7 @@ public class SinglePlayerGameCtrl {
      * Works the same as 'back' method from previous version.
      */
     public void leaveGame() {
+        server.disconnect(player);
         mainCtrl.showSplash();
     }
 
@@ -774,7 +794,7 @@ public class SinglePlayerGameCtrl {
      * Makes the confirmation pop-up invisible
      */
     public void disablePopUp() {
-        confirmationExit.setVisible(false);
+        confirmationExit.setOpacity(0);
         confirmationExit.setDisable(true);
     }
 
@@ -784,7 +804,7 @@ public class SinglePlayerGameCtrl {
      * TODO: trigger the same method when clicking on 'x' of the window
      */
     public void enablePopUp() {
-        confirmationExit.setVisible(true);
+        confirmationExit.setOpacity(1);
         confirmationExit.setDisable(false);
         confirmationExit.setStyle("-fx-background-color: #91e4fb; ");
     }
@@ -836,4 +856,9 @@ public class SinglePlayerGameCtrl {
 
         thread.start();
     }
+
+    public static boolean getGameIsOver(){
+        return gameIsOver;
+    }
+
 }

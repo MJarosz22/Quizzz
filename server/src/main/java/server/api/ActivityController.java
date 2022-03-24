@@ -122,7 +122,7 @@ public class ActivityController {
     @GetMapping("/random")
     public ResponseEntity<Activity> getRandom() {
         List<Activity> allAct = getAll();
-        if (allAct.size() == 0) return ResponseEntity.notFound().build();
+        if (allAct.isEmpty()) return ResponseEntity.notFound().build();
         int idx = random.nextInt(allAct.size());
         return ResponseEntity.ok(allAct.get(idx));
     }
@@ -135,7 +135,7 @@ public class ActivityController {
      * @return 200 OK - in case there is at least one activity that can be chosen, or 404 NOT_FOUND otherwise
      */
     @GetMapping("/random60")
-    public ResponseEntity<List<Optional<Activity>>> getRandom60() {
+    public ResponseEntity<List<Activity>> getRandom60() {
         //hard coded -> size of all activities - 60
         long countIds = activityRepository.count();
         if(activityRepository.count() == 0) {
@@ -143,21 +143,23 @@ public class ActivityController {
             return ResponseEntity.notFound().build();
         }
         int idRandom = (int) Math.abs(Math.random() * countIds) - 60;
-        Set<Optional<Activity>> setOfActivities = new HashSet<>();
+        Set<Activity> setOfActivities = new HashSet<>();
         int limit = 60;
         int i = 0;
+        long random_consumption = (long) ((Math.random() * (10000 - 50)) + 50);
+        long random_consumption_max = random_consumption +(50*random_consumption)/ 100;
+        long random_consumption_min = random_consumption -(50*random_consumption)/ 100;
         while (i < limit) {
             Optional<Activity> a = activityRepository.findById((long) idRandom);
-            if (a.isPresent() && !setOfActivities.contains(a)) {
-                setOfActivities.add(a);
-            } else {
-                limit++;
+            if (a.isPresent() && !setOfActivities.contains(a.get()) && a.get().getConsumption_in_wh() <= random_consumption_max
+                    && a.get().getConsumption_in_wh() >= random_consumption_min) {
+                setOfActivities.add(a.get());
+                i++;
             }
             idRandom = (int) Math.abs(Math.random() * countIds) - 60;
-            i++;
         }
-        if (setOfActivities.size() == 0) return ResponseEntity.notFound().build();
-        List<Optional<Activity>> listOfActivities = new ArrayList<>(setOfActivities);
+        if (setOfActivities.isEmpty()) return ResponseEntity.notFound().build();
+        List<Activity> listOfActivities = new ArrayList<>(setOfActivities);
         return ResponseEntity.ok(listOfActivities);
     }
 

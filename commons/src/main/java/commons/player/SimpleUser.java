@@ -5,9 +5,7 @@ import org.apache.commons.lang3.builder.EqualsBuilder;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
 import org.apache.commons.lang3.builder.ToStringBuilder;
 
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.Id;
+import javax.persistence.*;
 
 
 /**
@@ -17,6 +15,7 @@ import javax.persistence.Id;
 public class SimpleUser {
 
     @Id
+    @GeneratedValue(strategy = GenerationType.SEQUENCE)
     @Column(name = "id")
     private long id;
 
@@ -35,6 +34,11 @@ public class SimpleUser {
 
     public SimpleUser() {
 
+    }
+
+    public SimpleUser(String name, int score){
+        this.name = name;
+        this.score = score;
     }
 
     public SimpleUser(long id, String name, int gameInstanceId, String cookie) {
@@ -60,7 +64,7 @@ public class SimpleUser {
         this.id = id;
     }
 
-    public long getScore() {
+    public int getScore() {
         return score;
     }
 
