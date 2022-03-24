@@ -276,7 +276,9 @@ public class WhichOneCtrl implements QuestionCtrl {
                     });
                 }
             };
-            new Timer().schedule(timerTask, 5000);
+            new Timer().schedule(timerTask, 500);
+
+
         });
     }
 

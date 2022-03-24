@@ -120,8 +120,6 @@ public class HowMuchCtrl implements QuestionCtrl {
         //TODO ERROR HANDLING
     }
 
-
-
     @Override
     public void postQuestion(Answer answer) {
 
