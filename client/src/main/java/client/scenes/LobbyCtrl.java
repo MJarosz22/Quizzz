@@ -90,8 +90,8 @@ public class LobbyCtrl {
     public void back() {
         SimpleUser player = gameCtrl.getPlayer();
         this.sceneChanged = true;
-        if (server.disconnect(player)) ;
-        System.out.println(player.getName() + " disconnected!");
+        if (server.disconnect(player))
+            System.out.println(player.getName() + " disconnected!");
         //decreaseNumberOfPlayers();
         mainCtrl.showSplash();
     }

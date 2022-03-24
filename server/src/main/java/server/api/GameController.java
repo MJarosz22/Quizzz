@@ -221,7 +221,7 @@ public class GameController {
                     pl.setScore(player.getScore());
                     break;
                 }
-            logger.info("[GI " + (player.getGameInstanceId()) + " ] PLAYER (" + player.getId() + ") HAS NOW: " + player.getScore() + " POINTS!");
+            logger.info("[GI " + (player.getGameInstanceId()) + "] PLAYER (" + player.getId() + ") HAS NOW: " + player.getScore() + " POINTS!");
             return ResponseEntity.ok(playerToModify);
         }
 
