@@ -3,7 +3,7 @@ package client.scenes.multiplayer;
 import client.scenes.MainCtrl;
 import client.utils.ServerUtils;
 import commons.Answer;
-import commons.QuestionWhichOne;
+import commons.QuestionInsteadOf;
 import javafx.application.Platform;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
@@ -21,7 +21,7 @@ import java.io.FileNotFoundException;
 import java.util.Timer;
 import java.util.TimerTask;
 
-public class WhichOneCtrl implements QuestionCtrl {
+public class InsteadOfCtrl implements QuestionCtrl {
 
     @FXML
     private Text questionTitle, timer, score, points, answer, option4, correct_guess, questionCount;
@@ -48,13 +48,13 @@ public class WhichOneCtrl implements QuestionCtrl {
 
     private TimerTask scheduler;
 
-    private QuestionWhichOne question;
+    private QuestionInsteadOf question;
     private final ServerUtils server;
     private final MainCtrl mainCtrl;
     private final GameCtrl gameCtrl;
 
     @Inject
-    public WhichOneCtrl(ServerUtils server, MainCtrl mainCtrl, GameCtrl gameCtrl){
+    public InsteadOfCtrl(ServerUtils server, MainCtrl mainCtrl, GameCtrl gameCtrl){
         this.server = server;
         this.mainCtrl = mainCtrl;
         this.gameCtrl = gameCtrl;
@@ -65,7 +65,7 @@ public class WhichOneCtrl implements QuestionCtrl {
         }
     }
 
-    public void init(QuestionWhichOne question){
+    public void init(QuestionInsteadOf question){
         this.question = question;
         timerImage.setImage(timerImageSource);
         disablePopUp(null);
@@ -73,9 +73,9 @@ public class WhichOneCtrl implements QuestionCtrl {
         questionCount.setText("Question " + question.getNumber() + "/20");
         option4.setText(question.getActivity().getTitle());
         progressBar.setProgress(question.getNumber() / 20.0d + 0.05);
-        answer1.setText(String.valueOf(question.getAnswers()[0]));
-        answer2.setText(String.valueOf(question.getAnswers()[1]));
-        answer3.setText(String.valueOf(question.getAnswers()[2]));
+        answer1.setText(question.getAnswers()[0]);
+        answer2.setText(question.getAnswers()[1]);
+        answer3.setText(question.getAnswers()[2]);
         try {
             Image image = new Image(server.getImage(question.getActivity()));
             image4.setImage(image);

@@ -16,10 +16,7 @@
 package client;
 
 import client.scenes.*;
-import client.scenes.multiplayer.GameCtrl;
-import client.scenes.multiplayer.HowMuchCtrl;
-import client.scenes.multiplayer.MoreExpensiveCtrl;
-import client.scenes.multiplayer.WhichOneCtrl;
+import client.scenes.multiplayer.*;
 import client.utils.ServerUtils;
 import com.google.inject.Injector;
 import commons.player.SimpleUser;
@@ -58,9 +55,10 @@ public class Main extends Application {
                 "client", "scenes", "GameMoreExpensive.fxml");
         var howMuch = FXML.load(HowMuchCtrl.class, "client", "scenes", "GameHowMuch.fxml");
         var whichOne = FXML.load(WhichOneCtrl.class, "client", "scenes", "GameWhichOne.fxml");
+        var insteadOf = FXML.load(InsteadOfCtrl.class, "client", "scenes", "GameInsteadOf.fxml");
 
         mainCtrl.initialize(primaryStage, home, single, singleGame, singleGameOver, multi,
-                leaderboard, lobby, gameCtrl, moreExpensive, howMuch, whichOne, overview, add);
+                leaderboard, lobby, gameCtrl, moreExpensive, howMuch, whichOne, insteadOf, overview, add);
         primaryStage.setOnCloseRequest(event -> {
             Alert alert = new Alert(Alert.AlertType.CONFIRMATION, "Do you want to close the game?", ButtonType.YES, ButtonType.NO);
             ButtonType result = alert.showAndWait().orElse(ButtonType.NO);
