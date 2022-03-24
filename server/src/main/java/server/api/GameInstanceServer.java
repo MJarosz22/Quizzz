@@ -161,10 +161,15 @@ public class GameInstanceServer extends GameInstance {
     public void stopGameInstance() {
         if (gameController.getServerNames().get(serverName) == getId())
             gameController.createNewMultiplayerLobby(this.serverName);
-        countdownTimer.cancel();
-        questionTask.cancel();
-        questionTimer.cancel();
-        logger.info("[GI " + getId() + "] GameInstance stopped!");
+        try {
+            countdownTimer.cancel();
+            questionTask.cancel();
+            questionTimer.cancel();
+        }catch (NullPointerException e){
+            logger.info("Timer has already stopped");
+        }finally {
+            logger.info("[GI " + getId() + "] GameInstance stopped!");
+        }
     }
 
     @Override
