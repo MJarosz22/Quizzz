@@ -81,11 +81,11 @@ public class Main extends Application {
         var gameCtrl = INJECTOR.getInstance(GameCtrl.class);
         SimpleUser player = gameCtrl.getPlayer();
         ServerUtils server = new ServerUtils();
-        if (player != null) //TODO IS THIS THE RIGHT IF STATEMENT TO CHECK WHETHER PLAYER EXISTS?
-            gameCtrl.disconnect();
+        //if (player != null) //TODO IS THIS THE RIGHT IF STATEMENT TO CHECK WHETHER PLAYER EXISTS?
+            //gameCtrl.disconnect();
 
-//        if (server.containsPlayer(player) && SinglePlayerGameCtrl.getGameIsOver() == false )
-//            server.disconnect(player); //SINGLEPLAYER IMPL (DON'T KNOW HOW IT CORRELATES WITH MP)
+        if (server.containsPlayer(player) && SinglePlayerGameCtrl.getGameIsOver() == false )
+           server.disconnect(player); //SINGLEPLAYER IMPL (DON'T KNOW HOW IT CORRELATES WITH MP)
     }
 
 }
