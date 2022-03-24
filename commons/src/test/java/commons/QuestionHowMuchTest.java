@@ -61,6 +61,24 @@ public class QuestionHowMuchTest {
     }
 
     @Test
+    public void getAnswerTest() {
+        Activity activity = new Activity(
+                "Activity-ID", "00/test.png", "Title", 6L, "https://www.google.com"
+        );
+        QuestionHowMuch q = new QuestionHowMuch(activity, 2);
+        assertEquals(6L, q.getAnswer());
+    }
+
+    @Test
+    public void getCorrectAnswerTest() {
+        Activity activity = new Activity(
+                "Activity-ID", "00/test.png", "Title", 123L, "https://www.google.com"
+        );
+        QuestionHowMuch q = new QuestionHowMuch(activity, 1);
+        assertEquals(123L, q.getAnswer());
+    }
+
+    @Test
     public void equalsHashCode() {
         Activity activity = new Activity(
                 "Activity-ID", "00/test.png", "Title", 6L, "https://www.google.com"

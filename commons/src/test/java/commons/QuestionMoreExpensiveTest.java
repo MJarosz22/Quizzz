@@ -118,6 +118,24 @@ public class QuestionMoreExpensiveTest {
     }
 
     @Test
+    public void getCorrectAnswerTest() {
+        Activity activity1 = new Activity(
+                "Activity-ID-1", "00/test.png", "title1", 6L, "https://www.google.com"
+        );
+        Activity activity2 = new Activity(
+                "Activity-ID-2", "00/test.png", "title3", 7L, "https://www.wiki.com"
+        );
+        Activity activity3 = new Activity(
+                "Activity-ID-3", "00/test.png", "title3", 8L, "https://www.brightspace.com"
+        );
+
+        Activity[] activities = new Activity[]{activity1, activity2, activity3};
+        QuestionMoreExpensive q = new QuestionMoreExpensive(activities, 2);
+        assertEquals(3L, q.getCorrectAnswer());
+
+    }
+
+    @Test
     public void equalsHashCode() {
         Activity activity1 = new Activity(
                 "Activity-ID-1", "00/test.png", "title1", 6L, "https://www.google.com"

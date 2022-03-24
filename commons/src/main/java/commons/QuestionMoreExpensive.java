@@ -28,10 +28,23 @@ public class QuestionMoreExpensive extends Question {
     public QuestionMoreExpensive() {
     }
 
+    /**
+     * Getter for the 3 activities provided to the user as options. He/she will be asked to choose which one he/she considers
+     * to consume more energy
+     *
+     * @return a list (fixed size 3) of Activity object instances, from which the user is asked to choose the
+     * one that he/she thinks is the most energy-consuming
+     */
     public Activity[] getActivities() {
         return this.activities;
     }
 
+    /**
+     * Setter for the 3 activities provided to the user as options
+     *
+     * @param activities a list (fixed size 3) of Activity object instances, from which the user is asked to choose the
+     *                   one that he/she thinks is the most energy-consuming
+     */
     public void setActivities(Activity[] activities) {
         this.activities = activities;
     }
@@ -50,11 +63,18 @@ public class QuestionMoreExpensive extends Question {
         return max;
     }
 
+    /**
+     * Additional methods that returns what number is assigned to the highest consumption activity from the 3 selected
+     * 1 for the 1st option, 2 for the 2nd option and 3 for the 3rd option.
+     * NOTE: 'activities' array was indexed starting from 0, (i+1) MUST have been returned instead.
+     *
+     * @return Index of the option that relates to the highest consumption activity
+     */
     @Override
     public long getCorrectAnswer() {
         Activity maxActivity = Arrays.stream(activities).max(Comparator.comparingLong(Activity::getConsumption_in_wh)).get();
-        for(int i = 0; i < 3; i++){
-            if (activities[i].equals(maxActivity)) return i+1;
+        for (int i = 0; i < 3; i++) {
+            if (activities[i].equals(maxActivity)) return i + 1;
         }
         return 0;
     }

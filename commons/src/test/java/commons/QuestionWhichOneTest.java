@@ -61,6 +61,28 @@ public class QuestionWhichOneTest {
     }
 
     @Test
+    public void getAnswerTest() {
+        Activity activity = new Activity(
+                "Activity-ID", "00/test.png", "Title", 6L, "https://www.google.com"
+        );
+        QuestionWhichOne q = new QuestionWhichOne(activity, 0);
+        assertEquals(6L, q.getAnswer());
+    }
+
+    // Getter and setter cannot be tested separately, as the answers are generated randomly. Therefore, we do not what to expect
+    // for the getter.
+    @Test
+    public void bothGetAndSetAnswersTest() {
+        Activity activity = new Activity(
+                "Activity-ID", "00/test.png", "Title", 6L, "https://www.google.com"
+        );
+        QuestionWhichOne q = new QuestionWhichOne(activity, 0);
+        long[] answers = new long[]{1L, 5L, 12L};
+        q.setAnswers(answers);
+        assertEquals(answers, q.getAnswers());
+    }
+
+    @Test
     public void equalsHashCode() {
         Activity activity = new Activity(
                 "Activity-ID", "00/test.png", "Title", 6L, "https://www.google.com"
