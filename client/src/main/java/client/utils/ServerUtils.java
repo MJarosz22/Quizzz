@@ -2,6 +2,8 @@ package client.utils;
 
 import commons.Activity;
 import commons.Answer;
+import commons.Emoji;
+import commons.GameState;
 import commons.player.SimpleUser;
 import communication.RequestToJoin;
 import jakarta.ws.rs.NotFoundException;
@@ -10,12 +12,18 @@ import jakarta.ws.rs.client.ClientBuilder;
 import jakarta.ws.rs.client.Entity;
 import jakarta.ws.rs.core.GenericType;
 import jakarta.ws.rs.core.Response;
+import javafx.scene.control.Button;
 import org.glassfish.jersey.client.ClientConfig;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.messaging.converter.MappingJackson2MessageConverter;
 import org.springframework.messaging.simp.stomp.StompFrameHandler;
 import org.springframework.messaging.simp.stomp.StompHeaders;
 import org.springframework.messaging.simp.stomp.StompSession;
 import org.springframework.messaging.simp.stomp.StompSessionHandlerAdapter;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.socket.client.standard.StandardWebSocketClient;
 import org.springframework.web.socket.messaging.WebSocketStompClient;
 
@@ -41,6 +49,16 @@ public class ServerUtils {
                 .target(SERVER).path("api/gameinstance/ " + player.getGameInstanceId() + "/players") //
                 .request(APPLICATION_JSON).cookie("user-id", player.getCookie()) //
                 .accept(APPLICATION_JSON) //
+                .get(new GenericType<>() {
+                });
+    }
+
+    public String getCurrentQType(int gameInstanceId) {
+        Client client = ClientBuilder.newClient(new ClientConfig());
+        return client
+                .target(SERVER).path("api/gameinstance/ " + gameInstanceId + "/getCurrentQType")
+                .request(APPLICATION_JSON)
+                .accept(APPLICATION_JSON)
                 .get(new GenericType<>() {
                 });
     }
@@ -99,6 +117,7 @@ public class ServerUtils {
                 .accept(APPLICATION_JSON)
                 .put(Entity.entity(activity, APPLICATION_JSON), Activity.class);
     }
+
 
     public boolean disconnect(SimpleUser player) {
         Client client = ClientBuilder.newClient(new ClientConfig());
@@ -213,6 +232,7 @@ public class ServerUtils {
         }
     }
 
+
     public <T> void registerForMessages(String dest, Class<T> type, Consumer<T> consumer) {
         session.subscribe(dest, new StompFrameHandler() {
             @Override
@@ -237,6 +257,16 @@ public class ServerUtils {
                 .post(Entity.entity(answer, APPLICATION_JSON), Boolean.class);
     }
 
+    public void sendEmoji(SimpleUser player, String emoji){
+        ClientBuilder
+            .newClient(new ClientConfig())
+            .target(SERVER)
+            .path("api/gameinstance/" + player.getGameInstanceId() + "/emoji")
+            .request(APPLICATION_JSON).cookie("user-id", player.getCookie())
+            .accept(APPLICATION_JSON)
+                .post(Entity.entity(new Emoji(emoji), APPLICATION_JSON));
+    }
+
     public void disconnectWebsocket() {
         session.disconnect();
     }
@@ -244,6 +274,7 @@ public class ServerUtils {
     public void send(String dest, Object o) {
         session.send(dest, o);
     }
+
 
         // ------------------------------------ ADDITIONAL METHODS ------------------------------------ //
 
@@ -269,4 +300,6 @@ public class ServerUtils {
                 .accept(APPLICATION_JSON)
                 .delete(new GenericType<>(){});
     }
+
+
 }

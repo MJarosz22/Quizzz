@@ -1,9 +1,6 @@
 package server.api;
 
-import commons.Answer;
-import commons.GameInstance;
-import commons.GameState;
-import commons.Question;
+import commons.*;
 import commons.player.Player;
 import commons.player.SimpleUser;
 import org.slf4j.Logger;
@@ -79,6 +76,11 @@ public class GameInstanceController {
         return ResponseEntity.ok(gameInstances.get(gameInstanceId).disconnectPlayer(removePlayer));
     }
 
+    @GetMapping("/{gameInstanceId}/getCurrentQType")
+    public ResponseEntity<String> getCurrentQType(@PathVariable int gameInstanceId) {
+        if (gameInstanceId < 0 || gameInstanceId >= gameInstances.size()) return ResponseEntity.badRequest().build();
+        return ResponseEntity.ok(gameInstances.get(gameInstanceId).getCurrentQuestion().getClass().getName());
+    }
 
     @GetMapping("/{gameInstanceId}/question")
     public ResponseEntity<Question> getQuestion(@PathVariable int gameInstanceId,
@@ -111,6 +113,8 @@ public class GameInstanceController {
         return ResponseEntity.ok(gameInstance.answerQuestion(player, answer));
     }
 
+
+
     @GetMapping("/{gameInstanceId}/correctanswer")
     public ResponseEntity<Long> getCorrectAnswer(@PathVariable int gameInstanceId,
                                                  @CookieValue(name = "user-id", defaultValue = "null") String cookie) {
@@ -130,6 +134,18 @@ public class GameInstanceController {
         logger.info("[GI " + (gameInstanceId) + "] Game is starting in 5 seconds...");
         gameInstances.get(gameInstanceId).startCountdown();
 
+        return ResponseEntity.ok(true);
+    }
+
+    @PostMapping("/{gameInstanceId}/emoji")
+    public ResponseEntity<Boolean> sendEmoji(@PathVariable int gameInstanceId,
+                                             @CookieValue(name = "user-id", defaultValue = "null") String cookie,
+                                             @RequestBody Emoji emoji){
+        if (gameInstances.get(gameInstanceId).getState().equals(GameState.STARTING)) return ResponseEntity.ok(true);
+        Player reqPlayer = getPlayerFromGameInstance(gameInstanceId, cookie);
+        if (reqPlayer == null) return ResponseEntity.status(HttpStatus.FORBIDDEN).build();
+        gameInstances.get(gameInstanceId).sendEmoji(emoji);
+        logger.info("Emoji received: " + emoji);
         return ResponseEntity.ok(true);
     }
 

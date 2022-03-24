@@ -47,6 +47,12 @@ public class GameCtrl {
             players = server.getPlayers(player);
             Platform.runLater(() -> mainCtrl.getLobbyCtrl().updatePlayers(players));
         });
+
+        subscribe("/topic/" + player.getGameInstanceId() + "/emoji", Emoji.class, emoji -> {
+            System.out.println(emoji.getType());
+            Platform.runLater(() -> mainCtrl.getCurrentQuestionScene().showEmoji(emoji.getType()));
+        });
+
         subscribe("/topic/" + player.getGameInstanceId() + "/postquestion", Answer.class, answer ->
                 Platform.runLater(() -> mainCtrl.getCurrentQuestionScene().postQuestion(answer)));
 
