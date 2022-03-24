@@ -65,6 +65,11 @@ public class InsteadOfCtrl implements QuestionCtrl {
         }
     }
 
+    /**
+     * Initiates the Instead Of question, sets the scene and starts the timer
+     *
+     * @param question
+     */
     public void init(QuestionInsteadOf question){
         this.question = question;
         timerImage.setImage(timerImageSource);
@@ -123,6 +128,11 @@ public class InsteadOfCtrl implements QuestionCtrl {
         confirmationExit.setStyle("-fx-background-color: #91e4fb; ");
     }
 
+    /**
+     * Sends the answer to the server and starts a 5-second countdown
+     *
+     * @param answer
+     */
     @Override
     public void postQuestion(Answer answer) {
         switch (answer.getAnswer().intValue()){
