@@ -7,6 +7,7 @@ import commons.QuestionInsteadOf;
 import javafx.application.Platform;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
+import javafx.scene.control.Button;
 import javafx.scene.control.ProgressBar;
 import javafx.scene.control.RadioButton;
 import javafx.scene.image.Image;
@@ -36,7 +37,10 @@ public class InsteadOfCtrl implements QuestionCtrl {
     private RadioButton answer1, answer2, answer3;
 
     @FXML
-    private ImageView image4;
+    private Button heart, cry, laugh, angry, glasses;
+
+    @FXML
+    private ImageView image4, heartPic, cryPic, laughPic, angryPic, glassesPic;
 
     @FXML
     private ProgressBar progressBar;
@@ -54,7 +58,7 @@ public class InsteadOfCtrl implements QuestionCtrl {
     private final GameCtrl gameCtrl;
 
     @Inject
-    public InsteadOfCtrl(ServerUtils server, MainCtrl mainCtrl, GameCtrl gameCtrl){
+    public InsteadOfCtrl(ServerUtils server, MainCtrl mainCtrl, GameCtrl gameCtrl) {
         this.server = server;
         this.mainCtrl = mainCtrl;
         this.gameCtrl = gameCtrl;
@@ -81,6 +85,9 @@ public class InsteadOfCtrl implements QuestionCtrl {
         answer1.setText(question.getAnswers()[0]);
         answer2.setText(question.getAnswers()[1]);
         answer3.setText(question.getAnswers()[2]);
+        answer1.setDisable(false);
+        answer2.setDisable(false);
+        answer3.setDisable(false);
         try {
             Image image = new Image(server.getImage(question.getActivity()));
             image4.setImage(image);
@@ -135,14 +142,29 @@ public class InsteadOfCtrl implements QuestionCtrl {
      */
     @Override
     public void postQuestion(Answer answer) {
-        switch (answer.getAnswer().intValue()){
+        switch (answer.getAnswer().intValue()) {
             case 1:
+                answer1.setDisable(true);
+                answer2.setDisable(true);
+                answer3.setDisable(true);
                 answer1.setStyle("-fx-background-color: green");
+                answer2.setStyle("-fx-background-color: red");
+                answer3.setStyle("-fx-background-color: red");
                 break;
             case 2:
+                answer1.setDisable(true);
+                answer2.setDisable(true);
+                answer3.setDisable(true);
+                answer1.setStyle("-fx-background-color: red");
                 answer2.setStyle("-fx-background-color: green");
+                answer3.setStyle("-fx-background-color: red");
                 break;
             case 3:
+                answer1.setDisable(true);
+                answer2.setDisable(true);
+                answer3.setDisable(true);
+                answer1.setStyle("-fx-background-color: red");
+                answer2.setStyle("-fx-background-color: red");
                 answer3.setStyle("-fx-background-color: green");
                 break;
             default:
