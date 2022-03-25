@@ -40,13 +40,19 @@ public class GameCtrl {
         server.disconnect(player);
     }
 
-    private void subscribeToWebsockets(){
+    private void subscribeToWebsockets() {
         subscribe("/topic/" + player.getGameInstanceId() + "/time", Integer.class, time ->
                 Platform.runLater(() -> mainCtrl.getLobbyCtrl().setCountdown(time)));
         subscribe("/topic/" + player.getGameInstanceId() + "/players", Integer.class, amountOfPlayers -> {
             players = server.getPlayers(player);
             Platform.runLater(() -> mainCtrl.getLobbyCtrl().updatePlayers(players));
         });
+
+        subscribe("/topic/" + player.getGameInstanceId() + "/emoji", Emoji.class, emoji -> {
+            System.out.println(emoji.getType());
+            Platform.runLater(() -> mainCtrl.getCurrentQuestionScene().showEmoji(emoji.getType()));
+        });
+
         subscribe("/topic/" + player.getGameInstanceId() + "/postquestion", Answer.class, answer ->
                 Platform.runLater(() -> mainCtrl.getCurrentQuestionScene().postQuestion(answer)));
         subscribe("/topic/" + player.getGameInstanceId() + "/disconnectplayer", SimpleUser.class, playerDisconnect ->

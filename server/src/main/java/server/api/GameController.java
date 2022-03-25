@@ -162,7 +162,7 @@ public class GameController {
     /**
      * Additional method that returns all the players that are currently playing in a given game instance
      *
-     * @param gameInstanceId ID of GameInstanc
+     * @param gameInstanceId ID of GameInstance
      * @return ResponseEntity object that returns 400 BAD SYNTAX if the gameInstanceId is not in the appropriate range, or
      * 200 STATUS OK with a body consisting of the list of currently playing users from a game uniquely identified
      * by gameInstanceID

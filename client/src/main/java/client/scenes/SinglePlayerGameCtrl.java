@@ -97,7 +97,7 @@ public class SinglePlayerGameCtrl {
                 return;
             }
             setTimerImage(timerImage);
-            progressBar.setProgress(-0.05);
+            progressBar.setProgress(0);
             score.setText("Your score: 0");
             roundCounter = 1;
             gameIsOver = false;
@@ -288,7 +288,7 @@ public class SinglePlayerGameCtrl {
     /**
      * Randomly choose which one of the three RadioButtons(answer1, answer2, answer3) will hold the correct answer
      * The other 2 wrong answers are somewhat randomly generated
-     * * TODO: Work on a 'smarter' randoml generation of wrong answers
+     * * TODO: Work on a 'smarter' random generation of wrong answers
      */
     private void randomlyChooseCorrectAnswerButton() {
         Random random = new Random();
@@ -516,7 +516,7 @@ public class SinglePlayerGameCtrl {
     }
 
     /**
-     * Sets buttons as eanbled / disabled, depending on the value of parameter.
+     * Sets buttons as enabled / disabled, depending on the value of parameter.
      *
      * @param value boolean value that disables our buttons if 'true', or makes them functional otherwise
      */
@@ -916,7 +916,9 @@ public class SinglePlayerGameCtrl {
         confirmationExit.setStyle("-fx-background-color: #91e4fb; ");
     }
 
-    public static boolean getGameIsOver() {
+
+
+    public static boolean getGameIsOver(){
         return gameIsOver;
     }
 

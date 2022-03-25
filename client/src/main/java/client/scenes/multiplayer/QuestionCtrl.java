@@ -9,5 +9,8 @@ public interface QuestionCtrl {
 
     public void resetUI();
 
+    public void showEmoji(String type);
+
     public void showDisconnect(SimpleUser playerDisconnect);
+
 }

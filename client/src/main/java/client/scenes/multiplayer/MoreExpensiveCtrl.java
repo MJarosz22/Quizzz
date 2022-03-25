@@ -22,7 +22,7 @@ import java.io.FileNotFoundException;
 import java.util.Timer;
 import java.util.TimerTask;
 
-public class MoreExpensiveCtrl implements QuestionCtrl{
+public class MoreExpensiveCtrl implements QuestionCtrl {
 
     @FXML
     private Text questionTitle, timer, score, points, answer, correct_guess, questionCount, disconnect;
@@ -34,11 +34,11 @@ public class MoreExpensiveCtrl implements QuestionCtrl{
     private ImageView timerImage;
 
     @FXML
-    private Button option1Button, option2Button, option3Button;
+    private Button option1Button, option2Button, option3Button, heart, cry, laugh, angry, glasses;
 
 
     @FXML
-    private ImageView image1, image2, image3;
+    private ImageView image1, image2, image3, heartPic, cryPic, laughPic, angryPic, glassesPic;
 
     @FXML
     private ProgressBar progressBar;
@@ -72,6 +72,9 @@ public class MoreExpensiveCtrl implements QuestionCtrl{
         this.question = question;
         timerImage.setImage(timerImageSource);
         disablePopUp(null);
+        option1Button.setDisable(false);
+        option2Button.setDisable(false);
+        option3Button.setDisable(false);
         questionTitle.setText(question.getTitle());
         questionCount.setText("Question " + question.getNumber() + "/20");
         option1Button.setText(question.getActivities()[0].getTitle());
@@ -91,7 +94,7 @@ public class MoreExpensiveCtrl implements QuestionCtrl{
         }
         scheduler = new TimerTask() {
             @Override
-            public void run () {
+            public void run() {
                 int timeLeft = server.getTimeLeft(gameCtrl.getPlayer());
                 Platform.runLater(() -> {
                     timer.setText(String.valueOf(Math.round(timeLeft / 1000d)));
@@ -131,15 +134,30 @@ public class MoreExpensiveCtrl implements QuestionCtrl{
     }
 
     @Override
-    public void postQuestion(Answer answer) {
-        switch (answer.getAnswer().intValue()){
+    public void postQuestion(Answer answer){
+        switch (answer.getAnswer().intValue()) {
             case 1:
+                option1Button.setDisable(true);
+                option2Button.setDisable(true);
+                option3Button.setDisable(true);
                 option1Button.setStyle("-fx-background-color: green");
+                option2Button.setStyle("-fx-background-color: red");
+                option3Button.setStyle("-fx-background-color: red");
                 break;
             case 2:
+                option1Button.setDisable(true);
+                option2Button.setDisable(true);
+                option3Button.setDisable(true);
+                option1Button.setStyle("-fx-background-color: red");
                 option2Button.setStyle("-fx-background-color: green");
+                option3Button.setStyle("-fx-background-color: red");
                 break;
             case 3:
+                option1Button.setDisable(true);
+                option2Button.setDisable(true);
+                option3Button.setDisable(true);
+                option1Button.setStyle("-fx-background-color: red");
+                option2Button.setStyle("-fx-background-color: red");
                 option3Button.setStyle("-fx-background-color: green");
                 break;
             default:
@@ -161,6 +179,114 @@ public class MoreExpensiveCtrl implements QuestionCtrl{
         option3Button.setStyle("");
     }
 
+    /**
+<<<<<<< client/src/main/java/client/scenes/multiplayer/MoreExpensiveCtrl.java
+     * Method to select heart emoji
+     */
+
+    public void heartBold() {
+        server.sendEmoji(gameCtrl.getPlayer(), "heart");
+    }
+
+    /**
+     * Method to select glasses emoji
+     */
+
+    public void glassesBold() {
+        server.sendEmoji(gameCtrl.getPlayer(), "glasses");
+    }
+
+    /**
+     * Method to select angry emoji
+     */
+
+    public void angryBold() {
+        server.sendEmoji(gameCtrl.getPlayer(), "angry");
+    }
+
+    /**
+     * Method to select crying emoji
+     */
+
+    public void cryBold() {
+        server.sendEmoji(gameCtrl.getPlayer(), "cry");
+    }
+
+    /**
+     * Method to select laughing emoji
+     */
+
+    public void laughBold() {
+        System.out.println("laugh should be sent");
+        server.sendEmoji(gameCtrl.getPlayer(), "laugh");
+    }
+
+    /**
+     * Switch case method to call from Websockets that associates an id with its button and a picture
+     * and makes them bold
+     *
+     * @param id id of button (and image to increase size
+     */
+    public void emojiSelector(String id){
+        switch (id) {
+            case "heart":
+                emojiBold(heart, heartPic);
+                break;
+            case "glasses":
+                emojiBold(glasses, glassesPic);
+                break;
+            case "angry":
+                emojiBold(angry, angryPic);
+                break;
+            case "cry":
+                emojiBold(cry, cryPic);
+                break;
+            case "laugh":
+                emojiBold(laugh, laughPic);
+                break;
+            default:
+                System.out.println("INVALID EMOJI");
+        }
+    }
+
+
+    /**
+     * Method that boldens (enlargens) the emoji clicked, then shrinks it back into position
+     *
+     * @param emojiButton The emoji button to be enlarged
+     * @param emojiPic The corresponding image associated with that button
+     */
+    public void emojiBold(Button emojiButton, ImageView emojiPic) {
+        Platform.runLater(() -> {
+            emojiButton.setStyle("-fx-pref-height: 50; -fx-pref-width: 50; -fx-background-color: transparent; ");
+            emojiButton.setLayoutX(emojiButton.getLayoutX() - 10.0);
+            emojiButton.setLayoutY(emojiButton.getLayoutY() - 10.0);
+            emojiButton.setMouseTransparent(true);
+            emojiPic.setFitWidth(50);
+            emojiPic.setFitHeight(50);
+
+            TimerTask timerTask = new TimerTask() {
+                @Override
+                public void run() {
+                    Platform.runLater(()->{
+                        emojiButton.setStyle("-fx-pref-height: 30; -fx-pref-width: 30; -fx-background-color: transparent; ");
+                        emojiButton.setLayoutX(emojiButton.getLayoutX() + 10.0);
+                        emojiButton.setLayoutY(emojiButton.getLayoutY() + 10.0);
+                        emojiButton.setMouseTransparent(false);
+                        emojiPic.setFitWidth(30);
+                        emojiPic.setFitHeight(30);
+                    });
+                }
+            };
+            new Timer().schedule(timerTask, 5000);
+        });
+    }
+
+    @Override
+    public void showEmoji(String type) {
+        emojiSelector(type);
+    }
+    
     /**
      * Displays a message when another player disconnects
      * @param disconnectPlayer
