@@ -25,8 +25,8 @@ public class GameCtrl {
         this.mainCtrl = mainCtrl;
     }
 
-    public void start(String name) {
-        player = server.addPlayer(new RequestToJoin(name, GameInstance.MULTI_PLAYER));
+    public void start(String name, String serverName) {
+        player = server.addPlayer(new RequestToJoin(name, serverName, GameInstance.MULTI_PLAYER));
         server.initWebsocket();
         subscribeToWebsockets();
     }
