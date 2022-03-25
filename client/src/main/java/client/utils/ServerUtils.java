@@ -38,7 +38,7 @@ public class ServerUtils {
     public List<SimpleUser> getPlayers(SimpleUser player) {
         Client client = ClientBuilder.newClient(new ClientConfig());
         return client //
-                .target(SERVER).path("api/gameinstance/ " + player.getGameInstanceId() + "/players") //
+                .target(SERVER).path("api/gameinstance/" + player.getGameInstanceId() + "/players") //
                 .request(APPLICATION_JSON).cookie("user-id", player.getCookie()) //
                 .accept(APPLICATION_JSON) //
                 .get(new GenericType<>() {
@@ -105,7 +105,7 @@ public class ServerUtils {
     public boolean disconnect(SimpleUser player) {
         Client client = ClientBuilder.newClient(new ClientConfig());
         return client //
-                .target(SERVER).path("api/gameinstance/ " + player.getGameInstanceId() + "/disconnect") //
+                .target(SERVER).path("api/gameinstance/" + player.getGameInstanceId() + "/disconnect") //
                 .request(APPLICATION_JSON).cookie("user-id", player.getCookie()) //
                 .accept(APPLICATION_JSON) //
                 .delete(new GenericType<>() {
@@ -154,7 +154,7 @@ public class ServerUtils {
     public static List<SimpleUser> allPlayers(int gIId) {
         Client client = ClientBuilder.newClient(new ClientConfig());
         return client //
-                .target(SERVER).path("api/game/ " + gIId + "/allPlayers") //
+                .target(SERVER).path("api/game/" + gIId + "/allPlayers") //
                 .request(APPLICATION_JSON) //
                 .accept(APPLICATION_JSON) //
                 .get(new GenericType<>() {
@@ -164,7 +164,17 @@ public class ServerUtils {
     public static List<SimpleUser> connectedPlayers(int gIId) {
         Client client = ClientBuilder.newClient(new ClientConfig());
         return client //
-                .target(SERVER).path("api/game/ " + gIId + "/connectedPlayers") //
+                .target(SERVER).path("api/game/" + gIId + "/connectedPlayers") //
+                .request(APPLICATION_JSON) //
+                .accept(APPLICATION_JSON) //
+                .get(new GenericType<>() {
+                });
+    }
+
+    public static List<String> connectedPlayersOnServer(String serverName) {
+        Client client = ClientBuilder.newClient(new ClientConfig());
+        return client //
+                .target(SERVER).path("api/game/" + serverName + "/connectedPlayersOnServer") //
                 .request(APPLICATION_JSON) //
                 .accept(APPLICATION_JSON) //
                 .get(new GenericType<>() {
@@ -182,7 +192,7 @@ public class ServerUtils {
     public boolean startGame(SimpleUser player) {
         Client client = ClientBuilder.newClient(new ClientConfig());
         return client //
-                .target(SERVER).path("api/gameinstance/ " + player.getGameInstanceId() + "/start") //
+                .target(SERVER).path("api/gameinstance/" + player.getGameInstanceId() + "/start") //
                 .request(APPLICATION_JSON).cookie("user-id", player.getCookie()) //
                 .accept(APPLICATION_JSON) //
                 .get(new GenericType<>() {
@@ -192,7 +202,7 @@ public class ServerUtils {
     public int getTimeLeft(SimpleUser player) {
         Client client = ClientBuilder.newClient(new ClientConfig());
         return client //
-                .target(SERVER).path("api/gameinstance/ " + player.getGameInstanceId() + "/timeleft") //
+                .target(SERVER).path("api/gameinstance/" + player.getGameInstanceId() + "/timeleft") //
                 .request(APPLICATION_JSON).cookie("user-id", player.getCookie()) //
                 .accept(APPLICATION_JSON) //
                 .get(new GenericType<>() {
