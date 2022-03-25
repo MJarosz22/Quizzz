@@ -39,7 +39,7 @@ public class ServerUtils {
     public List<SimpleUser> getPlayers(SimpleUser player) {
         Client client = ClientBuilder.newClient(new ClientConfig());
         return client //
-                .target(SERVER).path("api/gameinstance/ " + player.getGameInstanceId() + "/players") //
+                .target(SERVER).path("api/gameinstance/" + player.getGameInstanceId() + "/players") //
                 .request(APPLICATION_JSON).cookie("user-id", player.getCookie()) //
                 .accept(APPLICATION_JSON) //
                 .get(new GenericType<>() {
@@ -64,7 +64,8 @@ public class ServerUtils {
                 .get(new GenericType<>() {
                 });
     }
-    public List<Activity> getActivitiesRandomly() throws NotFoundException{
+
+    public List<Activity> getActivitiesRandomly() throws NotFoundException {
         return ClientBuilder.newClient(new ClientConfig())
                 .target(SERVER).path("api/activities/random60")
                 .request(APPLICATION_JSON)
@@ -79,8 +80,9 @@ public class ServerUtils {
                 .target(SERVER).path("api/game/activities/" + activity.getImage_path())
                 .request("image/*")
                 .accept("image/*")
-                .get(new GenericType<>() {});
-        if(response.getStatus() == 404) throw new FileNotFoundException();
+                .get(new GenericType<>() {
+                });
+        if (response.getStatus() == 404) throw new FileNotFoundException();
         return response.readEntity(InputStream.class);
     }
 
@@ -115,14 +117,14 @@ public class ServerUtils {
     public boolean disconnect(SimpleUser player) {
         Client client = ClientBuilder.newClient(new ClientConfig());
         return client //
-                .target(SERVER).path("api/gameinstance/ " + player.getGameInstanceId() + "/disconnect") //
+                .target(SERVER).path("api/gameinstance/" + player.getGameInstanceId() + "/disconnect") //
                 .request(APPLICATION_JSON).cookie("user-id", player.getCookie()) //
                 .accept(APPLICATION_JSON) //
                 .delete(new GenericType<>() {
                 });
     }
 
-    public SimpleUser addPlayerToLeaderboard(SimpleUser player){
+    public SimpleUser addPlayerToLeaderboard(SimpleUser player) {
         Client client = ClientBuilder.newClient(new ClientConfig());
         return client
                 .target(SERVER).path("api/leaderboard/addPlayer")
@@ -164,7 +166,7 @@ public class ServerUtils {
     public static List<SimpleUser> allPlayers(int gIId) {
         Client client = ClientBuilder.newClient(new ClientConfig());
         return client //
-                .target(SERVER).path("api/game/ " + gIId + "/allPlayers") //
+                .target(SERVER).path("api/game/" + gIId + "/allPlayers") //
                 .request(APPLICATION_JSON) //
                 .accept(APPLICATION_JSON) //
                 .get(new GenericType<>() {
@@ -174,7 +176,17 @@ public class ServerUtils {
     public static List<SimpleUser> connectedPlayers(int gIId) {
         Client client = ClientBuilder.newClient(new ClientConfig());
         return client //
-                .target(SERVER).path("api/game/ " + gIId + "/connectedPlayers") //
+                .target(SERVER).path("api/game/" + gIId + "/connectedPlayers") //
+                .request(APPLICATION_JSON) //
+                .accept(APPLICATION_JSON) //
+                .get(new GenericType<>() {
+                });
+    }
+
+    public static List<String> connectedPlayersOnServer(String serverName) {
+        Client client = ClientBuilder.newClient(new ClientConfig());
+        return client //
+                .target(SERVER).path("api/game/" + serverName + "/connectedPlayersOnServer") //
                 .request(APPLICATION_JSON) //
                 .accept(APPLICATION_JSON) //
                 .get(new GenericType<>() {
@@ -192,19 +204,21 @@ public class ServerUtils {
     public boolean startGame(SimpleUser player) {
         Client client = ClientBuilder.newClient(new ClientConfig());
         return client //
-                .target(SERVER).path("api/gameinstance/ " + player.getGameInstanceId() + "/start") //
+                .target(SERVER).path("api/gameinstance/" + player.getGameInstanceId() + "/start") //
                 .request(APPLICATION_JSON).cookie("user-id", player.getCookie()) //
                 .accept(APPLICATION_JSON) //
-                .get(new GenericType<>() {});
+                .get(new GenericType<>() {
+                });
     }
 
     public int getTimeLeft(SimpleUser player) {
         Client client = ClientBuilder.newClient(new ClientConfig());
         return client //
-                .target(SERVER).path("api/gameinstance/ " + player.getGameInstanceId() + "/timeleft") //
+                .target(SERVER).path("api/gameinstance/" + player.getGameInstanceId() + "/timeleft") //
                 .request(APPLICATION_JSON).cookie("user-id", player.getCookie()) //
                 .accept(APPLICATION_JSON) //
-                .get(new GenericType<>() {});
+                .get(new GenericType<>() {
+                });
     }
 
     public void initWebsocket() {
@@ -240,6 +254,7 @@ public class ServerUtils {
             }
         });
     }
+
     public boolean submitAnswer(SimpleUser player, Answer answer) {
         return ClientBuilder
                 .newClient(new ClientConfig())
@@ -285,13 +300,24 @@ public class ServerUtils {
         return (contains.isPresent());
     }
 
+    public List<String> availableServers() {
+        return ClientBuilder.newClient(new ClientConfig())
+                .target(SERVER)
+                .path("api/game/available-servers")
+                .request(APPLICATION_JSON)
+                .accept(APPLICATION_JSON)
+                .get(new GenericType<>() {
+                });
+    }
+
 
     public Activity deleteActivity(Activity activity) {
         return ClientBuilder.newClient(new ClientConfig())
                 .target(SERVER).path("api/activities/" + activity.getActivityID())
                 .request(APPLICATION_JSON)
                 .accept(APPLICATION_JSON)
-                .delete(new GenericType<>(){});
+                .delete(new GenericType<>() {
+                });
     }
 
 

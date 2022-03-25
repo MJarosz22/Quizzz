@@ -737,7 +737,7 @@ public class SinglePlayerGameCtrl {
      * @param timer - an integer value representing the number of miliseconds after which the thread get executed.
      */
     public void gameOver(int timer) {
-        if(gameIsOver==false){
+        if (gameIsOver == false) {
             server.addPlayerToLeaderboard(player);
             server.disconnect(player);
         }
@@ -751,7 +751,6 @@ public class SinglePlayerGameCtrl {
             }
 
             Platform.runLater(() -> {
-                server.disconnect(player);
                 mainCtrl.showSinglePlayerGameOver();
                 progressBar.setProgress(1);
             });

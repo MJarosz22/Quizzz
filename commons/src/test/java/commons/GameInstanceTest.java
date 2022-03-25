@@ -118,7 +118,7 @@ public class GameInstanceTest {
         List<Activity> activities = this.generateActivities();
         gameInstance.generateQuestions(activities);
         Activity expectedActivity = new Activity("Activity-ID0", "0/test.png", "Title #0", 0L, "https://www.the-same-source.com");
-        QuestionWhichOne expectedQuestion = new QuestionWhichOne(expectedActivity);
+        QuestionWhichOne expectedQuestion = new QuestionWhichOne(expectedActivity, 1);
         assertEquals(expectedQuestion, gameInstance.getQuestions().get(0));
     }
 
@@ -129,7 +129,7 @@ public class GameInstanceTest {
         gameInstance.generateQuestions(activities);
         List<Question> questions = new ArrayList<>();
         Activity activity = new Activity("Activity-ID0", "0/test.png", "Title #0", 0L, "https://www.the-same-source.com");
-        QuestionWhichOne question = new QuestionWhichOne(activity);
+        QuestionWhichOne question = new QuestionWhichOne(activity, 1);
         questions.add(question);
         gameInstance.setQuestions(questions);
         assertEquals(gameInstance.getQuestions().size(), 1);
@@ -143,8 +143,8 @@ public class GameInstanceTest {
         Activity act1 = new Activity("Activity-ID", "00/test.png", "Title", 6L, "https://www.google.com");
         Activity act2 = new Activity("Activity-ID2", "01/test.png", "Other-title", 12L, "https://www.essay.com");
 
-        Question q1 = new QuestionHowMuch(act1);
-        Question q2 = new QuestionWhichOne(act1);
+        Question q1 = new QuestionHowMuch(act1, 2);
+        Question q2 = new QuestionWhichOne(act1, 2);
         questions.add(q1);
         questions.add(q2);
 
