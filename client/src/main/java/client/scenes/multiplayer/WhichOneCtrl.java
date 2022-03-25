@@ -167,7 +167,7 @@ public class WhichOneCtrl implements QuestionCtrl {
         new Timer().schedule(new TimerTask() {
             @Override
             public void run() {
-                scheduler.cancel();
+                Platform.runLater(()-> disconnect.setVisible(false));
             }
         }, 5000);
     }
