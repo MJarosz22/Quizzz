@@ -20,7 +20,6 @@ import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.util.Timer;
 import java.util.TimerTask;
-import java.util.function.Consumer;
 
 public class MoreExpensiveCtrl implements QuestionCtrl {
 
