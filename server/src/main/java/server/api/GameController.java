@@ -52,18 +52,14 @@ public class GameController {
         this.random = random;
         this.msgs = msgs;
         this.activityController = activityController;
-        gameInstances = new ArrayList<>();
-        players = new ArrayList<>();
+        this.gameInstances = new ArrayList<>();
+        this.players = new ArrayList<>();
         this.serverNames = new HashMap<>();
 
         //hardcoded servers; perhaps we could create API for the serverNames
-        this.serverNames.put("default", 0);
-        this.serverNames.put("first", 1);
-        this.serverNames.put("second", 2);
-        for (String server : serverNames.keySet()) {
-            gameInstances.add(new GameInstanceServer(gameInstances.size(), GameInstance.MULTI_PLAYER, this, msgs, server));
-        }
-
+        this.createNewMultiplayerLobby("default");
+        this.createNewMultiplayerLobby("first");
+        this.createNewMultiplayerLobby("second");
     }
 
 //    ---------------------------------------------------------------------------
@@ -110,7 +106,7 @@ public class GameController {
                 players.add(savedPlayer);
                 currGameInstance.getPlayers().add(savedPlayer.toPlayer(currGameInstance));
                 logger.info("[GI " + (currGameInstance.getId()) + "] PLAYER (" + savedPlayer.getId() +
-                        ") STARTED MP GAME: NAME=" + savedPlayer.getName());
+                        ") ENTERED MP LOBBY: NAME=" + savedPlayer.getName());
                 if (msgs != null)
                     currGameInstance.updatePlayerList();
                 break;
@@ -232,6 +228,22 @@ public class GameController {
                 res.add(serverName);
         }
         return ResponseEntity.ok(res);
+    }
+
+    @GetMapping("/{serverName}/connectedPlayersOnServer")
+    public ResponseEntity<List<String>> connectedPlayersOnServer(@PathVariable String serverName) {
+        if (serverName == null) return ResponseEntity.badRequest().build();
+        List<String> availableServers = getServers().getBody();
+        if (!availableServers.contains(serverName)) return ResponseEntity.badRequest().build();
+
+
+        GameInstanceServer lastGIS = null;
+        for (GameInstanceServer gi : gameInstances)
+            if (gi.getServerName().equals(serverName))
+                lastGIS = gi;
+
+        List<String> playerNames = lastGIS.getPlayers().stream().map(Player::getName).collect(Collectors.toList());
+        return ResponseEntity.ok(playerNames);
     }
     // ------------------------------------ ADDITIONAL METHODS ------------------------------------------------------
 
