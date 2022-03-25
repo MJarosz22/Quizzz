@@ -227,6 +227,7 @@ public class ServerUtils {
             }
         });
     }
+
     public boolean submitAnswer(SimpleUser player, Answer answer) {
         return ClientBuilder
                 .newClient(new ClientConfig())

@@ -41,7 +41,7 @@
             </font>
         </Text>
         <AnchorPane fx:id="emoji" layoutX="187.0" layoutY="84.0" prefHeight="30.0" prefWidth="30.0" style="-fx-background-size: contain;" />
-        <RadioButton fx:id="answer1" layoutX="583.0" layoutY="193.0" mnemonicParsing="false" onAction="#answer1Selected" prefHeight="18.0" prefWidth="142.0" text="answer1" />
+        <RadioButton fx:id="answer1" layoutX="581.0" layoutY="193.0" mnemonicParsing="false" onAction="#answer1Selected" prefHeight="18.0" prefWidth="142.0" text="answer1" />
         <RadioButton fx:id="answer2" layoutX="581.0" layoutY="243.0" mnemonicParsing="false" onAction="#answer2Selected" prefHeight="18.0" prefWidth="142.0" text="answer2" />
         <RadioButton fx:id="answer3" layoutX="581.0" layoutY="293.0" mnemonicParsing="false" onAction="#answer3Selected" prefHeight="18.0" prefWidth="142.0" text="answer3" />
         <ImageView fx:id="image4" fitHeight="200.0" fitWidth="309.0" layoutX="205.0" layoutY="160.0" pickOnBounds="true" preserveRatio="true" />

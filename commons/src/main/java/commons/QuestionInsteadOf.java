@@ -103,7 +103,6 @@ public class QuestionInsteadOf extends Question {
      */
     public void changeActivity(Activity activityAnswer) {
         double times = (double) activityAnswer.getConsumption_in_wh() / activity.getConsumption_in_wh();
-        System.out.println(times);
         String title = activity.getTitle();
         if(title.contains("second")) {
             activity.setTitle(changeActivityTitle(times, title, "second"));
@@ -120,9 +119,11 @@ public class QuestionInsteadOf extends Question {
         } else if(title.contains("times")) {
             activity.setTitle(changeActivityTitle(times, title, "times"));
         } else if(times == 1) {
+            times = ((int)(times * 100))/100d;
             activity.setTitle(title + " " + times + " time");
         } else {
-            activity.setTitle(title + " " + times + " time");
+            times = ((int)(times * 100))/100d;
+            activity.setTitle(title + " " + times + " times");
         }
     }
 
@@ -142,7 +143,8 @@ public class QuestionInsteadOf extends Question {
                 try {
                     times = (int)(times*Integer.parseInt(titleArray[i-1]) * 100) / 100d;
                 } catch (NumberFormatException e) {
-                     return title + " " + times + " times";
+                    times = ((int)(times * 100))/100d;
+                    return title + " " + times + " times";
                 }
                 titleArray[i-1] = String.valueOf(times);
                 if(!unit.endsWith("s") && times != 1){

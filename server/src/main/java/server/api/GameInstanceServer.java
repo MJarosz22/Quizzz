@@ -38,6 +38,16 @@ public class GameInstanceServer extends GameInstance {
         countdownTimer = new Timer();
     }
 
+
+    /**
+     * QuestionInsteadOf uses activity 0,1,2,3
+     * QuestionWhichOne uses activity 4
+     * QuestionHowMuch uses activity 5
+     * QuestionMoreExpensive uses activity 6,7,8
+     * After that, the mod is 1 and QuestionInsteadOf uses activity 9 etc
+     *
+     * @param activities List of 60 activities
+     */
     @Override
     public void generateQuestions(List<Activity> activities) {
         if (activities.size() != 60) throw new IllegalArgumentException();
