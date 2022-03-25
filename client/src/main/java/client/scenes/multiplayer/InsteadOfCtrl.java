@@ -4,6 +4,7 @@ import client.scenes.MainCtrl;
 import client.utils.ServerUtils;
 import commons.Answer;
 import commons.QuestionInsteadOf;
+import commons.player.SimpleUser;
 import javafx.application.Platform;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
@@ -25,7 +26,7 @@ import java.util.TimerTask;
 public class InsteadOfCtrl implements QuestionCtrl {
 
     @FXML
-    private Text questionTitle, timer, score, points, answer, option4, questionCount;
+    private Text questionTitle, timer, score, points, answer, option4, correct_guess, questionCount, disconnect;
 
     @FXML
     private AnchorPane emoji;
@@ -188,5 +189,21 @@ public class InsteadOfCtrl implements QuestionCtrl {
         answer1.setSelected(false);
         answer2.setSelected(false);
         answer3.setSelected(false);
+    }
+
+    /**
+     * Displays a message when another player disconnects
+     * @param disconnectPlayer
+     */
+    @Override
+    public void showDisconnect(SimpleUser disconnectPlayer) {
+        disconnect.setText(disconnectPlayer.getName() + " disconnected");
+        disconnect.setVisible(true);
+        new Timer().schedule(new TimerTask() {
+            @Override
+            public void run() {
+                Platform.runLater(()-> disconnect.setVisible(false));
+            }
+        }, 5000);
     }
 }
