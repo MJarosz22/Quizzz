@@ -25,7 +25,7 @@ import java.util.TimerTask;
 public class WhichOneCtrl implements QuestionCtrl {
 
     @FXML
-    private Text questionTitle, timer, score, points, answer, option4, correct_guess, questionCount;
+    private Text questionTitle, timer, score, points, answer, option4, correct_guess, questionCount,  heartText, cryText, laughText, angryText, glassesText;
 
     @FXML
     private AnchorPane emoji;
@@ -269,6 +269,7 @@ public class WhichOneCtrl implements QuestionCtrl {
                 public void run() {
                     Platform.runLater(()->{
                         emojiButton.setStyle("-fx-pref-height: 30; -fx-pref-width: 30; -fx-background-color: transparent; ");
+                        //emojiButton.set();
                         emojiButton.setLayoutX(emojiButton.getLayoutX() + 10.0);
                         emojiButton.setLayoutY(emojiButton.getLayoutY() + 10.0);
                         emojiButton.setMouseTransparent(false);
