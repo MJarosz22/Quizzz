@@ -130,6 +130,9 @@ public class SinglePlayerGameCtrl {
             if (currentQuestion instanceof QuestionWhichOne) {
                 setScene3();
             }
+            if (currentQuestion instanceof QuestionInsteadOf) {
+                setScene4();
+            }
             answered = false;
             startTimer(20);
         });
@@ -245,6 +248,41 @@ public class SinglePlayerGameCtrl {
         questionCount.setText("Question " + roundCounter + "/20");
 
         randomlyChooseCorrectAnswerButton();
+    }
+
+    /**
+     * Sets the scene for the QuestionInsteadOf
+     * option4 describes the title of the question
+     */
+    public void setScene4() {
+        answer1.setSelected(false);
+        answer2.setSelected(false);
+        answer3.setSelected(false);
+
+        answer1.setStyle("-fx-background-color: #91e4fb; ");
+        answer2.setStyle("-fx-background-color: #91e4fb; ");
+        answer3.setStyle("-fx-background-color: #91e4fb; ");
+
+        option4.setText(((QuestionInsteadOf) currentQuestion).getActivity().getTitle());
+
+        option1Button.setVisible(false);
+        option2Button.setVisible(false);
+        option3Button.setVisible(false);
+        option4.setVisible(true);
+
+        setOptions(true);
+        player_answer.setVisible(false);
+        submit_guess.setVisible(false);
+        correct_guess.setVisible(false);
+
+        enableOptionsQuestionWhichOne();
+
+        progressBar.setProgress(progressBar.getProgress() + 0.05);
+        questionCount.setText("Question " + roundCounter + "/20");
+
+        answer1.setText(((QuestionInsteadOf) currentQuestion).getAnswers()[0]);
+        answer2.setText(((QuestionInsteadOf) currentQuestion).getAnswers()[1]);
+        answer3.setText(((QuestionInsteadOf) currentQuestion).getAnswers()[2]);
     }
 
     /**
@@ -427,6 +465,19 @@ public class SinglePlayerGameCtrl {
             image4.setVisible(true);
             try {
                 image4.setImage(new Image(server.getImage(((QuestionHowMuch) currentQuestion)
+                        .getActivity())));
+            } catch (FileNotFoundException e) {
+                System.out.println("Image not found!");
+            }
+        }
+
+        if (currentQuestion instanceof QuestionInsteadOf) {
+            image1.setVisible(false);
+            image2.setVisible(false);
+            image3.setVisible(false);
+            image4.setVisible(true);
+            try {
+                image4.setImage(new Image(server.getImage(((QuestionInsteadOf) currentQuestion)
                         .getActivity())));
             } catch (FileNotFoundException e) {
                 System.out.println("Image not found!");
@@ -624,24 +675,39 @@ public class SinglePlayerGameCtrl {
      * This method is called when user selects answer1 in a QuestionWhichOne type of question
      */
     public void answer1Selected() {
-        long response = Long.parseLong(answer1.getText());
-        isSelectionCorrect(answer1, response);
+        if(currentQuestion instanceof QuestionWhichOne) {
+            long response = Long.parseLong(answer1.getText());
+            isSelectionCorrect(answer1, response);
+        }
+        if(currentQuestion instanceof QuestionInsteadOf) {
+            isSelectionCorrectInsteadOf(answer1, 1);
+        }
     }
 
     /**
      * This method is called when user selects answer2 in a QuestionWhichOne type of question
      */
     public void answer2Selected() {
-        long response = Long.parseLong(answer2.getText());
-        isSelectionCorrect(answer2, response);
+        if(currentQuestion instanceof QuestionWhichOne) {
+            long response = Long.parseLong(answer2.getText());
+            isSelectionCorrect(answer2, response);
+        }
+        if(currentQuestion instanceof QuestionInsteadOf) {
+            isSelectionCorrectInsteadOf(answer2, 2);
+        }
     }
 
     /**
      * This method is called when user selects answer3 in a QuestionWhichOne type of question
      */
     public void answer3Selected() {
-        long response = Long.parseLong(answer3.getText());
-        isSelectionCorrect(answer3, response);
+        if(currentQuestion instanceof QuestionWhichOne) {
+            long response = Long.parseLong(answer3.getText());
+            isSelectionCorrect(answer3, response);
+        }
+        if(currentQuestion instanceof QuestionInsteadOf) {
+            isSelectionCorrectInsteadOf(answer3, 3);
+        }
     }
 
     /**
@@ -653,7 +719,6 @@ public class SinglePlayerGameCtrl {
      * @param response      the correct answer
      */
     public void isSelectionCorrect(RadioButton player_answer, long response) {
-
         if (response == ((QuestionWhichOne) currentQuestion).getActivity().getConsumption_in_wh()) {
             int numberOfPoints = calculatePoints(timeLeft);
             player.addScore(numberOfPoints);
@@ -693,6 +758,49 @@ public class SinglePlayerGameCtrl {
             gameOver(2000);
         }
     }
+
+    public void isSelectionCorrectInsteadOf(RadioButton player_answer, long response) {
+        if(response == currentQuestion.getCorrectAnswer()) {
+            int numberOfPoints = calculatePoints(timeLeft);
+            player.addScore(numberOfPoints);
+            server.updatePlayer(player);
+            score.setText("Your score: " + player.getScore());
+            points.setText("+" + numberOfPoints + "points");
+            answer.setText("Correct answer");
+            setEmoji(emoji, true);
+            player_answer.setStyle("-fx-background-color: green; ");
+            if (!answer1.equals(player_answer)) answer1.setStyle("-fx-background-color: red; ");
+            if (!answer2.equals(player_answer)) answer2.setStyle("-fx-background-color: red; ");
+            if (!answer3.equals(player_answer)) answer3.setStyle("-fx-background-color: red; ");
+        } else {
+            points.setText("+0 points");
+            answer.setText("Wrong answer");
+            setEmoji(emoji, false);
+            if (currentQuestion.getCorrectAnswer() == 1)
+                answer1.setStyle("-fx-background-color: green; ");
+            else answer1.setStyle("-fx-background-color: red; ");
+            if ( currentQuestion.getCorrectAnswer() == 2)
+                answer2.setStyle("-fx-background-color: green; ");
+            else answer2.setStyle("-fx-background-color: red; ");
+            if (currentQuestion.getCorrectAnswer() == 3)
+                answer3.setStyle("-fx-background-color: green; ");
+            else answer3.setStyle("-fx-background-color: red; ");
+        }
+
+        setOptions(true);
+
+        CompletableFuture.delayedExecutor(1, SECONDS).execute(() -> {
+            if (!isGameOver())
+                loadNextQuestion();
+        });
+
+
+        if (roundCounter >= 20) {
+            gameOver(2000);
+        }
+    }
+
+
 
     /**
      * This method starts the countdown and update the timer every second.
@@ -737,7 +845,7 @@ public class SinglePlayerGameCtrl {
      * @param timer - an integer value representing the number of miliseconds after which the thread get executed.
      */
     public void gameOver(int timer) {
-        if (gameIsOver == false) {
+        if(!gameIsOver){
             server.addPlayerToLeaderboard(player);
             server.disconnect(player);
         }

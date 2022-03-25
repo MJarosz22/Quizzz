@@ -42,7 +42,7 @@
             </font>
         </Text>
         <AnchorPane fx:id="emoji" layoutX="187.0" layoutY="84.0" prefHeight="30.0" prefWidth="30.0" style="-fx-background-size: contain;" />
-        <RadioButton fx:id="answer1" layoutX="583.0" layoutY="193.0" mnemonicParsing="false" onAction="#answer1Selected" prefHeight="18.0" prefWidth="142.0" text="answer1" />
+        <RadioButton fx:id="answer1" layoutX="581.0" layoutY="193.0" mnemonicParsing="false" onAction="#answer1Selected" prefHeight="18.0" prefWidth="142.0" text="answer1" />
         <RadioButton fx:id="answer2" layoutX="581.0" layoutY="243.0" mnemonicParsing="false" onAction="#answer2Selected" prefHeight="18.0" prefWidth="142.0" text="answer2" />
         <RadioButton fx:id="answer3" layoutX="581.0" layoutY="293.0" mnemonicParsing="false" onAction="#answer3Selected" prefHeight="18.0" prefWidth="142.0" text="answer3" />
         <ImageView fx:id="image4" fitHeight="200.0" fitWidth="309.0" layoutX="205.0" layoutY="160.0" pickOnBounds="true" preserveRatio="true" />
@@ -54,6 +54,11 @@
         <Button layoutX="286.0" layoutY="434.0" mnemonicParsing="false" onAction="#enablePopUp" prefHeight="68.0" prefWidth="94.0" style="-fx-background-radius: 25;" text="REMOVE &#10;INCORRECT&#10;ANSWER" textAlignment="CENTER" />
         <Button layoutX="433.0" layoutY="434.0" mnemonicParsing="false" onAction="#enablePopUp" prefHeight="68.0" prefWidth="94.0" style="-fx-background-radius: 25;" text="DOUBLE&#10;POINTS" textAlignment="CENTER" />
         <Button layoutX="580.0" layoutY="434.0" mnemonicParsing="false" onAction="#enablePopUp" prefHeight="68.0" prefWidth="94.0" style="-fx-background-radius: 25;" text="DECREASE&#10;OPPONENTS'&#10;TIME" textAlignment="CENTER" />
+        <Text fx:id="disconnect" layoutX="825.0" layoutY="473.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Disconnect" wrappingWidth="106.0">
+            <font>
+                <Font size="14.0" />
+            </font>
+        </Text>
         <Pane fx:id="confirmationExit" layoutY="1.0" prefHeight="540.0" prefWidth="960.0">
             <children>
                 <Button layoutX="545.0" layoutY="336.0" mnemonicParsing="false" onAction="#leaveGame" prefHeight="158.0" prefWidth="349.0" text="YES" />

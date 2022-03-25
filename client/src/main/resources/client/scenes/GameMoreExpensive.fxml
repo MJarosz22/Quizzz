@@ -68,6 +68,11 @@
         <Button layoutX="286.0" layoutY="434.0" mnemonicParsing="false" onAction="#enablePopUp" prefHeight="68.0" prefWidth="94.0" style="-fx-background-radius: 25;" text="REMOVE &#10;INCORRECT&#10;ANSWER" textAlignment="CENTER" />
         <Button layoutX="433.0" layoutY="434.0" mnemonicParsing="false" onAction="#enablePopUp" prefHeight="68.0" prefWidth="94.0" style="-fx-background-radius: 25;" text="DOUBLE&#10;POINTS" textAlignment="CENTER" />
         <Button layoutX="580.0" layoutY="434.0" mnemonicParsing="false" onAction="#enablePopUp" prefHeight="68.0" prefWidth="94.0" style="-fx-background-radius: 25;" text="DECREASE&#10;OPPONENTS'&#10;TIME" textAlignment="CENTER" />
+        <Text fx:id="disconnect" layoutX="825.0" layoutY="473.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Disconnect" wrappingWidth="106.0">
+            <font>
+                <Font size="14.0" />
+            </font>
+        </Text>
         <Pane fx:id="confirmationExit" layoutY="1.0" prefHeight="540.0" prefWidth="960.0">
             <children>
                 <Button layoutX="545.0" layoutY="336.0" mnemonicParsing="false" onAction="#leaveGame" prefHeight="158.0" prefWidth="349.0" text="YES" />

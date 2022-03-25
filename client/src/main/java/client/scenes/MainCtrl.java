@@ -18,6 +18,7 @@ package client.scenes;
 import client.scenes.multiplayer.*;
 import client.utils.ServerUtils;
 import commons.QuestionHowMuch;
+import commons.QuestionInsteadOf;
 import commons.QuestionMoreExpensive;
 import commons.QuestionWhichOne;
 import javafx.scene.Parent;
@@ -68,6 +69,9 @@ public class MainCtrl {
     private WhichOneCtrl whichOneCtrl;
     private Scene whichOne;
 
+    private InsteadOfCtrl insteadOfCtrl;
+    private Scene insteadOf;
+
     private QuestionCtrl currentQuestionScene;
 
     public void initialize(Stage primaryStage, Pair<SplashScreenCtrl, Parent> splash, Pair<SinglePlayerCtrl,
@@ -77,7 +81,8 @@ public class MainCtrl {
                            Pair<LeaderBoardCtrl, Parent> leaderboard, Pair<LobbyCtrl, Parent> lobby,
                            GameCtrl gameCtrl, Pair<MoreExpensiveCtrl, Parent> moreExpensive,
                            Pair<HowMuchCtrl, Parent> howMuch, Pair<WhichOneCtrl, Parent> whichOne,
-                           Pair<ActivityOverviewCtrl, Parent> overview, Pair<AddActivityCtrl, Parent> add) {
+                           Pair<InsteadOfCtrl, Parent> insteadOf, Pair<ActivityOverviewCtrl, Parent> overview,
+                           Pair<AddActivityCtrl, Parent> add) {
 
 
         this.primaryStage = primaryStage;
@@ -113,6 +118,8 @@ public class MainCtrl {
         this.whichOneCtrl = whichOne.getKey();
         this.whichOne = new Scene(whichOne.getValue());
 
+        this.insteadOfCtrl = insteadOf.getKey();
+        this.insteadOf = new Scene(insteadOf.getValue());
 
         this.activityOverviewCtrl = overview.getKey();
         this.overview = new Scene(overview.getValue());
@@ -195,6 +202,13 @@ public class MainCtrl {
         primaryStage.setScene(whichOne);
     }
 
+    public void showInsteadOf(QuestionInsteadOf question) {
+        currentQuestionScene = insteadOfCtrl;
+        primaryStage.setTitle("Quizzz Instead Of");
+        insteadOfCtrl.init(question);
+        primaryStage.setScene(insteadOf);
+    }
+
     public LobbyCtrl getLobbyCtrl() {
         return lobbyCtrl;
     }
@@ -217,6 +231,10 @@ public class MainCtrl {
 
     public WhichOneCtrl getWhichOneCtrl() {
         return whichOneCtrl;
+    }
+
+    public InsteadOfCtrl getInsteadOfCtrl() {
+        return insteadOfCtrl;
     }
 
 }
