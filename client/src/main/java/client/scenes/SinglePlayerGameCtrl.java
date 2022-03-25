@@ -737,7 +737,7 @@ public class SinglePlayerGameCtrl {
      * @param timer - an integer value representing the number of miliseconds after which the thread get executed.
      */
     public void gameOver(int timer) {
-        if(gameIsOver==false){
+        if (gameIsOver == false) {
             server.addPlayerToLeaderboard(player);
             server.disconnect(player);
         }
@@ -808,7 +808,7 @@ public class SinglePlayerGameCtrl {
         confirmationExit.setStyle("-fx-background-color: #91e4fb; ");
     }
 
-    public static boolean getGameIsOver(){
+    public static boolean getGameIsOver() {
         return gameIsOver;
     }
 
