@@ -17,7 +17,7 @@ public class MultiPlayerCtrl {
     private final GameCtrl gameCtrl;
 
     @FXML
-    private TextField textfieldName;
+    private TextField textfieldName, textfieldServer;
 
     @Inject
     public MultiPlayerCtrl(ServerUtils server, MainCtrl mainCtrl, GameCtrl gameCtrl) {
@@ -31,17 +31,19 @@ public class MultiPlayerCtrl {
         mainCtrl.showSplash();
     }
 
-    // To be added when making the main game scene, in order for the player to play
     public void join() {
-        if (!getTextFieldName().equals("") && !containsName(getTextFieldName())) {
-            gameCtrl.start(getTextFieldName());
+        if (!getTextFieldName().equals("") && !containsName(getTextFieldName()) && containsServer(getTextFieldServer())) {
+            gameCtrl.start(getTextFieldName(), getTextFieldServer());
             this.textfieldName.clear();
             mainCtrl.getLobbyCtrl().init();
             mainCtrl.showLobby();
-        } else {
-            Alert alert = new Alert(Alert.AlertType.ERROR,"This name already exists. Try a different one");
+        } else if (getTextFieldName().equals("") || containsName(getTextFieldName())) {
+            Alert alert = new Alert(Alert.AlertType.ERROR, "This name already exists. Try a different one");
             alert.show();
             System.out.println("NAME ALREADY EXISTS!"); //We must make an actual pop-up
+        } else {
+            Alert alert = new Alert(Alert.AlertType.ERROR, "Provided server is not available!");
+            alert.show();
         }
     }
 
@@ -49,19 +51,28 @@ public class MultiPlayerCtrl {
         return textfieldName.getText();
     }
 
+    public String getTextFieldServer() {
+        return textfieldServer.getText();
+    }
+
     private boolean containsName(String name) {
         boolean nameExists = false;
         int lastGIId = server.getLastGIIdMult();
         List<SimpleUser> simpleUserList = server.connectedPlayers(lastGIId);
         int i = 0;
-        while (!nameExists && i < simpleUserList.size()){
-            if (simpleUserList.get(i).getName().toLowerCase().trim().equals(name.toLowerCase().trim())){
+        while (!nameExists && i < simpleUserList.size()) {
+            if (simpleUserList.get(i).getName().toLowerCase().trim().equals(name.toLowerCase().trim())) {
                 nameExists = true;
             }
-                i++;
+            i++;
         }
 
         return nameExists;
+    }
+
+    private boolean containsServer(String serverName) {
+        List<String> availableServers = server.availableServers();
+        return availableServers.contains(serverName);
     }
 
 }

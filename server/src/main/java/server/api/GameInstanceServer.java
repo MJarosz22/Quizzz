@@ -16,6 +16,7 @@ import java.util.TimerTask;
 
 public class GameInstanceServer extends GameInstance {
 
+    String serverName;
     GameController gameController;
     SimpMessagingTemplate msgs;
     int questionNumber = -1;
@@ -29,10 +30,11 @@ public class GameInstanceServer extends GameInstance {
 
     private final Timer countdownTimer;
 
-    public GameInstanceServer(int id, int type, GameController controller, SimpMessagingTemplate msgs) {
+    public GameInstanceServer(int id, int type, GameController controller, SimpMessagingTemplate msgs, String serverName) {
         super(id, type);
         this.gameController = controller;
         this.msgs = msgs;
+        this.serverName = serverName;
         answers = new ArrayList<>();
         questionTimer = new Timer();
         countdownTimer = new Timer();
@@ -60,15 +62,14 @@ public class GameInstanceServer extends GameInstance {
 
     @Async
     public void startGame(List<Activity> activities) {
-        gameController.createNewMultiplayerLobby();
-        setState(GameState.INQUESTION);
+        // gameController.createNewMultiplayerLobby();
         generateQuestions(activities);
         nextQuestion();
     }
 
     private void sendQuestion(int questionNumber) {
         Question currentQuestion = getQuestions().get(questionNumber);
-        logger.info("[GI "+ getId() + "] Question " + questionNumber + " sent.");
+        logger.info("[GI " + getId() + "] Question " + questionNumber + " sent.");
         if (currentQuestion instanceof QuestionHowMuch) {
             msgs.convertAndSend("/topic/" + getId() + "/questionhowmuch", getQuestions().get(questionNumber));
         } else if (currentQuestion instanceof QuestionMoreExpensive) {
@@ -80,9 +81,9 @@ public class GameInstanceServer extends GameInstance {
 
     private void nextQuestion() {
         setState(GameState.INQUESTION);
-        if(questionTask != null) questionTask.cancel();
+        if (questionTask != null) questionTask.cancel();
         questionNumber++;
-        if(questionNumber > 20){
+        if (questionNumber > 20) {
             //TODO ADD POST-GAME SCREEN AND FUNCTIONALITY
         }
         sendQuestion(questionNumber);
@@ -98,7 +99,7 @@ public class GameInstanceServer extends GameInstance {
         questionTimer.schedule(questionTask, questionTime);
     }
 
-    public void postQuestion(){
+    public void postQuestion() {
         questionTask.cancel();
         setState(GameState.POSTQUESTION);
         msgs.convertAndSend("/topic/" + getId() + "/postquestion", getCurrentQuestion().getCorrectAnswer());
@@ -114,7 +115,7 @@ public class GameInstanceServer extends GameInstance {
 
     public int getTimeLeft() {
         int timeSpent = (int) (System.currentTimeMillis() - startingTime);
-        if(getState() == GameState.POSTQUESTION) return (postQuestionTime - timeSpent);
+        if (getState() == GameState.POSTQUESTION) return (postQuestionTime - timeSpent);
         return Math.max(questionTime - timeSpent, 0);
     }
 
@@ -133,37 +134,42 @@ public class GameInstanceServer extends GameInstance {
     }
 
     public boolean answerQuestion(SimpleUser player, Answer answer) {
-        if(answers.stream()
+        if (answers.stream()
                 .map(x -> x.getPlayer().getName())
-                .noneMatch(x-> x.equals(player.getName()))){
+                .noneMatch(x -> x.equals(player.getName()))) {
             answers.add(new ServerAnswer(answer.getAnswer(), player));
-            if(answers.size() == getPlayers().size()) {
+            if (answers.size() == getPlayers().size()) {
                 //TODO POST QUESTION
                 postQuestion();
 //                nextQuestion();
             }
-            logger.info("[GI "+ getId() + "] Answer received from " + player.getName() + " = " + answer.getAnswer());
+            logger.info("[GI " + getId() + "] Answer received from " + player.getName() + " = " + answer.getAnswer());
             return true;
         }
         return false;
     }
 
-    public boolean disconnectPlayer(SimpleUser player){
+    public boolean disconnectPlayer(SimpleUser player) {
         boolean status = getPlayers().remove(player);
         updatePlayerList();
-        if(getState() != GameState.INLOBBY && getPlayers().isEmpty()){
+        if (getState() != GameState.INLOBBY && getPlayers().isEmpty()) {
             stopGameInstance();
         }
         return status;
     }
 
-    public void stopGameInstance(){
-        if(gameController.getCurrentMPGIId() == getId())
-            gameController.createNewMultiplayerLobby();
-        countdownTimer.cancel();
-        questionTask.cancel();
-        questionTimer.cancel();
-        logger.info("[GI " + getId() + "] GameInstance stopped!");
+    public void stopGameInstance() {
+        if (gameController.getServerNames().get(serverName) == getId())
+            gameController.createNewMultiplayerLobby(this.serverName);
+        try {
+            countdownTimer.cancel();
+            questionTask.cancel();
+            questionTimer.cancel();
+        }catch (NullPointerException e){
+            logger.info("Timer has already stopped");
+        }finally {
+            logger.info("[GI " + getId() + "] GameInstance stopped!");
+        }
     }
 
     @Override

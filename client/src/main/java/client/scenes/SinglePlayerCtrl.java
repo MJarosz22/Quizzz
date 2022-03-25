@@ -37,7 +37,7 @@ public class SinglePlayerCtrl {
      */
     public void play() {
         if (!getTextField().equals("")) {
-            SimpleUser player = server.addPlayer(new RequestToJoin(getTextField(), GameInstance.SINGLE_PLAYER));
+            SimpleUser player = server.addPlayer(new RequestToJoin(getTextField(), null, GameInstance.SINGLE_PLAYER));
             gameCtrl.setPlayer(player);
             playerName = player.getName();
             this.textField.clear();

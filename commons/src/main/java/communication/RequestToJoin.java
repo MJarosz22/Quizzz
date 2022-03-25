@@ -8,13 +8,15 @@ import org.apache.commons.lang3.builder.ToStringBuilder;
 public class RequestToJoin {
 
     private String name;
+    private String serverName;
     private int gameType;
 
     public RequestToJoin() {
     }
 
-    public RequestToJoin(String name, int gameType) {
+    public RequestToJoin(String name, String serverName, int gameType) {
         this.name = name;
+        this.serverName = serverName;
         if (gameType != GameInstance.SINGLE_PLAYER && gameType != GameInstance.MULTI_PLAYER)
             throw new IllegalArgumentException();
         this.gameType = gameType;
@@ -24,8 +26,16 @@ public class RequestToJoin {
         return name;
     }
 
+    public String getServerName() {
+        return serverName;
+    }
+
     public void setName(String name) {
         this.name = name;
+    }
+
+    public void setServerName(String serverName) {
+        this.serverName = serverName;
     }
 
     public int getGameType() {

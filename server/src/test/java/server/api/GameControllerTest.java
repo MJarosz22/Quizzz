@@ -7,6 +7,8 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.messaging.simp.SimpMessagingTemplate;
 
+import java.util.HashMap;
+import java.util.Map;
 import java.util.Random;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
@@ -36,39 +38,38 @@ public class GameControllerTest {
 
     @Test
     public void getCurrentMPGIIdTest() {
-        sut.addPlayer(new RequestToJoin("Petra", GameInstance.SINGLE_PLAYER));
-        sut.addPlayer(new RequestToJoin("Marcin", GameInstance.SINGLE_PLAYER));
-        sut.addPlayer(new RequestToJoin("Joshua", GameInstance.SINGLE_PLAYER));
-        sut.addPlayer(new RequestToJoin("Sophie", GameInstance.SINGLE_PLAYER));
+        sut.addPlayer(new RequestToJoin("Petra", "test", GameInstance.SINGLE_PLAYER));
+        sut.addPlayer(new RequestToJoin("Marcin", "test", GameInstance.SINGLE_PLAYER));
+        sut.addPlayer(new RequestToJoin("Joshua", "test", GameInstance.SINGLE_PLAYER));
+        sut.addPlayer(new RequestToJoin("Sophie", "test", GameInstance.SINGLE_PLAYER));
 
         assertEquals(0, sut.getCurrentMPGIId());
     }
 
     @Test
     public void getPlayersTest() {
-        sut.addPlayer(new RequestToJoin("Petra", GameInstance.SINGLE_PLAYER));
-        sut.addPlayer(new RequestToJoin("Marcin", GameInstance.SINGLE_PLAYER));
-        sut.addPlayer(new RequestToJoin("Joshua", GameInstance.SINGLE_PLAYER));
-        sut.addPlayer(new RequestToJoin("Sophie", GameInstance.SINGLE_PLAYER));
+        sut.addPlayer(new RequestToJoin("Petra", null, GameInstance.SINGLE_PLAYER));
+        sut.addPlayer(new RequestToJoin("Marcin", null, GameInstance.SINGLE_PLAYER));
+        sut.addPlayer(new RequestToJoin("Joshua", null, GameInstance.SINGLE_PLAYER));
+        sut.addPlayer(new RequestToJoin("Sophie", null, GameInstance.SINGLE_PLAYER));
 
         assertEquals(4, sut.getPlayers().size());
     }
 
     @Test
     public void getGameInstancesTest() {
-        sut.addPlayer(new RequestToJoin("Petra", GameInstance.MULTI_PLAYER));
-        sut.addPlayer(new RequestToJoin("Marcin", GameInstance.SINGLE_PLAYER));
-        sut.addPlayer(new RequestToJoin("Joshua", GameInstance.MULTI_PLAYER));
-        sut.addPlayer(new RequestToJoin("Sophie", GameInstance.MULTI_PLAYER));
+        sut.addPlayer(new RequestToJoin("Petra", "default", GameInstance.MULTI_PLAYER));
+        sut.addPlayer(new RequestToJoin("Marcin", null, GameInstance.SINGLE_PLAYER));
+        sut.addPlayer(new RequestToJoin("Joshua", "first", GameInstance.MULTI_PLAYER));
+        sut.addPlayer(new RequestToJoin("Sophie", "second", GameInstance.MULTI_PLAYER));
 
-
-        assertEquals(2, sut.getGameInstances().size());
+        assertEquals(4, sut.getGameInstances().size());
     }
 
     @Test
     public void createNewMultiplayerLobby() {
-        // This method is called in the constructor of GameController, so we'll just test whether it worked
-        assertEquals(1, sut.getGameInstances().size());
+        // 3 initially hard-coded servers
+        assertEquals(3, sut.getGameInstances().size());
         assertEquals(GameInstance.MULTI_PLAYER, sut.getGameInstances().get(0).getType());
         assertEquals(0, sut.getCurrentMPGIId());
     }
@@ -84,7 +85,7 @@ public class GameControllerTest {
     @Test
     public void invalidGameInstanceAddPlayerTest() {
         assertThrows(IllegalArgumentException.class, () -> {
-            RequestToJoin rq = new RequestToJoin("Vlad", 3);
+            RequestToJoin rq = new RequestToJoin("Vlad", "default", 3);
             var actual = sut.addPlayer(rq);
             assertEquals(BAD_REQUEST, actual.getStatusCode());
         });
@@ -93,7 +94,7 @@ public class GameControllerTest {
 
     @Test
     public void addPlayerSinglePlayerTest() {
-        RequestToJoin rq = new RequestToJoin("Vlad", GameInstance.SINGLE_PLAYER);
+        RequestToJoin rq = new RequestToJoin("Vlad", null, GameInstance.SINGLE_PLAYER);
         var actual = sut.addPlayer(rq);
         assertEquals(OK, actual.getStatusCode());
         assertEquals(1, sut.getPlayers().size());
@@ -103,12 +104,13 @@ public class GameControllerTest {
     @Test
     public void addPlayerMultiPlayerTest() {
 
-        RequestToJoin rq = new RequestToJoin("Vlad", GameInstance.MULTI_PLAYER);
+        RequestToJoin rq = new RequestToJoin("Vlad", "default", GameInstance.MULTI_PLAYER);
         var actual = sut.addPlayer(rq);
         assertEquals(OK, actual.getStatusCode());
         assertEquals(1, sut.getPlayers().size());
-        assertEquals(1, sut.getGameInstances().size());
-        assertEquals(0, sut.getGameInstances().get(0).getId());
+        //Already 3 hard-coded instances are created
+        assertEquals(3, sut.getGameInstances().size());
+
     }
 
     @Test
@@ -120,7 +122,7 @@ public class GameControllerTest {
     @Test
     public void getLastGIIdMultTest() {
 
-        RequestToJoin rq = new RequestToJoin("Vlad", GameInstance.MULTI_PLAYER);
+        RequestToJoin rq = new RequestToJoin("Vlad", "default", GameInstance.MULTI_PLAYER);
         sut.addPlayer(rq);
         var actual = sut.getLastGIIdMult();
 
@@ -131,12 +133,13 @@ public class GameControllerTest {
     @Test
     public void getLastGIIdSingleTest() {
 
-        RequestToJoin rq = new RequestToJoin("Sophie", GameInstance.SINGLE_PLAYER);
+        RequestToJoin rq = new RequestToJoin("Sophie", null, GameInstance.SINGLE_PLAYER);
         sut.addPlayer(rq);
         var actual = sut.getLastGIIdSingle();
 
         assertEquals(OK, actual.getStatusCode());
-        assertEquals(1, actual.getBody());
+        // 0,1,2 are gameInstances occupied by default, first and second.
+        assertEquals(3, actual.getBody());
     }
 
 
@@ -149,13 +152,14 @@ public class GameControllerTest {
     @Test
     public void allPlayersTest() {
 
-        RequestToJoin rq1 = new RequestToJoin("Rafael", GameInstance.SINGLE_PLAYER);
-        RequestToJoin rq2 = new RequestToJoin("Petra", GameInstance.MULTI_PLAYER);
-        RequestToJoin rq3 = new RequestToJoin("Marcin", GameInstance.MULTI_PLAYER);
+        RequestToJoin rq1 = new RequestToJoin("Rafael", null, GameInstance.SINGLE_PLAYER);
+        RequestToJoin rq2 = new RequestToJoin("Petra", "default", GameInstance.MULTI_PLAYER);
+        RequestToJoin rq3 = new RequestToJoin("Marcin", "default", GameInstance.MULTI_PLAYER);
         sut.addPlayer(rq1);
         sut.addPlayer(rq2);
         sut.addPlayer(rq3);
-        var actualSinglePlayer = sut.allPlayers(1);
+        // The first 3 instances are occupied BY DEFAULT BY the  hard-coded servers (0, 1, 2)
+        var actualSinglePlayer = sut.allPlayers(3);
         var actualsMultiPlayer = sut.allPlayers(0);
         assertEquals(OK, actualSinglePlayer.getStatusCode());
         assertEquals(1, actualSinglePlayer.getBody().size());
@@ -173,10 +177,10 @@ public class GameControllerTest {
     @Test
     public void connectedPlayersTest() {
 
-        sut.addPlayer(new RequestToJoin("Petra", GameInstance.MULTI_PLAYER));
-        sut.addPlayer(new RequestToJoin("Marcin", GameInstance.MULTI_PLAYER));
-        sut.addPlayer(new RequestToJoin("Joshua", GameInstance.MULTI_PLAYER));
-        sut.addPlayer(new RequestToJoin("Sophie", GameInstance.MULTI_PLAYER));
+        sut.addPlayer(new RequestToJoin("Petra", "default", GameInstance.MULTI_PLAYER));
+        sut.addPlayer(new RequestToJoin("Marcin", "default", GameInstance.MULTI_PLAYER));
+        sut.addPlayer(new RequestToJoin("Joshua", "default", GameInstance.MULTI_PLAYER));
+        sut.addPlayer(new RequestToJoin("Sophie", "default", GameInstance.MULTI_PLAYER));
         sut.getGameInstances().get(0).getPlayers().remove(2);
 
         var actual = sut.connectedPlayers(0);
@@ -216,8 +220,8 @@ public class GameControllerTest {
     }
 
 
-   /*
-     @Test
+
+   /*  @Test
     public void getImageOKTest() {
         var actual = sut.getImage("38", "coffee.png");
         assertEquals(OK, actual.getStatusCode());
