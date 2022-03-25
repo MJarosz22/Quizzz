@@ -200,11 +200,15 @@ public class GameInstanceServer extends GameInstance {
             countdownTimer.cancel();
             questionTask.cancel();
             questionTimer.cancel();
-        }catch (NullPointerException e){
+        } catch (NullPointerException e) {
             logger.info("Timer has already stopped");
-        }finally {
+        } finally {
             logger.info("[GI " + getId() + "] GameInstance stopped!");
         }
+    }
+
+    public String getServerName() {
+        return serverName;
     }
 
     @Override

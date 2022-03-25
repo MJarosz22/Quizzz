@@ -102,7 +102,7 @@ public class GameInstance {
         this.state = state;
     }
 
-        @Override
+    @Override
     public boolean equals(Object o) {
         if (this == o) return true;
 

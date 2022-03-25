@@ -32,7 +32,6 @@ public class GameController {
 
     private final Logger logger = LoggerFactory.getLogger(GameController.class);
 
-    private final ActivityRepository activityRepository;
     private final SimpMessagingTemplate msgs;
     public ActivityController activityController;
     private final Random random;
@@ -51,21 +50,19 @@ public class GameController {
      */
     public GameController(Random random, ActivityRepository activityRepository, SimpMessagingTemplate msgs, ActivityController activityController) {
         this.random = random;
-        this.activityRepository = activityRepository;
         this.msgs = msgs;
         this.activityController = activityController;
-        gameInstances = new ArrayList<>();
-
-        players = new ArrayList<>();
-        serverNames = new HashMap<>();
+        this.gameInstances = new ArrayList<>();
+        this.players = new ArrayList<>();
+        this.serverNames = new HashMap<>();
 
         //hardcoded servers; perhaps we could create API for the serverNames
-        serverNames.put("default", 0);
-        serverNames.put("first", 1);
-        serverNames.put("second", 2);
-        for (String server : serverNames.keySet()) {
-            gameInstances.add(new GameInstanceServer(gameInstances.size(), GameInstance.MULTI_PLAYER, this, msgs, server));
-        }
+        this.createNewMultiplayerLobby("default");
+        this.createNewMultiplayerLobby("first");
+        this.createNewMultiplayerLobby("second");
+
+        // ASSUMPTION: we consider the current last multiplayerGameInstanceID to be 0 (the one matching "default" serverName)
+        currentMPGIId = 0;
     }
 
 //    ---------------------------------------------------------------------------
@@ -112,8 +109,9 @@ public class GameController {
                 players.add(savedPlayer);
                 currGameInstance.getPlayers().add(savedPlayer.toPlayer(currGameInstance));
                 logger.info("[GI " + (currGameInstance.getId()) + "] PLAYER (" + savedPlayer.getId() +
-                        ") STARTED MP GAME: NAME=" + savedPlayer.getName());
-                currGameInstance.updatePlayerList();
+                        ") ENTERED MP LOBBY: NAME=" + savedPlayer.getName());
+                if (msgs != null)
+                    currGameInstance.updatePlayerList();
                 break;
 
             default:
@@ -130,8 +128,8 @@ public class GameController {
             return ResponseEntity.ok(new InputStreamResource(inputStream));
         } catch (FileNotFoundException e) {
             logger.debug("Image " + activityFolder + "/" + activityFile + " not found!");
+            return ResponseEntity.notFound().build();
         }
-        return ResponseEntity.notFound().build();
     }
 
 
@@ -235,6 +233,24 @@ public class GameController {
         return ResponseEntity.ok(res);
     }
 
+    @GetMapping("/{serverName}/connectedPlayersOnServer")
+    public ResponseEntity<List<String>> connectedPlayersOnServer(@PathVariable String serverName) {
+        if (serverName == null) return ResponseEntity.badRequest().build();
+        List<String> availableServers = getServers().getBody();
+        if (!availableServers.contains(serverName)) return ResponseEntity.badRequest().build();
+
+
+        GameInstanceServer lastGIS = null;
+        for (GameInstanceServer gi : gameInstances)
+            if (gi.getServerName().equals(serverName))
+                lastGIS = gi;
+
+        List<String> playerNames = lastGIS.getPlayers().stream().map(Player::getName).collect(Collectors.toList());
+        return ResponseEntity.ok(playerNames);
+    }
+    // ------------------------------------ ADDITIONAL METHODS ------------------------------------------------------
+
+
     public void createNewMultiplayerLobby(String serverName) {
         GameInstanceServer newGameInstance = new GameInstanceServer(gameInstances.size(), GameInstance.MULTI_PLAYER, this, msgs, serverName);
         gameInstances.add(newGameInstance);
@@ -244,6 +260,10 @@ public class GameController {
 
     public List<GameInstanceServer> getGameInstances() {
         return gameInstances;
+    }
+
+    public List<SimpleUser> getPlayers() {
+        return players;
     }
 
     public Map<String, Integer> getServerNames() {
