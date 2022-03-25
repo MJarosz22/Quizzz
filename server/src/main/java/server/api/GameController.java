@@ -2,7 +2,6 @@ package server.api;
 
 
 import commons.GameInstance;
-import commons.Question;
 import commons.player.Player;
 import commons.player.SimpleUser;
 import communication.RequestToJoin;
