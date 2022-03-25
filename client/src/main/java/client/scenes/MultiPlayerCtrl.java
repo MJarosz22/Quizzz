@@ -3,7 +3,6 @@ package client.scenes;
 import client.scenes.multiplayer.GameCtrl;
 import client.utils.ServerUtils;
 import com.google.inject.Inject;
-import commons.player.SimpleUser;
 import javafx.fxml.FXML;
 import javafx.scene.control.Alert;
 import javafx.scene.control.TextField;
