@@ -32,7 +32,6 @@ public class GameController {
 
     private final Logger logger = LoggerFactory.getLogger(GameController.class);
 
-    private final ActivityRepository activityRepository;
     private final SimpMessagingTemplate msgs;
     public ActivityController activityController;
     private final Random random;
@@ -51,21 +50,20 @@ public class GameController {
      */
     public GameController(Random random, ActivityRepository activityRepository, SimpMessagingTemplate msgs, ActivityController activityController) {
         this.random = random;
-        this.activityRepository = activityRepository;
         this.msgs = msgs;
         this.activityController = activityController;
         gameInstances = new ArrayList<>();
-
         players = new ArrayList<>();
-        serverNames = new HashMap<>();
+        this.serverNames = new HashMap<>();
 
         //hardcoded servers; perhaps we could create API for the serverNames
-        serverNames.put("default", 0);
-        serverNames.put("first", 1);
-        serverNames.put("second", 2);
+        this.serverNames.put("default", 0);
+        this.serverNames.put("first", 1);
+        this.serverNames.put("second", 2);
         for (String server : serverNames.keySet()) {
             gameInstances.add(new GameInstanceServer(gameInstances.size(), GameInstance.MULTI_PLAYER, this, msgs, server));
         }
+
     }
 
 //    ---------------------------------------------------------------------------
@@ -113,7 +111,8 @@ public class GameController {
                 currGameInstance.getPlayers().add(savedPlayer.toPlayer(currGameInstance));
                 logger.info("[GI " + (currGameInstance.getId()) + "] PLAYER (" + savedPlayer.getId() +
                         ") STARTED MP GAME: NAME=" + savedPlayer.getName());
-                currGameInstance.updatePlayerList();
+                if (msgs != null)
+                    currGameInstance.updatePlayerList();
                 break;
 
             default:
@@ -130,8 +129,8 @@ public class GameController {
             return ResponseEntity.ok(new InputStreamResource(inputStream));
         } catch (FileNotFoundException e) {
             logger.debug("Image " + activityFolder + "/" + activityFile + " not found!");
+            return ResponseEntity.notFound().build();
         }
-        return ResponseEntity.notFound().build();
     }
 
 
@@ -234,6 +233,8 @@ public class GameController {
         }
         return ResponseEntity.ok(res);
     }
+    // ------------------------------------ ADDITIONAL METHODS ------------------------------------------------------
+
 
     public void createNewMultiplayerLobby(String serverName) {
         GameInstanceServer newGameInstance = new GameInstanceServer(gameInstances.size(), GameInstance.MULTI_PLAYER, this, msgs, serverName);
@@ -244,6 +245,10 @@ public class GameController {
 
     public List<GameInstanceServer> getGameInstances() {
         return gameInstances;
+    }
+
+    public List<SimpleUser> getPlayers() {
+        return players;
     }
 
     public Map<String, Integer> getServerNames() {
