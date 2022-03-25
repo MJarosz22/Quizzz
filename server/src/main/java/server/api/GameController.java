@@ -60,6 +60,9 @@ public class GameController {
         this.createNewMultiplayerLobby("default");
         this.createNewMultiplayerLobby("first");
         this.createNewMultiplayerLobby("second");
+
+        // ASSUMPTION: we consider the current last multiplayerGameInstanceID to be 0 (the one matching "default" serverName)
+        currentMPGIId = 0;
     }
 
 //    ---------------------------------------------------------------------------
