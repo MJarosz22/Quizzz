@@ -60,6 +60,8 @@ public class GameCtrl {
                 Platform.runLater(() -> goToMoreExpensive(question)));
         subscribe("/topic/" + getPlayer().getGameInstanceId() + "/questionwhichone", QuestionWhichOne.class, question ->
                 Platform.runLater(() -> goToWhichOne(question)));
+        subscribe("/topic/" + getPlayer().getGameInstanceId() + "/questioninsteadof", QuestionInsteadOf.class, question ->
+                Platform.runLater(() -> goToInsteadOf(question)));
     }
 
     public void submitAnswer(Answer answer) {
@@ -84,5 +86,9 @@ public class GameCtrl {
 
     private void goToWhichOne(QuestionWhichOne question) {
         mainCtrl.showWhichOne(question);
+    }
+
+    private void goToInsteadOf(QuestionInsteadOf question) {
+        mainCtrl.showInsteadOf(question);
     }
 }
