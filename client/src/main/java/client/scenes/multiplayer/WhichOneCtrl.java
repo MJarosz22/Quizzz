@@ -4,6 +4,7 @@ import client.scenes.MainCtrl;
 import client.utils.ServerUtils;
 import commons.Answer;
 import commons.QuestionWhichOne;
+import commons.player.SimpleUser;
 import javafx.application.Platform;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
@@ -24,7 +25,7 @@ import java.util.TimerTask;
 public class WhichOneCtrl implements QuestionCtrl {
 
     @FXML
-    private Text questionTitle, timer, score, points, answer, option4, correct_guess, questionCount;
+    private Text questionTitle, timer, score, points, answer, option4, correct_guess, questionCount, disconnect;
 
     @FXML
     private AnchorPane emoji;
@@ -72,6 +73,7 @@ public class WhichOneCtrl implements QuestionCtrl {
         questionTitle.setText(question.getTitle());
         questionCount.setText("Question " + question.getNumber() + "/20");
         option4.setText(question.getActivity().getTitle());
+        disconnect.setVisible(false);
         progressBar.setProgress(question.getNumber() / 20.0d + 0.05);
         answer1.setText(String.valueOf(question.getAnswers()[0]));
         answer2.setText(String.valueOf(question.getAnswers()[1]));
@@ -156,5 +158,17 @@ public class WhichOneCtrl implements QuestionCtrl {
         answer1.setSelected(false);
         answer2.setSelected(false);
         answer3.setSelected(false);
+    }
+
+    @Override
+    public void showDisconnect(SimpleUser disconnectPlayer) {
+        disconnect.setText(disconnectPlayer.getName() + " disconnected");
+        disconnect.setVisible(true);
+        new Timer().schedule(new TimerTask() {
+            @Override
+            public void run() {
+                scheduler.cancel();
+            }
+        }, 5000);
     }
 }

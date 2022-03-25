@@ -4,6 +4,7 @@ import client.scenes.MainCtrl;
 import client.utils.ServerUtils;
 import commons.Answer;
 import commons.QuestionMoreExpensive;
+import commons.player.SimpleUser;
 import javafx.application.Platform;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
@@ -24,7 +25,7 @@ import java.util.TimerTask;
 public class MoreExpensiveCtrl implements QuestionCtrl{
 
     @FXML
-    private Text questionTitle, timer, score, points, answer, correct_guess, questionCount;
+    private Text questionTitle, timer, score, points, answer, correct_guess, questionCount, disconnect;
 
     @FXML
     private AnchorPane emoji;
@@ -76,6 +77,7 @@ public class MoreExpensiveCtrl implements QuestionCtrl{
         option1Button.setText(question.getActivities()[0].getTitle());
         option2Button.setText(question.getActivities()[1].getTitle());
         option3Button.setText(question.getActivities()[2].getTitle());
+        disconnect.setVisible(false);
         progressBar.setProgress(question.getNumber() / 20.0d + 0.05);
         try {
             Image loadimage1 = new Image(server.getImage(question.getActivities()[0]));
@@ -157,5 +159,17 @@ public class MoreExpensiveCtrl implements QuestionCtrl{
         option1Button.setStyle("");
         option2Button.setStyle("");
         option3Button.setStyle("");
+    }
+
+    @Override
+    public void showDisconnect(SimpleUser disconnectPlayer) {
+        disconnect.setText(disconnectPlayer.getName() + " disconnected");
+        disconnect.setVisible(true);
+        new Timer().schedule(new TimerTask() {
+            @Override
+            public void run() {
+                scheduler.cancel();
+            }
+        }, 5000);
     }
 }

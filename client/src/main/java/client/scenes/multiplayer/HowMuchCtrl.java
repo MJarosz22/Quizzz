@@ -5,6 +5,7 @@ import client.utils.ServerUtils;
 import com.google.inject.Inject;
 import commons.Answer;
 import commons.QuestionHowMuch;
+import commons.player.SimpleUser;
 import javafx.application.Platform;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
@@ -25,7 +26,7 @@ import java.util.TimerTask;
 public class HowMuchCtrl implements QuestionCtrl{
 
     @FXML
-    private Text questionTitle, timer, score, points, answer, option4, correct_guess, questionCount;
+    private Text questionTitle, timer, score, points, answer, option4, correct_guess, questionCount, disconnect;
 
     @FXML
     private AnchorPane emoji;
@@ -78,6 +79,7 @@ public class HowMuchCtrl implements QuestionCtrl{
         questionTitle.setText(question.getTitle());
         questionCount.setText("Question " + question.getNumber() + "/20");
         option4.setText(question.getActivity().getTitle());
+        disconnect.setVisible(false);
         progressBar.setProgress(question.getNumber() / 20.0d + 0.05);
         try {
             Image image = new Image(server.getImage(question.getActivity()));
@@ -137,5 +139,17 @@ public class HowMuchCtrl implements QuestionCtrl{
         correct_guess.setVisible(false);
         player_answer.clear();
 //        timer.setText("12000");
+    }
+
+    @Override
+    public void showDisconnect(SimpleUser disconnectPlayer) {
+        disconnect.setText(disconnectPlayer.getName() + " disconnected");
+        disconnect.setVisible(true);
+        new Timer().schedule(new TimerTask() {
+            @Override
+            public void run() {
+                scheduler.cancel();
+            }
+        }, 5000);
     }
 }

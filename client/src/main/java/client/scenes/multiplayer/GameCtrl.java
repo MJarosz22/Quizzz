@@ -3,6 +3,7 @@ package client.scenes.multiplayer;
 import client.scenes.MainCtrl;
 import client.utils.ServerUtils;
 import commons.*;
+import commons.player.Player;
 import commons.player.SimpleUser;
 import communication.RequestToJoin;
 import javafx.application.Platform;
@@ -49,6 +50,8 @@ public class GameCtrl {
         });
         subscribe("/topic/" + player.getGameInstanceId() + "/postquestion", Answer.class, answer ->
                 Platform.runLater(() -> mainCtrl.getCurrentQuestionScene().postQuestion(answer)));
+        subscribe("/topic/" + player.getGameInstanceId() + "/playerdisconnect", SimpleUser.class, playerDisconnect ->
+                Platform.runLater(() -> mainCtrl.getCurrentQuestionScene().showDisconnect(playerDisconnect)));
 
         //TODO FIND WAY TO DEAL WITH SUBCLASSES OF QUESTION
         //TODO MAKE IT SO THAT TIMERS WITHIN QUESTION CLASSES STOP WHEN DISCONNECTED
