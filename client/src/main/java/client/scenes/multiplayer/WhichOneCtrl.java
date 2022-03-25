@@ -244,7 +244,7 @@ public class WhichOneCtrl implements QuestionCtrl {
             case "laugh":
                 emojiBold(laugh, laughPic);
                 break;
-            case "default":
+            default:
                 System.out.println("INVALID EMOJI");
         }
     }
