@@ -859,7 +859,6 @@ public class SinglePlayerGameCtrl {
             }
 
             Platform.runLater(() -> {
-                server.disconnect(player);
                 mainCtrl.showSinglePlayerGameOver();
                 progressBar.setProgress(1);
             });
@@ -917,7 +916,7 @@ public class SinglePlayerGameCtrl {
         confirmationExit.setStyle("-fx-background-color: #91e4fb; ");
     }
 
-    public static boolean getGameIsOver(){
+    public static boolean getGameIsOver() {
         return gameIsOver;
     }
 
