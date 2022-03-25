@@ -141,6 +141,10 @@ public class HowMuchCtrl implements QuestionCtrl{
 //        timer.setText("12000");
     }
 
+    /**
+     * Displays a message when another player disconnects
+     * @param disconnectPlayer
+     */
     @Override
     public void showDisconnect(SimpleUser disconnectPlayer) {
         disconnect.setText(disconnectPlayer.getName() + " disconnected");

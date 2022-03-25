@@ -161,6 +161,10 @@ public class MoreExpensiveCtrl implements QuestionCtrl{
         option3Button.setStyle("");
     }
 
+    /**
+     * Displays a message when another player disconnects
+     * @param disconnectPlayer
+     */
     @Override
     public void showDisconnect(SimpleUser disconnectPlayer) {
         disconnect.setText(disconnectPlayer.getName() + " disconnected");

@@ -160,6 +160,10 @@ public class WhichOneCtrl implements QuestionCtrl {
         answer3.setSelected(false);
     }
 
+    /**
+     * Displays a message when another player disconnects
+     * @param disconnectPlayer
+     */
     @Override
     public void showDisconnect(SimpleUser disconnectPlayer) {
         disconnect.setText(disconnectPlayer.getName() + " disconnected");
