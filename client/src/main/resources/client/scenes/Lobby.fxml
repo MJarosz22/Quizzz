@@ -34,7 +34,7 @@
             <Font name="Courier New" size="24.0"/>
         </font>
     </Text>
-    <Label fx:id="labelName" layoutX="835.0" layoutY="30.0">
+    <Label fx:id="timer" layoutX="835.0" layoutY="30.0">
         <font>
             <Font name="Courier New" size="18.0"/>
         </font>

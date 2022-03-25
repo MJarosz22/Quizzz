@@ -1,10 +1,8 @@
 package client.scenes;
 
+import client.scenes.multiplayer.GameCtrl;
 import client.utils.ServerUtils;
 import com.google.inject.Inject;
-import commons.GameInstance;
-import commons.player.SimpleUser;
-import communication.RequestToJoin;
 import javafx.fxml.FXML;
 import javafx.scene.control.Alert;
 import javafx.scene.control.TextField;
@@ -15,14 +13,16 @@ public class MultiPlayerCtrl {
 
     private final ServerUtils server;
     private final MainCtrl mainCtrl;
+    private final GameCtrl gameCtrl;
 
     @FXML
-    private TextField textfieldName;
+    private TextField textfieldName, textfieldServer;
 
     @Inject
-    public MultiPlayerCtrl(ServerUtils server, MainCtrl mainCtrl) {
+    public MultiPlayerCtrl(ServerUtils server, MainCtrl mainCtrl, GameCtrl gameCtrl) {
         this.server = server;
         this.mainCtrl = mainCtrl;
+        this.gameCtrl = gameCtrl;
     }
 
     public void back() {
@@ -30,43 +30,40 @@ public class MultiPlayerCtrl {
         mainCtrl.showSplash();
     }
 
-    // To be added when making the main game scene, in order for the player to play
     public void join() {
-        if (!getTextFieldName().equals("") && !containsName(getTextFieldName())) {
-
-            SimpleUser player = server.addPlayer(new RequestToJoin(getTextFieldName(), GameInstance.MULTI_PLAYER));
-            mainCtrl.setPlayer(player);
-            LobbyCtrl lobbyCtrl = mainCtrl.getLobbyCtrl();
-            System.out.println(player);
-            lobbyCtrl.changePrompt();
-            this.textfieldName.clear();
-            mainCtrl.showLobby();
-            //TODO Make it so that player goes directly into game instead of going to lobby
-        } else {
-            Alert alert = new Alert(Alert.AlertType.ERROR,"This name already exists. Try a different one");
+        if (!containsServer(getTextFieldServer())) {
+            Alert alert = new Alert(Alert.AlertType.ERROR, "Provided server is not available!");
             alert.show();
-            System.out.println("NAME ALREADY EXISTS!"); //We must make an actual pop-up
+        } else if (containsName(getTextFieldName())) {
+            Alert alert = new Alert(Alert.AlertType.ERROR, "This name already exists. Try a different one");
+            alert.show();
+        } else if (getTextFieldName().equals("")) {
+            Alert alert = new Alert(Alert.AlertType.ERROR, "This is an empty name. Try a different one");
+            alert.show();
+        } else {
+            gameCtrl.start(getTextFieldName(), getTextFieldServer());
+            this.textfieldName.clear();
+            mainCtrl.getLobbyCtrl().init();
+            mainCtrl.showLobby();
         }
-
     }
 
     public String getTextFieldName() {
         return textfieldName.getText();
     }
 
-    private boolean containsName(String name) {
-        boolean nameExists = false;
-        int lastGIId = server.getLastGIIdMult();
-        List<SimpleUser> simpleUserList = server.getPlayerList(lastGIId);
-        int i = 0;
-        while (!nameExists && i < simpleUserList.size()){
-            if (simpleUserList.get(i).getName().toLowerCase().trim().equals(name.toLowerCase().trim())){
-                nameExists = true;
-            }
-                i++;
-        }
+    public String getTextFieldServer() {
+        return textfieldServer.getText();
+    }
 
-        return nameExists;
+    private boolean containsName(String name) {
+        List<String> playerNames = server.connectedPlayersOnServer(getTextFieldServer());
+        return playerNames.contains(name);
+    }
+
+    private boolean containsServer(String serverName) {
+        List<String> availableServers = server.availableServers();
+        return availableServers.contains(serverName);
     }
 
 }

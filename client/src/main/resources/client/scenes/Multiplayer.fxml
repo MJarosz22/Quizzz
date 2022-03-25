@@ -26,8 +26,8 @@
             <Font name="Courier New" size="18.0"/>
         </font>
     </TextField>
-    <TextField alignment="CENTER" layoutX="377.0" layoutY="280.0" prefHeight="36.0" prefWidth="209.0"
-               promptText="Server name">
+    <TextField fx:id="textfieldServer" alignment="CENTER" layoutX="377.0" layoutY="280.0" prefHeight="36.0"
+               prefWidth="209.0" promptText="Server name" text="default">
         <font>
             <Font name="Courier New" size="18.0"/>
         </font>

@@ -16,6 +16,7 @@
 package client;
 
 import client.scenes.*;
+import client.scenes.multiplayer.*;
 import client.utils.ServerUtils;
 import com.google.inject.Injector;
 import commons.player.SimpleUser;
@@ -49,7 +50,15 @@ public class Main extends Application {
         var overview = FXML.load(ActivityOverviewCtrl.class, "client", "scenes", "ActivityOverview.fxml");
         var add = FXML.load(AddActivityCtrl.class, "client", "scenes", "AddActivity.fxml");
 
-        mainCtrl.initialize(primaryStage, home, single, singleGame, singleGameOver, multi, leaderboard, lobby, overview, add);
+        var gameCtrl = INJECTOR.getInstance(GameCtrl.class);
+        var moreExpensive = FXML.load(MoreExpensiveCtrl.class,
+                "client", "scenes", "GameMoreExpensive.fxml");
+        var howMuch = FXML.load(HowMuchCtrl.class, "client", "scenes", "GameHowMuch.fxml");
+        var whichOne = FXML.load(WhichOneCtrl.class, "client", "scenes", "GameWhichOne.fxml");
+        var insteadOf = FXML.load(InsteadOfCtrl.class, "client", "scenes", "GameInsteadOf.fxml");
+
+        mainCtrl.initialize(primaryStage, home, single, singleGame, singleGameOver, multi,
+                leaderboard, lobby, gameCtrl, moreExpensive, howMuch, whichOne, insteadOf, overview, add);
         primaryStage.setOnCloseRequest(event -> {
             Alert alert = new Alert(Alert.AlertType.CONFIRMATION, "Do you want to close the game?", ButtonType.YES, ButtonType.NO);
             ButtonType result = alert.showAndWait().orElse(ButtonType.NO);
@@ -67,11 +76,14 @@ public class Main extends Application {
      */
     @Override
     public void stop() {
-        var mainCtrl = INJECTOR.getInstance(MainCtrl.class);
-        SimpleUser player = mainCtrl.getPlayer();
+        var gameCtrl = INJECTOR.getInstance(GameCtrl.class);
+        SimpleUser player = gameCtrl.getPlayer();
         ServerUtils server = new ServerUtils();
+        //if (player != null) //TODO IS THIS THE RIGHT IF STATEMENT TO CHECK WHETHER PLAYER EXISTS?
+            //gameCtrl.disconnect();
+
         if (server.containsPlayer(player) && SinglePlayerGameCtrl.getGameIsOver() == false )
-            server.disconnect(player);
+           server.disconnect(player); //SINGLEPLAYER IMPL (DON'T KNOW HOW IT CORRELATES WITH MP)
     }
 
 }

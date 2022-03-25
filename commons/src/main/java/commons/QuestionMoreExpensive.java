@@ -4,6 +4,9 @@ import org.apache.commons.lang3.builder.EqualsBuilder;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
 import org.apache.commons.lang3.builder.ToStringBuilder;
 
+import java.util.Arrays;
+import java.util.Comparator;
+
 /**
  * This is a multiple-choice type of question.
  * This question type asks the user to choose from the 3 given activities the one that consumes the highest amount of energy.
@@ -16,18 +19,32 @@ public class QuestionMoreExpensive extends Question {
 
     private Activity[] activities = new Activity[3];
 
-    public QuestionMoreExpensive(Activity[] activities) {
+    public QuestionMoreExpensive(Activity[] activities, int number) {
         this.setTitle("What requires more energy?");
         this.activities = activities;
+        setNumber(number);
     }
 
     public QuestionMoreExpensive() {
     }
 
+    /**
+     * Getter for the 3 activities provided to the user as options. He/she will be asked to choose which one he/she considers
+     * to consume more energy
+     *
+     * @return a list (fixed size 3) of Activity object instances, from which the user is asked to choose the
+     * one that he/she thinks is the most energy-consuming
+     */
     public Activity[] getActivities() {
         return this.activities;
     }
 
+    /**
+     * Setter for the 3 activities provided to the user as options
+     *
+     * @param activities a list (fixed size 3) of Activity object instances, from which the user is asked to choose the
+     *                   one that he/she thinks is the most energy-consuming
+     */
     public void setActivities(Activity[] activities) {
         this.activities = activities;
     }
@@ -44,6 +61,22 @@ public class QuestionMoreExpensive extends Question {
         if (activities[1].getConsumption_in_wh() > max) max = activities[1].getConsumption_in_wh();
         if (activities[2].getConsumption_in_wh() > max) max = activities[2].getConsumption_in_wh();
         return max;
+    }
+
+    /**
+     * Additional methods that returns what number is assigned to the highest consumption activity from the 3 selected
+     * 1 for the 1st option, 2 for the 2nd option and 3 for the 3rd option.
+     * NOTE: 'activities' array was indexed starting from 0, (i+1) MUST have been returned instead.
+     *
+     * @return Index of the option that relates to the highest consumption activity
+     */
+    @Override
+    public long getCorrectAnswer() {
+        Activity maxActivity = Arrays.stream(activities).max(Comparator.comparingLong(Activity::getConsumption_in_wh)).get();
+        for (int i = 0; i < 3; i++) {
+            if (activities[i].equals(maxActivity)) return i + 1;
+        }
+        return 0;
     }
 
     @Override

@@ -1,8 +1,10 @@
 package client.scenes;
 
+import client.scenes.multiplayer.GameCtrl;
 import client.utils.ServerUtils;
 import com.google.inject.Inject;
 import commons.player.SimpleUser;
+import javafx.application.Platform;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.collections.FXCollections;
 import javafx.fxml.FXML;
@@ -20,11 +22,12 @@ public class LobbyCtrl {
 
     private final ServerUtils server;
     private final MainCtrl mainCtrl;
+    private final GameCtrl gameCtrl;
     private static int persons;
     private boolean sceneChanged;
 
     @FXML
-    private Label labelName;
+    private Label timer;
 
     @FXML
     private Text personsText;
@@ -36,16 +39,25 @@ public class LobbyCtrl {
     private TableColumn<SimpleUser, String> columnName;
 
     @Inject
-    public LobbyCtrl(ServerUtils server, MainCtrl mainCtrl) {
+    public LobbyCtrl(ServerUtils server, MainCtrl mainCtrl, GameCtrl gameCtrl) {
         this.server = server;
         this.mainCtrl = mainCtrl;
+        this.gameCtrl = gameCtrl;
+    }
+
+    public void init() {
+        Platform.runLater(() -> {
+            timer.setVisible(false);
+            List<SimpleUser> players = server.getPlayers(gameCtrl.getPlayer());
+            updatePlayers(players);
+        });
     }
 
     public void initialize() {
-        persons = 0;
+//        persons = 0;
         columnName.setCellValueFactory(q -> new SimpleStringProperty(q.getValue().getName()));
-        this.sceneChanged = false;
-        startPolling();
+//        this.sceneChanged = false;
+//        startPolling();
     }
 
     public void startPolling() {
@@ -53,10 +65,10 @@ public class LobbyCtrl {
         Runnable poller = new Runnable() {
             @Override
             public void run() {
-                if (mainCtrl.getPlayer() != null) {
+                if (gameCtrl.getPlayer() != null) {
                     if (sceneChanged)
                         executor.shutdown();
-                    setTablePlayers(ServerUtils.getPlayers(mainCtrl.getPlayer()));
+                    setTablePlayers(server.getPlayers(gameCtrl.getPlayer()));
                     changePrompt();
                 }
             }
@@ -66,25 +78,30 @@ public class LobbyCtrl {
         executor.scheduleAtFixedRate(poller, 0, 1, TimeUnit.SECONDS);
     }
 
+    public void updatePlayers(List<SimpleUser> players) {
+        persons = players.size();
+        setTablePlayers(players);
+        changePrompt();
+    }
 
     /**
      * When you press "LEAVE LOBBY" for the multi-player variant of the game, or "BACK"
      * in the singleplayer variant, the player should be disconnected and guided back to the splash screen.
      */
     public void back() {
-        SimpleUser player = mainCtrl.getPlayer();
+        SimpleUser player = gameCtrl.getPlayer();
         this.sceneChanged = true;
-        server.disconnect(player);
+        gameCtrl.disconnect();
+        // if (server.disconnect(player))
         System.out.println(player.getName() + " disconnected!");
         //decreaseNumberOfPlayers();
         mainCtrl.showSplash();
     }
 
-    // To be added when making the main game scene, in order for the player to play
     public void play() {
         this.sceneChanged = true;
-        //TODO CONNECT TO SERVER
-//        mainCtrl.showPlayMode();
+        server.startGame(gameCtrl.getPlayer());
+
     }
 
     /*
@@ -97,11 +114,7 @@ public class LobbyCtrl {
     }
 
     public int getPersons() {
-        return server.getPlayerList(server.getLastGIIdMult()).size();
-    }
-
-    public void setPersons(int persons) {
-        this.persons = persons;
+        return server.connectedPlayers(server.getLastGIIdMult()).size();
     }
 
     /**
@@ -131,9 +144,14 @@ public class LobbyCtrl {
 
     public void changePrompt() {
         if (getPersons() > 1)
-            personsText.setText("There are " + getPersons() + " players out of the maximum capacity of 50");
+            personsText.setText("There are " + persons + " players out of the maximum capacity of 50");
         else
-            personsText.setText("There is " + getPersons() + " player out of the maximum capacity of 50");
+            personsText.setText("There is " + persons + " player out of the maximum capacity of 50");
+    }
+
+    public void setCountdown(int time) {
+        timer.setVisible(true);
+        timer.setText(String.valueOf(time));
     }
 
     /*
