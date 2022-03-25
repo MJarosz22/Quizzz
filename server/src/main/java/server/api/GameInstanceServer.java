@@ -186,6 +186,7 @@ public class GameInstanceServer extends GameInstance {
 
     public boolean disconnectPlayer(SimpleUser player) {
         boolean status = getPlayers().remove(player);
+        msgs.convertAndSend("/topic/" + getId() + "/disconnectplayer", player);
         updatePlayerList();
         if (getState() != GameState.INLOBBY && getPlayers().isEmpty()) {
             stopGameInstance();
