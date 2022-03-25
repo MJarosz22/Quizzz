@@ -3,7 +3,6 @@ package client.scenes.multiplayer;
 import client.scenes.MainCtrl;
 import client.utils.ServerUtils;
 import commons.*;
-import commons.player.Player;
 import commons.player.SimpleUser;
 import communication.RequestToJoin;
 import javafx.application.Platform;

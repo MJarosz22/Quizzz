@@ -1,7 +1,6 @@
 package client.scenes.multiplayer;
 
 import commons.Answer;
-import commons.player.Player;
 import commons.player.SimpleUser;
 
 public interface QuestionCtrl {
