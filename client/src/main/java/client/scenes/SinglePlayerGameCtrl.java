@@ -18,6 +18,8 @@ import javafx.scene.text.Text;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.net.URI;
+import java.net.URL;
+import java.nio.file.FileSystems;
 import java.util.Random;
 import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.Executors;
@@ -32,9 +34,9 @@ public class SinglePlayerGameCtrl {
     private final MainCtrl mainCtrl;
     private final GameCtrl gameCtrl;
 
-    private final String correctEmojiPath = "client/src/main/resources/images/correct-answer.png";
-    private final String wrongEmojiPath = "client/src/main/resources/images/wrong-answer.png";
-    private final String timerPath = "client/src/main/resources/images/timer.png";
+    private  String correctEmojiPath = "/images/correct-answer.png";
+    private  String wrongEmojiPath = "/images/wrong-answer.png";
+    private  String timerPath = "/images/timer.png";
 
     private SimpleUser player;
     private GameInstance currentGame;
@@ -96,6 +98,9 @@ public class SinglePlayerGameCtrl {
                 leaveGame();
                 return;
             }
+            timerPath = relativeToAbsolute(timerPath);
+            correctEmojiPath = relativeToAbsolute(correctEmojiPath);
+            wrongEmojiPath = relativeToAbsolute(wrongEmojiPath);
             setTimerImage(timerImage);
             progressBar.setProgress(-0.05);
             score.setText("Your score: 0");
@@ -495,9 +500,9 @@ public class SinglePlayerGameCtrl {
      * @param timerImage AnchorPane object that is meant to display a timer image.
      */
     public void setTimerImage(AnchorPane timerImage) {
-        File file = new File(timerPath);
-        URI uri = file.toURI();
-        timerImage.setStyle("-fx-background-image: url(" + uri + ");");
+        URL url = SinglePlayerGameCtrl.class.getResource(this.timerPath);
+        timerImage.setStyle("-fx-background-image: url(" + url + ");");
+        System.out.println(url.toString());
     }
 
     /**
@@ -509,14 +514,13 @@ public class SinglePlayerGameCtrl {
      *                or a crying emoji image (otherwise)
      */
     public void setEmoji(AnchorPane emoji, boolean correct) {
-        emoji.setVisible(true);
-        File file;
+        URL url;
         if (correct)
-            file = new File(correctEmojiPath);
+            url = SinglePlayerGameCtrl.class.getResource(this.correctEmojiPath);
         else
-            file = new File(wrongEmojiPath);
-        URI uri = file.toURI();
-        emoji.setStyle("-fx-background-image: url(" + uri + ");");
+            url = SinglePlayerGameCtrl.class.getResource(this.wrongEmojiPath);
+        System.out.println(url.toString());
+        emoji.setStyle("-fx-background-image: url(" + url + ");");
     }
 
     /**
@@ -812,4 +816,7 @@ public class SinglePlayerGameCtrl {
         return gameIsOver;
     }
 
+    public static String relativeToAbsolute (String relativePath) {
+        return FileSystems.getDefault().getPath(relativePath).normalize().toAbsolutePath().toString();
+    }
 }

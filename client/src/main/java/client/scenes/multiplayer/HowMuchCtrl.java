@@ -66,7 +66,7 @@ public class HowMuchCtrl implements QuestionCtrl{
         try {
             timerImageSource = new Image(new FileInputStream("client/src/main/resources/images/timer.png"));
         } catch (FileNotFoundException e) {
-            System.out.println("Couldn't find timer image.");
+            System.out.println("Couldn't find timer image for multiplayer.");
         }
     }
 
