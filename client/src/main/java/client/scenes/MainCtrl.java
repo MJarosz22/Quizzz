@@ -21,10 +21,13 @@ import commons.QuestionHowMuch;
 import commons.QuestionInsteadOf;
 import commons.QuestionMoreExpensive;
 import commons.QuestionWhichOne;
+import commons.player.SimpleUser;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.stage.Stage;
 import javafx.util.Pair;
+
+import java.util.List;
 
 
 public class MainCtrl {
@@ -72,6 +75,9 @@ public class MainCtrl {
     private InsteadOfCtrl insteadOfCtrl;
     private Scene insteadOf;
 
+    private MPGameOverCtrl gameOverCtrl;
+    private Scene gameOver;
+
     private QuestionCtrl currentQuestionScene;
 
     public void initialize(Stage primaryStage, Pair<SplashScreenCtrl, Parent> splash, Pair<SinglePlayerCtrl,
@@ -82,7 +88,7 @@ public class MainCtrl {
                            GameCtrl gameCtrl, Pair<MoreExpensiveCtrl, Parent> moreExpensive,
                            Pair<HowMuchCtrl, Parent> howMuch, Pair<WhichOneCtrl, Parent> whichOne,
                            Pair<InsteadOfCtrl, Parent> insteadOf, Pair<ActivityOverviewCtrl, Parent> overview,
-                           Pair<AddActivityCtrl, Parent> add) {
+                           Pair<AddActivityCtrl, Parent> add, Pair<MPGameOverCtrl, Parent> gameOver) {
 
 
         this.primaryStage = primaryStage;
@@ -126,6 +132,9 @@ public class MainCtrl {
 
         this.addActivityCtrl = add.getKey();
         this.add = new Scene(add.getValue());
+
+        this.gameOverCtrl = gameOver.getKey();
+        this.gameOver = new Scene(gameOver.getValue());
 
         showSplash();
         primaryStage.show();
@@ -207,6 +216,12 @@ public class MainCtrl {
         primaryStage.setTitle("Quizzz Instead Of");
         insteadOfCtrl.init(question);
         primaryStage.setScene(insteadOf);
+    }
+
+    public void showMPGameOver(List<SimpleUser> players){
+        primaryStage.setTitle("MPGameOver");
+        gameOverCtrl.init(players);
+        primaryStage.setScene(gameOver);
     }
 
     public LobbyCtrl getLobbyCtrl() {

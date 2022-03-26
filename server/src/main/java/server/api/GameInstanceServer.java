@@ -118,20 +118,22 @@ public class GameInstanceServer extends GameInstance {
         setState(GameState.INQUESTION);
         if (questionTask != null) questionTask.cancel();
         questionNumber++;
-        if (questionNumber > 20) {
-            //TODO ADD POST-GAME SCREEN AND FUNCTIONALITY
-        }
-        sendQuestion(questionNumber);
-        startingTime = System.currentTimeMillis();
-        answers.clear();
-        questionTask = new TimerTask() {
-            @Override
-            public void run() {
-                postQuestion();
+        if (questionNumber > 3) {
+            msgs.convertAndSend("/topic/" + getId() + "/MPgameOver", getPlayers());
+            logger.info(String.valueOf(getPlayers().get(0).getScore()));
+        }else {
+            sendQuestion(questionNumber);
+            startingTime = System.currentTimeMillis();
+            answers.clear();
+            questionTask = new TimerTask() {
+                @Override
+                public void run() {
+                    postQuestion();
 //                nextQuestion();
-            }
-        };
-        questionTimer.schedule(questionTask, questionTime);
+                }
+            };
+            questionTimer.schedule(questionTask, questionTime);
+        }
     }
 
     public void postQuestion() {

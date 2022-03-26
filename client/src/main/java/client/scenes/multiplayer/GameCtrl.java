@@ -11,6 +11,8 @@ import javax.inject.Inject;
 import java.util.List;
 import java.util.function.Consumer;
 
+import static client.utils.ServerUtils.connectedPlayers;
+
 public class GameCtrl {
 
     private SimpleUser player;
@@ -69,6 +71,12 @@ public class GameCtrl {
                 Platform.runLater(() -> goToWhichOne(question)));
         subscribe("/topic/" + getPlayer().getGameInstanceId() + "/questioninsteadof", QuestionInsteadOf.class, question ->
                 Platform.runLater(() -> goToInsteadOf(question)));
+
+        subscribe("/topic/" + getPlayer().getGameInstanceId() + "/MPgameOver", List.class, playersInMPgame -> {
+                List<SimpleUser> players  = server.connectedPlayers(getPlayer().getGameInstanceId());
+                System.out.println(players.get(0).getScore());
+                Platform.runLater(() -> goToGameOver(players));
+        });
     }
 
     public void submitAnswer(Answer answer) {
@@ -97,5 +105,9 @@ public class GameCtrl {
 
     private void goToInsteadOf(QuestionInsteadOf question) {
         mainCtrl.showInsteadOf(question);
+    }
+
+    private void goToGameOver(List<SimpleUser> players){
+        mainCtrl.showMPGameOver(players);
     }
 }
