@@ -121,6 +121,31 @@ public class MoreExpensiveCtrl implements QuestionCtrl {
         confirmationExit.setDisable(true);
     }
 
+    public void decreaseTime(ActionEvent actionEvent){
+        server.useTimePowerup(gameCtrl.getPlayer(),50);
+    }
+
+    @Override
+    public void reduceTimer(int percentage){
+        scheduler.cancel();
+        scheduler = new TimerTask() {
+            @Override
+            public void run() {
+                int timeLeft = server.getTimeLeft(gameCtrl.getPlayer())*percentage/100;
+                Platform.runLater(() -> {
+                    timer.setText(String.valueOf(Math.round(timeLeft / 1000d)));
+                });
+                if(timeLeft==0){
+                    Platform.runLater(() ->{
+                        disableAnswers();
+                    });
+                }
+
+            }
+        };
+        new Timer().scheduleAtFixedRate(scheduler, 0, 100);
+    }
+
     public void leaveGame(ActionEvent actionEvent) {
         scheduler.cancel();
         gameCtrl.disconnect();
@@ -177,6 +202,19 @@ public class MoreExpensiveCtrl implements QuestionCtrl {
         option1Button.setStyle("");
         option2Button.setStyle("");
         option3Button.setStyle("");
+        enableAnswers();
+    }
+
+    public void disableAnswers(){
+        option1Button.setDisable(true);
+        option2Button.setDisable(true);
+        option3Button.setDisable(true);
+    }
+
+    public void enableAnswers(){
+        option1Button.setDisable(false);
+        option2Button.setDisable(false);
+        option3Button.setDisable(false);
     }
 
     /**

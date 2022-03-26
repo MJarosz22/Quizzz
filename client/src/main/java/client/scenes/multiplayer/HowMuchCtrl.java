@@ -116,6 +116,31 @@ public class HowMuchCtrl implements QuestionCtrl {
         confirmationExit.setStyle("-fx-background-color: #91e4fb; ");
     }
 
+    public void decreaseTime(ActionEvent actionEvent){
+        server.useTimePowerup(gameCtrl.getPlayer(),50);
+    }
+
+    @Override
+    public void reduceTimer(int percentage){
+        scheduler.cancel();
+        scheduler = new TimerTask() {
+            @Override
+            public void run() {
+                int timeLeft = server.getTimeLeft(gameCtrl.getPlayer())/2;
+                Platform.runLater(() -> {
+                    timer.setText(String.valueOf(Math.round(timeLeft / 1000d)));
+                });
+                if(timeLeft==0){
+                    Platform.runLater(() ->{
+                        disableAnswers();
+                    });
+                }
+
+            }
+        };
+        new Timer().scheduleAtFixedRate(scheduler, 0, 100);
+    }
+
     public void submitAnswer(ActionEvent actionEvent) {
         gameCtrl.submitAnswer(new Answer(Long.valueOf(player_answer.getText())));
         //TODO ERROR HANDLING
@@ -139,7 +164,16 @@ public class HowMuchCtrl implements QuestionCtrl {
     public void resetUI() {
         correct_guess.setVisible(false);
         player_answer.clear();
+        enableAnswers();
 //        timer.setText("12000");
+    }
+
+    public void disableAnswers(){
+        this.submit_guess.setDisable(true);
+    }
+
+    public void enableAnswers(){
+        this.submit_guess.setDisable(false);
     }
 
     /**

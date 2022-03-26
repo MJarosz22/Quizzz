@@ -13,4 +13,5 @@ public interface QuestionCtrl {
 
     public void showDisconnect(SimpleUser playerDisconnect);
 
+    public void reduceTimer(int percentage);
 }

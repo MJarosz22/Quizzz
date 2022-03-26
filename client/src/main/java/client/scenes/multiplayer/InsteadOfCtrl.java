@@ -125,6 +125,31 @@ public class InsteadOfCtrl implements QuestionCtrl {
         confirmationExit.setDisable(true);
     }
 
+    public void decreaseTime(ActionEvent actionEvent){
+        server.useTimePowerup(gameCtrl.getPlayer(),50);
+    }
+
+    @Override
+    public void reduceTimer(int percentage){
+        scheduler.cancel();
+        scheduler = new TimerTask() {
+            @Override
+            public void run() {
+                int timeLeft = server.getTimeLeft(gameCtrl.getPlayer())*percentage/100;
+                Platform.runLater(() -> {
+                    timer.setText(String.valueOf(Math.round(timeLeft / 1000d)));
+                });
+                if(timeLeft==0){
+                    Platform.runLater(() ->{
+                        disableAnswers();
+                    });
+                }
+
+            }
+        };
+        new Timer().scheduleAtFixedRate(scheduler, 0, 100);
+    }
+
     public void leaveGame(ActionEvent actionEvent) {
         scheduler.cancel();
         gameCtrl.disconnect();
@@ -184,12 +209,25 @@ public class InsteadOfCtrl implements QuestionCtrl {
 
     @Override
     public void resetUI() {
+        enableAnswers();
         answer1.setStyle("");
         answer2.setStyle("");
         answer3.setStyle("");
         answer1.setSelected(false);
         answer2.setSelected(false);
         answer3.setSelected(false);
+    }
+
+    public void disableAnswers(){
+        answer1.setDisable(true);
+        answer2.setDisable(true);
+        answer3.setDisable(true);
+    }
+
+    public void enableAnswers(){
+        answer1.setDisable(false);
+        answer2.setDisable(false);
+        answer3.setDisable(false);
     }
 
     /**

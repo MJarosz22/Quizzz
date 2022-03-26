@@ -1,7 +1,7 @@
 package commons.player;
 
 import commons.GameInstance;
-import commons.PowerUp;
+import commons.powerups.PowerUp;
 import org.apache.commons.lang3.builder.EqualsBuilder;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
 import org.apache.commons.lang3.builder.ToStringBuilder;

@@ -4,6 +4,7 @@ import client.scenes.MainCtrl;
 import client.utils.ServerUtils;
 import commons.*;
 import commons.player.SimpleUser;
+import commons.powerups.TimePU;
 import communication.RequestToJoin;
 import javafx.application.Platform;
 
@@ -51,6 +52,12 @@ public class GameCtrl {
         subscribe("/topic/" + player.getGameInstanceId() + "/emoji", Emoji.class, emoji -> {
             System.out.println(emoji.getType());
             Platform.runLater(() -> mainCtrl.getCurrentQuestionScene().showEmoji(emoji.getType()));
+        });
+
+        subscribe("/topic/" + player.getGameInstanceId() + "/decrease-time", TimePU.class, timePU -> {
+            System.out.println("time reduced by "+timePU.getPercentage()+"%");
+            if (!player.getCookie().equals(timePU.getPlayerCookie()))
+                Platform.runLater(() -> mainCtrl.getCurrentQuestionScene().reduceTimer(timePU.getPercentage()));
         });
 
         subscribe("/topic/" + player.getGameInstanceId() + "/postquestion", Answer.class, answer ->

@@ -3,6 +3,7 @@ package client.utils;
 import commons.Activity;
 import commons.Answer;
 import commons.Emoji;
+import commons.powerups.*;
 import commons.player.SimpleUser;
 import communication.RequestToJoin;
 import jakarta.ws.rs.NotFoundException;
@@ -263,6 +264,16 @@ public class ServerUtils {
                 .request(APPLICATION_JSON).cookie("user-id", player.getCookie())
                 .accept(APPLICATION_JSON)
                 .post(Entity.entity(answer, APPLICATION_JSON), Boolean.class);
+    }
+
+    public void useTimePowerup(SimpleUser player, int percentage) {
+        ClientBuilder
+                .newClient(new ClientConfig())
+                .target(SERVER)
+                .path("api/gameinstance/" + player.getGameInstanceId() + "/decrease-time")
+                .request(APPLICATION_JSON).cookie("user-id", player.getCookie())
+                .accept(APPLICATION_JSON)
+                .post(Entity.entity(new TimePU(percentage, player.getCookie()), APPLICATION_JSON));
     }
 
     public void sendEmoji(SimpleUser player, String emoji){

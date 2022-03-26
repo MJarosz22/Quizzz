@@ -3,12 +3,14 @@ package server.api;
 import commons.*;
 import commons.player.Player;
 import commons.player.SimpleUser;
+import commons.powerups.TimePU;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.sql.Time;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
@@ -146,6 +148,18 @@ public class GameInstanceController {
         if (reqPlayer == null) return ResponseEntity.status(HttpStatus.FORBIDDEN).build();
         gameInstances.get(gameInstanceId).sendEmoji(emoji);
         logger.info("Emoji received: " + emoji);
+        return ResponseEntity.ok(true);
+    }
+
+    @PostMapping("/{gameInstanceId}/decrease-time")
+    public ResponseEntity<Boolean> decreaseTime(@PathVariable int gameInstanceId,
+                                                @CookieValue(name = "user-id", defaultValue = "null") String cookie,
+                                                @RequestBody TimePU timePU){
+        if (gameInstances.get(gameInstanceId).getState().equals(GameState.STARTING)) return ResponseEntity.ok(true);
+        Player reqPlayer = getPlayerFromGameInstance(gameInstanceId, cookie);
+        if (reqPlayer == null) return ResponseEntity.status(HttpStatus.FORBIDDEN).build();
+        gameInstances.get(gameInstanceId).decreaseTime(timePU);
+        logger.info("Time decreased by "+timePU.getPercentage()+"%");
         return ResponseEntity.ok(true);
     }
 

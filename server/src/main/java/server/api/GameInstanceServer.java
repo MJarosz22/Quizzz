@@ -2,6 +2,7 @@ package server.api;
 
 import commons.*;
 import commons.player.SimpleUser;
+import commons.powerups.TimePU;
 import org.apache.commons.lang3.builder.EqualsBuilder;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
 import org.slf4j.Logger;
@@ -187,6 +188,14 @@ public class GameInstanceServer extends GameInstance {
     public void sendEmoji(Emoji emoji){
         System.out.println(emoji);
         msgs.convertAndSend("/topic/" + getId() + "/emoji", emoji);
+    }
+
+    public void decreaseTime(TimePU timePU){
+        if(getTimeLeft() > 1) {
+            System.out.println(timePU);
+            msgs.convertAndSend("/topic/" + getId() + "/decrease-time", timePU);
+
+        }
     }
 
     public boolean disconnectPlayer(SimpleUser player){
