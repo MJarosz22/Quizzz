@@ -9,10 +9,9 @@ import javafx.beans.binding.Bindings;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
-import javafx.scene.control.TableCell;
-import javafx.scene.control.TableColumn;
-import javafx.scene.control.TableView;
+import javafx.scene.control.*;
 import javafx.scene.control.cell.PropertyValueFactory;
+import javafx.scene.text.Text;
 
 import java.util.Comparator;
 import java.util.List;
@@ -32,6 +31,12 @@ public class MPGameOverCtrl {
     @FXML
     TableColumn<String, Integer> positionColumn;
 
+    @FXML
+    Button play_again;
+
+    @FXML
+    Text game_over;
+
     private final ServerUtils server;
     private final MainCtrl mainCtrl;
     private final GameCtrl gameCtrl;
@@ -44,6 +49,16 @@ public class MPGameOverCtrl {
     }
 
     public void init(List<SimpleUser> players) {
+        if(players.get(players.size() - 1).getName().equals("SENTINEL") && players.get(players.size() - 1).getScore() == -1){
+            players.remove(players.get(players.size() -1 ));
+            play_again.setDisable(true);
+            play_again.setVisible(false);
+            game_over.setVisible(false);
+        } else {
+            play_again.setDisable(false);
+            play_again.setVisible(true);
+            game_over.setVisible(true);
+        }
         setTablePlayers(players);
     }
 

@@ -76,6 +76,23 @@ public class GameCtrl {
         subscribe("/topic/" + getPlayer().getGameInstanceId() + "/questioninsteadof", QuestionInsteadOf.class, question ->
                 Platform.runLater(() -> goToInsteadOf(question)));
 
+        subscribe("/topic/" + getPlayer().getGameInstanceId() + "/MPgameMiddle", List.class, MPplayers -> {
+
+            Platform.runLater(() -> {
+                List<SimpleUser> simpleUserList = new ArrayList<>();
+                for(Object o : MPplayers) {
+                    LinkedHashMap linkedHashMap = (LinkedHashMap) o;
+                    String name = (String) linkedHashMap.get("name");
+                    Integer score = (Integer) linkedHashMap.get("score");
+                    System.out.println(name + " " + score);
+                    SimpleUser aux = new SimpleUser(name,score);
+                    simpleUserList.add(aux);
+                }
+                simpleUserList.add(new SimpleUser("SENTINEL", -1));
+                goToGameOver(simpleUserList);
+            });
+        });
+
         subscribe("/topic/" + getPlayer().getGameInstanceId() + "/MPgameOver", List.class, MPplayers -> {
 
                 Platform.runLater(() -> {
@@ -94,7 +111,6 @@ public class GameCtrl {
                         SimpleUser aux = new SimpleUser(name,score);
                         simpleUserList.add(aux);
                     }
-                    //System.out.println("I'm here");
                     goToGameOver(simpleUserList);
                 });
         });

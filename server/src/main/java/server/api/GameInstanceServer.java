@@ -118,19 +118,45 @@ public class GameInstanceServer extends GameInstance {
         setState(GameState.INQUESTION);
         if (questionTask != null) questionTask.cancel();
         questionNumber++;
+        if(questionNumber == 10){
+            Thread thread = new Thread(new Runnable() {
+                @Override
+                public void run() {
+                    msgs.convertAndSend("/topic/" + getId() + "/MPgameMiddle", getPlayers());
+                    try {
+                        Thread.sleep(5000);
+                    }catch (InterruptedException e) {
+                        System.out.println("Something went wrong with thread at line 130 : GameInstanceServer");
+                    }
+
+                    sendQuestion(questionNumber);
+                    startingTime = System.currentTimeMillis();
+                    answers.clear();
+                    questionTask = new TimerTask() {
+                        @Override
+                        public void run() {
+                            postQuestion();
+//                nextQuestion();
+                        }
+                    };
+                    questionTimer.schedule(questionTask, questionTime);
+                }
+            });
+        thread.start();
+        } else
         if (questionNumber > 19) {
-            msgs.convertAndSend("/topic/" + getId() + "/MPgameOver",  getPlayers());
-        }else {
+            msgs.convertAndSend("/topic/" + getId() + "/MPgameOver", getPlayers());
+        } else {
             sendQuestion(questionNumber);
             startingTime = System.currentTimeMillis();
             answers.clear();
             questionTask = new TimerTask() {
-                @Override
-                public void run() {
-                    postQuestion();
+                    @Override
+                    public void run() {
+                        postQuestion();
 //                nextQuestion();
-                }
-            };
+                    }
+                };
             questionTimer.schedule(questionTask, questionTime);
         }
     }
