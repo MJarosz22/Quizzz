@@ -81,6 +81,9 @@ public class HowMuchCtrl implements QuestionCtrl {
         option4.setText(question.getActivity().getTitle());
         disconnect.setVisible(false);
         progressBar.setProgress(question.getNumber() / 20.0d + 0.05);
+        score.setText("Your score: "+ gameCtrl.getPlayer().getScore());
+        answer.setVisible(false);
+        points.setVisible(false);
         try {
             Image image = new Image(server.getImage(question.getActivity()));
             image4.setImage(image);
@@ -123,7 +126,10 @@ public class HowMuchCtrl implements QuestionCtrl {
 
     @Override
     public void postQuestion(Answer answer) {
-
+        CharSequence input = player_answer.getCharacters();
+        long number = Long.parseLong(input.toString());
+        long correct_number = question.getActivity().getConsumption_in_wh();
+        awardPointsQuestionHowMuch(number, correct_number);
         correct_guess.setText("The correct answer is: " + answer.getAnswer());
         correct_guess.setVisible(true);
         new Timer().schedule(new TimerTask() {
@@ -134,6 +140,61 @@ public class HowMuchCtrl implements QuestionCtrl {
             }
         }, 5000);
     }
+
+    /**
+     * Additional method awards 100,75,50,25 or 0 points to a player, depending on how close he/she was to
+     * the correct answer, on behalf of our chosen strategy for this type of question.
+     *
+     * @param number         long value that represents the number inputted by the player.
+     * @param correct_number long value that represents the correct answer to our QuestionHowMuch type of question
+     */
+    public void awardPointsQuestionHowMuch(long number, long correct_number) {
+        if (number == correct_number) {
+            gameCtrl.getPlayer().addScore(100);
+            server.updatePlayer(gameCtrl.getPlayer());
+            score.setText("Your score: " + gameCtrl.getPlayer().getScore());
+            points.setText("+100 points");
+            points.setVisible(true);
+            answer.setText("Correct answer");
+            answer.setVisible(true);
+        } else {
+            if (number <= correct_number + (25 * correct_number) / 100 && number >= correct_number - (25 * correct_number) / 100) {
+                gameCtrl.getPlayer().addScore(75);
+                server.updatePlayer(gameCtrl.getPlayer());
+                score.setText("Your score: " + gameCtrl.getPlayer().getScore());
+                points.setText("+75 points");
+                points.setVisible(true);
+                answer.setText("Almost the correct answer");
+                answer.setVisible(true);
+            } else {
+                if (number <= correct_number + (50 * correct_number) / 100 && number >= correct_number - (50 * correct_number) / 100) {
+                    gameCtrl.getPlayer().addScore(50);
+                    server.updatePlayer(gameCtrl.getPlayer());
+                    score.setText("Your score: " + gameCtrl.getPlayer().getScore());
+                    points.setText("+50 points");
+                    points.setVisible(true);
+                    answer.setText("Not quite the correct answer");
+                    answer.setVisible(true);
+                } else {
+                    if (number <= correct_number + (75 * correct_number) / 100 && number >= correct_number - (75 * correct_number) / 100) {
+                        gameCtrl.getPlayer().addScore(25);
+                        server.updatePlayer(gameCtrl.getPlayer());
+                        score.setText("Your score: " + gameCtrl.getPlayer().getScore());
+                        points.setText("+25 points");
+                        points.setVisible(true);
+                        answer.setText("Pretty far from the correct answer");
+                        answer.setVisible(true);
+                    } else {
+                        points.setText("+0 points");
+                        points.setVisible(true);
+                        answer.setText("Wrong answer");
+                        answer.setVisible(true);
+                    }
+                }
+            }
+        }
+    }
+
 
     @Override
     public void resetUI() {
