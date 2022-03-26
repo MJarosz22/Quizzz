@@ -3,7 +3,6 @@ package client.scenes.multiplayer;
 import client.scenes.MainCtrl;
 import client.utils.ServerUtils;
 import commons.*;
-import commons.player.Player;
 import commons.player.SimpleUser;
 import communication.RequestToJoin;
 import javafx.application.Platform;
@@ -14,8 +13,6 @@ import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.function.Consumer;
 
-import static client.utils.ServerUtils.connectedPlayers;
-import static client.utils.ServerUtils.getLeaderboard;
 
 public class GameCtrl {
 
