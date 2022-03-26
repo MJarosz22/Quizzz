@@ -29,6 +29,7 @@ public class GameCtrl {
         player = server.addPlayer(new RequestToJoin(name, serverName, GameInstance.MULTI_PLAYER));
         server.initWebsocket();
         subscribeToWebsockets();
+        getPlayer().setScore(0);
     }
 
     public <T> void subscribe(String destination, Class<T> type, Consumer<T> consumer) {
