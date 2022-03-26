@@ -17,7 +17,6 @@ import javafx.scene.text.Text;
 
 import java.io.File;
 import java.io.FileNotFoundException;
-import java.net.URI;
 import java.net.URL;
 import java.nio.file.FileSystems;
 import java.util.Random;
@@ -34,9 +33,7 @@ public class SinglePlayerGameCtrl {
     private final MainCtrl mainCtrl;
     private final GameCtrl gameCtrl;
 
-    private  String correctEmojiPath = "/images/correct-answer.png";
-    private  String wrongEmojiPath = "/images/wrong-answer.png";
-    private  String timerPath = "/images/timer.png";
+    private String timerPath = "/images/timer.png";
 
     private SimpleUser player;
     private GameInstance currentGame;
@@ -50,7 +47,7 @@ public class SinglePlayerGameCtrl {
     private Text questionTitle, timer, score, points, answer, option4, correct_guess, questionCount;
 
     @FXML
-    private AnchorPane timerImage, emoji;
+    private AnchorPane timerImage;
 
     @FXML
     private Button option1Button, option2Button, option3Button, correct_answer, submit_guess;
@@ -99,8 +96,6 @@ public class SinglePlayerGameCtrl {
                 return;
             }
             timerPath = relativeToAbsolute(timerPath);
-            correctEmojiPath = relativeToAbsolute(correctEmojiPath);
-            wrongEmojiPath = relativeToAbsolute(wrongEmojiPath);
             setTimerImage(timerImage);
             progressBar.setProgress(-0.05);
             score.setText("Your score: 0");
@@ -255,7 +250,7 @@ public class SinglePlayerGameCtrl {
     /**
      * Randomly choose which one of the three RadioButtons(answer1, answer2, answer3) will hold the correct answer
      * The other 2 wrong answers are somewhat randomly generated
-     * * TODO: Work on a 'smarter' randoml generation of wrong answers
+     * * TODO: Work on a 'smarter' random generation of wrong answers
      */
     private void randomlyChooseCorrectAnswerButton() {
         Random random = new Random();
@@ -359,7 +354,6 @@ public class SinglePlayerGameCtrl {
         score.setText("Your score: " + player.getScore());
         points.setText("+" + numberOfPoints + "points");
         answer.setText("Correct answer");
-        setEmoji(emoji, true);
         setColors();
         setOptions(true);
     }
@@ -387,7 +381,6 @@ public class SinglePlayerGameCtrl {
         answered = true;
         points.setText("+0 points");
         answer.setText("Wrong answer");
-        setEmoji(emoji, false);
         setColors();
         setOptions(true);
     }
@@ -470,7 +463,7 @@ public class SinglePlayerGameCtrl {
     }
 
     /**
-     * Sets buttons as eanbled / disabled, depending on the value of parameter.
+     * Sets buttons as enabled / disabled, depending on the value of parameter.
      *
      * @param value boolean value that disables our buttons if 'true', or makes them functional otherwise
      */
@@ -491,11 +484,10 @@ public class SinglePlayerGameCtrl {
     public void infoRefresh() {
         points.setText("");
         answer.setText("");
-        emoji.setVisible(false);
     }
 
     /**
-     * Sets the 'timerImage' AncorPane's image
+     * Sets the 'timerImage' AnchorPane's image
      *
      * @param timerImage AnchorPane object that is meant to display a timer image.
      */
@@ -505,23 +497,6 @@ public class SinglePlayerGameCtrl {
         System.out.println(url.toString());
     }
 
-    /**
-     * Sets the 'emoji' AnchorPane's image, depending on the value of parameter.
-     *
-     * @param emoji   AnchorPane object that is meant to display an emoji
-     * @param correct boolean value
-     *                if 'true': displays a happy emoji image (if the answer was correct)
-     *                or a crying emoji image (otherwise)
-     */
-    public void setEmoji(AnchorPane emoji, boolean correct) {
-        URL url;
-        if (correct)
-            url = SinglePlayerGameCtrl.class.getResource(this.correctEmojiPath);
-        else
-            url = SinglePlayerGameCtrl.class.getResource(this.wrongEmojiPath);
-        System.out.println(url.toString());
-        emoji.setStyle("-fx-background-image: url(" + url + ");");
-    }
 
     /**
      * For the QuestionHowMuch
@@ -571,7 +546,6 @@ public class SinglePlayerGameCtrl {
             score.setText("Your score: " + player.getScore());
             points.setText("+100 points");
             answer.setText("Correct answer");
-            setEmoji(emoji, true);
         } else {
             if (number <= correct_number + (25 * correct_number) / 100 && number >= correct_number - (25 * correct_number) / 100) {
                 player.addScore(75);
@@ -579,7 +553,6 @@ public class SinglePlayerGameCtrl {
                 score.setText("Your score: " + player.getScore());
                 points.setText("+75 points");
                 answer.setText("Almost the correct answer");
-                setEmoji(emoji, true);
             } else {
                 if (number <= correct_number + (50 * correct_number) / 100 && number >= correct_number - (50 * correct_number) / 100) {
                     player.addScore(50);
@@ -587,7 +560,6 @@ public class SinglePlayerGameCtrl {
                     score.setText("Your score: " + player.getScore());
                     points.setText("+50 points");
                     answer.setText("Not quite the correct answer");
-                    setEmoji(emoji, true);
                 } else {
                     if (number <= correct_number + (75 * correct_number) / 100 && number >= correct_number - (75 * correct_number) / 100) {
                         player.addScore(25);
@@ -595,11 +567,9 @@ public class SinglePlayerGameCtrl {
                         score.setText("Your score: " + player.getScore());
                         points.setText("+25 points");
                         answer.setText("Pretty far from the correct answer");
-                        setEmoji(emoji, true);
                     } else {
                         points.setText("+0 points");
                         answer.setText("Wrong answer");
-                        setEmoji(emoji, false);
                     }
                 }
             }
@@ -665,7 +635,6 @@ public class SinglePlayerGameCtrl {
             score.setText("Your score: " + player.getScore());
             points.setText("+" + numberOfPoints + "points");
             answer.setText("Correct answer");
-            setEmoji(emoji, true);
             player_answer.setStyle("-fx-background-color: green; ");
             if (!answer1.equals(player_answer)) answer1.setStyle("-fx-background-color: red; ");
             if (!answer2.equals(player_answer)) answer2.setStyle("-fx-background-color: red; ");
@@ -673,7 +642,6 @@ public class SinglePlayerGameCtrl {
         } else {
             points.setText("+0 points");
             answer.setText("Wrong answer");
-            setEmoji(emoji, false);
             if (Long.parseLong(answer1.getText()) == ((QuestionWhichOne) currentQuestion).getActivity().getConsumption_in_wh())
                 answer1.setStyle("-fx-background-color: green; ");
             else answer1.setStyle("-fx-background-color: red; ");
@@ -735,10 +703,10 @@ public class SinglePlayerGameCtrl {
     }
 
     /**
-     * Freezes the scene for 'timer' miliseconds ('run' method of thread, the first one) and after this interval of time runs the
+     * Freezes the scene for 'timer' milliseconds ('run' method of thread, the first one) and after this interval of time runs the
      * code inside the 'run'  method of Platform.runLater (the second one), by showing the user the gameOver screen
      *
-     * @param timer - an integer value representing the number of miliseconds after which the thread get executed.
+     * @param timer - an integer value representing the number of milliseconds after which the thread get executed.
      */
     public void gameOver(int timer) {
         if (gameIsOver == false) {
@@ -816,7 +784,14 @@ public class SinglePlayerGameCtrl {
         return gameIsOver;
     }
 
-    public static String relativeToAbsolute (String relativePath) {
+    /**
+     * Additional method that transforms a relative path into an absolute one, as Gradle does not handle relative paths
+     * Credits: https://stackoverflow.com/questions/3204955/converting-relative-paths-to-absolute-paths
+     *
+     * @param relativePath a String value representing the relative path we are interested in
+     * @return a String value representing the aboslute path
+     */
+    public static String relativeToAbsolute(String relativePath) {
         return FileSystems.getDefault().getPath(relativePath).normalize().toAbsolutePath().toString();
     }
 }
