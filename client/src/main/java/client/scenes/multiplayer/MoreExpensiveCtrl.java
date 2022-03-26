@@ -50,6 +50,8 @@ public class MoreExpensiveCtrl implements QuestionCtrl {
 
     private TimerTask scheduler;
 
+    private int timeReduced;
+
     private final MainCtrl mainCtrl;
     private final GameCtrl gameCtrl;
     private final ServerUtils server;
@@ -68,8 +70,9 @@ public class MoreExpensiveCtrl implements QuestionCtrl {
         }
     }
 
-    public void init(QuestionMoreExpensive question){
+    public void init(QuestionMoreExpensive question) {
         this.question = question;
+        this.timeReduced = 0;
         timerImage.setImage(timerImageSource);
         disablePopUp(null);
         option1Button.setDisable(false);
@@ -121,22 +124,24 @@ public class MoreExpensiveCtrl implements QuestionCtrl {
         confirmationExit.setDisable(true);
     }
 
-    public void decreaseTime(ActionEvent actionEvent){
-        server.useTimePowerup(gameCtrl.getPlayer(),50);
+    public void decreaseTime(ActionEvent actionEvent) {
+        server.useTimePowerup(gameCtrl.getPlayer(), 50);
     }
 
     @Override
-    public void reduceTimer(int percentage){
+    public void reduceTimer(int percentage) {
         scheduler.cancel();
+        timeReduced += (server.getTimeLeft(gameCtrl.getPlayer()) - timeReduced) * percentage / 100;
         scheduler = new TimerTask() {
+
             @Override
             public void run() {
-                int timeLeft = server.getTimeLeft(gameCtrl.getPlayer())*percentage/100;
+                int timeLeft = server.getTimeLeft(gameCtrl.getPlayer());
                 Platform.runLater(() -> {
-                    timer.setText(String.valueOf(Math.round(timeLeft / 1000d)));
+                    timer.setText(String.valueOf(Math.max(Math.round((timeLeft - timeReduced) / 1000d), 0)));
                 });
-                if(timeLeft==0){
-                    Platform.runLater(() ->{
+                if (Math.round((timeLeft - timeReduced) / 1000d) <= 0) {
+                    Platform.runLater(() -> {
                         disableAnswers();
                     });
                 }
@@ -159,7 +164,7 @@ public class MoreExpensiveCtrl implements QuestionCtrl {
     }
 
     @Override
-    public void postQuestion(Answer answer){
+    public void postQuestion(Answer answer) {
         switch (answer.getAnswer().intValue()) {
             case 1:
                 option1Button.setDisable(true);
@@ -188,6 +193,7 @@ public class MoreExpensiveCtrl implements QuestionCtrl {
             default:
                 throw new IllegalStateException();
         }
+        timeReduced = 0;
         new Timer().schedule(new TimerTask() {
             @Override
             public void run() {
@@ -205,20 +211,20 @@ public class MoreExpensiveCtrl implements QuestionCtrl {
         enableAnswers();
     }
 
-    public void disableAnswers(){
+    public void disableAnswers() {
         option1Button.setDisable(true);
         option2Button.setDisable(true);
         option3Button.setDisable(true);
     }
 
-    public void enableAnswers(){
+    public void enableAnswers() {
         option1Button.setDisable(false);
         option2Button.setDisable(false);
         option3Button.setDisable(false);
     }
 
     /**
-<<<<<<< client/src/main/java/client/scenes/multiplayer/MoreExpensiveCtrl.java
+     * <<<<<<< client/src/main/java/client/scenes/multiplayer/MoreExpensiveCtrl.java
      * Method to select heart emoji
      */
 
@@ -265,7 +271,7 @@ public class MoreExpensiveCtrl implements QuestionCtrl {
      *
      * @param id id of button (and image to increase size
      */
-    public void emojiSelector(String id){
+    public void emojiSelector(String id) {
         switch (id) {
             case "heart":
                 emojiBold(heart, heartPic);
@@ -292,7 +298,7 @@ public class MoreExpensiveCtrl implements QuestionCtrl {
      * Method that boldens (enlargens) the emoji clicked, then shrinks it back into position
      *
      * @param emojiButton The emoji button to be enlarged
-     * @param emojiPic The corresponding image associated with that button
+     * @param emojiPic    The corresponding image associated with that button
      */
     public void emojiBold(Button emojiButton, ImageView emojiPic) {
         Platform.runLater(() -> {
@@ -306,7 +312,7 @@ public class MoreExpensiveCtrl implements QuestionCtrl {
             TimerTask timerTask = new TimerTask() {
                 @Override
                 public void run() {
-                    Platform.runLater(()->{
+                    Platform.runLater(() -> {
                         emojiButton.setStyle("-fx-pref-height: 30; -fx-pref-width: 30; -fx-background-color: transparent; ");
                         emojiButton.setLayoutX(emojiButton.getLayoutX() + 10.0);
                         emojiButton.setLayoutY(emojiButton.getLayoutY() + 10.0);
@@ -324,9 +330,10 @@ public class MoreExpensiveCtrl implements QuestionCtrl {
     public void showEmoji(String type) {
         emojiSelector(type);
     }
-    
+
     /**
      * Displays a message when another player disconnects
+     *
      * @param disconnectPlayer
      */
     @Override
@@ -336,7 +343,7 @@ public class MoreExpensiveCtrl implements QuestionCtrl {
         new Timer().schedule(new TimerTask() {
             @Override
             public void run() {
-                Platform.runLater(()-> disconnect.setVisible(false));
+                Platform.runLater(() -> disconnect.setVisible(false));
             }
         }, 5000);
     }

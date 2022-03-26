@@ -57,6 +57,7 @@ public class InsteadOfCtrl implements QuestionCtrl {
     private final ServerUtils server;
     private final MainCtrl mainCtrl;
     private final GameCtrl gameCtrl;
+    private int timeReduced;
 
     @Inject
     public InsteadOfCtrl(ServerUtils server, MainCtrl mainCtrl, GameCtrl gameCtrl) {
@@ -75,8 +76,9 @@ public class InsteadOfCtrl implements QuestionCtrl {
      *
      * @param question
      */
-    public void init(QuestionInsteadOf question){
+    public void init(QuestionInsteadOf question) {
         this.question = question;
+        this.timeReduced = 0;
         timerImage.setImage(timerImageSource);
         disablePopUp(null);
         questionTitle.setText(question.getTitle());
@@ -98,7 +100,7 @@ public class InsteadOfCtrl implements QuestionCtrl {
         }
         scheduler = new TimerTask() {
             @Override
-            public void run () {
+            public void run() {
                 int timeLeft = server.getTimeLeft(gameCtrl.getPlayer());
                 Platform.runLater(() -> {
                     timer.setText(String.valueOf(Math.round(timeLeft / 1000d)));
@@ -125,22 +127,24 @@ public class InsteadOfCtrl implements QuestionCtrl {
         confirmationExit.setDisable(true);
     }
 
-    public void decreaseTime(ActionEvent actionEvent){
-        server.useTimePowerup(gameCtrl.getPlayer(),50);
+    public void decreaseTime(ActionEvent actionEvent) {
+        server.useTimePowerup(gameCtrl.getPlayer(), 50);
     }
 
     @Override
-    public void reduceTimer(int percentage){
+    public void reduceTimer(int percentage) {
         scheduler.cancel();
+        timeReduced += (server.getTimeLeft(gameCtrl.getPlayer()) - timeReduced) * percentage / 100;
         scheduler = new TimerTask() {
+
             @Override
             public void run() {
-                int timeLeft = server.getTimeLeft(gameCtrl.getPlayer())*percentage/100;
+                int timeLeft = server.getTimeLeft(gameCtrl.getPlayer());
                 Platform.runLater(() -> {
-                    timer.setText(String.valueOf(Math.round(timeLeft / 1000d)));
+                    timer.setText(String.valueOf(Math.max(Math.round((timeLeft - timeReduced) / 1000d), 0)));
                 });
-                if(timeLeft==0){
-                    Platform.runLater(() ->{
+                if (Math.round((timeLeft - timeReduced) / 1000d) <= 0) {
+                    Platform.runLater(() -> {
                         disableAnswers();
                     });
                 }
@@ -198,6 +202,7 @@ public class InsteadOfCtrl implements QuestionCtrl {
                 System.out.println(answer.getAnswer().intValue());
                 throw new IllegalStateException();
         }
+        timeReduced = 0;
         new Timer().schedule(new TimerTask() {
             @Override
             public void run() {
@@ -218,13 +223,13 @@ public class InsteadOfCtrl implements QuestionCtrl {
         answer3.setSelected(false);
     }
 
-    public void disableAnswers(){
+    public void disableAnswers() {
         answer1.setDisable(true);
         answer2.setDisable(true);
         answer3.setDisable(true);
     }
 
-    public void enableAnswers(){
+    public void enableAnswers() {
         answer1.setDisable(false);
         answer2.setDisable(false);
         answer3.setDisable(false);
@@ -277,7 +282,7 @@ public class InsteadOfCtrl implements QuestionCtrl {
      *
      * @param id id of button (and image to increase size
      */
-    public void emojiSelector(String id){
+    public void emojiSelector(String id) {
 
         //String currentQType = server.getCurrentQType(server.getLastGIIdMult());
         System.out.println("ID SELECTION BEGINS");
@@ -306,7 +311,7 @@ public class InsteadOfCtrl implements QuestionCtrl {
      * Method that boldens (enlargens) the emoji clicked, then shrinks it back into position
      *
      * @param emojiButton The emoji button to be enlarged
-     * @param emojiPic The corresponding image associated with that button
+     * @param emojiPic    The corresponding image associated with that button
      */
     public void emojiBold(Button emojiButton, ImageView emojiPic) {
         Platform.runLater(() -> {
@@ -320,7 +325,7 @@ public class InsteadOfCtrl implements QuestionCtrl {
             TimerTask timerTask = new TimerTask() {
                 @Override
                 public void run() {
-                    Platform.runLater(()->{
+                    Platform.runLater(() -> {
                         emojiButton.setStyle("-fx-pref-height: 30; -fx-pref-width: 30; -fx-background-color: transparent; ");
                         emojiButton.setLayoutX(emojiButton.getLayoutX() + 10.0);
                         emojiButton.setLayoutY(emojiButton.getLayoutY() + 10.0);
@@ -341,6 +346,7 @@ public class InsteadOfCtrl implements QuestionCtrl {
 
     /**
      * Displays a message when another player disconnects
+     *
      * @param disconnectPlayer
      */
     @Override
@@ -350,7 +356,7 @@ public class InsteadOfCtrl implements QuestionCtrl {
         new Timer().schedule(new TimerTask() {
             @Override
             public void run() {
-                Platform.runLater(()-> disconnect.setVisible(false));
+                Platform.runLater(() -> disconnect.setVisible(false));
             }
         }, 5000);
     }

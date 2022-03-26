@@ -273,16 +273,16 @@ public class ServerUtils {
                 .path("api/gameinstance/" + player.getGameInstanceId() + "/decrease-time")
                 .request(APPLICATION_JSON).cookie("user-id", player.getCookie())
                 .accept(APPLICATION_JSON)
-                .post(Entity.entity(new TimePU(percentage, player.getCookie()), APPLICATION_JSON));
+                .post(Entity.entity(new TimePU(player.getCookie(), percentage), APPLICATION_JSON));
     }
 
-    public void sendEmoji(SimpleUser player, String emoji){
+    public void sendEmoji(SimpleUser player, String emoji) {
         ClientBuilder
-            .newClient(new ClientConfig())
-            .target(SERVER)
-            .path("api/gameinstance/" + player.getGameInstanceId() + "/emoji")
-            .request(APPLICATION_JSON).cookie("user-id", player.getCookie())
-            .accept(APPLICATION_JSON)
+                .newClient(new ClientConfig())
+                .target(SERVER)
+                .path("api/gameinstance/" + player.getGameInstanceId() + "/emoji")
+                .request(APPLICATION_JSON).cookie("user-id", player.getCookie())
+                .accept(APPLICATION_JSON)
                 .post(Entity.entity(new Emoji(emoji), APPLICATION_JSON));
     }
 
@@ -295,7 +295,7 @@ public class ServerUtils {
     }
 
 
-        // ------------------------------------ ADDITIONAL METHODS ------------------------------------ //
+    // ------------------------------------ ADDITIONAL METHODS ------------------------------------ //
 
     /**
      * Additional method that checks whether a player hasn't disconnected from a game, by comparing cookies, which are

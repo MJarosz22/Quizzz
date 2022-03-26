@@ -58,6 +58,7 @@ public class WhichOneCtrl implements QuestionCtrl {
 
     private TimerTask scheduler;
 
+    private int timeReduced;
 
     private QuestionWhichOne question;
     private final ServerUtils server;
@@ -76,8 +77,9 @@ public class WhichOneCtrl implements QuestionCtrl {
         }
     }
 
-    public void init(QuestionWhichOne question){
+    public void init(QuestionWhichOne question) {
         this.question = question;
+        this.timeReduced = 0;
         timerImage.setImage(timerImageSource);
         answer1.setDisable(false);
         answer2.setDisable(false);
@@ -126,30 +128,31 @@ public class WhichOneCtrl implements QuestionCtrl {
         confirmationExit.setDisable(true);
     }
 
-    public void decreaseTime(ActionEvent actionEvent){
-        server.useTimePowerup(gameCtrl.getPlayer(),50);
+    public void decreaseTime(ActionEvent actionEvent) {
+        server.useTimePowerup(gameCtrl.getPlayer(), 50);
     }
 
     @Override
-    public void reduceTimer(int percentage){
-        int timeLeft = server.getTimeLeft(gameCtrl.getPlayer())*(percentage/100);
+    public void reduceTimer(int percentage) {
         scheduler.cancel();
-        ScheduledExecutorService newScheduler = Executors.newScheduledThreadPool(1);
-        Runnable runnable = new Runnable() {
-            int countdown = timeLeft*percentage/100;
+        timeReduced += (server.getTimeLeft(gameCtrl.getPlayer()) - timeReduced) * percentage / 100;
+        scheduler = new TimerTask() {
 
+            @Override
             public void run() {
-                if (countdown == 0) {
-                    timer.setText(String.valueOf(countdown));
-                    disableAnswers();
-                    newScheduler.shutdown();
-                } else {
-                    timer.setText(String.valueOf(countdown--));
+                int timeLeft = server.getTimeLeft(gameCtrl.getPlayer());
+                Platform.runLater(() -> {
+                    timer.setText(String.valueOf(Math.max(Math.round((timeLeft - timeReduced) / 1000d), 0)));
+                });
+                if (Math.round((timeLeft - timeReduced) / 1000d) <= 0) {
+                    Platform.runLater(() -> {
+                        disableAnswers();
+                    });
                 }
+
             }
         };
-        newScheduler.scheduleAtFixedRate(runnable, 0, 1, SECONDS);
-
+        new Timer().scheduleAtFixedRate(scheduler, 0, 100);
     }
 
     public void leaveGame(ActionEvent actionEvent) {
@@ -195,6 +198,7 @@ public class WhichOneCtrl implements QuestionCtrl {
                 System.out.println(answer.getAnswer().intValue());
                 throw new IllegalStateException();
         }
+        timeReduced = 0;
         new Timer().schedule(new TimerTask() {
             @Override
             public void run() {
@@ -215,20 +219,20 @@ public class WhichOneCtrl implements QuestionCtrl {
         enableAnswers();
     }
 
-    public void disableAnswers(){
+    public void disableAnswers() {
         answer1.setDisable(true);
         answer2.setDisable(true);
         answer3.setDisable(true);
     }
 
-    public void enableAnswers(){
+    public void enableAnswers() {
         answer1.setDisable(false);
         answer2.setDisable(false);
         answer3.setDisable(false);
     }
 
     /**
-<<<<<<< client/src/main/java/client/scenes/multiplayer/WhichOneCtrl.java
+     * <<<<<<< client/src/main/java/client/scenes/multiplayer/WhichOneCtrl.java
      * Method to select heart emoji
      */
 
@@ -274,7 +278,7 @@ public class WhichOneCtrl implements QuestionCtrl {
      *
      * @param id id of button (and image to increase size
      */
-    public void emojiSelector(String id){
+    public void emojiSelector(String id) {
         System.out.println(id);
         switch (id) {
             case "heart":
@@ -301,7 +305,7 @@ public class WhichOneCtrl implements QuestionCtrl {
      * Method that boldens (enlargens) the emoji clicked, then shrinks it back into position
      *
      * @param emojiButton The emoji button to be enlarged
-     * @param emojiPic The corresponding image associated with that button
+     * @param emojiPic    The corresponding image associated with that button
      */
     public void emojiBold(Button emojiButton, ImageView emojiPic) {
         Platform.runLater(() -> {
@@ -315,7 +319,7 @@ public class WhichOneCtrl implements QuestionCtrl {
             TimerTask timerTask = new TimerTask() {
                 @Override
                 public void run() {
-                    Platform.runLater(()->{
+                    Platform.runLater(() -> {
                         emojiButton.setStyle("-fx-pref-height: 30; -fx-pref-width: 30; -fx-background-color: transparent; ");
                         emojiButton.setLayoutX(emojiButton.getLayoutX() + 10.0);
                         emojiButton.setLayoutY(emojiButton.getLayoutY() + 10.0);
@@ -335,8 +339,10 @@ public class WhichOneCtrl implements QuestionCtrl {
     public void showEmoji(String type) {
         emojiSelector(type);
     }
+
     /**
      * Displays a message when another player disconnects
+     *
      * @param disconnectPlayer
      */
     @Override
@@ -346,7 +352,7 @@ public class WhichOneCtrl implements QuestionCtrl {
         new Timer().schedule(new TimerTask() {
             @Override
             public void run() {
-                Platform.runLater(()-> disconnect.setVisible(false));
+                Platform.runLater(() -> disconnect.setVisible(false));
             }
         }, 5000);
     }

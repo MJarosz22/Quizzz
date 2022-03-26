@@ -53,6 +53,8 @@ public class HowMuchCtrl implements QuestionCtrl {
 
     private TimerTask scheduler;
 
+    private int timeReduced;
+
     private ServerUtils server;
     private MainCtrl mainCtrl;
     private GameCtrl gameCtrl;
@@ -71,11 +73,12 @@ public class HowMuchCtrl implements QuestionCtrl {
         }
     }
 
-    public void init(QuestionHowMuch question){
+    public void init(QuestionHowMuch question) {
         timerImage.setImage(timerImageSource);
         disablePopUp(null);
         player_answer.clear();
         this.question = question;
+        this.timeReduced = 0;
         questionTitle.setText(question.getTitle());
         questionCount.setText("Question " + question.getNumber() + "/20");
         option4.setText(question.getActivity().getTitle());
@@ -116,30 +119,33 @@ public class HowMuchCtrl implements QuestionCtrl {
         confirmationExit.setStyle("-fx-background-color: #91e4fb; ");
     }
 
-    public void decreaseTime(ActionEvent actionEvent){
-        server.useTimePowerup(gameCtrl.getPlayer(),50);
+    public void decreaseTime(ActionEvent actionEvent) {
+        server.useTimePowerup(gameCtrl.getPlayer(), 50);
     }
 
     @Override
-    public void reduceTimer(int percentage){
+    public void reduceTimer(int percentage) {
         scheduler.cancel();
+        timeReduced += (server.getTimeLeft(gameCtrl.getPlayer()) - timeReduced) * percentage / 100;
         scheduler = new TimerTask() {
+
             @Override
             public void run() {
-                double timeLeft = server.getTimeLeft(gameCtrl.getPlayer())*percentage/100.0;
+                int timeLeft = server.getTimeLeft(gameCtrl.getPlayer());
                 Platform.runLater(() -> {
-                    timer.setText(String.valueOf(Math.round(timeLeft / 1000d)));
+                    timer.setText(String.valueOf(Math.max(Math.round((timeLeft - timeReduced) / 1000d), 0)));
                 });
-                if(timeLeft==0){
-                    Platform.runLater(() ->{
+                if (Math.round((timeLeft - timeReduced) / 1000d) <= 0) {
+                    Platform.runLater(() -> {
                         disableAnswers();
                     });
                 }
 
             }
         };
-        new Timer().scheduleAtFixedRate(scheduler, 0, 50);
+        new Timer().scheduleAtFixedRate(scheduler, 0, 100);
     }
+
 
     public void submitAnswer(ActionEvent actionEvent) {
         gameCtrl.submitAnswer(new Answer(Long.valueOf(player_answer.getText())));
@@ -151,6 +157,7 @@ public class HowMuchCtrl implements QuestionCtrl {
 
         correct_guess.setText("The correct answer is: " + answer.getAnswer());
         correct_guess.setVisible(true);
+        timeReduced = 0;
         new Timer().schedule(new TimerTask() {
             @Override
             public void run() {
@@ -168,11 +175,11 @@ public class HowMuchCtrl implements QuestionCtrl {
 //        timer.setText("12000");
     }
 
-    public void disableAnswers(){
+    public void disableAnswers() {
         this.submit_guess.setDisable(true);
     }
 
-    public void enableAnswers(){
+    public void enableAnswers() {
         this.submit_guess.setDisable(false);
     }
 
@@ -223,36 +230,36 @@ public class HowMuchCtrl implements QuestionCtrl {
      *
      * @param id id of button (and image to increase size
      */
-    public void emojiSelector(String id){
+    public void emojiSelector(String id) {
 
         //String currentQType = server.getCurrentQType(server.getLastGIIdMult());
         System.out.println("ID SELECTION BEGINS");
-            switch (id) {
-                case "heart":
-                    emojiBold(heart, heartPic);
-                    break;
-                case "glasses":
-                    emojiBold(glasses, glassesPic);
-                    break;
-                case "angry":
-                    emojiBold(angry, angryPic);
-                    break;
-                case "cry":
-                    emojiBold(cry, cryPic);
-                    break;
-                case "laugh":
-                    emojiBold(laugh, laughPic);
-                    break;
-                default:
-                    break;
-            }
+        switch (id) {
+            case "heart":
+                emojiBold(heart, heartPic);
+                break;
+            case "glasses":
+                emojiBold(glasses, glassesPic);
+                break;
+            case "angry":
+                emojiBold(angry, angryPic);
+                break;
+            case "cry":
+                emojiBold(cry, cryPic);
+                break;
+            case "laugh":
+                emojiBold(laugh, laughPic);
+                break;
+            default:
+                break;
         }
+    }
 
     /**
      * Method that boldens (enlargens) the emoji clicked, then shrinks it back into position
      *
      * @param emojiButton The emoji button to be enlarged
-     * @param emojiPic The corresponding image associated with that button
+     * @param emojiPic    The corresponding image associated with that button
      */
     public void emojiBold(Button emojiButton, ImageView emojiPic) {
         Platform.runLater(() -> {
@@ -266,7 +273,7 @@ public class HowMuchCtrl implements QuestionCtrl {
             TimerTask timerTask = new TimerTask() {
                 @Override
                 public void run() {
-                    Platform.runLater(()->{
+                    Platform.runLater(() -> {
                         emojiButton.setStyle("-fx-pref-height: 30; -fx-pref-width: 30; -fx-background-color: transparent; ");
                         emojiButton.setLayoutX(emojiButton.getLayoutX() + 10.0);
                         emojiButton.setLayoutY(emojiButton.getLayoutY() + 10.0);
@@ -284,9 +291,10 @@ public class HowMuchCtrl implements QuestionCtrl {
     public void showEmoji(String type) {
         emojiSelector(type);
     }
-    
+
     /**
      * Displays a message when another player disconnects
+     *
      * @param disconnectPlayer
      */
     @Override
@@ -296,7 +304,7 @@ public class HowMuchCtrl implements QuestionCtrl {
         new Timer().schedule(new TimerTask() {
             @Override
             public void run() {
-                Platform.runLater(()-> disconnect.setVisible(false));
+                Platform.runLater(() -> disconnect.setVisible(false));
             }
         }, 5000);
     }
