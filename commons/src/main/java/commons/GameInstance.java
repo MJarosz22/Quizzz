@@ -1,7 +1,6 @@
 package commons;
 
 import commons.player.Player;
-import commons.player.SimpleUser;
 import org.apache.commons.lang3.builder.EqualsBuilder;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
 import org.apache.commons.lang3.builder.ToStringBuilder;
