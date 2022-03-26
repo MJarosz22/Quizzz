@@ -739,7 +739,6 @@ public class SinglePlayerGameCtrl {
             score.setText("Your score: " + player.getScore());
             points.setText("+" + numberOfPoints + "points");
             answer.setText("Correct answer");
-            setEmoji(emoji, true);
             player_answer.setStyle("-fx-background-color: green; ");
             if (!answer1.equals(player_answer)) answer1.setStyle("-fx-background-color: red; ");
             if (!answer2.equals(player_answer)) answer2.setStyle("-fx-background-color: red; ");
@@ -747,7 +746,6 @@ public class SinglePlayerGameCtrl {
         } else {
             points.setText("+0 points");
             answer.setText("Wrong answer");
-            setEmoji(emoji, false);
             if (currentQuestion.getCorrectAnswer() == 1)
                 answer1.setStyle("-fx-background-color: green; ");
             else answer1.setStyle("-fx-background-color: red; ");
