@@ -54,6 +54,7 @@ public class MPGameOverCtrl {
             play_again.setVisible(false);
             game_over.setVisible(false);
         } else {
+            gameCtrl.disconnect();
             play_again.setDisable(false);
             play_again.setVisible(true);
             game_over.setVisible(true);
