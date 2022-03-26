@@ -40,15 +40,23 @@ public class GameCtrl {
         server.disconnect(player);
     }
 
-    private void subscribeToWebsockets(){
+    private void subscribeToWebsockets() {
         subscribe("/topic/" + player.getGameInstanceId() + "/time", Integer.class, time ->
                 Platform.runLater(() -> mainCtrl.getLobbyCtrl().setCountdown(time)));
         subscribe("/topic/" + player.getGameInstanceId() + "/players", Integer.class, amountOfPlayers -> {
             players = server.getPlayers(player);
             Platform.runLater(() -> mainCtrl.getLobbyCtrl().updatePlayers(players));
         });
+
+        subscribe("/topic/" + player.getGameInstanceId() + "/emoji", Emoji.class, emoji -> {
+            System.out.println(emoji.getType());
+            Platform.runLater(() -> mainCtrl.getCurrentQuestionScene().showEmoji(emoji.getType()));
+        });
+
         subscribe("/topic/" + player.getGameInstanceId() + "/postquestion", Answer.class, answer ->
                 Platform.runLater(() -> mainCtrl.getCurrentQuestionScene().postQuestion(answer)));
+        subscribe("/topic/" + player.getGameInstanceId() + "/disconnectplayer", SimpleUser.class, playerDisconnect ->
+                Platform.runLater(() -> mainCtrl.getCurrentQuestionScene().showDisconnect(playerDisconnect)));
 
         //TODO FIND WAY TO DEAL WITH SUBCLASSES OF QUESTION
         //TODO MAKE IT SO THAT TIMERS WITHIN QUESTION CLASSES STOP WHEN DISCONNECTED
@@ -58,6 +66,8 @@ public class GameCtrl {
                 Platform.runLater(() -> goToMoreExpensive(question)));
         subscribe("/topic/" + getPlayer().getGameInstanceId() + "/questionwhichone", QuestionWhichOne.class, question ->
                 Platform.runLater(() -> goToWhichOne(question)));
+        subscribe("/topic/" + getPlayer().getGameInstanceId() + "/questioninsteadof", QuestionInsteadOf.class, question ->
+                Platform.runLater(() -> goToInsteadOf(question)));
     }
 
     public void submitAnswer(Answer answer) {
@@ -82,5 +92,9 @@ public class GameCtrl {
 
     private void goToWhichOne(QuestionWhichOne question) {
         mainCtrl.showWhichOne(question);
+    }
+
+    private void goToInsteadOf(QuestionInsteadOf question) {
+        mainCtrl.showInsteadOf(question);
     }
 }

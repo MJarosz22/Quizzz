@@ -3,7 +3,7 @@ package client.scenes.multiplayer;
 import client.scenes.MainCtrl;
 import client.utils.ServerUtils;
 import commons.Answer;
-import commons.QuestionWhichOne;
+import commons.QuestionInsteadOf;
 import commons.player.SimpleUser;
 import javafx.application.Platform;
 import javafx.event.ActionEvent;
@@ -23,7 +23,7 @@ import java.io.FileNotFoundException;
 import java.util.Timer;
 import java.util.TimerTask;
 
-public class WhichOneCtrl implements QuestionCtrl {
+public class InsteadOfCtrl implements QuestionCtrl {
 
     @FXML
     private Text questionTitle, timer, score, points, answer, option4, correct_guess, questionCount, disconnect;
@@ -53,38 +53,43 @@ public class WhichOneCtrl implements QuestionCtrl {
 
     private TimerTask scheduler;
 
-    private QuestionWhichOne question;
+    private QuestionInsteadOf question;
     private final ServerUtils server;
     private final MainCtrl mainCtrl;
     private final GameCtrl gameCtrl;
 
     @Inject
-    public WhichOneCtrl(ServerUtils server, MainCtrl mainCtrl, GameCtrl gameCtrl) {
+    public InsteadOfCtrl(ServerUtils server, MainCtrl mainCtrl, GameCtrl gameCtrl) {
         this.server = server;
         this.mainCtrl = mainCtrl;
         this.gameCtrl = gameCtrl;
         try {
             timerImageSource = new Image(new FileInputStream("client/src/main/resources/images/timer.png"));
         } catch (FileNotFoundException e) {
-            System.out.println("Couldn't find timer image for multiplayer.");
+            System.out.println("Couldn't find timer image.");
         }
     }
 
-    public void init(QuestionWhichOne question){
+    /**
+     * Initiates the Instead Of question, sets the scene and starts the timer
+     *
+     * @param question
+     */
+    public void init(QuestionInsteadOf question){
         this.question = question;
         timerImage.setImage(timerImageSource);
-        answer1.setDisable(false);
-        answer2.setDisable(false);
-        answer3.setDisable(false);
         disablePopUp(null);
         questionTitle.setText(question.getTitle());
         questionCount.setText("Question " + question.getNumber() + "/20");
         option4.setText(question.getActivity().getTitle());
-        disconnect.setVisible(false);
         progressBar.setProgress(question.getNumber() / 20.0d + 0.05);
-        answer1.setText(String.valueOf(question.getAnswers()[0]));
-        answer2.setText(String.valueOf(question.getAnswers()[1]));
-        answer3.setText(String.valueOf(question.getAnswers()[2]));
+        disconnect.setVisible(false);
+        answer1.setText(question.getAnswers()[0]);
+        answer2.setText(question.getAnswers()[1]);
+        answer3.setText(question.getAnswers()[2]);
+        answer1.setDisable(false);
+        answer2.setDisable(false);
+        answer3.setDisable(false);
         try {
             Image image = new Image(server.getImage(question.getActivity()));
             image4.setImage(image);
@@ -93,7 +98,7 @@ public class WhichOneCtrl implements QuestionCtrl {
         }
         scheduler = new TimerTask() {
             @Override
-            public void run() {
+            public void run () {
                 int timeLeft = server.getTimeLeft(gameCtrl.getPlayer());
                 Platform.runLater(() -> {
                     timer.setText(String.valueOf(Math.round(timeLeft / 1000d)));
@@ -132,6 +137,11 @@ public class WhichOneCtrl implements QuestionCtrl {
         confirmationExit.setStyle("-fx-background-color: #91e4fb; ");
     }
 
+    /**
+     * Sends the answer to the server and starts a 5-second countdown
+     *
+     * @param answer
+     */
     @Override
     public void postQuestion(Answer answer) {
         switch (answer.getAnswer().intValue()) {
@@ -183,7 +193,6 @@ public class WhichOneCtrl implements QuestionCtrl {
     }
 
     /**
-<<<<<<< client/src/main/java/client/scenes/multiplayer/WhichOneCtrl.java
      * Method to select heart emoji
      */
 
@@ -223,6 +232,7 @@ public class WhichOneCtrl implements QuestionCtrl {
         server.sendEmoji(gameCtrl.getPlayer(), "laugh");
     }
 
+
     /**
      * Switch case method to call from Websockets that associates an id with its button and a picture
      * and makes them bold
@@ -230,7 +240,9 @@ public class WhichOneCtrl implements QuestionCtrl {
      * @param id id of button (and image to increase size
      */
     public void emojiSelector(String id){
-        System.out.println(id);
+
+        //String currentQType = server.getCurrentQType(server.getLastGIIdMult());
+        System.out.println("ID SELECTION BEGINS");
         switch (id) {
             case "heart":
                 emojiBold(heart, heartPic);
@@ -248,7 +260,7 @@ public class WhichOneCtrl implements QuestionCtrl {
                 emojiBold(laugh, laughPic);
                 break;
             default:
-                System.out.println("INVALID EMOJI");
+                break;
         }
     }
 
@@ -281,8 +293,6 @@ public class WhichOneCtrl implements QuestionCtrl {
                 }
             };
             new Timer().schedule(timerTask, 5000);
-
-
         });
     }
 
@@ -290,6 +300,7 @@ public class WhichOneCtrl implements QuestionCtrl {
     public void showEmoji(String type) {
         emojiSelector(type);
     }
+
     /**
      * Displays a message when another player disconnects
      * @param disconnectPlayer

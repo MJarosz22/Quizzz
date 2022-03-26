@@ -5,6 +5,7 @@ import client.utils.ServerUtils;
 import com.google.inject.Inject;
 import commons.Answer;
 import commons.QuestionHowMuch;
+import commons.player.SimpleUser;
 import javafx.application.Platform;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
@@ -22,19 +23,19 @@ import java.io.FileNotFoundException;
 import java.util.Timer;
 import java.util.TimerTask;
 
-public class HowMuchCtrl implements QuestionCtrl{
+public class HowMuchCtrl implements QuestionCtrl {
 
     @FXML
-    private Text questionTitle, timer, score, points, answer, option4, correct_guess, questionCount;
+    private Text questionTitle, timer, score, points, answer, option4, correct_guess, questionCount, disconnect;
 
     @FXML
     private AnchorPane emoji;
 
     @FXML
-    private ImageView timerImage;
+    private ImageView timerImage, heartPic, cryPic, laughPic, angryPic, glassesPic;
 
     @FXML
-    private Button submit_guess;
+    private Button submit_guess, heart, cry, laugh, angry, glasses;
 
     @FXML
     private TextField player_answer;
@@ -70,7 +71,7 @@ public class HowMuchCtrl implements QuestionCtrl{
         }
     }
 
-    public void init(QuestionHowMuch question) {
+    public void init(QuestionHowMuch question){
         timerImage.setImage(timerImageSource);
         disablePopUp(null);
         player_answer.clear();
@@ -78,6 +79,7 @@ public class HowMuchCtrl implements QuestionCtrl{
         questionTitle.setText(question.getTitle());
         questionCount.setText("Question " + question.getNumber() + "/20");
         option4.setText(question.getActivity().getTitle());
+        disconnect.setVisible(false);
         progressBar.setProgress(question.getNumber() / 20.0d + 0.05);
         try {
             Image image = new Image(server.getImage(question.getActivity()));
@@ -87,7 +89,7 @@ public class HowMuchCtrl implements QuestionCtrl{
         }
         scheduler = new TimerTask() {
             @Override
-            public void run () {
+            public void run() {
                 int timeLeft = server.getTimeLeft(gameCtrl.getPlayer());
                 Platform.runLater(() -> {
                     timer.setText(String.valueOf(Math.round(timeLeft / 1000d)));
@@ -121,6 +123,7 @@ public class HowMuchCtrl implements QuestionCtrl{
 
     @Override
     public void postQuestion(Answer answer) {
+
         correct_guess.setText("The correct answer is: " + answer.getAnswer());
         correct_guess.setVisible(true);
         new Timer().schedule(new TimerTask() {
@@ -137,5 +140,130 @@ public class HowMuchCtrl implements QuestionCtrl{
         correct_guess.setVisible(false);
         player_answer.clear();
 //        timer.setText("12000");
+    }
+
+    /**
+     * Method to select heart emoji
+     */
+
+    public void heartBold() {
+        server.sendEmoji(gameCtrl.getPlayer(), "heart");
+    }
+
+    /**
+     * Method to select glasses emoji
+     */
+
+    public void glassesBold() {
+        server.sendEmoji(gameCtrl.getPlayer(), "glasses");
+    }
+
+    /**
+     * Method to select angry emoji
+     */
+
+    public void angryBold() {
+        server.sendEmoji(gameCtrl.getPlayer(), "angry");
+    }
+
+    /**
+     * Method to select crying emoji
+     */
+
+    public void cryBold() {
+        server.sendEmoji(gameCtrl.getPlayer(), "cry");
+    }
+
+    /**
+     * Method to select laughing emoji
+     */
+
+    public void laughBold() {
+        server.sendEmoji(gameCtrl.getPlayer(), "laugh");
+    }
+
+
+    /**
+     * Switch case method to call from Websockets that associates an id with its button and a picture
+     * and makes them bold
+     *
+     * @param id id of button (and image to increase size
+     */
+    public void emojiSelector(String id){
+
+        //String currentQType = server.getCurrentQType(server.getLastGIIdMult());
+        System.out.println("ID SELECTION BEGINS");
+            switch (id) {
+                case "heart":
+                    emojiBold(heart, heartPic);
+                    break;
+                case "glasses":
+                    emojiBold(glasses, glassesPic);
+                    break;
+                case "angry":
+                    emojiBold(angry, angryPic);
+                    break;
+                case "cry":
+                    emojiBold(cry, cryPic);
+                    break;
+                case "laugh":
+                    emojiBold(laugh, laughPic);
+                    break;
+                default:
+                    break;
+            }
+        }
+
+    /**
+     * Method that boldens (enlargens) the emoji clicked, then shrinks it back into position
+     *
+     * @param emojiButton The emoji button to be enlarged
+     * @param emojiPic The corresponding image associated with that button
+     */
+    public void emojiBold(Button emojiButton, ImageView emojiPic) {
+        Platform.runLater(() -> {
+            emojiButton.setStyle("-fx-pref-height: 50; -fx-pref-width: 50; -fx-background-color: transparent; ");
+            emojiButton.setLayoutX(emojiButton.getLayoutX() - 10.0);
+            emojiButton.setLayoutY(emojiButton.getLayoutY() - 10.0);
+            emojiButton.setMouseTransparent(true);
+            emojiPic.setFitWidth(50);
+            emojiPic.setFitHeight(50);
+
+            TimerTask timerTask = new TimerTask() {
+                @Override
+                public void run() {
+                    Platform.runLater(()->{
+                        emojiButton.setStyle("-fx-pref-height: 30; -fx-pref-width: 30; -fx-background-color: transparent; ");
+                        emojiButton.setLayoutX(emojiButton.getLayoutX() + 10.0);
+                        emojiButton.setLayoutY(emojiButton.getLayoutY() + 10.0);
+                        emojiButton.setMouseTransparent(false);
+                        emojiPic.setFitWidth(30);
+                        emojiPic.setFitHeight(30);
+                    });
+                }
+            };
+            new Timer().schedule(timerTask, 5000);
+        });
+    }
+
+    @Override
+    public void showEmoji(String type) {
+        emojiSelector(type);
+    }
+    
+    /**
+     * Displays a message when another player disconnects
+     * @param disconnectPlayer
+     */
+    @Override
+    public void showDisconnect(SimpleUser disconnectPlayer) {
+        disconnect.setText(disconnectPlayer.getName() + " disconnected");
+        disconnect.setVisible(true);
+        new Timer().schedule(new TimerTask() {
+            @Override
+            public void run() {
+                Platform.runLater(()-> disconnect.setVisible(false));
+            }
+        }, 5000);
     }
 }

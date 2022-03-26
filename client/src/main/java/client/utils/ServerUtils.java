@@ -2,6 +2,7 @@ package client.utils;
 
 import commons.Activity;
 import commons.Answer;
+import commons.Emoji;
 import commons.player.SimpleUser;
 import communication.RequestToJoin;
 import jakarta.ws.rs.NotFoundException;
@@ -41,6 +42,16 @@ public class ServerUtils {
                 .target(SERVER).path("api/gameinstance/" + player.getGameInstanceId() + "/players") //
                 .request(APPLICATION_JSON).cookie("user-id", player.getCookie()) //
                 .accept(APPLICATION_JSON) //
+                .get(new GenericType<>() {
+                });
+    }
+
+    public String getCurrentQType(int gameInstanceId) {
+        Client client = ClientBuilder.newClient(new ClientConfig());
+        return client
+                .target(SERVER).path("api/gameinstance/ " + gameInstanceId + "/getCurrentQType")
+                .request(APPLICATION_JSON)
+                .accept(APPLICATION_JSON)
                 .get(new GenericType<>() {
                 });
     }
@@ -102,6 +113,7 @@ public class ServerUtils {
                 .put(Entity.entity(activity, APPLICATION_JSON), Activity.class);
     }
 
+
     public boolean disconnect(SimpleUser player) {
         Client client = ClientBuilder.newClient(new ClientConfig());
         return client //
@@ -132,10 +144,10 @@ public class ServerUtils {
 
     public int getLastGIIdMult() {
         Client client = ClientBuilder.newClient(new ClientConfig());
-        return client //
-                .target(SERVER).path("api/game/getLastGIIdMult") //
-                .request(APPLICATION_JSON) //
-                .accept(APPLICATION_JSON) //
+        return client
+                .target(SERVER).path("api/game/getLastGIIdMult")
+                .request(APPLICATION_JSON)
+                .accept(APPLICATION_JSON)
                 .get(new GenericType<>() {
                 });
     }
@@ -227,6 +239,7 @@ public class ServerUtils {
         }
     }
 
+
     public <T> void registerForMessages(String dest, Class<T> type, Consumer<T> consumer) {
         session.subscribe(dest, new StompFrameHandler() {
             @Override
@@ -252,6 +265,16 @@ public class ServerUtils {
                 .post(Entity.entity(answer, APPLICATION_JSON), Boolean.class);
     }
 
+    public void sendEmoji(SimpleUser player, String emoji){
+        ClientBuilder
+            .newClient(new ClientConfig())
+            .target(SERVER)
+            .path("api/gameinstance/" + player.getGameInstanceId() + "/emoji")
+            .request(APPLICATION_JSON).cookie("user-id", player.getCookie())
+            .accept(APPLICATION_JSON)
+                .post(Entity.entity(new Emoji(emoji), APPLICATION_JSON));
+    }
+
     public void disconnectWebsocket() {
         session.disconnect();
     }
@@ -260,7 +283,8 @@ public class ServerUtils {
         session.send(dest, o);
     }
 
-    // ------------------------------------ ADDITIONAL METHODS ------------------------------------ //
+
+        // ------------------------------------ ADDITIONAL METHODS ------------------------------------ //
 
     /**
      * Additional method that checks whether a player hasn't disconnected from a game, by comparing cookies, which are
@@ -295,4 +319,6 @@ public class ServerUtils {
                 .delete(new GenericType<>() {
                 });
     }
+
+
 }
