@@ -71,7 +71,7 @@ public class HowMuchCtrl implements QuestionCtrl {
         }
     }
 
-    public void init(QuestionHowMuch question){
+    public void init(QuestionHowMuch question) {
         timerImage.setImage(timerImageSource);
         disablePopUp(null);
         player_answer.clear();
@@ -81,9 +81,11 @@ public class HowMuchCtrl implements QuestionCtrl {
         option4.setText(question.getActivity().getTitle());
         disconnect.setVisible(false);
         progressBar.setProgress(question.getNumber() / 20.0d + 0.05);
-        score.setText("Your score: "+ gameCtrl.getPlayer().getScore());
+        score.setText("Your score: " + gameCtrl.getPlayer().getScore());
         answer.setVisible(false);
         points.setVisible(false);
+        submit_guess.setDisable(false);
+        correct_guess.setVisible(false);
         try {
             Image image = new Image(server.getImage(question.getActivity()));
             image4.setImage(image);
@@ -120,25 +122,38 @@ public class HowMuchCtrl implements QuestionCtrl {
     }
 
     public void submitAnswer(ActionEvent actionEvent) {
-        gameCtrl.submitAnswer(new Answer(Long.valueOf(player_answer.getText())));
-        //TODO ERROR HANDLING
+        try {
+            gameCtrl.submitAnswer(new Answer(Long.valueOf(player_answer.getText())));
+        } catch (NumberFormatException e) {
+            gameCtrl.submitAnswer(new Answer(null));
+        }
+        finally {
+            submit_guess.setDisable(true);
+        }
     }
 
     @Override
     public void postQuestion(Answer answer) {
-        CharSequence input = player_answer.getCharacters();
-        long number = Long.parseLong(input.toString());
-        long correct_number = question.getActivity().getConsumption_in_wh();
-        awardPointsQuestionHowMuch(number, correct_number);
-        correct_guess.setText("The correct answer is: " + answer.getAnswer());
-        correct_guess.setVisible(true);
-        new Timer().schedule(new TimerTask() {
-            @Override
-            public void run() {
-                scheduler.cancel();
-                resetUI();
-            }
-        }, 5000);
+        try {
+            CharSequence input = player_answer.getCharacters();
+            long number = Long.parseLong(input.toString());
+            long correct_number = question.getActivity().getConsumption_in_wh();
+            awardPointsQuestionHowMuch(number, correct_number);
+            correct_guess.setText("The correct answer is: " + answer.getAnswer());
+            correct_guess.setVisible(true);
+        } catch (Exception e) {
+            player_answer.clear();
+            correct_guess.setVisible(true);
+            correct_guess.setText("Invalid number. Maybe next time.");
+        } finally {
+            new Timer().schedule(new TimerTask() {
+                @Override
+                public void run() {
+                    scheduler.cancel();
+                    resetUI();
+                }
+            }, 5000);
+        }
     }
 
     /**
@@ -250,36 +265,36 @@ public class HowMuchCtrl implements QuestionCtrl {
      *
      * @param id id of button (and image to increase size
      */
-    public void emojiSelector(String id){
+    public void emojiSelector(String id) {
 
         //String currentQType = server.getCurrentQType(server.getLastGIIdMult());
         System.out.println("ID SELECTION BEGINS");
-            switch (id) {
-                case "heart":
-                    emojiBold(heart, heartPic);
-                    break;
-                case "glasses":
-                    emojiBold(glasses, glassesPic);
-                    break;
-                case "angry":
-                    emojiBold(angry, angryPic);
-                    break;
-                case "cry":
-                    emojiBold(cry, cryPic);
-                    break;
-                case "laugh":
-                    emojiBold(laugh, laughPic);
-                    break;
-                default:
-                    break;
-            }
+        switch (id) {
+            case "heart":
+                emojiBold(heart, heartPic);
+                break;
+            case "glasses":
+                emojiBold(glasses, glassesPic);
+                break;
+            case "angry":
+                emojiBold(angry, angryPic);
+                break;
+            case "cry":
+                emojiBold(cry, cryPic);
+                break;
+            case "laugh":
+                emojiBold(laugh, laughPic);
+                break;
+            default:
+                break;
         }
+    }
 
     /**
      * Method that boldens (enlargens) the emoji clicked, then shrinks it back into position
      *
      * @param emojiButton The emoji button to be enlarged
-     * @param emojiPic The corresponding image associated with that button
+     * @param emojiPic    The corresponding image associated with that button
      */
     public void emojiBold(Button emojiButton, ImageView emojiPic) {
         Platform.runLater(() -> {
@@ -293,7 +308,7 @@ public class HowMuchCtrl implements QuestionCtrl {
             TimerTask timerTask = new TimerTask() {
                 @Override
                 public void run() {
-                    Platform.runLater(()->{
+                    Platform.runLater(() -> {
                         emojiButton.setStyle("-fx-pref-height: 30; -fx-pref-width: 30; -fx-background-color: transparent; ");
                         emojiButton.setLayoutX(emojiButton.getLayoutX() + 10.0);
                         emojiButton.setLayoutY(emojiButton.getLayoutY() + 10.0);
@@ -311,9 +326,10 @@ public class HowMuchCtrl implements QuestionCtrl {
     public void showEmoji(String type) {
         emojiSelector(type);
     }
-    
+
     /**
      * Displays a message when another player disconnects
+     *
      * @param disconnectPlayer
      */
     @Override
@@ -323,7 +339,7 @@ public class HowMuchCtrl implements QuestionCtrl {
         new Timer().schedule(new TimerTask() {
             @Override
             public void run() {
-                Platform.runLater(()-> disconnect.setVisible(false));
+                Platform.runLater(() -> disconnect.setVisible(false));
             }
         }, 5000);
     }
