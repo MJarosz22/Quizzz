@@ -126,26 +126,27 @@ public class HowMuchCtrl implements QuestionCtrl {
             gameCtrl.submitAnswer(new Answer(Long.valueOf(player_answer.getText())));
         } catch (NumberFormatException e) {
             gameCtrl.submitAnswer(new Answer(null));
-        }
-        finally {
+        } finally {
             submit_guess.setDisable(true);
         }
     }
 
     @Override
-    public void postQuestion(Answer answer) {
+    public void postQuestion(Answer ans) {
+        submit_guess.setDisable(true); // If an answer was not submitted already.
         try {
             CharSequence input = player_answer.getCharacters();
             long number = Long.parseLong(input.toString());
             long correct_number = question.getActivity().getConsumption_in_wh();
             awardPointsQuestionHowMuch(number, correct_number);
-            correct_guess.setText("The correct answer is: " + answer.getAnswer());
-            correct_guess.setVisible(true);
         } catch (Exception e) {
-            player_answer.clear();
-            correct_guess.setVisible(true);
-            correct_guess.setText("Invalid number. Maybe next time.");
+            points.setText("+0 points");
+            points.setVisible(true);
+            answer.setText("Wrong answer");
+            answer.setVisible(true);
         } finally {
+            correct_guess.setText("The correct answer is: " + ans.getAnswer());
+            correct_guess.setVisible(true);
             new Timer().schedule(new TimerTask() {
                 @Override
                 public void run() {
