@@ -58,7 +58,7 @@ public class GameInstanceServer extends GameInstance {
         for (int i = 0; i < 20; i++) {
             int remainder = i % 4;
             int mod = i / 4;
-            if(questions.size() == 20) break;
+            if (questions.size() == 20) break;
             if (remainder == 3) questions.add(new QuestionMoreExpensive
                     (new Activity[]{
                             activities.get(9 * mod + 6),
@@ -66,10 +66,10 @@ public class GameInstanceServer extends GameInstance {
                             activities.get(9 * mod + 8)},
                             i + 1));
             else if (remainder == 2) questions.add(new QuestionHowMuch(activities.get(9 * mod + 5), i + 1));
-            else if(remainder == 1) questions.add(new QuestionWhichOne(activities.get(9 * mod + 4), i + 1));
+            else if (remainder == 1) questions.add(new QuestionWhichOne(activities.get(9 * mod + 4), i + 1));
             else questions.add(new QuestionInsteadOf(activities.get(9 * mod),
                         new Activity[]{activities.get(9 * mod + 1),
-                        activities.get(9 * mod + 2), activities.get(9 * mod + 3)}, i + 1));
+                                activities.get(9 * mod + 2), activities.get(9 * mod + 3)}, i + 1));
         }
         setQuestions(questions);
     }
@@ -110,7 +110,7 @@ public class GameInstanceServer extends GameInstance {
             msgs.convertAndSend("/topic/" + getId() + "/questionmoreexpensive", getQuestions().get(questionNumber));
         } else if (currentQuestion instanceof QuestionWhichOne) {
             msgs.convertAndSend("/topic/" + getId() + "/questionwhichone", getQuestions().get(questionNumber));
-        }else if(currentQuestion instanceof  QuestionInsteadOf){
+        } else if (currentQuestion instanceof QuestionInsteadOf) {
             msgs.convertAndSend("/topic/" + getId() + "/questioninsteadof", getQuestions().get(questionNumber));
         } else throw new IllegalStateException();
     }
@@ -185,20 +185,20 @@ public class GameInstanceServer extends GameInstance {
         return false;
     }
 
-    public void sendEmoji(Emoji emoji){
+    public void sendEmoji(Emoji emoji) {
         System.out.println(emoji);
         msgs.convertAndSend("/topic/" + getId() + "/emoji", emoji);
     }
 
-    public void decreaseTime(TimePU timePU){
-        if(getTimeLeft() > 1) {
+    public void decreaseTime(TimePU timePU) {
+        if (getTimeLeft() > 1) {
             System.out.println(timePU);
             msgs.convertAndSend("/topic/" + getId() + "/decrease-time", timePU);
 
         }
     }
 
-    public boolean disconnectPlayer(SimpleUser player){
+    public boolean disconnectPlayer(SimpleUser player) {
         boolean status = getPlayers().remove(player);
         msgs.convertAndSend("/topic/" + getId() + "/disconnectplayer", player);
         updatePlayerList();

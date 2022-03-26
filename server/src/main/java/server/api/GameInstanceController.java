@@ -10,7 +10,6 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
-import java.sql.Time;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
@@ -116,7 +115,6 @@ public class GameInstanceController {
     }
 
 
-
     @GetMapping("/{gameInstanceId}/correctanswer")
     public ResponseEntity<Long> getCorrectAnswer(@PathVariable int gameInstanceId,
                                                  @CookieValue(name = "user-id", defaultValue = "null") String cookie) {
@@ -142,7 +140,7 @@ public class GameInstanceController {
     @PostMapping("/{gameInstanceId}/emoji")
     public ResponseEntity<Boolean> sendEmoji(@PathVariable int gameInstanceId,
                                              @CookieValue(name = "user-id", defaultValue = "null") String cookie,
-                                             @RequestBody Emoji emoji){
+                                             @RequestBody Emoji emoji) {
         if (gameInstances.get(gameInstanceId).getState().equals(GameState.STARTING)) return ResponseEntity.ok(true);
         Player reqPlayer = getPlayerFromGameInstance(gameInstanceId, cookie);
         if (reqPlayer == null) return ResponseEntity.status(HttpStatus.FORBIDDEN).build();
@@ -154,12 +152,12 @@ public class GameInstanceController {
     @PostMapping("/{gameInstanceId}/decrease-time")
     public ResponseEntity<Boolean> decreaseTime(@PathVariable int gameInstanceId,
                                                 @CookieValue(name = "user-id", defaultValue = "null") String cookie,
-                                                @RequestBody TimePU timePU){
+                                                @RequestBody TimePU timePU) {
         if (gameInstances.get(gameInstanceId).getState().equals(GameState.STARTING)) return ResponseEntity.ok(true);
         Player reqPlayer = getPlayerFromGameInstance(gameInstanceId, cookie);
         if (reqPlayer == null) return ResponseEntity.status(HttpStatus.FORBIDDEN).build();
         gameInstances.get(gameInstanceId).decreaseTime(timePU);
-        logger.info("Time decreased by "+timePU.getPercentage()+"%");
+        logger.info("Time decreased by " + timePU.getPercentage() + "%");
         return ResponseEntity.ok(true);
     }
 

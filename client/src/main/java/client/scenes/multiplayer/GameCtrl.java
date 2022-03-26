@@ -55,7 +55,7 @@ public class GameCtrl {
         });
 
         subscribe("/topic/" + player.getGameInstanceId() + "/decrease-time", TimePU.class, timePU -> {
-            System.out.println("time reduced by "+timePU.getPercentage()+"%");
+            System.out.println("time reduced by " + timePU.getPercentage() + "%");
             if (!player.getCookie().equals(timePU.getPlayerCookie()))
                 Platform.runLater(() -> mainCtrl.getCurrentQuestionScene().reduceTimer(timePU.getPercentage()));
         });
