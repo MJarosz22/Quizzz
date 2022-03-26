@@ -3,6 +3,7 @@ package client.scenes.multiplayer;
 import client.scenes.MainCtrl;
 import client.utils.ServerUtils;
 import commons.Answer;
+import commons.QuestionHowMuch;
 import commons.QuestionWhichOne;
 import commons.player.SimpleUser;
 import javafx.application.Platform;
@@ -22,6 +23,10 @@ import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.util.Timer;
 import java.util.TimerTask;
+import java.util.concurrent.Executors;
+import java.util.concurrent.ScheduledExecutorService;
+
+import static java.util.concurrent.TimeUnit.SECONDS;
 
 public class WhichOneCtrl implements QuestionCtrl {
 
@@ -52,6 +57,7 @@ public class WhichOneCtrl implements QuestionCtrl {
     private Image timerImageSource;
 
     private TimerTask scheduler;
+
 
     private QuestionWhichOne question;
     private final ServerUtils server;
@@ -126,23 +132,24 @@ public class WhichOneCtrl implements QuestionCtrl {
 
     @Override
     public void reduceTimer(int percentage){
+        int timeLeft = server.getTimeLeft(gameCtrl.getPlayer())*(percentage/100);
         scheduler.cancel();
-        scheduler = new TimerTask() {
-            @Override
-            public void run() {
-                int timeLeft = server.getTimeLeft(gameCtrl.getPlayer())*percentage/100;
-                Platform.runLater(() -> {
-                    timer.setText(String.valueOf(Math.round(timeLeft / 1000d)));
-                });
-                if(timeLeft==0){
-                    Platform.runLater(() ->{
-                        disableAnswers();
-                    });
-                }
+        ScheduledExecutorService newScheduler = Executors.newScheduledThreadPool(1);
+        Runnable runnable = new Runnable() {
+            int countdown = timeLeft*percentage/100;
 
+            public void run() {
+                if (countdown == 0) {
+                    timer.setText(String.valueOf(countdown));
+                    disableAnswers();
+                    newScheduler.shutdown();
+                } else {
+                    timer.setText(String.valueOf(countdown--));
+                }
             }
         };
-        new Timer().scheduleAtFixedRate(scheduler, 0, 100);
+        newScheduler.scheduleAtFixedRate(runnable, 0, 1, SECONDS);
+
     }
 
     public void leaveGame(ActionEvent actionEvent) {

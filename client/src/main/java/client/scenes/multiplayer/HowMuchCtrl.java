@@ -126,7 +126,7 @@ public class HowMuchCtrl implements QuestionCtrl {
         scheduler = new TimerTask() {
             @Override
             public void run() {
-                int timeLeft = server.getTimeLeft(gameCtrl.getPlayer())/2;
+                double timeLeft = server.getTimeLeft(gameCtrl.getPlayer())*percentage/100.0;
                 Platform.runLater(() -> {
                     timer.setText(String.valueOf(Math.round(timeLeft / 1000d)));
                 });
@@ -138,7 +138,7 @@ public class HowMuchCtrl implements QuestionCtrl {
 
             }
         };
-        new Timer().scheduleAtFixedRate(scheduler, 0, 100);
+        new Timer().scheduleAtFixedRate(scheduler, 0, 50);
     }
 
     public void submitAnswer(ActionEvent actionEvent) {
