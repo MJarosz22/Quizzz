@@ -124,10 +124,20 @@ public class HowMuchCtrl implements QuestionCtrl {
         confirmationExit.setStyle("-fx-background-color: #91e4fb; ");
     }
 
+    /**
+     * Use the time reduction powerup
+     *
+     * @param actionEvent click on the powerUp
+     */
     public void decreaseTime(ActionEvent actionEvent) {
         server.useTimePowerup(gameCtrl.getPlayer(), 50);
     }
 
+    /**
+     * reduce the time for this player by the given percentage
+     *
+     * @param percentage
+     */
     @Override
     public void reduceTimer(int percentage) {
         scheduler.cancel();
@@ -182,10 +192,16 @@ public class HowMuchCtrl implements QuestionCtrl {
 //        timer.setText("12000");
     }
 
+    /**
+     * Block answers for this player (for example when their time runs out)
+     */
     public void disableAnswers() {
         this.submit_guess.setDisable(true);
     }
 
+    /**
+     * Enable answers for this player
+     */
     public void enableAnswers() {
         this.submit_guess.setDisable(false);
     }
@@ -316,6 +332,12 @@ public class HowMuchCtrl implements QuestionCtrl {
         }, 5000);
     }
 
+    /**
+     * Displays a message when another player uses a powerUp
+     *
+     * @param powerUpPlayer
+     * @param powerUp
+     */
     public void showPowerUpUsed(SimpleUser powerUpPlayer, PowerUp powerUp) {
         disconnect.setText(powerUpPlayer.getName() + powerUp.getPrompt());
         disconnect.setVisible(true);
@@ -327,6 +349,10 @@ public class HowMuchCtrl implements QuestionCtrl {
         }, 2000);
     }
 
+    /**
+     * Get the powerUps available for this player from server
+     * and adjust the powerUp buttons accordingly
+     */
     public void setPowerUps() {
         boolean[] powerUps = ((Player) (gameCtrl.getPlayer())).getPowerUps();
         powerUp1.setDisable(!powerUps[0]);

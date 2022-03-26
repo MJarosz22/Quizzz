@@ -149,11 +149,20 @@ public class GameInstanceController {
         return ResponseEntity.ok(true);
     }
 
+    /**
+     * Check if the game is in the right state and make a call to reduce time for players
+     *
+     * @param gameInstanceId
+     * @param cookie
+     * @param timePU
+     * @return true if the game is in the right state, and the call was made successfully
+     */
     @PostMapping("/{gameInstanceId}/decrease-time")
     public ResponseEntity<Boolean> decreaseTime(@PathVariable int gameInstanceId,
                                                 @CookieValue(name = "user-id", defaultValue = "null") String cookie,
                                                 @RequestBody TimePU timePU) {
-        if (gameInstances.get(gameInstanceId).getState().equals(GameState.STARTING)) return ResponseEntity.ok(true);
+        if (!gameInstances.get(gameInstanceId).getState().equals(GameState.INQUESTION))
+            return ResponseEntity.status(HttpStatus.FORBIDDEN).build();
         Player reqPlayer = getPlayerFromGameInstance(gameInstanceId, cookie);
         if (reqPlayer == null) return ResponseEntity.status(HttpStatus.FORBIDDEN).build();
         gameInstances.get(gameInstanceId).decreaseTime(timePU);

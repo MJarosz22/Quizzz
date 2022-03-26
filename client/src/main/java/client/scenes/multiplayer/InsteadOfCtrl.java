@@ -132,10 +132,20 @@ public class InsteadOfCtrl implements QuestionCtrl {
         confirmationExit.setDisable(true);
     }
 
+    /**
+     * Use the time reduction powerup
+     *
+     * @param actionEvent click on the powerUp
+     */
     public void decreaseTime(ActionEvent actionEvent) {
         server.useTimePowerup(gameCtrl.getPlayer(), 50);
     }
 
+    /**
+     * reduce the time for this player by the given percentage
+     *
+     * @param percentage
+     */
     @Override
     public void reduceTimer(int percentage) {
         scheduler.cancel();
@@ -230,12 +240,18 @@ public class InsteadOfCtrl implements QuestionCtrl {
         answer3.setSelected(false);
     }
 
+    /**
+     * Block answers for this player (for example when their time runs out)
+     */
     public void disableAnswers() {
         answer1.setDisable(true);
         answer2.setDisable(true);
         answer3.setDisable(true);
     }
 
+    /**
+     * Enable answers for this player
+     */
     public void enableAnswers() {
         answer1.setDisable(false);
         answer2.setDisable(false);
@@ -368,6 +384,12 @@ public class InsteadOfCtrl implements QuestionCtrl {
         }, 5000);
     }
 
+    /**
+     * Displays a message when another player uses a powerUp
+     *
+     * @param powerUpPlayer
+     * @param powerUp
+     */
     public void showPowerUpUsed(SimpleUser powerUpPlayer, PowerUp powerUp) {
         disconnect.setText(powerUpPlayer.getName() + powerUp.getPrompt());
         disconnect.setVisible(true);
@@ -379,6 +401,10 @@ public class InsteadOfCtrl implements QuestionCtrl {
         }, 2000);
     }
 
+    /**
+     * Get the powerUps available for this player from server
+     * and adjust the powerUp buttons accordingly
+     */
     public void setPowerUps() {
         boolean[] powerUps = ((Player) (gameCtrl.getPlayer())).getPowerUps();
         powerUp1.setDisable(!powerUps[0]);

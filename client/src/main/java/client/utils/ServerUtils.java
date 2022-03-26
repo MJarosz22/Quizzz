@@ -266,6 +266,12 @@ public class ServerUtils {
                 .post(Entity.entity(answer, APPLICATION_JSON), Boolean.class);
     }
 
+    /**
+     * Send a request to reduce time by the given percentage
+     *
+     * @param player     who used the powerUp
+     * @param percentage by which the time should be reduced
+     */
     public void useTimePowerup(SimpleUser player, int percentage) {
         ClientBuilder
                 .newClient(new ClientConfig())

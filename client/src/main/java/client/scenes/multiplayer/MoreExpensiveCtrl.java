@@ -129,10 +129,20 @@ public class MoreExpensiveCtrl implements QuestionCtrl {
         confirmationExit.setDisable(true);
     }
 
+    /**
+     * Use the time reduction powerup
+     *
+     * @param actionEvent click on the powerUp
+     */
     public void decreaseTime(ActionEvent actionEvent) {
         server.useTimePowerup(gameCtrl.getPlayer(), 50);
     }
 
+    /**
+     * reduce the time for this player by the given percentage
+     *
+     * @param percentage
+     */
     @Override
     public void reduceTimer(int percentage) {
         scheduler.cancel();
@@ -218,12 +228,18 @@ public class MoreExpensiveCtrl implements QuestionCtrl {
         enableAnswers();
     }
 
+    /**
+     * Block answers for this player (for example when their time runs out)
+     */
     public void disableAnswers() {
         option1Button.setDisable(true);
         option2Button.setDisable(true);
         option3Button.setDisable(true);
     }
 
+    /**
+     * Enable answers for this player
+     */
     public void enableAnswers() {
         option1Button.setDisable(false);
         option2Button.setDisable(false);
@@ -355,7 +371,13 @@ public class MoreExpensiveCtrl implements QuestionCtrl {
         }, 5000);
     }
 
-    public void showPowerUpUsed(SimpleUser powerUpPlayer, PowerUp powerUp){
+    /**
+     * Displays a message when another player uses a powerUp
+     *
+     * @param powerUpPlayer
+     * @param powerUp
+     */
+    public void showPowerUpUsed(SimpleUser powerUpPlayer, PowerUp powerUp) {
         disconnect.setText(powerUpPlayer.getName() + powerUp.getPrompt());
         disconnect.setVisible(true);
         new Timer().schedule(new TimerTask() {
@@ -366,8 +388,12 @@ public class MoreExpensiveCtrl implements QuestionCtrl {
         }, 2000);
     }
 
-    public void setPowerUps(){
-        boolean[] powerUps = ((Player)(gameCtrl.getPlayer())).getPowerUps();
+    /**
+     * Get the powerUps available for this player from server
+     * and adjust the powerUp buttons accordingly
+     */
+    public void setPowerUps() {
+        boolean[] powerUps = ((Player) (gameCtrl.getPlayer())).getPowerUps();
         powerUp1.setDisable(!powerUps[0]);
         powerUp2.setDisable(!powerUps[1]);
         powerUp3.setDisable(!powerUps[2]);

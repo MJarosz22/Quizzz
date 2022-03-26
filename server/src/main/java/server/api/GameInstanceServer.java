@@ -191,10 +191,14 @@ public class GameInstanceServer extends GameInstance {
         msgs.convertAndSend("/topic/" + getId() + "/emoji", emoji);
     }
 
+    /**
+     * A player has used time-reducing powerUp. Send it to all the players from their game
+     *
+     * @param timePU powerUp used
+     */
     public void decreaseTime(TimePU timePU) {
         if (getTimeLeft() > 1) {
             msgs.convertAndSend("/topic/" + getId() + "/decrease-time", timePU);
-
         }
     }
 
