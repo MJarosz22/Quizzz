@@ -3,7 +3,6 @@ package client.scenes.multiplayer;
 import client.scenes.MainCtrl;
 import client.utils.ServerUtils;
 import commons.Answer;
-import commons.QuestionHowMuch;
 import commons.QuestionWhichOne;
 import commons.player.SimpleUser;
 import javafx.application.Platform;
@@ -23,10 +22,6 @@ import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.util.Timer;
 import java.util.TimerTask;
-import java.util.concurrent.Executors;
-import java.util.concurrent.ScheduledExecutorService;
-
-import static java.util.concurrent.TimeUnit.SECONDS;
 
 public class WhichOneCtrl implements QuestionCtrl {
 
