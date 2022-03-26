@@ -252,4 +252,8 @@ public class MainCtrl {
         return insteadOfCtrl;
     }
 
+    public MPGameOverCtrl getGameOverCtrl(){
+        return  gameOverCtrl;
+    }
+
 }

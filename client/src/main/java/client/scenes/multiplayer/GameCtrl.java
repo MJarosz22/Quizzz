@@ -3,15 +3,19 @@ package client.scenes.multiplayer;
 import client.scenes.MainCtrl;
 import client.utils.ServerUtils;
 import commons.*;
+import commons.player.Player;
 import commons.player.SimpleUser;
 import communication.RequestToJoin;
 import javafx.application.Platform;
 
 import javax.inject.Inject;
+import java.util.ArrayList;
+import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.function.Consumer;
 
 import static client.utils.ServerUtils.connectedPlayers;
+import static client.utils.ServerUtils.getLeaderboard;
 
 public class GameCtrl {
 
@@ -72,10 +76,27 @@ public class GameCtrl {
         subscribe("/topic/" + getPlayer().getGameInstanceId() + "/questioninsteadof", QuestionInsteadOf.class, question ->
                 Platform.runLater(() -> goToInsteadOf(question)));
 
-        subscribe("/topic/" + getPlayer().getGameInstanceId() + "/MPgameOver", List.class, playersInMPgame -> {
-                List<SimpleUser> players  = server.connectedPlayers(getPlayer().getGameInstanceId());
-                System.out.println(players.get(0).getScore());
-                Platform.runLater(() -> goToGameOver(players));
+        subscribe("/topic/" + getPlayer().getGameInstanceId() + "/MPgameOver", List.class, MPplayers -> {
+
+                Platform.runLater(() -> {
+                    List<SimpleUser> simpleUserList = new ArrayList<>();
+                    for(Object o : MPplayers) {
+                        LinkedHashMap linkedHashMap = (LinkedHashMap) o;
+                        String name = (String) linkedHashMap.get("name");
+                        Integer score = (Integer) linkedHashMap.get("score");
+                        Integer gameInstanceId = (Integer) linkedHashMap.get("gameInstanceId");
+                        Integer playerId = (Integer) linkedHashMap.get("id");
+                        if(getPlayer().getId() == playerId
+                                && getPlayer().getGameInstanceId() == gameInstanceId) {
+                            server.addPlayerToLeaderboard(getPlayer());
+                        }
+                        System.out.println(name + " " + score);
+                        SimpleUser aux = new SimpleUser(name,score);
+                        simpleUserList.add(aux);
+                    }
+                    //System.out.println("I'm here");
+                    goToGameOver(simpleUserList);
+                });
         });
     }
 

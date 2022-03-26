@@ -44,8 +44,7 @@ public class MPGameOverCtrl {
     }
 
     public void init(List<SimpleUser> players) {
-        System.out.println(players.get(0).getScore());
-            setTablePlayers(players);
+        setTablePlayers(players);
     }
 
     /**

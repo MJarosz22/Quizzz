@@ -118,9 +118,8 @@ public class GameInstanceServer extends GameInstance {
         setState(GameState.INQUESTION);
         if (questionTask != null) questionTask.cancel();
         questionNumber++;
-        if (questionNumber > 3) {
-            msgs.convertAndSend("/topic/" + getId() + "/MPgameOver", getPlayers());
-            logger.info(String.valueOf(getPlayers().get(0).getScore()));
+        if (questionNumber > 19) {
+            msgs.convertAndSend("/topic/" + getId() + "/MPgameOver",  getPlayers());
         }else {
             sendQuestion(questionNumber);
             startingTime = System.currentTimeMillis();
