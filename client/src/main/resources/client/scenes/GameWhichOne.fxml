@@ -55,9 +55,9 @@
                 <Font name="Courier New Bold Italic" size="14.0" />
             </font>
         </Text>
-        <Button layoutX="286.0" layoutY="434.0" mnemonicParsing="false" onAction="#enablePopUp" prefHeight="68.0" prefWidth="94.0" style="-fx-background-radius: 25;" text="REMOVE &#10;INCORRECT&#10;ANSWER" textAlignment="CENTER" />
-        <Button layoutX="433.0" layoutY="434.0" mnemonicParsing="false" onAction="#enablePopUp" prefHeight="68.0" prefWidth="94.0" style="-fx-background-radius: 25;" text="DOUBLE&#10;POINTS" textAlignment="CENTER" />
-        <Button layoutX="580.0" layoutY="434.0" mnemonicParsing="false" onAction="#decreaseTime" prefHeight="68.0" prefWidth="94.0" style="-fx-background-radius: 25;" text="DECREASE&#10;OPPONENTS'&#10;TIME" textAlignment="CENTER" />
+        <Button fx:id="powerUp1" layoutX="286.0" layoutY="434.0" mnemonicParsing="false" onAction="#enablePopUp" prefHeight="68.0" prefWidth="94.0" style="-fx-background-radius: 25;" text="REMOVE &#10;INCORRECT&#10;ANSWER" textAlignment="CENTER" />
+        <Button fx:id="powerUp2" layoutX="433.0" layoutY="434.0" mnemonicParsing="false" onAction="#enablePopUp" prefHeight="68.0" prefWidth="94.0" style="-fx-background-radius: 25;" text="DOUBLE&#10;POINTS" textAlignment="CENTER" />
+        <Button fx:id="powerUp3" layoutX="580.0" layoutY="434.0" mnemonicParsing="false" onAction="#decreaseTime" prefHeight="68.0" prefWidth="94.0" style="-fx-background-radius: 25;" text="DECREASE&#10;OPPONENTS'&#10;TIME" textAlignment="CENTER" />
         <Text fx:id="disconnect" layoutX="825.0" layoutY="473.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Disconnect" wrappingWidth="106.0">
             <font>
                 <Font size="14.0" />

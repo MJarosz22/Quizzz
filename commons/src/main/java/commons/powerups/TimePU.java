@@ -3,21 +3,19 @@ package commons.powerups;
 
 public class TimePU extends PowerUp {
 
+    private int percentage;
+
     public TimePU() {
     }
-
-    private int percentage;
 
     public TimePU(String playerCookie, int percentage) {
         super(playerCookie);
         this.percentage = percentage;
+        this.prompt = " reduced your time!";
     }
 
     public int getPercentage() {
         return percentage;
     }
 
-    public String getPlayerCookie() {
-        return playerCookie;
-    }
 }

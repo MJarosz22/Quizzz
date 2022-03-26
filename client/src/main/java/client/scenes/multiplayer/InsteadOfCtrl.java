@@ -4,7 +4,9 @@ import client.scenes.MainCtrl;
 import client.utils.ServerUtils;
 import commons.Answer;
 import commons.QuestionInsteadOf;
+import commons.player.Player;
 import commons.player.SimpleUser;
+import commons.powerups.PowerUp;
 import javafx.application.Platform;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
@@ -38,7 +40,7 @@ public class InsteadOfCtrl implements QuestionCtrl {
     private RadioButton answer1, answer2, answer3;
 
     @FXML
-    private Button heart, cry, laugh, angry, glasses;
+    private Button heart, cry, laugh, angry, glasses, powerUp1, powerUp2, powerUp3;
 
     @FXML
     private ImageView image4, heartPic, cryPic, laughPic, angryPic, glassesPic;
@@ -92,6 +94,7 @@ public class InsteadOfCtrl implements QuestionCtrl {
         answer1.setDisable(false);
         answer2.setDisable(false);
         answer3.setDisable(false);
+        setPowerUps();
         try {
             Image image = new Image(server.getImage(question.getActivity()));
             image4.setImage(image);
@@ -103,6 +106,8 @@ public class InsteadOfCtrl implements QuestionCtrl {
             public void run() {
                 int timeLeft = server.getTimeLeft(gameCtrl.getPlayer());
                 Platform.runLater(() -> {
+                    if (Math.round((timeLeft) / 1000d) <= 2)
+                        powerUp3.setDisable(true);
                     timer.setText(String.valueOf(Math.round(timeLeft / 1000d)));
                 });
             }
@@ -143,6 +148,8 @@ public class InsteadOfCtrl implements QuestionCtrl {
                 Platform.runLater(() -> {
                     timer.setText(String.valueOf(Math.max(Math.round((timeLeft - timeReduced) / 1000d), 0)));
                 });
+                if (Math.round((timeLeft) / 1000d) <= 2)
+                    powerUp3.setDisable(true);
                 if (Math.round((timeLeft - timeReduced) / 1000d) <= 0) {
                     Platform.runLater(() -> {
                         disableAnswers();
@@ -359,5 +366,23 @@ public class InsteadOfCtrl implements QuestionCtrl {
                 Platform.runLater(() -> disconnect.setVisible(false));
             }
         }, 5000);
+    }
+
+    public void showPowerUpUsed(SimpleUser powerUpPlayer, PowerUp powerUp) {
+        disconnect.setText(powerUpPlayer.getName() + powerUp.getPrompt());
+        disconnect.setVisible(true);
+        new Timer().schedule(new TimerTask() {
+            @Override
+            public void run() {
+                Platform.runLater(() -> disconnect.setVisible(false));
+            }
+        }, 2000);
+    }
+
+    public void setPowerUps() {
+        boolean[] powerUps = ((Player) (gameCtrl.getPlayer())).getPowerUps();
+        powerUp1.setDisable(!powerUps[0]);
+        powerUp2.setDisable(!powerUps[1]);
+        powerUp3.setDisable(!powerUps[2]);
     }
 }

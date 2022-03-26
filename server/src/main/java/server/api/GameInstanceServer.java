@@ -29,6 +29,7 @@ public class GameInstanceServer extends GameInstance {
     private TimerTask questionTask;
     private final Timer questionTimer;
 
+
     private final Timer countdownTimer;
 
     public GameInstanceServer(int id, int type, GameController controller, SimpMessagingTemplate msgs, String serverName) {
@@ -192,7 +193,6 @@ public class GameInstanceServer extends GameInstance {
 
     public void decreaseTime(TimePU timePU) {
         if (getTimeLeft() > 1) {
-            System.out.println(timePU);
             msgs.convertAndSend("/topic/" + getId() + "/decrease-time", timePU);
 
         }
