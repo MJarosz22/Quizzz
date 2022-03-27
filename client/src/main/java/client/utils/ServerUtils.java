@@ -292,6 +292,16 @@ public class ServerUtils {
                 .post(Entity.entity(new Emoji(emoji), APPLICATION_JSON));
     }
 
+    public Integer gameInstanceType(int gameInstanceId) {
+        Client client = ClientBuilder.newClient(new ClientConfig());
+        return client
+                .target(SERVER).path("api/gameinstance/ " + gameInstanceId + "/gameInstanceType")
+                .request(APPLICATION_JSON)
+                .accept(APPLICATION_JSON)
+                .get(new GenericType<>() {
+                });
+    }
+
     public void disconnectWebsocket() {
         session.disconnect();
     }
