@@ -18,7 +18,6 @@ import javafx.scene.text.Text;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.net.URL;
-import java.nio.file.FileSystems;
 import java.util.Random;
 import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.Executors;
@@ -95,7 +94,7 @@ public class SinglePlayerGameCtrl {
                 leaveGame();
                 return;
             }
-            timerPath = relativeToAbsolute(timerPath);
+            timerPath = MainCtrl.relativeToAbsolute(timerPath);
             setTimerImage(timerImage);
             progressBar.setProgress(0);
             score.setText("Your score: 0");
@@ -545,7 +544,6 @@ public class SinglePlayerGameCtrl {
     public void setTimerImage(AnchorPane timerImage) {
         URL url = SinglePlayerGameCtrl.class.getResource(this.timerPath);
         timerImage.setStyle("-fx-background-image: url(" + url + ");");
-        System.out.println(url.toString());
     }
 
 
@@ -649,11 +647,11 @@ public class SinglePlayerGameCtrl {
      * This method is called when user selects answer1 in a QuestionWhichOne type of question
      */
     public void answer1Selected() {
-        if(currentQuestion instanceof QuestionWhichOne) {
+        if (currentQuestion instanceof QuestionWhichOne) {
             long response = Long.parseLong(answer1.getText());
             isSelectionCorrect(answer1, response);
         }
-        if(currentQuestion instanceof QuestionInsteadOf) {
+        if (currentQuestion instanceof QuestionInsteadOf) {
             isSelectionCorrectInsteadOf(answer1, 1);
         }
     }
@@ -662,11 +660,11 @@ public class SinglePlayerGameCtrl {
      * This method is called when user selects answer2 in a QuestionWhichOne type of question
      */
     public void answer2Selected() {
-        if(currentQuestion instanceof QuestionWhichOne) {
+        if (currentQuestion instanceof QuestionWhichOne) {
             long response = Long.parseLong(answer2.getText());
             isSelectionCorrect(answer2, response);
         }
-        if(currentQuestion instanceof QuestionInsteadOf) {
+        if (currentQuestion instanceof QuestionInsteadOf) {
             isSelectionCorrectInsteadOf(answer2, 2);
         }
     }
@@ -675,11 +673,11 @@ public class SinglePlayerGameCtrl {
      * This method is called when user selects answer3 in a QuestionWhichOne type of question
      */
     public void answer3Selected() {
-        if(currentQuestion instanceof QuestionWhichOne) {
+        if (currentQuestion instanceof QuestionWhichOne) {
             long response = Long.parseLong(answer3.getText());
             isSelectionCorrect(answer3, response);
         }
-        if(currentQuestion instanceof QuestionInsteadOf) {
+        if (currentQuestion instanceof QuestionInsteadOf) {
             isSelectionCorrectInsteadOf(answer3, 3);
         }
     }
@@ -732,7 +730,7 @@ public class SinglePlayerGameCtrl {
     }
 
     public void isSelectionCorrectInsteadOf(RadioButton player_answer, long response) {
-        if(response == currentQuestion.getCorrectAnswer()) {
+        if (response == currentQuestion.getCorrectAnswer()) {
             int numberOfPoints = calculatePoints(timeLeft);
             player.addScore(numberOfPoints);
             server.updatePlayer(player);
@@ -749,7 +747,7 @@ public class SinglePlayerGameCtrl {
             if (currentQuestion.getCorrectAnswer() == 1)
                 answer1.setStyle("-fx-background-color: green; ");
             else answer1.setStyle("-fx-background-color: red; ");
-            if ( currentQuestion.getCorrectAnswer() == 2)
+            if (currentQuestion.getCorrectAnswer() == 2)
                 answer2.setStyle("-fx-background-color: green; ");
             else answer2.setStyle("-fx-background-color: red; ");
             if (currentQuestion.getCorrectAnswer() == 3)
@@ -769,7 +767,6 @@ public class SinglePlayerGameCtrl {
             gameOver(2000);
         }
     }
-
 
 
     /**
@@ -815,7 +812,7 @@ public class SinglePlayerGameCtrl {
      * @param timer - an integer value representing the number of milliseconds after which the thread get executed.
      */
     public void gameOver(int timer) {
-        if(!gameIsOver){
+        if (!gameIsOver) {
             server.addPlayerToLeaderboard(player);
             server.disconnect(player);
         }
@@ -887,19 +884,8 @@ public class SinglePlayerGameCtrl {
     }
 
 
-
-    public static boolean getGameIsOver(){
+    public static boolean getGameIsOver() {
         return gameIsOver;
     }
 
-    /**
-     * Additional method that transforms a relative path into an absolute one, as Gradle does not handle relative paths
-     * Credits: https://stackoverflow.com/questions/3204955/converting-relative-paths-to-absolute-paths
-     *
-     * @param relativePath a String value representing the relative path we are interested in
-     * @return a String value representing the aboslute path
-     */
-    public static String relativeToAbsolute(String relativePath) {
-        return FileSystems.getDefault().getPath(relativePath).normalize().toAbsolutePath().toString();
-    }
 }

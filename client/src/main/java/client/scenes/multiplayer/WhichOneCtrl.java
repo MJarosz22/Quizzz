@@ -20,7 +20,6 @@ import javafx.scene.layout.Pane;
 import javafx.scene.text.Text;
 
 import javax.inject.Inject;
-import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.util.Timer;
 import java.util.TimerTask;
@@ -62,6 +61,8 @@ public class WhichOneCtrl implements QuestionCtrl {
     private final MainCtrl mainCtrl;
     private final GameCtrl gameCtrl;
 
+    private String timerPath = "/images/timer.png";
+
     Long player_answer;
 
     @Inject
@@ -70,8 +71,9 @@ public class WhichOneCtrl implements QuestionCtrl {
         this.mainCtrl = mainCtrl;
         this.gameCtrl = gameCtrl;
         try {
-            timerImageSource = new Image(new FileInputStream("client/src/main/resources/images/timer.png"));
-        } catch (FileNotFoundException e) {
+            String absoluteTimerPath = MainCtrl.relativeToAbsolute(this.timerPath);
+            timerImageSource = new Image(absoluteTimerPath);
+        } catch (NullPointerException e) {
             System.out.println("Couldn't find timer image for multiplayer.");
         }
     }
@@ -92,7 +94,7 @@ public class WhichOneCtrl implements QuestionCtrl {
         answer1.setText(String.valueOf(question.getAnswers()[0]));
         answer2.setText(String.valueOf(question.getAnswers()[1]));
         answer3.setText(String.valueOf(question.getAnswers()[2]));
-        score.setText("Your score: "+ gameCtrl.getPlayer().getScore());
+        score.setText("Your score: " + gameCtrl.getPlayer().getScore());
         answer.setVisible(false);
         points.setVisible(false);
         setPowerUps();
@@ -198,7 +200,7 @@ public class WhichOneCtrl implements QuestionCtrl {
 
     @Override
     public void postQuestion(Answer answer) {
-        if(player_answer != null && player_answer == question.getAnswer()){
+        if (player_answer != null && player_answer == question.getAnswer()) {
             int numberOfPoints = calculatePoints(server.getTimeLeft(gameCtrl.getPlayer()));
             gameCtrl.getPlayer().addScore(numberOfPoints);
             server.updatePlayer(gameCtrl.getPlayer());
@@ -207,7 +209,7 @@ public class WhichOneCtrl implements QuestionCtrl {
             points.setVisible(true);
             this.answer.setText("Correct answer");
             this.answer.setVisible(true);
-        } else{
+        } else {
             points.setText("+0 points");
             points.setVisible(true);
             this.answer.setText("Wrong answer");

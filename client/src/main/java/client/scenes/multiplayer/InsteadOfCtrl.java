@@ -20,7 +20,6 @@ import javafx.scene.layout.Pane;
 import javafx.scene.text.Text;
 
 import javax.inject.Inject;
-import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.util.Timer;
 import java.util.TimerTask;
@@ -61,7 +60,9 @@ public class InsteadOfCtrl implements QuestionCtrl {
     private final GameCtrl gameCtrl;
     private int timeReduced;
 
-    private Long  player_answer;
+    private String timerPath = "/images/timer.png";
+
+    private Long player_answer;
 
     @Inject
     public InsteadOfCtrl(ServerUtils server, MainCtrl mainCtrl, GameCtrl gameCtrl) {
@@ -69,9 +70,10 @@ public class InsteadOfCtrl implements QuestionCtrl {
         this.mainCtrl = mainCtrl;
         this.gameCtrl = gameCtrl;
         try {
-            timerImageSource = new Image(new FileInputStream("client/src/main/resources/images/timer.png"));
-        } catch (FileNotFoundException e) {
-            System.out.println("Couldn't find timer image.");
+            String absoluteTimerPath = MainCtrl.relativeToAbsolute(this.timerPath);
+            timerImageSource = new Image(absoluteTimerPath);
+        } catch (NullPointerException e) {
+            System.out.println("Couldn't find timer image for multiplayer.");
         }
     }
 
@@ -96,7 +98,7 @@ public class InsteadOfCtrl implements QuestionCtrl {
         answer1.setDisable(false);
         answer2.setDisable(false);
         answer3.setDisable(false);
-        score.setText("Your score: "+ gameCtrl.getPlayer().getScore());
+        score.setText("Your score: " + gameCtrl.getPlayer().getScore());
         answer.setVisible(false);
         points.setVisible(false);
         setPowerUps();
@@ -207,7 +209,7 @@ public class InsteadOfCtrl implements QuestionCtrl {
      */
     @Override
     public void postQuestion(Answer answer) {
-        if(player_answer != null && player_answer == question.getAnswer()){
+        if (player_answer != null && player_answer == question.getAnswer()) {
             int numberOfPoints = calculatePoints(server.getTimeLeft(gameCtrl.getPlayer()));
             gameCtrl.getPlayer().addScore(numberOfPoints);
             server.updatePlayer(gameCtrl.getPlayer());
@@ -216,7 +218,7 @@ public class InsteadOfCtrl implements QuestionCtrl {
             points.setVisible(true);
             this.answer.setText("Correct answer");
             this.answer.setVisible(true);
-        } else{
+        } else {
             points.setText("+0 points");
             points.setVisible(true);
             this.answer.setText("Wrong answer");

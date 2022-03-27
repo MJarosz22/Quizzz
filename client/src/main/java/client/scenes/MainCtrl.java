@@ -27,6 +27,7 @@ import javafx.scene.Scene;
 import javafx.stage.Stage;
 import javafx.util.Pair;
 
+import java.nio.file.FileSystems;
 import java.util.List;
 
 
@@ -254,6 +255,17 @@ public class MainCtrl {
 
     public MPGameOverCtrl getGameOverCtrl(){
         return  gameOverCtrl;
+    }
+
+    /**
+     * Additional method that transforms a relative path into an absolute one, as Gradle does not handle relative paths
+     * Credits: https://stackoverflow.com/questions/3204955/converting-relative-paths-to-absolute-paths
+     *
+     * @param relativePath a String value representing the relative path we are interested in
+     * @return a String value representing the aboslute path
+     */
+    public static String relativeToAbsolute(String relativePath) {
+        return FileSystems.getDefault().getPath(relativePath).normalize().toAbsolutePath().toString();
     }
 
 }

@@ -19,7 +19,6 @@ import javafx.scene.paint.Color;
 import javafx.scene.text.Text;
 
 import javax.inject.Inject;
-import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.util.Timer;
 import java.util.TimerTask;
@@ -58,6 +57,8 @@ public class MoreExpensiveCtrl implements QuestionCtrl {
     private final GameCtrl gameCtrl;
     private final ServerUtils server;
 
+    private String timerPath = "/images/timer.png";
+
     private QuestionMoreExpensive question;
 
     Long player_answer;
@@ -68,8 +69,9 @@ public class MoreExpensiveCtrl implements QuestionCtrl {
         this.gameCtrl = gameCtrl;
         this.server = server;
         try {
-            timerImageSource = new Image(new FileInputStream("client/src/main/resources/images/timer.png"));
-        } catch (FileNotFoundException e) {
+            String absoluteTimerPath = MainCtrl.relativeToAbsolute(this.timerPath);
+            timerImageSource = new Image(absoluteTimerPath);
+        } catch (NullPointerException e) {
             System.out.println("Couldn't find timer image for multiplayer.");
         }
     }
@@ -201,8 +203,8 @@ public class MoreExpensiveCtrl implements QuestionCtrl {
     }
 
     @Override
-    public void postQuestion(Answer answer){
-        if(player_answer != null && player_answer == question.getAnswer()){
+    public void postQuestion(Answer answer) {
+        if (player_answer != null && player_answer == question.getAnswer()) {
             int numberOfPoints = calculatePoints(server.getTimeLeft(gameCtrl.getPlayer()));
             gameCtrl.getPlayer().addScore(numberOfPoints);
             server.updatePlayer(gameCtrl.getPlayer());
@@ -211,7 +213,7 @@ public class MoreExpensiveCtrl implements QuestionCtrl {
             points.setVisible(true);
             this.answer.setText("Correct answer");
             this.answer.setVisible(true);
-        } else{
+        } else {
             points.setText("+0 points");
             points.setVisible(true);
             this.answer.setText("Wrong answer");
@@ -276,7 +278,6 @@ public class MoreExpensiveCtrl implements QuestionCtrl {
         timeLeft = (int) (timeLeft / 1000d);
         return (timeLeft * 10) / 2;
     }
-
 
 
     /**
