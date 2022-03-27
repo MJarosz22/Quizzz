@@ -31,7 +31,7 @@ public class MPGameOverCtrl {
     TableColumn<String, Integer> positionColumn;
 
     @FXML
-    Button play_again;
+    Button go_lobby, play_again;
 
     @FXML
     Text game_over;
@@ -50,11 +50,15 @@ public class MPGameOverCtrl {
     public void init(List<SimpleUser> players) {
         if(players.get(players.size() - 1).getName().equals("SENTINEL") && players.get(players.size() - 1).getScore() == -1){
             players.remove(players.get(players.size() -1 ));
+            go_lobby.setDisable(true);
+            go_lobby.setVisible(false);
             play_again.setDisable(true);
             play_again.setVisible(false);
             game_over.setVisible(false);
         } else {
             gameCtrl.disconnect();
+            go_lobby.setDisable(false);
+            go_lobby.setVisible(true);
             play_again.setDisable(false);
             play_again.setVisible(true);
             game_over.setVisible(true);
@@ -67,6 +71,11 @@ public class MPGameOverCtrl {
      */
     public void back() {
         mainCtrl.showSplash();
+    }
+
+    public void playAgain() {
+        mainCtrl.showLobby();
+//        lobbyCtrl.initialize(); //TODO LOOK AT THIS
     }
 
     public void setTablePlayers(List<SimpleUser> players) {
