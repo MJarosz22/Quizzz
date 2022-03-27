@@ -4,9 +4,14 @@ import commons.Activity;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.propertyeditors.URLEditor;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.server.ResponseStatusException;
 import server.database.ActivityRepository;
+import server.exception.BadRequestException;
+import server.exception.InternalServerException;
+import server.exception.NotFoundException;
 
 import java.beans.PropertyEditor;
 import java.util.*;
@@ -38,7 +43,7 @@ public class ActivityController {
                 || isNullOrEmpty(activity.getTitle())
                 || !isValidTitle(activity.getTitle())
                 || activity.getConsumption_in_wh() <= 0) {
-            return ResponseEntity.badRequest().build();
+            throw new BadRequestException();
         }
         Activity savedActivity = activityRepository.save(new Activity(
                 activity.getId(),
@@ -98,12 +103,15 @@ public class ActivityController {
             newActivity.setImage_path(activity.getImage_path());
             if (!isNullOrEmpty(activity.getTitle()) && isValidTitle(activity.getTitle()))
                 newActivity.setTitle(activity.getTitle());
-            if (activity.getConsumption_in_wh() > 0) newActivity.setConsumption_in_wh(activity.getConsumption_in_wh());
+            if (activity.getConsumption_in_wh() != null) {
+                if(activity.getConsumption_in_wh() <= 0)  throw new BadRequestException();
+                newActivity.setConsumption_in_wh(activity.getConsumption_in_wh());
+            }
             if (!isNullOrEmpty(activity.getSource()) && isValidUrl(activity.getSource()))
                 newActivity.setSource(activity.getSource());
             return ResponseEntity.ok(activityRepository.save(newActivity));
         }
-        return ResponseEntity.notFound().build();
+        throw new NotFoundException();
     }
 
     @DeleteMapping("/{id}")
@@ -113,10 +121,10 @@ public class ActivityController {
                 activityRepository.deleteById(id);
                 return ResponseEntity.ok().build();
             } catch (Exception e) {
-                return ResponseEntity.internalServerError().build();
+                throw new InternalServerException();
             }
         }
-        return ResponseEntity.notFound().build();
+        throw new NotFoundException();
     }
 
     @GetMapping("/random")
@@ -172,5 +180,4 @@ public class ActivityController {
         }
         return ResponseEntity.ok().build();
     }
-
 }
