@@ -26,7 +26,8 @@ import java.util.TimerTask;
 public class WhichOneCtrl implements QuestionCtrl {
 
     @FXML
-    private Text questionTitle, timer, score, points, answer, option4, correct_guess, questionCount,  heartText, cryText, laughText, angryText, glassesText;
+    private Text questionTitle, timer, score, points, answer, option4, correct_guess, questionCount,  heartText,
+            cryText, laughText, angryText, glassesText;
 
     @FXML
     private AnchorPane emoji;

@@ -25,7 +25,8 @@ import java.util.TimerTask;
 public class MoreExpensiveCtrl implements QuestionCtrl {
 
     @FXML
-    private Text questionTitle, timer, score, points, answer, correct_guess, questionCount, heartText, cryText, laughText, angryText, glassesText;
+    private Text questionTitle, timer, score, points, answer, correct_guess, questionCount, heartText, cryText,
+            laughText, angryText, glassesText;
 
     @FXML
     private AnchorPane emoji;
