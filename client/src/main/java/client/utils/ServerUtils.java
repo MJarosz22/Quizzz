@@ -279,7 +279,7 @@ public class ServerUtils {
                 .path("api/gameinstance/" + player.getGameInstanceId() + "/decrease-time")
                 .request(APPLICATION_JSON).cookie("user-id", player.getCookie())
                 .accept(APPLICATION_JSON)
-                .post(Entity.entity(new TimePU(player.getCookie(), percentage), APPLICATION_JSON));
+                .post(Entity.entity(new TimePU(player.getCookie(), player.getName(), percentage), APPLICATION_JSON));
     }
 
     public void sendEmoji(SimpleUser player, String emoji) {

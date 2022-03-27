@@ -14,8 +14,8 @@ public class TimePU extends PowerUp {
     public TimePU() {
     }
 
-    public TimePU(String playerCookie, int percentage) {
-        super(playerCookie);
+    public TimePU(String playerCookie, String playerName, int percentage) {
+        super(playerCookie, playerName);
         this.percentage = percentage;
         this.prompt = " reduced your time!";
     }

@@ -18,5 +18,5 @@ public interface QuestionCtrl {
 
     public void setPowerUps();
 
-    public void showPowerUpUsed(SimpleUser player, PowerUp powerUp);
+    public void showPowerUpUsed(PowerUp powerUp);
 }

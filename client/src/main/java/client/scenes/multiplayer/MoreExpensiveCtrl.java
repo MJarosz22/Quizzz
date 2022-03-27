@@ -374,11 +374,10 @@ public class MoreExpensiveCtrl implements QuestionCtrl {
     /**
      * Displays a message when another player uses a powerUp
      *
-     * @param powerUpPlayer
      * @param powerUp
      */
-    public void showPowerUpUsed(SimpleUser powerUpPlayer, PowerUp powerUp) {
-        disconnect.setText(powerUpPlayer.getName() + powerUp.getPrompt());
+    public void showPowerUpUsed(PowerUp powerUp) {
+        disconnect.setText(powerUp.getPlayerName() + powerUp.getPrompt());
         disconnect.setVisible(true);
         new Timer().schedule(new TimerTask() {
             @Override

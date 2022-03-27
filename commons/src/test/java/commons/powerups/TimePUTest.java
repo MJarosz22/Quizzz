@@ -12,8 +12,8 @@ public class TimePUTest {
 
     @BeforeEach
     public void initTests() {
-        p1 = new TimePU("cookie", 50);
-        p2 = new TimePU("cookie", 50);
+        p1 = new TimePU("cookie", "player", 50);
+        p2 = new TimePU("cookie", "player", 50);
     }
 
     @Test

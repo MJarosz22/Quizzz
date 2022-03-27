@@ -13,15 +13,31 @@ public abstract class PowerUp {
 
     protected String prompt;
 
+    protected String playerName;
+
     public PowerUp() {
     }
 
-    public PowerUp(String playerCookie) {
+    public PowerUp(String playerCookie, String playerName) {
         this.playerCookie = playerCookie;
+        this.playerName = playerName;
     }
 
     public String getPlayerCookie() {
         return playerCookie;
+    }
+
+    public String getPlayerName() {
+        return playerName;
+    }
+
+    @Override
+    public String toString() {
+        return "PowerUp{" +
+                "playerCookie='" + playerCookie + '\'' +
+                ", prompt='" + prompt + '\'' +
+                ", playerName='" + playerName + '\'' +
+                '}';
     }
 
     public String getPrompt() {
@@ -33,23 +49,15 @@ public abstract class PowerUp {
     }
 
     @Override
-    public String toString() {
-        return "PowerUp{" +
-                "playerCookie='" + playerCookie + '\'' +
-                ", prompt='" + prompt + '\'' +
-                '}';
-    }
-
-    @Override
     public boolean equals(Object o) {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         PowerUp powerUp = (PowerUp) o;
-        return Objects.equals(playerCookie, powerUp.playerCookie) && Objects.equals(prompt, powerUp.prompt);
+        return Objects.equals(playerCookie, powerUp.playerCookie) && Objects.equals(prompt, powerUp.prompt) && Objects.equals(playerName, powerUp.playerName);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(playerCookie, prompt);
+        return Objects.hash(playerCookie, prompt, playerName);
     }
 }

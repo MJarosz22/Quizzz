@@ -59,7 +59,7 @@ public class GameCtrl {
             System.out.println("time reduced by " + timePU.getPercentage() + "%");
             if (!player.getCookie().equals(timePU.getPlayerCookie())) {
                 Platform.runLater(() -> mainCtrl.getCurrentQuestionScene().reduceTimer(timePU.getPercentage()));
-                Platform.runLater(() -> mainCtrl.getCurrentQuestionScene().showPowerUpUsed(player, timePU));
+                Platform.runLater(() -> mainCtrl.getCurrentQuestionScene().showPowerUpUsed(timePU));
             } else {
                 ((Player) player).usePowerUp(2);
                 Platform.runLater(() -> mainCtrl.getCurrentQuestionScene().setPowerUps());
