@@ -198,7 +198,7 @@ public class WhichOneCtrl implements QuestionCtrl {
 
     @Override
     public void postQuestion(Answer answer) {
-        if(player_answer == question.getAnswer()){
+        if(player_answer != null && player_answer == question.getAnswer()){
             int numberOfPoints = calculatePoints(server.getTimeLeft(gameCtrl.getPlayer()));
             gameCtrl.getPlayer().addScore(numberOfPoints);
             server.updatePlayer(gameCtrl.getPlayer());
