@@ -4,7 +4,9 @@ import client.scenes.MainCtrl;
 import client.utils.ServerUtils;
 import commons.Answer;
 import commons.QuestionMoreExpensive;
+import commons.player.Player;
 import commons.player.SimpleUser;
+import commons.powerups.PowerUp;
 import javafx.application.Platform;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
@@ -34,7 +36,7 @@ public class MoreExpensiveCtrl implements QuestionCtrl {
     private ImageView timerImage;
 
     @FXML
-    private Button option1Button, option2Button, option3Button, heart, cry, laugh, angry, glasses;
+    private Button option1Button, option2Button, option3Button, heart, cry, laugh, angry, glasses, powerUp1, powerUp2, powerUp3;
 
 
     @FXML
@@ -49,6 +51,8 @@ public class MoreExpensiveCtrl implements QuestionCtrl {
     private Image timerImageSource;
 
     private TimerTask scheduler;
+
+    private int timeReduced;
 
     private final MainCtrl mainCtrl;
     private final GameCtrl gameCtrl;
@@ -70,8 +74,9 @@ public class MoreExpensiveCtrl implements QuestionCtrl {
         }
     }
 
-    public void init(QuestionMoreExpensive question){
+    public void init(QuestionMoreExpensive question) {
         this.question = question;
+        this.timeReduced = 0;
         timerImage.setImage(timerImageSource);
         disablePopUp(null);
         option1Button.setDisable(false);
@@ -87,6 +92,7 @@ public class MoreExpensiveCtrl implements QuestionCtrl {
         score.setText("Your score: " + gameCtrl.getPlayer().getScore());
         answer.setVisible(false);
         points.setVisible(false);
+        setPowerUps();
         try {
             Image loadimage1 = new Image(server.getImage(question.getActivities()[0]));
             Image loadimage2 = new Image(server.getImage(question.getActivities()[1]));
@@ -102,6 +108,8 @@ public class MoreExpensiveCtrl implements QuestionCtrl {
             public void run() {
                 int timeLeft = server.getTimeLeft(gameCtrl.getPlayer());
                 Platform.runLater(() -> {
+                    if (Math.round((timeLeft) / 1000d) <= 2)
+                        powerUp3.setDisable(true);
                     timer.setText(String.valueOf(Math.round(timeLeft / 1000d)));
                 });
             }
@@ -139,6 +147,45 @@ public class MoreExpensiveCtrl implements QuestionCtrl {
     public void disablePopUp(ActionEvent actionEvent) {
         confirmationExit.setVisible(false);
         confirmationExit.setDisable(true);
+    }
+
+    /**
+     * Use the time reduction powerup
+     *
+     * @param actionEvent click on the powerUp
+     */
+    public void decreaseTime(ActionEvent actionEvent) {
+        server.useTimePowerup(gameCtrl.getPlayer(), 50);
+    }
+
+    /**
+     * reduce the time for this player by the given percentage
+     *
+     * @param percentage
+     */
+    @Override
+    public void reduceTimer(int percentage) {
+        scheduler.cancel();
+        timeReduced += (server.getTimeLeft(gameCtrl.getPlayer()) - timeReduced) * percentage / 100;
+        scheduler = new TimerTask() {
+
+            @Override
+            public void run() {
+                int timeLeft = server.getTimeLeft(gameCtrl.getPlayer());
+                Platform.runLater(() -> {
+                    timer.setText(String.valueOf(Math.max(Math.round((timeLeft - timeReduced) / 1000d), 0)));
+                });
+                if (Math.round((timeLeft) / 1000d) <= 2)
+                    powerUp3.setDisable(true);
+                if (Math.round((timeLeft - timeReduced) / 1000d) <= 0) {
+                    Platform.runLater(() -> {
+                        disableAnswers();
+                    });
+                }
+
+            }
+        };
+        new Timer().scheduleAtFixedRate(scheduler, 0, 100);
     }
 
     public void leaveGame(ActionEvent actionEvent) {
@@ -207,6 +254,7 @@ public class MoreExpensiveCtrl implements QuestionCtrl {
             default:
                 throw new IllegalStateException();
         }
+        timeReduced = 0;
         new Timer().schedule(new TimerTask() {
             @Override
             public void run() {
@@ -221,6 +269,7 @@ public class MoreExpensiveCtrl implements QuestionCtrl {
         option1Button.setStyle("-fx-background-color: #91e4fb; ");
         option2Button.setStyle("-fx-background-color: #91e4fb; ");
         option3Button.setStyle("-fx-background-color: #91e4fb; ");
+        enableAnswers();
     }
 
     public int calculatePoints(int timeLeft) {
@@ -231,6 +280,25 @@ public class MoreExpensiveCtrl implements QuestionCtrl {
 
 
     /**
+     * Block answers for this player (for example when their time runs out)
+     */
+    public void disableAnswers() {
+        option1Button.setDisable(true);
+        option2Button.setDisable(true);
+        option3Button.setDisable(true);
+    }
+
+    /**
+     * Enable answers for this player
+     */
+    public void enableAnswers() {
+        option1Button.setDisable(false);
+        option2Button.setDisable(false);
+        option3Button.setDisable(false);
+    }
+
+    /**
+     * <<<<<<< client/src/main/java/client/scenes/multiplayer/MoreExpensiveCtrl.java
      * Method to select heart emoji
      */
 
@@ -277,7 +345,7 @@ public class MoreExpensiveCtrl implements QuestionCtrl {
      *
      * @param id id of button (and image to increase size
      */
-    public void emojiSelector(String id){
+    public void emojiSelector(String id) {
         switch (id) {
             case "heart":
                 emojiBold(heart, heartPic);
@@ -304,7 +372,7 @@ public class MoreExpensiveCtrl implements QuestionCtrl {
      * Method that boldens (enlargens) the emoji clicked, then shrinks it back into position
      *
      * @param emojiButton The emoji button to be enlarged
-     * @param emojiPic The corresponding image associated with that button
+     * @param emojiPic    The corresponding image associated with that button
      */
     public void emojiBold(Button emojiButton, ImageView emojiPic) {
         Platform.runLater(() -> {
@@ -318,7 +386,7 @@ public class MoreExpensiveCtrl implements QuestionCtrl {
             TimerTask timerTask = new TimerTask() {
                 @Override
                 public void run() {
-                    Platform.runLater(()->{
+                    Platform.runLater(() -> {
                         emojiButton.setStyle("-fx-pref-height: 30; -fx-pref-width: 30; -fx-background-color: transparent; ");
                         emojiButton.setLayoutX(emojiButton.getLayoutX() + 10.0);
                         emojiButton.setLayoutY(emojiButton.getLayoutY() + 10.0);
@@ -336,9 +404,10 @@ public class MoreExpensiveCtrl implements QuestionCtrl {
     public void showEmoji(String type) {
         emojiSelector(type);
     }
-    
+
     /**
      * Displays a message when another player disconnects
+     *
      * @param disconnectPlayer
      */
     @Override
@@ -348,8 +417,35 @@ public class MoreExpensiveCtrl implements QuestionCtrl {
         new Timer().schedule(new TimerTask() {
             @Override
             public void run() {
-                Platform.runLater(()-> disconnect.setVisible(false));
+                Platform.runLater(() -> disconnect.setVisible(false));
             }
         }, 5000);
+    }
+
+    /**
+     * Displays a message when another player uses a powerUp
+     *
+     * @param powerUp
+     */
+    public void showPowerUpUsed(PowerUp powerUp) {
+        disconnect.setText(powerUp.getPlayerName() + powerUp.getPrompt());
+        disconnect.setVisible(true);
+        new Timer().schedule(new TimerTask() {
+            @Override
+            public void run() {
+                Platform.runLater(() -> disconnect.setVisible(false));
+            }
+        }, 2000);
+    }
+
+    /**
+     * Get the powerUps available for this player from server
+     * and adjust the powerUp buttons accordingly
+     */
+    public void setPowerUps() {
+        boolean[] powerUps = ((Player) (gameCtrl.getPlayer())).getPowerUps();
+        powerUp1.setDisable(!powerUps[0]);
+        powerUp2.setDisable(!powerUps[1]);
+        powerUp3.setDisable(!powerUps[2]);
     }
 }
