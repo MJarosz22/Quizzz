@@ -62,6 +62,8 @@ public class WhichOneCtrl implements QuestionCtrl {
     private final MainCtrl mainCtrl;
     private final GameCtrl gameCtrl;
 
+    Long player_answer;
+
     @Inject
     public WhichOneCtrl(ServerUtils server, MainCtrl mainCtrl, GameCtrl gameCtrl) {
         this.server = server;
@@ -90,6 +92,9 @@ public class WhichOneCtrl implements QuestionCtrl {
         answer1.setText(String.valueOf(question.getAnswers()[0]));
         answer2.setText(String.valueOf(question.getAnswers()[1]));
         answer3.setText(String.valueOf(question.getAnswers()[2]));
+        score.setText("Your score: "+ gameCtrl.getPlayer().getScore());
+        answer.setVisible(false);
+        points.setVisible(false);
         setPowerUps();
         try {
             Image image = new Image(server.getImage(question.getActivity()));
@@ -112,15 +117,27 @@ public class WhichOneCtrl implements QuestionCtrl {
     }
 
     public void answer3Selected(ActionEvent actionEvent) {
+        answer1.setDisable(true);
+        answer2.setDisable(true);
+        answer3.setDisable(true);
         gameCtrl.submitAnswer(new Answer((long) 3));
+        player_answer = question.getAnswers()[2];
     }
 
     public void answer2Selected(ActionEvent actionEvent) {
+        answer1.setDisable(true);
+        answer2.setDisable(true);
+        answer3.setDisable(true);
         gameCtrl.submitAnswer(new Answer((long) 2));
+        player_answer = question.getAnswers()[1];
     }
 
     public void answer1Selected(ActionEvent actionEvent) {
+        answer1.setDisable(true);
+        answer2.setDisable(true);
+        answer3.setDisable(true);
         gameCtrl.submitAnswer(new Answer((long) 1));
+        player_answer = question.getAnswers()[0];
     }
 
     public void disablePopUp(ActionEvent actionEvent) {
@@ -181,6 +198,21 @@ public class WhichOneCtrl implements QuestionCtrl {
 
     @Override
     public void postQuestion(Answer answer) {
+        if(player_answer == question.getAnswer()){
+            int numberOfPoints = calculatePoints(server.getTimeLeft(gameCtrl.getPlayer()));
+            gameCtrl.getPlayer().addScore(numberOfPoints);
+            server.updatePlayer(gameCtrl.getPlayer());
+            score.setText("Your score: " + gameCtrl.getPlayer().getScore());
+            points.setText("+" + numberOfPoints + "points");
+            points.setVisible(true);
+            this.answer.setText("Correct answer");
+            this.answer.setVisible(true);
+        } else{
+            points.setText("+0 points");
+            points.setVisible(true);
+            this.answer.setText("Wrong answer");
+            this.answer.setVisible(true);
+        }
         switch (answer.getAnswer().intValue()) {
             case 1:
                 answer1.setDisable(true);
@@ -229,6 +261,11 @@ public class WhichOneCtrl implements QuestionCtrl {
         answer2.setSelected(false);
         answer3.setSelected(false);
         enableAnswers();
+    }
+
+    public int calculatePoints(int timeLeft) {
+        timeLeft = (int) (timeLeft / 1000d);
+        return (timeLeft * 10) / 2;
     }
 
     /**

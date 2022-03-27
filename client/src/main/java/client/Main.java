@@ -56,9 +56,10 @@ public class Main extends Application {
         var howMuch = FXML.load(HowMuchCtrl.class, "client", "scenes", "GameHowMuch.fxml");
         var whichOne = FXML.load(WhichOneCtrl.class, "client", "scenes", "GameWhichOne.fxml");
         var insteadOf = FXML.load(InsteadOfCtrl.class, "client", "scenes", "GameInsteadOf.fxml");
+        var gameOver = FXML.load(MPGameOverCtrl.class, "client", "scenes", "MPGameOver.fxml");
 
         mainCtrl.initialize(primaryStage, home, single, singleGame, singleGameOver, multi,
-                leaderboard, lobby, gameCtrl, moreExpensive, howMuch, whichOne, insteadOf, overview, add);
+                leaderboard, lobby, gameCtrl, moreExpensive, howMuch, whichOne, insteadOf, overview, add, gameOver);
         primaryStage.setOnCloseRequest(event -> {
             Alert alert = new Alert(Alert.AlertType.CONFIRMATION, "Do you want to close the game?", ButtonType.YES, ButtonType.NO);
             ButtonType result = alert.showAndWait().orElse(ButtonType.NO);
