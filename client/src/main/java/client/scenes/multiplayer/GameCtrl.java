@@ -3,13 +3,18 @@ package client.scenes.multiplayer;
 import client.scenes.MainCtrl;
 import client.utils.ServerUtils;
 import commons.*;
+import commons.player.Player;
 import commons.player.SimpleUser;
+import commons.powerups.TimePU;
 import communication.RequestToJoin;
 import javafx.application.Platform;
 
 import javax.inject.Inject;
+import java.util.ArrayList;
+import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.function.Consumer;
+
 
 public class GameCtrl {
 
@@ -26,9 +31,10 @@ public class GameCtrl {
     }
 
     public void start(String name, String serverName) {
-        player = server.addPlayer(new RequestToJoin(name, serverName, GameInstance.MULTI_PLAYER));
+        player = new Player(server.addPlayer(new RequestToJoin(name, serverName, GameInstance.MULTI_PLAYER)));
         server.initWebsocket();
         subscribeToWebsockets();
+        getPlayer().setScore(0);
     }
 
     public <T> void subscribe(String destination, Class<T> type, Consumer<T> consumer) {
@@ -53,6 +59,17 @@ public class GameCtrl {
             Platform.runLater(() -> mainCtrl.getCurrentQuestionScene().showEmoji(emoji.getType()));
         });
 
+        subscribe("/topic/" + player.getGameInstanceId() + "/decrease-time", TimePU.class, timePU -> {
+            System.out.println("time reduced by " + timePU.getPercentage() + "%");
+            if (!player.getCookie().equals(timePU.getPlayerCookie())) {
+                Platform.runLater(() -> mainCtrl.getCurrentQuestionScene().reduceTimer(timePU.getPercentage()));
+                Platform.runLater(() -> mainCtrl.getCurrentQuestionScene().showPowerUpUsed(timePU));
+            } else {
+                ((Player) player).usePowerUp(2);
+                Platform.runLater(() -> mainCtrl.getCurrentQuestionScene().setPowerUps());
+            }
+        });
+
         subscribe("/topic/" + player.getGameInstanceId() + "/postquestion", Answer.class, answer ->
                 Platform.runLater(() -> mainCtrl.getCurrentQuestionScene().postQuestion(answer)));
         subscribe("/topic/" + player.getGameInstanceId() + "/disconnectplayer", SimpleUser.class, playerDisconnect ->
@@ -68,6 +85,45 @@ public class GameCtrl {
                 Platform.runLater(() -> goToWhichOne(question)));
         subscribe("/topic/" + getPlayer().getGameInstanceId() + "/questioninsteadof", QuestionInsteadOf.class, question ->
                 Platform.runLater(() -> goToInsteadOf(question)));
+
+        subscribe("/topic/" + getPlayer().getGameInstanceId() + "/MPgameMiddle", List.class, MPplayers -> {
+
+            Platform.runLater(() -> {
+                List<SimpleUser> simpleUserList = new ArrayList<>();
+                for(Object o : MPplayers) {
+                    LinkedHashMap linkedHashMap = (LinkedHashMap) o;
+                    String name = (String) linkedHashMap.get("name");
+                    Integer score = (Integer) linkedHashMap.get("score");
+                    System.out.println(name + " " + score);
+                    SimpleUser aux = new SimpleUser(name,score);
+                    simpleUserList.add(aux);
+                }
+                simpleUserList.add(new SimpleUser("SENTINEL", -1));
+                goToGameOver(simpleUserList);
+            });
+        });
+
+        subscribe("/topic/" + getPlayer().getGameInstanceId() + "/MPgameOver", List.class, MPplayers -> {
+
+                Platform.runLater(() -> {
+                    List<SimpleUser> simpleUserList = new ArrayList<>();
+                    for(Object o : MPplayers) {
+                        LinkedHashMap linkedHashMap = (LinkedHashMap) o;
+                        String name = (String) linkedHashMap.get("name");
+                        Integer score = (Integer) linkedHashMap.get("score");
+                        Integer gameInstanceId = (Integer) linkedHashMap.get("gameInstanceId");
+                        Integer playerId = (Integer) linkedHashMap.get("id");
+                        if(getPlayer().getId() == playerId
+                                && getPlayer().getGameInstanceId() == gameInstanceId) {
+                            server.addPlayerToLeaderboard(getPlayer());
+                        }
+                        System.out.println(name + " " + score);
+                        SimpleUser aux = new SimpleUser(name,score);
+                        simpleUserList.add(aux);
+                    }
+                    goToGameOver(simpleUserList);
+                });
+        });
     }
 
     public void submitAnswer(Answer answer) {
@@ -96,5 +152,9 @@ public class GameCtrl {
 
     private void goToInsteadOf(QuestionInsteadOf question) {
         mainCtrl.showInsteadOf(question);
+    }
+
+    private void goToGameOver(List<SimpleUser> players){
+        mainCtrl.showMPGameOver(players);
     }
 }
