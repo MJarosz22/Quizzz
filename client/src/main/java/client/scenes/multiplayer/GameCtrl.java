@@ -50,7 +50,7 @@ public class GameCtrl {
 
         subscribe("/topic/" + player.getGameInstanceId() + "/emoji", Emoji.class, emoji -> {
             System.out.println(emoji.getType());
-            Platform.runLater(() -> mainCtrl.getCurrentQuestionScene().showEmoji(emoji.getType()));
+            Platform.runLater(() -> mainCtrl.getCurrentQuestionScene().showEmoji(emoji.getType(), emoji.getPlayer()));
         });
 
         //subscribe("/topic/" + player.getGameInstanceId() + "/playeremoji", SimpleUser.class, player -> {

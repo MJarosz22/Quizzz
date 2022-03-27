@@ -125,27 +125,27 @@
                 </Pane>
                 <Pane layoutY="60.0" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="60.0" prefWidth="250.0">
                     <children>
-                        <Text fx:id="cryText" layoutX="140.0" layoutY="10.0" strokeType="OUTSIDE" strokeWidth="0.0" text="R" textAlignment="CENTER" wrappingWidth="50.0">
+                        <Text fx:id="cryText" layoutX="140.0" layoutY="10.0" strokeType="OUTSIDE" strokeWidth="0.0" text="" textAlignment="CENTER" wrappingWidth="50.0">
                             <font>
                                 <Font size="15.0" />
                             </font>
                         </Text>
-                        <Text fx:id="heartText" layoutX="90.0" layoutY="10.0" strokeType="OUTSIDE" strokeWidth="0.0" text="R" textAlignment="CENTER" wrappingWidth="50.0">
+                        <Text fx:id="heartText" layoutX="90.0" layoutY="10.0" strokeType="OUTSIDE" strokeWidth="0.0" text="" textAlignment="CENTER" wrappingWidth="50.0">
                             <font>
                                 <Font size="15.0" />
                             </font>
                         </Text>
-                        <Text fx:id="glassesText" layoutX="40.0" layoutY="10.0" strokeType="OUTSIDE" strokeWidth="0.0" text="R" textAlignment="CENTER" wrappingWidth="50.0">
+                        <Text fx:id="glassesText" layoutX="40.0" layoutY="10.0" strokeType="OUTSIDE" strokeWidth="0.0" text="" textAlignment="CENTER" wrappingWidth="50.0">
                             <font>
                                 <Font size="15.0" />
                             </font>
                         </Text>
-                        <Text fx:id="laughText" layoutX="190.0" layoutY="10.0" strokeType="OUTSIDE" strokeWidth="0.0" text="R" textAlignment="CENTER" wrappingWidth="50.0">
+                        <Text fx:id="laughText" layoutX="190.0" layoutY="10.0" strokeType="OUTSIDE" strokeWidth="0.0" text="" textAlignment="CENTER" wrappingWidth="50.0">
                             <font>
                                 <Font size="15.0" />
                             </font>
                         </Text>
-                        <Text fx:id="angryText" layoutX="-10.0" layoutY="10.0" strokeType="OUTSIDE" strokeWidth="0.0" text="R" textAlignment="CENTER" wrappingWidth="50.0">
+                        <Text fx:id="angryText" layoutX="-10.0" layoutY="10.0" strokeType="OUTSIDE" strokeWidth="0.0" text="" textAlignment="CENTER" wrappingWidth="50.0">
                             <font>
                                 <Font size="15.0" />
                             </font>
