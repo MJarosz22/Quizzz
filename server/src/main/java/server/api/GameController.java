@@ -242,7 +242,7 @@ public class GameController {
 
         GameInstanceServer lastGIS = null;
         for (GameInstanceServer gi : gameInstances)
-            if (gi.getServerName().equals(serverName))
+            if (gi.getType() == GameInstance.MULTI_PLAYER && gi.getServerName().equals(serverName))
                 lastGIS = gi;
 
         List<String> playerNames = lastGIS.getPlayers().stream().map(Player::getName).collect(Collectors.toList());
@@ -253,6 +253,7 @@ public class GameController {
 
     public void createNewMultiplayerLobby(String serverName) {
         GameInstanceServer newGameInstance = new GameInstanceServer(gameInstances.size(), GameInstance.MULTI_PLAYER, this, msgs, serverName);
+        newGameInstance.setState(GameState.INLOBBY);
         gameInstances.add(newGameInstance);
         currentMPGIId = newGameInstance.getId();
         serverNames.put(serverName, currentMPGIId);
