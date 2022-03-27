@@ -53,7 +53,8 @@ public abstract class PowerUp {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         PowerUp powerUp = (PowerUp) o;
-        return Objects.equals(playerCookie, powerUp.playerCookie) && Objects.equals(prompt, powerUp.prompt) && Objects.equals(playerName, powerUp.playerName);
+        return Objects.equals(playerCookie, powerUp.playerCookie) && Objects.equals(prompt, powerUp.prompt)
+                && Objects.equals(playerName, powerUp.playerName);
     }
 
     @Override
