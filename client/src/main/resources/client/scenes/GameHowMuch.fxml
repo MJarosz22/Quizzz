@@ -1,15 +1,20 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
-<?import javafx.scene.control.*?>
-<?import javafx.scene.image.*?>
-<?import javafx.scene.layout.*?>
-<?import javafx.scene.text.*?>
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.ProgressBar?>
+<?import javafx.scene.control.TextField?>
 <?import javafx.scene.image.Image?>
-<AnchorPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="540.0" prefWidth="960.0" style="-fx-background-color: #91e4fb;" xmlns="http://javafx.com/javafx/11.0.14-internal" xmlns:fx="http://javafx.com/fxml/1" fx:controller="client.scenes.multiplayer.HowMuchCtrl">
+<?import javafx.scene.image.ImageView?>
+<?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.layout.Pane?>
+<?import javafx.scene.text.Font?>
+<?import javafx.scene.text.Text?>
+
+<AnchorPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="540.0" prefWidth="960.0" style="-fx-background-color: #91e4fb;" xmlns="http://javafx.com/javafx/17" xmlns:fx="http://javafx.com/fxml/1" fx:controller="client.scenes.multiplayer.HowMuchCtrl">
     <children>
         <Text fx:id="correct_guess" layoutX="542.0" layoutY="178.0" strokeType="OUTSIDE" strokeWidth="0.0" text="The correct answer is ..." wrappingWidth="385.0">
             <font>
-                <Font name="Courier New" size="22.0" />
+                <Font name="Courier New" size="20.0" />
             </font>
         </Text>
         <TextField fx:id="player_answer" layoutX="642.0" layoutY="211.0" prefHeight="38.0" prefWidth="183.0">
@@ -22,17 +27,17 @@
                 <Font name="Courier New" size="16.0" />
             </font>
         </Button>
-        <Text fx:id="score" layoutX="62.0" layoutY="51.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Score">
+        <Text fx:id="score" layoutX="50.0" layoutY="50.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Score">
             <font>
                 <Font size="14.0" />
             </font>
         </Text>
-        <Text fx:id="points" layoutX="62.0" layoutY="82.0" strokeType="OUTSIDE" strokeWidth="0.0" text=" Points" wrappingWidth="106.0">
+        <Text fx:id="points" layoutX="50.0" layoutY="75.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Points" wrappingWidth="106.0">
             <font>
                 <Font size="14.0" />
             </font>
         </Text>
-        <Text fx:id="answer" layoutX="51.0" layoutY="113.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Your answer is correct or wrong" wrappingWidth="127.21630859375">
+        <Text fx:id="answer" layoutX="50.0" layoutY="100.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Your answer is correct or wrong" wrappingWidth="127.21630859375">
             <font>
                 <Font size="14.0" />
             </font>

@@ -12,8 +12,8 @@ import javafx.scene.control.Button;
 import javafx.scene.control.ProgressBar;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
-import javafx.scene.layout.AnchorPane;
-import javafx.scene.layout.Pane;
+import javafx.scene.layout.*;
+import javafx.scene.paint.Color;
 import javafx.scene.text.Text;
 
 import javax.inject.Inject;
@@ -56,6 +56,8 @@ public class MoreExpensiveCtrl implements QuestionCtrl {
 
     private QuestionMoreExpensive question;
 
+    Long player_answer;
+
     @Inject
     public MoreExpensiveCtrl(MainCtrl mainCtrl, GameCtrl gameCtrl, ServerUtils server) {
         this.mainCtrl = mainCtrl;
@@ -82,6 +84,9 @@ public class MoreExpensiveCtrl implements QuestionCtrl {
         option3Button.setText(question.getActivities()[2].getTitle());
         disconnect.setVisible(false);
         progressBar.setProgress(question.getNumber() / 20.0d + 0.05);
+        score.setText("Your score: " + gameCtrl.getPlayer().getScore());
+        answer.setVisible(false);
+        points.setVisible(false);
         try {
             Image loadimage1 = new Image(server.getImage(question.getActivities()[0]));
             Image loadimage2 = new Image(server.getImage(question.getActivities()[1]));
@@ -105,15 +110,30 @@ public class MoreExpensiveCtrl implements QuestionCtrl {
     }
 
     public void option3Selected(ActionEvent actionEvent) {
+        option3Button.setBorder(new Border(new BorderStroke(Color.BLACK, BorderStrokeStyle.SOLID, CornerRadii.EMPTY, new BorderWidths(3))));
+        option1Button.setDisable(true);
+        option2Button.setDisable(true);
+        option3Button.setDisable(true);
         gameCtrl.submitAnswer(new Answer((long) 3));
+        player_answer = question.getActivities()[2].getConsumption_in_wh();
     }
 
     public void option2Selected(ActionEvent actionEvent) {
+        option2Button.setBorder(new Border(new BorderStroke(Color.BLACK, BorderStrokeStyle.SOLID, CornerRadii.EMPTY, new BorderWidths(3))));
+        option1Button.setDisable(true);
+        option2Button.setDisable(true);
+        option3Button.setDisable(true);
         gameCtrl.submitAnswer(new Answer((long) 2));
+        player_answer = question.getActivities()[1].getConsumption_in_wh();
     }
 
     public void option1Selected(ActionEvent actionEvent) {
+        option1Button.setBorder(new Border(new BorderStroke(Color.BLACK, BorderStrokeStyle.SOLID, CornerRadii.EMPTY, new BorderWidths(3))));
+        option1Button.setDisable(true);
+        option2Button.setDisable(true);
+        option3Button.setDisable(true);
         gameCtrl.submitAnswer(new Answer((long) 1));
+        player_answer = question.getActivities()[0].getConsumption_in_wh();
     }
 
     public void disablePopUp(ActionEvent actionEvent) {
@@ -135,11 +155,29 @@ public class MoreExpensiveCtrl implements QuestionCtrl {
 
     @Override
     public void postQuestion(Answer answer){
+        if(player_answer != null && player_answer == question.getAnswer()){
+            int numberOfPoints = calculatePoints(server.getTimeLeft(gameCtrl.getPlayer()));
+            gameCtrl.getPlayer().addScore(numberOfPoints);
+            server.updatePlayer(gameCtrl.getPlayer());
+            score.setText("Your score: " + gameCtrl.getPlayer().getScore());
+            points.setText("+" + numberOfPoints + "points");
+            points.setVisible(true);
+            this.answer.setText("Correct answer");
+            this.answer.setVisible(true);
+        } else{
+            points.setText("+0 points");
+            points.setVisible(true);
+            this.answer.setText("Wrong answer");
+            this.answer.setVisible(true);
+        }
         switch (answer.getAnswer().intValue()) {
             case 1:
                 option1Button.setDisable(true);
                 option2Button.setDisable(true);
                 option3Button.setDisable(true);
+                option1Button.setBorder(null);
+                option2Button.setBorder(null);
+                option3Button.setBorder(null);
                 option1Button.setStyle("-fx-background-color: green");
                 option2Button.setStyle("-fx-background-color: red");
                 option3Button.setStyle("-fx-background-color: red");
@@ -148,6 +186,9 @@ public class MoreExpensiveCtrl implements QuestionCtrl {
                 option1Button.setDisable(true);
                 option2Button.setDisable(true);
                 option3Button.setDisable(true);
+                option1Button.setBorder(null);
+                option2Button.setBorder(null);
+                option3Button.setBorder(null);
                 option1Button.setStyle("-fx-background-color: red");
                 option2Button.setStyle("-fx-background-color: green");
                 option3Button.setStyle("-fx-background-color: red");
@@ -156,6 +197,9 @@ public class MoreExpensiveCtrl implements QuestionCtrl {
                 option1Button.setDisable(true);
                 option2Button.setDisable(true);
                 option3Button.setDisable(true);
+                option1Button.setBorder(null);
+                option2Button.setBorder(null);
+                option3Button.setBorder(null);
                 option1Button.setStyle("-fx-background-color: red");
                 option2Button.setStyle("-fx-background-color: red");
                 option3Button.setStyle("-fx-background-color: green");
@@ -174,13 +218,19 @@ public class MoreExpensiveCtrl implements QuestionCtrl {
 
     @Override
     public void resetUI() {
-        option1Button.setStyle("");
-        option2Button.setStyle("");
-        option3Button.setStyle("");
+        option1Button.setStyle("-fx-background-color: #91e4fb; ");
+        option2Button.setStyle("-fx-background-color: #91e4fb; ");
+        option3Button.setStyle("-fx-background-color: #91e4fb; ");
     }
 
+    public int calculatePoints(int timeLeft) {
+        timeLeft = (int) (timeLeft / 1000d);
+        return (timeLeft * 10) / 2;
+    }
+
+
+
     /**
-<<<<<<< client/src/main/java/client/scenes/multiplayer/MoreExpensiveCtrl.java
      * Method to select heart emoji
      */
 
