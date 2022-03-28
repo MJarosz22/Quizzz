@@ -149,6 +149,11 @@ public class GameInstanceController {
         return ResponseEntity.ok(true);
     }
 
+    @GetMapping("/{gameInstanceId}/getServerName")
+    public ResponseEntity<String> getServerName(@PathVariable int gameInstanceId) {
+        if (gameInstanceId < 0 || gameInstanceId >= gameInstances.size()) return ResponseEntity.badRequest().build();
+        return ResponseEntity.ok(gameInstances.get(gameInstanceId).getServerName());
+    }
 
     /**
      * Additional method that checks whether cookie given is from a player connected to gameInstance with ID

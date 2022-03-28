@@ -39,12 +39,18 @@ public class MPGameOverCtrl {
     private final ServerUtils server;
     private final MainCtrl mainCtrl;
     private final GameCtrl gameCtrl;
+    private SimpleUser player;
+    private String serverName;
+    private String playerName;
 
     @Inject
     public MPGameOverCtrl(ServerUtils server, MainCtrl mainCtrl, GameCtrl gameCtrl) {
         this.server = server;
         this.mainCtrl = mainCtrl;
         this.gameCtrl = gameCtrl;
+        this.player = gameCtrl.getPlayer();
+        this.serverName = "";
+        this.playerName = "";
     }
 
     public void init(List<SimpleUser> players) {
@@ -56,6 +62,8 @@ public class MPGameOverCtrl {
             play_again.setVisible(false);
             game_over.setVisible(false);
         } else {
+            serverName = server.getServerName(gameCtrl.getPlayer().getGameInstanceId());
+            playerName = gameCtrl.getPlayer().getName();
             gameCtrl.disconnect();
             go_lobby.setDisable(false);
             go_lobby.setVisible(true);
@@ -74,6 +82,7 @@ public class MPGameOverCtrl {
     }
 
     public void playAgain() {
+        gameCtrl.start(playerName,serverName);
         mainCtrl.showLobby();
 //        lobbyCtrl.initialize(); //TODO LOOK AT THIS
     }

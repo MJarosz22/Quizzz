@@ -16,7 +16,7 @@
                 <TableColumn fx:id="scoreColumn" prefWidth="95.0" text="Score" />
             </columns>
         </TableView>
-        <Button fx:id="go_lobby" layoutX="804.0" layoutY="53.0" mnemonicParsing="false" onAction="#back" prefHeight="56.0" prefWidth="96.0" style="-fx-background-color: #fff;" text="GO TO LOBBY" textAlignment="CENTER" wrapText="true">
+        <Button fx:id="go_lobby" layoutX="804.0" layoutY="53.0" mnemonicParsing="false" onAction="#back" prefHeight="56.0" prefWidth="96.0" style="-fx-background-color: #fff;" text="GO TO TITLE SCREEN" textAlignment="CENTER" wrapText="true">
             <font>
                 <Font name="Courier New" size="15.0" />
             </font>

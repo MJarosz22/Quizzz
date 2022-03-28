@@ -133,6 +133,16 @@ public class ServerUtils {
                 .post(Entity.entity(player, APPLICATION_JSON), SimpleUser.class);
     }
 
+    public String getServerName(int gameInstanceId) {
+        Client client = ClientBuilder.newClient(new ClientConfig());
+        return client
+                .target(SERVER).path("api/gameinstance/ " + gameInstanceId + "/getServerName")
+                .request(APPLICATION_JSON)
+                .accept(APPLICATION_JSON)
+                .get(new GenericType<>() {
+                });
+    }
+
     public static List<SimpleUser> getLeaderboard(SimpleUser player) {
         Client client = ClientBuilder.newClient(new ClientConfig());
         return client //
