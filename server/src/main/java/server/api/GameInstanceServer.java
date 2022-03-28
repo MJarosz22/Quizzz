@@ -2,6 +2,7 @@ package server.api;
 
 import commons.*;
 import commons.player.SimpleUser;
+import commons.powerups.AnswerPU;
 import commons.powerups.PointsPU;
 import commons.powerups.TimePU;
 import org.apache.commons.lang3.builder.EqualsBuilder;
@@ -237,6 +238,15 @@ public class GameInstanceServer extends GameInstance {
      */
     public void doublePoints(PointsPU pointsPU) {
         msgs.convertAndSend("/topic/" + getId() + "/double-points", pointsPU);
+    }
+
+    /**
+     * A player has used the remove-answer powerUp. Send it to all the players from their game.
+     *
+     * @param answerPU powerUp used
+     */
+    public void removeAnswer(AnswerPU answerPU) {
+        msgs.convertAndSend("/topic/" + getId() + "/remove-incorrect-answer", answerPU);
     }
 
     public boolean disconnectPlayer(SimpleUser player) {

@@ -22,6 +22,7 @@ import javafx.scene.text.Text;
 import javax.inject.Inject;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
+import java.util.Random;
 import java.util.Timer;
 import java.util.TimerTask;
 
@@ -176,6 +177,34 @@ public class InsteadOfCtrl implements QuestionCtrl {
     public void doublePoints(ActionEvent actionEvent) {
         doublePointsPUUsed = true;
         server.usePointsPowerup(gameCtrl.getPlayer());
+    }
+
+    /**
+     * Use the remove incorrect answer powerup
+     *
+     * @param actionEvent click on the powerUp
+     */
+    public void removeAnswer(ActionEvent actionEvent) {
+        Random random = new Random();
+        int randomAnswer = random.nextInt(2)+1;
+        while(randomAnswer == question.getCorrectAnswer() || (randomAnswer != 1 && randomAnswer != 2 && randomAnswer != 3)) {
+            randomAnswer = random.nextInt(3);
+        }
+        switch (randomAnswer) {
+            case 1:
+                answer1.setDisable(true);
+                answer1.setStyle("-fx-background-color: red");
+                break;
+            case 2:
+                answer2.setDisable(true);
+                answer2.setStyle("-fx-background-color: red");
+                break;
+            case 3:
+                answer3.setDisable(true);
+                answer3.setStyle("-fx-background-color: red");
+                break;
+        }
+        server.useAnswerPowerup(gameCtrl.getPlayer());
     }
 
     /**

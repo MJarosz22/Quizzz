@@ -292,6 +292,16 @@ public class ServerUtils {
                 .post(Entity.entity(new PointsPU(player.getCookie(), player.getName()), APPLICATION_JSON));
     }
 
+    public void useAnswerPowerup(SimpleUser player) {
+        ClientBuilder
+                .newClient(new ClientConfig())
+                .target(SERVER)
+                .path("api/gameinstance/" + player.getGameInstanceId() + "/remove-incorrect-answer")
+                .request(APPLICATION_JSON).cookie("user-id", player.getCookie())
+                .accept(APPLICATION_JSON)
+                .post(Entity.entity(new AnswerPU(player.getCookie(), player.getName()), APPLICATION_JSON));
+    }
+
     public void sendEmoji(SimpleUser player, String emoji) {
         ClientBuilder
                 .newClient(new ClientConfig())

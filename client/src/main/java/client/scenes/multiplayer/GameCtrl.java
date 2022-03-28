@@ -5,6 +5,7 @@ import client.utils.ServerUtils;
 import commons.*;
 import commons.player.Player;
 import commons.player.SimpleUser;
+import commons.powerups.AnswerPU;
 import commons.powerups.PointsPU;
 import commons.powerups.TimePU;
 import communication.RequestToJoin;
@@ -72,11 +73,21 @@ public class GameCtrl {
         });
 
         subscribe("/topic/" + player.getGameInstanceId() + "/double-points", PointsPU.class, pointsPU -> {
-            System.out.println("double points");
+            System.out.println("doubled points");
             if (!player.getCookie().equals(pointsPU.getPlayerCookie())) {
                 Platform.runLater(() -> mainCtrl.getCurrentQuestionScene().showPowerUpUsed(pointsPU));
             } else {
                 ((Player) player).usePowerUp(1);
+                Platform.runLater(() -> mainCtrl.getCurrentQuestionScene().setPowerUps());
+            }
+        });
+
+        subscribe("/topic/" + player.getGameInstanceId() + "/remove-incorrect-answer", AnswerPU.class, answerPU -> {
+            System.out.println("removed one incorrect answer");
+            if (!player.getCookie().equals(answerPU.getPlayerCookie())) {
+                Platform.runLater(() -> mainCtrl.getCurrentQuestionScene().showPowerUpUsed(answerPU));
+            } else {
+                ((Player) player).usePowerUp(0);
                 Platform.runLater(() -> mainCtrl.getCurrentQuestionScene().setPowerUps());
             }
         });
