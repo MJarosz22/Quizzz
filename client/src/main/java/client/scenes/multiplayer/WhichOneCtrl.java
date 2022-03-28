@@ -122,6 +122,8 @@ public class WhichOneCtrl implements QuestionCtrl {
         answer1.setDisable(true);
         answer2.setDisable(true);
         answer3.setDisable(true);
+        powerUp1.setDisable(true);
+        powerUp2.setDisable(true);
         gameCtrl.submitAnswer(new Answer((long) 3));
         player_answer = question.getAnswers()[2];
     }
@@ -130,6 +132,8 @@ public class WhichOneCtrl implements QuestionCtrl {
         answer1.setDisable(true);
         answer2.setDisable(true);
         answer3.setDisable(true);
+        powerUp1.setDisable(true);
+        powerUp2.setDisable(true);
         gameCtrl.submitAnswer(new Answer((long) 2));
         player_answer = question.getAnswers()[1];
     }
@@ -138,6 +142,8 @@ public class WhichOneCtrl implements QuestionCtrl {
         answer1.setDisable(true);
         answer2.setDisable(true);
         answer3.setDisable(true);
+        powerUp1.setDisable(true);
+        powerUp2.setDisable(true);
         gameCtrl.submitAnswer(new Answer((long) 1));
         player_answer = question.getAnswers()[0];
     }
@@ -256,6 +262,7 @@ public class WhichOneCtrl implements QuestionCtrl {
                 throw new IllegalStateException();
         }
         timeReduced = 0;
+        doublePointsPUUsed = false;
         new Timer().schedule(new TimerTask() {
             @Override
             public void run() {

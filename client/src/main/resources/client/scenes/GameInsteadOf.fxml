@@ -1,86 +1,61 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
-<?import javafx.scene.control.Button?>
-<?import javafx.scene.control.ProgressBar?>
-<?import javafx.scene.control.RadioButton?>
-<?import javafx.scene.image.Image?>
-<?import javafx.scene.image.ImageView?>
-<?import javafx.scene.layout.AnchorPane?>
-<?import javafx.scene.layout.Pane?>
-<?import javafx.scene.text.Font?>
-<?import javafx.scene.text.Text?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.image.*?>
+<?import javafx.scene.layout.*?>
+<?import javafx.scene.text.*?>
 
-<AnchorPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="540.0"
-            prefWidth="960.0" style="-fx-background-color: #91e4fb;" xmlns="http://javafx.com/javafx/17"
-            xmlns:fx="http://javafx.com/fxml/1" fx:controller="client.scenes.multiplayer.InsteadOfCtrl">
+<AnchorPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="540.0" prefWidth="960.0" style="-fx-background-color: #91e4fb;" xmlns="http://javafx.com/javafx/11.0.2" xmlns:fx="http://javafx.com/fxml/1" fx:controller="client.scenes.multiplayer.InsteadOfCtrl">
     <children>
         <Text fx:id="score" layoutX="50.0" layoutY="50.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Score">
             <font>
-                <Font size="14.0"/>
+                <Font size="14.0" />
             </font>
         </Text>
         <Text fx:id="points" layoutX="50.0" layoutY="75.0" strokeType="OUTSIDE" strokeWidth="0.0" text=" Points" wrappingWidth="106.0">
             <font>
-                <Font size="14.0"/>
+                <Font size="14.0" />
             </font>
         </Text>
         <Text fx:id="answer" layoutX="50.0" layoutY="100.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Your answer is correct or wrong" wrappingWidth="127.21630859375">
             <font>
-                <Font size="14.0"/>
+                <Font size="14.0" />
             </font>
         </Text>
-        <Text fx:id="questionTitle" fill="WHITE" layoutX="350.0" layoutY="51.0" strokeType="OUTSIDE" strokeWidth="0.0"
-              text="Question" textAlignment="CENTER" wrappingWidth="277.4140625">
+        <Text fx:id="questionTitle" fill="WHITE" layoutX="350.0" layoutY="51.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Question" textAlignment="CENTER" wrappingWidth="277.4140625">
             <font>
-                <Font name="Courier New Bold Italic" size="24.0"/>
+                <Font name="Courier New Bold Italic" size="24.0" />
             </font>
         </Text>
-        <ImageView fx:id="timerImage" fitHeight="37.0" fitWidth="38.0" layoutX="433.0" layoutY="98.0"
-                   pickOnBounds="true" preserveRatio="true"/>
+        <ImageView fx:id="timerImage" fitHeight="37.0" fitWidth="38.0" layoutX="433.0" layoutY="98.0" pickOnBounds="true" preserveRatio="true" />
         <Text fx:id="timer" layoutX="480.0" layoutY="124.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Timer">
             <font>
-                <Font size="20.0"/>
+                <Font size="20.0" />
             </font>
         </Text>
-        <Button layoutX="41.0" layoutY="434.0" mnemonicParsing="false" onAction="#enablePopUp" prefHeight="68.0"
-                prefWidth="94.0" style="-fx-background-radius: 25;" text="LEAVE &#10;GAME" textAlignment="JUSTIFY"/>
-        <ProgressBar fx:id="progressBar" layoutX="12.0" layoutY="508.0" prefHeight="18.0" prefWidth="942.0"
-                     progress="0.0"/>
-        <Text fx:id="questionCount" layoutX="423.0" layoutY="522.0" strokeType="OUTSIDE" strokeWidth="0.0"
-              text="Question 0/20" wrappingWidth="115.0">
+        <Button layoutX="41.0" layoutY="434.0" mnemonicParsing="false" onAction="#enablePopUp" prefHeight="68.0" prefWidth="94.0" style="-fx-background-radius: 25;" text="LEAVE &#10;GAME" textAlignment="JUSTIFY" />
+        <ProgressBar fx:id="progressBar" layoutX="12.0" layoutY="508.0" prefHeight="18.0" prefWidth="942.0" progress="0.0" />
+        <Text fx:id="questionCount" layoutX="423.0" layoutY="522.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Question 0/20" wrappingWidth="115.0">
             <font>
-                <Font size="16.0"/>
+                <Font size="16.0" />
             </font>
         </Text>
-        <AnchorPane fx:id="emoji" layoutX="187.0" layoutY="84.0" prefHeight="30.0" prefWidth="30.0"
-                    style="-fx-background-size: contain;"/>
-        <RadioButton fx:id="answer1" layoutX="581.0" layoutY="193.0" mnemonicParsing="false" onAction="#answer1Selected"
-                     prefHeight="50.0" prefWidth="182.0" text="answer1" wrapText="true"/>
-        <RadioButton fx:id="answer2" layoutX="581.0" layoutY="243.0" mnemonicParsing="false" onAction="#answer2Selected"
-                     prefHeight="50.0" prefWidth="182.0" text="answer2" wrapText="true"/>
-        <RadioButton fx:id="answer3" layoutX="581.0" layoutY="293.0" mnemonicParsing="false" onAction="#answer3Selected"
-                     prefHeight="50.0" prefWidth="182.0" text="answer3" wrapText="true"/>
-        <ImageView fx:id="image4" fitHeight="200.0" fitWidth="309.0" layoutX="205.0" layoutY="160.0" pickOnBounds="true"
-                   preserveRatio="true"/>
-        <Text fx:id="option4" fill="WHITE" layoutX="202.0" layoutY="396.0" strokeType="OUTSIDE" strokeWidth="0.0"
-              text="Option 4 " wrappingWidth="315.2109375">
+        <AnchorPane fx:id="emoji" layoutX="187.0" layoutY="84.0" prefHeight="30.0" prefWidth="30.0" style="-fx-background-size: contain;" />
+        <RadioButton fx:id="answer1" layoutX="581.0" layoutY="193.0" mnemonicParsing="false" onAction="#answer1Selected" prefHeight="50.0" prefWidth="235.0" text="answer1" wrapText="true" />
+        <RadioButton fx:id="answer2" layoutX="581.0" layoutY="243.0" mnemonicParsing="false" onAction="#answer2Selected" prefHeight="50.0" prefWidth="235.0" text="answer2" wrapText="true" />
+        <RadioButton fx:id="answer3" layoutX="581.0" layoutY="293.0" mnemonicParsing="false" onAction="#answer3Selected" prefHeight="50.0" prefWidth="235.0" text="answer3" wrapText="true" />
+        <ImageView fx:id="image4" fitHeight="200.0" fitWidth="309.0" layoutX="205.0" layoutY="160.0" pickOnBounds="true" preserveRatio="true" />
+        <Text fx:id="option4" fill="WHITE" layoutX="202.0" layoutY="396.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Option 4 " wrappingWidth="315.2109375">
             <font>
-                <Font name="Courier New Bold Italic" size="14.0"/>
+                <Font name="Courier New Bold Italic" size="14.0" />
             </font>
         </Text>
-        <Button fx:id="powerUp1" layoutX="286.0" layoutY="434.0" mnemonicParsing="false" onAction="#enablePopUp"
-                prefHeight="68.0" prefWidth="94.0" style="-fx-background-radius: 25;"
-                text="REMOVE &#10;INCORRECT&#10;ANSWER" textAlignment="CENTER"/>
-        <Button fx:id="powerUp2" layoutX="433.0" layoutY="434.0" mnemonicParsing="false" onAction="#doublePoints"
-                prefHeight="68.0" prefWidth="94.0" style="-fx-background-radius: 25;" text="DOUBLE&#10;POINTS"
-                textAlignment="CENTER"/>
-        <Button fx:id="powerUp3" layoutX="580.0" layoutY="434.0" mnemonicParsing="false" onAction="#decreaseTime"
-                prefHeight="68.0" prefWidth="94.0" style="-fx-background-radius: 25;"
-                text="DECREASE&#10;OPPONENTS'&#10;TIME" textAlignment="CENTER"/>
-        <Text fx:id="disconnect" layoutX="825.0" layoutY="473.0" strokeType="OUTSIDE" strokeWidth="0.0"
-              text="Disconnect" wrappingWidth="106.0">
+        <Button fx:id="powerUp1" layoutX="286.0" layoutY="434.0" mnemonicParsing="false" onAction="#enablePopUp" prefHeight="68.0" prefWidth="94.0" style="-fx-background-radius: 25;" text="REMOVE &#10;INCORRECT&#10;ANSWER" textAlignment="CENTER" />
+        <Button fx:id="powerUp2" layoutX="433.0" layoutY="434.0" mnemonicParsing="false" onAction="#doublePoints" prefHeight="68.0" prefWidth="94.0" style="-fx-background-radius: 25;" text="DOUBLE&#10;POINTS" textAlignment="CENTER" />
+        <Button fx:id="powerUp3" layoutX="580.0" layoutY="434.0" mnemonicParsing="false" onAction="#decreaseTime" prefHeight="68.0" prefWidth="94.0" style="-fx-background-radius: 25;" text="DECREASE&#10;OPPONENTS'&#10;TIME" textAlignment="CENTER" />
+        <Text fx:id="disconnect" layoutX="825.0" layoutY="473.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Disconnect" wrappingWidth="106.0">
             <font>
-                <Font size="14.0"/>
+                <Font size="14.0" />
             </font>
         </Text>
         <Pane fx:id="confirmationExit" layoutY="1.0" prefHeight="540.0" prefWidth="960.0">
@@ -98,66 +73,41 @@
             </children>
         </Pane>
 
-        <Pane layoutX="690.0" layoutY="20.0" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity"
-              minWidth="-Infinity" prefHeight="60.0" prefWidth="250.0">
+        <Pane layoutX="690.0" layoutY="20.0" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="60.0" prefWidth="250.0">
             <children>
-                <Button fx:id="cry" cacheShape="false" centerShape="false" contentDisplay="GRAPHIC_ONLY"
-                        focusTraversable="false" layoutX="150.0" layoutY="10.0" maxHeight="-Infinity"
-                        maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" mnemonicParsing="false"
-                        onAction="#cryBold" prefHeight="30.0" prefWidth="30.0" scaleShape="false"
-                        style="-fx-background-color: transparent;" styleClass="emoji" text="cry">
+                <Button fx:id="cry" cacheShape="false" centerShape="false" contentDisplay="GRAPHIC_ONLY" focusTraversable="false" layoutX="150.0" layoutY="10.0" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" mnemonicParsing="false" onAction="#cryBold" prefHeight="30.0" prefWidth="30.0" scaleShape="false" style="-fx-background-color: transparent;" styleClass="emoji" text="cry">
                     <graphic>
                         <ImageView fx:id="cryPic" fitHeight="30" fitWidth="30" pickOnBounds="true" preserveRatio="true">
-                            <Image url="@/images/emojis/Loudly Crying Face Emoji.png"/>
+                            <Image url="@/images/emojis/Loudly Crying Face Emoji.png" />
                         </ImageView>
                     </graphic>
                 </Button>
-                <Button fx:id="heart" cacheShape="false" centerShape="false" contentDisplay="GRAPHIC_ONLY"
-                        focusTraversable="false" layoutX="100.0" layoutY="10.0" maxHeight="-Infinity"
-                        maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" mnemonicParsing="false"
-                        onAction="#heartBold" prefHeight="30.0" prefWidth="30.0" scaleShape="false"
-                        style="-fx-background-color: transparent;" styleClass="emoji" text="heart">
+                <Button fx:id="heart" cacheShape="false" centerShape="false" contentDisplay="GRAPHIC_ONLY" focusTraversable="false" layoutX="100.0" layoutY="10.0" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" mnemonicParsing="false" onAction="#heartBold" prefHeight="30.0" prefWidth="30.0" scaleShape="false" style="-fx-background-color: transparent;" styleClass="emoji" text="heart">
                     <graphic>
-                        <ImageView fx:id="heartPic" fitHeight="30" fitWidth="30" pickOnBounds="true"
-                                   preserveRatio="true">
-                            <Image url="@/images/emojis/Heart Eyes Emoji.png"/>
+                        <ImageView fx:id="heartPic" fitHeight="30" fitWidth="30" pickOnBounds="true" preserveRatio="true">
+                            <Image url="@/images/emojis/Heart Eyes Emoji.png" />
                         </ImageView>
 
                     </graphic>
                 </Button>
-                <Button fx:id="glasses" cacheShape="false" centerShape="false" contentDisplay="GRAPHIC_ONLY"
-                        focusTraversable="false" layoutX="50.0" layoutY="10.0" maxHeight="-Infinity"
-                        maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" mnemonicParsing="false"
-                        onAction="#glassesBold" prefHeight="30.0" prefWidth="30.0" scaleShape="false"
-                        style="-fx-background-color: transparent;" styleClass="emoji" text="glasses">
+                <Button fx:id="glasses" cacheShape="false" centerShape="false" contentDisplay="GRAPHIC_ONLY" focusTraversable="false" layoutX="50.0" layoutY="10.0" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" mnemonicParsing="false" onAction="#glassesBold" prefHeight="30.0" prefWidth="30.0" scaleShape="false" style="-fx-background-color: transparent;" styleClass="emoji" text="glasses">
                     <graphic>
-                        <ImageView fx:id="glassesPic" fitHeight="30" fitWidth="30" pickOnBounds="true"
-                                   preserveRatio="true">
-                            <Image url="@/images/emojis/Sunglasses Emoji.png"/>
+                        <ImageView fx:id="glassesPic" fitHeight="30" fitWidth="30" pickOnBounds="true" preserveRatio="true">
+                            <Image url="@/images/emojis/Sunglasses Emoji.png" />
                         </ImageView>
                     </graphic>
                 </Button>
-                <Button fx:id="laugh" cacheShape="false" centerShape="false" contentDisplay="GRAPHIC_ONLY"
-                        focusTraversable="false" layoutX="200.0" layoutY="10.0" maxHeight="-Infinity"
-                        maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" mnemonicParsing="false"
-                        onAction="#laughBold" prefHeight="30.0" prefWidth="30.0" scaleShape="false" snapToPixel="false"
-                        style="-fx-background-color: transparent;" styleClass="emoji" text="laugh">
+                <Button fx:id="laugh" cacheShape="false" centerShape="false" contentDisplay="GRAPHIC_ONLY" focusTraversable="false" layoutX="200.0" layoutY="10.0" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" mnemonicParsing="false" onAction="#laughBold" prefHeight="30.0" prefWidth="30.0" scaleShape="false" snapToPixel="false" style="-fx-background-color: transparent;" styleClass="emoji" text="laugh">
                     <graphic>
-                        <ImageView fx:id="laughPic" fitHeight="30" fitWidth="30" pickOnBounds="true"
-                                   preserveRatio="true">
-                            <Image url="@/images/emojis/Tears of Joy Emoji.png"/>
+                        <ImageView fx:id="laughPic" fitHeight="30" fitWidth="30" pickOnBounds="true" preserveRatio="true">
+                            <Image url="@/images/emojis/Tears of Joy Emoji.png" />
                         </ImageView>
                     </graphic>
                 </Button>
-                <Button fx:id="angry" cacheShape="false" centerShape="false" contentDisplay="GRAPHIC_ONLY"
-                        focusTraversable="false" layoutY="10.0" maxHeight="-Infinity" maxWidth="-Infinity"
-                        minHeight="-Infinity" minWidth="-Infinity" mnemonicParsing="false" onAction="#angryBold"
-                        prefHeight="30.0" prefWidth="30.0" scaleShape="false" snapToPixel="false"
-                        style="-fx-background-color: transparent;" styleClass="emoji" text="angry">
+                <Button fx:id="angry" cacheShape="false" centerShape="false" contentDisplay="GRAPHIC_ONLY" focusTraversable="false" layoutY="10.0" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" mnemonicParsing="false" onAction="#angryBold" prefHeight="30.0" prefWidth="30.0" scaleShape="false" snapToPixel="false" style="-fx-background-color: transparent;" styleClass="emoji" text="angry">
                     <graphic>
-                        <ImageView fx:id="angryPic" fitHeight="30" fitWidth="30" pickOnBounds="true"
-                                   preserveRatio="true">
-                            <Image url="@/images/emojis/Very Angry Emoji.png"/>
+                        <ImageView fx:id="angryPic" fitHeight="30" fitWidth="30" pickOnBounds="true" preserveRatio="true">
+                            <Image url="@/images/emojis/Very Angry Emoji.png" />
                         </ImageView>
                     </graphic>
                 </Button>

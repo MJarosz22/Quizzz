@@ -128,6 +128,8 @@ public class InsteadOfCtrl implements QuestionCtrl {
         answer1.setDisable(true);
         answer2.setDisable(true);
         answer3.setDisable(true);
+        powerUp1.setDisable(true);
+        powerUp2.setDisable(true);
         gameCtrl.submitAnswer(new Answer((long) 3));
         player_answer = question.getActivities()[2].getConsumption_in_wh();
     }
@@ -136,16 +138,20 @@ public class InsteadOfCtrl implements QuestionCtrl {
         answer1.setDisable(true);
         answer2.setDisable(true);
         answer3.setDisable(true);
+        powerUp1.setDisable(true);
+        powerUp2.setDisable(true);
         gameCtrl.submitAnswer(new Answer((long) 2));
-        player_answer = question.getActivities()[2].getConsumption_in_wh();
+        player_answer = question.getActivities()[1].getConsumption_in_wh();
     }
 
     public void answer1Selected(ActionEvent actionEvent) {
         answer1.setDisable(true);
         answer2.setDisable(true);
         answer3.setDisable(true);
+        powerUp1.setDisable(true);
+        powerUp2.setDisable(true);
         gameCtrl.submitAnswer(new Answer((long) 1));
-        player_answer = question.getActivities()[2].getConsumption_in_wh();
+        player_answer = question.getActivities()[0].getConsumption_in_wh();
     }
 
     public void disablePopUp(ActionEvent actionEvent) {
@@ -267,6 +273,7 @@ public class InsteadOfCtrl implements QuestionCtrl {
                 throw new IllegalStateException();
         }
         timeReduced = 0;
+        doublePointsPUUsed = false;
         new Timer().schedule(new TimerTask() {
             @Override
             public void run() {

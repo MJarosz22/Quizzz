@@ -5,6 +5,7 @@ import client.utils.ServerUtils;
 import commons.*;
 import commons.player.Player;
 import commons.player.SimpleUser;
+import commons.powerups.PointsPU;
 import commons.powerups.TimePU;
 import communication.RequestToJoin;
 import javafx.application.Platform;
@@ -70,11 +71,10 @@ public class GameCtrl {
             }
         });
 
-        subscribe("/topic/" + player.getGameInstanceId() + "/double-points", TimePU.class, timePU -> {
+        subscribe("/topic/" + player.getGameInstanceId() + "/double-points", PointsPU.class, pointsPU -> {
             System.out.println("double points");
-            if (!player.getCookie().equals(timePU.getPlayerCookie())) {
-                Platform.runLater(() -> mainCtrl.getCurrentQuestionScene().reduceTimer(timePU.getPercentage()));
-                Platform.runLater(() -> mainCtrl.getCurrentQuestionScene().showPowerUpUsed(timePU));
+            if (!player.getCookie().equals(pointsPU.getPlayerCookie())) {
+                Platform.runLater(() -> mainCtrl.getCurrentQuestionScene().showPowerUpUsed(pointsPU));
             } else {
                 ((Player) player).usePowerUp(1);
                 Platform.runLater(() -> mainCtrl.getCurrentQuestionScene().setPowerUps());

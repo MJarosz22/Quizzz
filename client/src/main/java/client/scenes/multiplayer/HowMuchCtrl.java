@@ -188,6 +188,7 @@ public class HowMuchCtrl implements QuestionCtrl {
             gameCtrl.submitAnswer(new Answer(null));
         } finally {
             submit_guess.setDisable(true);
+            powerUp2.setDisable(true);
         }
     }
 
@@ -208,6 +209,7 @@ public class HowMuchCtrl implements QuestionCtrl {
         } finally {
             correct_guess.setText("The correct answer is: " + ans.getAnswer());
             correct_guess.setVisible(true);
+            doublePointsPUUsed = false;
             new Timer().schedule(new TimerTask() {
                 @Override
                 public void run() {
