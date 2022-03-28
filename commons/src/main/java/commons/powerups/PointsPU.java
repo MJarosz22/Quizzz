@@ -2,8 +2,6 @@ package commons.powerups;
 
 import org.apache.commons.lang3.builder.ToStringBuilder;
 
-import java.util.Objects;
-
 /**
  * This is a powerUp that doubles your points if you answer the question that you used the powerUp for correctly
  */
