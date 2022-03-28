@@ -53,6 +53,7 @@ public class MoreExpensiveCtrl implements QuestionCtrl {
     private TimerTask scheduler;
 
     private int timeReduced;
+    private boolean doublePointsPUUsed;
 
     private final MainCtrl mainCtrl;
     private final GameCtrl gameCtrl;
@@ -67,6 +68,7 @@ public class MoreExpensiveCtrl implements QuestionCtrl {
         this.mainCtrl = mainCtrl;
         this.gameCtrl = gameCtrl;
         this.server = server;
+        this.doublePointsPUUsed = false;
         try {
             timerImageSource = new Image(new FileInputStream("client/src/main/resources/images/timer.png"));
         } catch (FileNotFoundException e) {
@@ -159,6 +161,16 @@ public class MoreExpensiveCtrl implements QuestionCtrl {
     }
 
     /**
+     * Use the double points powerup
+     *
+     * @param actionEvent click on the powerUp
+     */
+    public void doublePoints(ActionEvent actionEvent) {
+        doublePointsPUUsed = true;
+        server.usePointsPowerup(gameCtrl.getPlayer());
+    }
+
+    /**
      * reduce the time for this player by the given percentage
      *
      * @param percentage
@@ -204,10 +216,11 @@ public class MoreExpensiveCtrl implements QuestionCtrl {
     public void postQuestion(Answer answer){
         if(player_answer != null && player_answer == question.getAnswer()){
             int numberOfPoints = calculatePoints(server.getTimeLeft(gameCtrl.getPlayer()));
+            if(doublePointsPUUsed) numberOfPoints = numberOfPoints * 2;
             gameCtrl.getPlayer().addScore(numberOfPoints);
             server.updatePlayer(gameCtrl.getPlayer());
             score.setText("Your score: " + gameCtrl.getPlayer().getScore());
-            points.setText("+" + numberOfPoints + "points");
+            points.setText("+" + numberOfPoints + " points");
             points.setVisible(true);
             this.answer.setText("Correct answer");
             this.answer.setVisible(true);

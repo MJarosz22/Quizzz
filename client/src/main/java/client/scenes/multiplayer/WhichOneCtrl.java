@@ -56,6 +56,7 @@ public class WhichOneCtrl implements QuestionCtrl {
     private TimerTask scheduler;
 
     private int timeReduced;
+    private boolean doublePointsPUUsed;
 
     private QuestionWhichOne question;
     private final ServerUtils server;
@@ -69,6 +70,7 @@ public class WhichOneCtrl implements QuestionCtrl {
         this.server = server;
         this.mainCtrl = mainCtrl;
         this.gameCtrl = gameCtrl;
+        this.doublePointsPUUsed = false;
         try {
             timerImageSource = new Image(new FileInputStream("client/src/main/resources/images/timer.png"));
         } catch (FileNotFoundException e) {
@@ -155,6 +157,16 @@ public class WhichOneCtrl implements QuestionCtrl {
     }
 
     /**
+     * Use the double points powerup
+     *
+     * @param actionEvent click on the powerUp
+     */
+    public void doublePoints(ActionEvent actionEvent) {
+        doublePointsPUUsed = true;
+        server.usePointsPowerup(gameCtrl.getPlayer());
+    }
+
+    /**
      * reduce the time for this player by the given percentage
      *
      * @param percentage
@@ -201,6 +213,7 @@ public class WhichOneCtrl implements QuestionCtrl {
         if(player_answer != null && player_answer == question.getAnswer()){
             int numberOfPoints = calculatePoints(server.getTimeLeft(gameCtrl.getPlayer()));
             gameCtrl.getPlayer().addScore(numberOfPoints);
+            if(doublePointsPUUsed) numberOfPoints = numberOfPoints * 2;
             server.updatePlayer(gameCtrl.getPlayer());
             score.setText("Your score: " + gameCtrl.getPlayer().getScore());
             points.setText("+" + numberOfPoints + "points");

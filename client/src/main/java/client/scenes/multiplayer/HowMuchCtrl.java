@@ -56,6 +56,7 @@ public class HowMuchCtrl implements QuestionCtrl {
     private TimerTask scheduler;
 
     private int timeReduced;
+    private boolean doublePointsPUUsed;
 
     private ServerUtils server;
     private MainCtrl mainCtrl;
@@ -68,6 +69,7 @@ public class HowMuchCtrl implements QuestionCtrl {
         this.server = server;
         this.mainCtrl = mainCtrl;
         this.gameCtrl = gameCtrl;
+        this.doublePointsPUUsed = false;
         try {
             timerImageSource = new Image(new FileInputStream("client/src/main/resources/images/timer.png"));
         } catch (FileNotFoundException e) {
@@ -136,6 +138,16 @@ public class HowMuchCtrl implements QuestionCtrl {
      */
     public void decreaseTime(ActionEvent actionEvent) {
         server.useTimePowerup(gameCtrl.getPlayer(), 50);
+    }
+
+    /**
+     * Use the double points powerup
+     *
+     * @param actionEvent click on the powerUp
+     */
+    public void doublePoints(ActionEvent actionEvent) {
+        doublePointsPUUsed = true;
+        server.usePointsPowerup(gameCtrl.getPlayer());
     }
 
     /**
@@ -211,53 +223,39 @@ public class HowMuchCtrl implements QuestionCtrl {
      * the correct answer, on behalf of our chosen strategy for this type of question.
      *
      * @param number         long value that represents the number inputted by the player.
-     * @param correct_number long value that represents the correct answer to our QuestionHowMuch type of question
+     * @param correct_number long value that represents the correct answer to our QuestionHowMuch type of question.
      */
     public void awardPointsQuestionHowMuch(long number, long correct_number) {
+        int scoreAdd = 0;
         if (number == correct_number) {
-            gameCtrl.getPlayer().addScore(100);
-            server.updatePlayer(gameCtrl.getPlayer());
-            score.setText("Your score: " + gameCtrl.getPlayer().getScore());
-            points.setText("+100 points");
-            points.setVisible(true);
+            scoreAdd = 100;
             answer.setText("Correct answer");
-            answer.setVisible(true);
         } else {
             if (number <= correct_number + (25 * correct_number) / 100 && number >= correct_number - (25 * correct_number) / 100) {
-                gameCtrl.getPlayer().addScore(75);
-                server.updatePlayer(gameCtrl.getPlayer());
-                score.setText("Your score: " + gameCtrl.getPlayer().getScore());
-                points.setText("+75 points");
-                points.setVisible(true);
+                scoreAdd = 75;
                 answer.setText("Almost the correct answer");
-                answer.setVisible(true);
             } else {
                 if (number <= correct_number + (50 * correct_number) / 100 && number >= correct_number - (50 * correct_number) / 100) {
-                    gameCtrl.getPlayer().addScore(50);
-                    server.updatePlayer(gameCtrl.getPlayer());
-                    score.setText("Your score: " + gameCtrl.getPlayer().getScore());
-                    points.setText("+50 points");
-                    points.setVisible(true);
+                    scoreAdd = 50;
                     answer.setText("Not quite the correct answer");
-                    answer.setVisible(true);
                 } else {
                     if (number <= correct_number + (75 * correct_number) / 100 && number >= correct_number - (75 * correct_number) / 100) {
-                        gameCtrl.getPlayer().addScore(25);
-                        server.updatePlayer(gameCtrl.getPlayer());
-                        score.setText("Your score: " + gameCtrl.getPlayer().getScore());
-                        points.setText("+25 points");
-                        points.setVisible(true);
+                        scoreAdd = 25;
                         answer.setText("Pretty far from the correct answer");
-                        answer.setVisible(true);
                     } else {
-                        points.setText("+0 points");
-                        points.setVisible(true);
+                        scoreAdd = 0;
                         answer.setText("Wrong answer");
-                        answer.setVisible(true);
                     }
                 }
             }
         }
+        if(this.doublePointsPUUsed) scoreAdd = scoreAdd * 2;
+        gameCtrl.getPlayer().addScore(scoreAdd);
+        server.updatePlayer(gameCtrl.getPlayer());
+        score.setText("Your score: " + gameCtrl.getPlayer().getScore());
+        points.setVisible(true);
+        points.setText("+" + scoreAdd + " points");
+        answer.setVisible(true);
     }
 
 
@@ -431,7 +429,7 @@ public class HowMuchCtrl implements QuestionCtrl {
      */
     public void setPowerUps() {
         boolean[] powerUps = ((Player) (gameCtrl.getPlayer())).getPowerUps();
-        powerUp1.setDisable(!powerUps[0]);
+        powerUp1.setDisable(true);
         powerUp2.setDisable(!powerUps[1]);
         powerUp3.setDisable(!powerUps[2]);
     }

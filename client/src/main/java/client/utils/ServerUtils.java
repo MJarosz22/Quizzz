@@ -282,6 +282,16 @@ public class ServerUtils {
                 .post(Entity.entity(new TimePU(player.getCookie(), player.getName(), percentage), APPLICATION_JSON));
     }
 
+    public void usePointsPowerup(SimpleUser player) {
+        ClientBuilder
+                .newClient(new ClientConfig())
+                .target(SERVER)
+                .path("api/gameinstance/" + player.getGameInstanceId() + "/double-points")
+                .request(APPLICATION_JSON).cookie("user-id", player.getCookie())
+                .accept(APPLICATION_JSON)
+                .post(Entity.entity(new PointsPU(player.getCookie(), player.getName()), APPLICATION_JSON));
+    }
+
     public void sendEmoji(SimpleUser player, String emoji) {
         ClientBuilder
                 .newClient(new ClientConfig())
@@ -346,6 +356,5 @@ public class ServerUtils {
                 .delete(new GenericType<>() {
                 });
     }
-
 
 }

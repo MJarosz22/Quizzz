@@ -70,6 +70,17 @@ public class GameCtrl {
             }
         });
 
+        subscribe("/topic/" + player.getGameInstanceId() + "/double-points", TimePU.class, timePU -> {
+            System.out.println("double points");
+            if (!player.getCookie().equals(timePU.getPlayerCookie())) {
+                Platform.runLater(() -> mainCtrl.getCurrentQuestionScene().reduceTimer(timePU.getPercentage()));
+                Platform.runLater(() -> mainCtrl.getCurrentQuestionScene().showPowerUpUsed(timePU));
+            } else {
+                ((Player) player).usePowerUp(1);
+                Platform.runLater(() -> mainCtrl.getCurrentQuestionScene().setPowerUps());
+            }
+        });
+
         subscribe("/topic/" + player.getGameInstanceId() + "/postquestion", Answer.class, answer ->
                 Platform.runLater(() -> mainCtrl.getCurrentQuestionScene().postQuestion(answer)));
         subscribe("/topic/" + player.getGameInstanceId() + "/disconnectplayer", SimpleUser.class, playerDisconnect ->

@@ -80,7 +80,7 @@
         <Button fx:id="powerUp1" layoutX="286.0" layoutY="434.0" mnemonicParsing="false" onAction="#enablePopUp"
                 prefHeight="68.0" prefWidth="94.0" style="-fx-background-radius: 25;"
                 text="REMOVE &#10;INCORRECT&#10;ANSWER" textAlignment="CENTER"/>
-        <Button fx:id="powerUp2" layoutX="433.0" layoutY="434.0" mnemonicParsing="false" onAction="#enablePopUp"
+        <Button fx:id="powerUp2" layoutX="433.0" layoutY="434.0" mnemonicParsing="false" onAction="#doublePoints"
                 prefHeight="68.0" prefWidth="94.0" style="-fx-background-radius: 25;" text="DOUBLE&#10;POINTS"
                 textAlignment="CENTER"/>
         <Button fx:id="powerUp3" layoutX="580.0" layoutY="434.0" mnemonicParsing="false" onAction="#decreaseTime"
