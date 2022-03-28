@@ -184,9 +184,9 @@ public class MoreExpensiveCtrl implements QuestionCtrl {
      */
     public void removeAnswer(ActionEvent actionEvent) {
         Random random = new Random();
-        int randomAnswer = random.nextInt(3);
+        int randomAnswer = random.nextInt(2)+1;
         while(randomAnswer == question.getCorrectAnswer() || (randomAnswer != 1 && randomAnswer != 2 && randomAnswer != 3)) {
-            randomAnswer = random.nextInt(3);
+            randomAnswer = random.nextInt(2)+1;
         }
         switch (randomAnswer) {
             case 1:
@@ -201,6 +201,8 @@ public class MoreExpensiveCtrl implements QuestionCtrl {
                 option3Button.setDisable(true);
                 option3Button.setStyle("-fx-background-color: red");
                 break;
+            default:
+                throw new IllegalStateException();
         }
         server.useAnswerPowerup(gameCtrl.getPlayer());
     }
