@@ -35,8 +35,8 @@ Secretary: Rafael Petouris
   3. Improve code style (javadocs) and write tests where necessary
 
 ## Questions for the TA
-
-*Insert your questions here*
+- Is there any team member that is currently 'behind' in terms of contribution? 
+- Is individual contribution of all peers starting to get somehow similar during past few weeks? 
 
 ## Tips and Tops
 To the TA: do you have any tips and tops for us?
