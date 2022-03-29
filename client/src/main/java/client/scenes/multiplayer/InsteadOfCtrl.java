@@ -28,7 +28,8 @@ import java.util.TimerTask;
 public class InsteadOfCtrl implements QuestionCtrl {
 
     @FXML
-    private Text questionTitle, timer, score, points, answer, option4, correct_guess, questionCount, disconnect;
+    private Text questionTitle, timer, score, points, answer, option4, correct_guess, questionCount, heartText,
+            cryText, laughText, angryText, glassesText, disconnect;
 
     @FXML
     private AnchorPane emoji;
@@ -342,25 +343,24 @@ public class InsteadOfCtrl implements QuestionCtrl {
      *
      * @param id id of button (and image to increase size
      */
-    public void emojiSelector(String id) {
+    public void emojiSelector(String id, SimpleUser player){
 
-        //String currentQType = server.getCurrentQType(server.getLastGIIdMult());
-        System.out.println("ID SELECTION BEGINS");
+
         switch (id) {
             case "heart":
-                emojiBold(heart, heartPic);
+                emojiBold(heart, heartPic, heartText, player);
                 break;
             case "glasses":
-                emojiBold(glasses, glassesPic);
+                emojiBold(glasses, glassesPic,  glassesText, player);
                 break;
             case "angry":
-                emojiBold(angry, angryPic);
+                emojiBold(angry, angryPic, angryText, player);
                 break;
             case "cry":
-                emojiBold(cry, cryPic);
+                emojiBold(cry, cryPic, cryText, player);
                 break;
             case "laugh":
-                emojiBold(laugh, laughPic);
+                emojiBold(laugh, laughPic, laughText, player);
                 break;
             default:
                 break;
@@ -373,7 +373,7 @@ public class InsteadOfCtrl implements QuestionCtrl {
      * @param emojiButton The emoji button to be enlarged
      * @param emojiPic    The corresponding image associated with that button
      */
-    public void emojiBold(Button emojiButton, ImageView emojiPic) {
+    public void emojiBold(Button emojiButton, ImageView emojiPic, Text text, SimpleUser player) {
         Platform.runLater(() -> {
             emojiButton.setStyle("-fx-pref-height: 50; -fx-pref-width: 50; -fx-background-color: transparent; ");
             emojiButton.setLayoutX(emojiButton.getLayoutX() - 10.0);
@@ -381,6 +381,8 @@ public class InsteadOfCtrl implements QuestionCtrl {
             emojiButton.setMouseTransparent(true);
             emojiPic.setFitWidth(50);
             emojiPic.setFitHeight(50);
+            text.setText(player.getName().toUpperCase().substring(0,1));
+            text.setVisible(true);
 
             TimerTask timerTask = new TimerTask() {
                 @Override
@@ -392,6 +394,7 @@ public class InsteadOfCtrl implements QuestionCtrl {
                         emojiButton.setMouseTransparent(false);
                         emojiPic.setFitWidth(30);
                         emojiPic.setFitHeight(30);
+                        text.setVisible(false);
                     });
                 }
             };
@@ -400,8 +403,8 @@ public class InsteadOfCtrl implements QuestionCtrl {
     }
 
     @Override
-    public void showEmoji(String type) {
-        emojiSelector(type);
+    public void showEmoji(String type, SimpleUser player) {
+        emojiSelector(type, player);
     }
 
     /**

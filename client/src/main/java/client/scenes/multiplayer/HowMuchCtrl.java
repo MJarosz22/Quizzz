@@ -354,7 +354,6 @@ public class HowMuchCtrl implements QuestionCtrl {
                     break;
             }
         }
-    }
 
     /**
      * Method that boldens (enlargens) the emoji clicked, then shrinks it back into position

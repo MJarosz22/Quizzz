@@ -289,7 +289,7 @@ public class ServerUtils {
                 .path("api/gameinstance/" + player.getGameInstanceId() + "/emoji")
                 .request(APPLICATION_JSON).cookie("user-id", player.getCookie())
                 .accept(APPLICATION_JSON)
-                .post(Entity.entity(new Emoji(emoji), APPLICATION_JSON));
+                .post(Entity.entity(new Emoji(emoji, player), APPLICATION_JSON));
     }
 
     public Integer gameInstanceType(int gameInstanceId) {
