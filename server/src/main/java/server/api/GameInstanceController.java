@@ -147,7 +147,7 @@ public class GameInstanceController {
         Player reqPlayer = getPlayerFromGameInstance(gameInstanceId, cookie);
         if (reqPlayer == null) return ResponseEntity.status(HttpStatus.FORBIDDEN).build();
         gameInstances.get(gameInstanceId).sendEmoji(emoji);
-        logger.info("Emoji received: " + emoji);
+        logger.info("Emoji received: " + emoji.getType());
         return ResponseEntity.ok(true);
     }
 

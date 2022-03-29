@@ -48,13 +48,18 @@ public class MPGameOverCtrl {
     }
 
     public void init(List<SimpleUser> players) {
-        if(players.get(players.size() - 1).getName().equals("SENTINEL") && players.get(players.size() - 1).getScore() == -1){
-            players.remove(players.get(players.size() -1 ));
+        if (players.get(players.size() - 1).getName().equals("SENTINEL") && players.get(players.size() - 1).getScore() == -1) {
+            players.remove(players.get(players.size() - 1));
             play_again.setDisable(true);
             play_again.setVisible(false);
             game_over.setVisible(false);
         } else {
-            gameCtrl.disconnect();
+            /*SimpleUser currentPlayer = gameCtrl.getPlayer();
+            List<SimpleUser> actualPlayers = ServerUtils.connectedPlayers(currentPlayer.getGameInstanceId());
+            for (SimpleUser player : actualPlayers)
+                server.disconnect(player);
+            server.disconnectWebsocket();*/
+
             play_again.setDisable(false);
             play_again.setVisible(true);
             game_over.setVisible(true);
@@ -66,6 +71,7 @@ public class MPGameOverCtrl {
      * Method that is triggered when the user presses 'PLAY AGAIN' button in GameOver screen
      */
     public void back() {
+        gameCtrl.disconnect();
         mainCtrl.showSplash();
     }
 
@@ -75,7 +81,7 @@ public class MPGameOverCtrl {
 
         //show player positions
         positionColumn.setCellFactory(col -> {
-            TableCell<String,Integer> cell = new TableCell<>();
+            TableCell<String, Integer> cell = new TableCell<>();
             cell.textProperty().bind(Bindings.createStringBinding(() -> {
                 if (cell.isEmpty()) {
                     return null;
