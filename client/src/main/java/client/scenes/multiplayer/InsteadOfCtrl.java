@@ -131,7 +131,7 @@ public class InsteadOfCtrl implements QuestionCtrl {
         answer3.setDisable(true);
         powerUp1.setDisable(true);
         gameCtrl.submitAnswer(new Answer((long) 3));
-        player_answer = question.getActivities()[2].getConsumption_in_wh();
+        player_answer = (long) 3;;
     }
 
     public void answer2Selected(ActionEvent actionEvent) {
@@ -140,7 +140,7 @@ public class InsteadOfCtrl implements QuestionCtrl {
         answer3.setDisable(true);
         powerUp1.setDisable(true);
         gameCtrl.submitAnswer(new Answer((long) 2));
-        player_answer = question.getActivities()[1].getConsumption_in_wh();
+        player_answer = (long) 2;;
     }
 
     public void answer1Selected(ActionEvent actionEvent) {
@@ -149,7 +149,7 @@ public class InsteadOfCtrl implements QuestionCtrl {
         answer3.setDisable(true);
         powerUp1.setDisable(true);
         gameCtrl.submitAnswer(new Answer((long) 1));
-        player_answer = question.getActivities()[0].getConsumption_in_wh();
+        player_answer = (long) 1;
     }
 
     public void disablePopUp(ActionEvent actionEvent) {
@@ -255,7 +255,7 @@ public class InsteadOfCtrl implements QuestionCtrl {
      */
     @Override
     public void postQuestion(Answer answer) {
-        if(player_answer != null && player_answer == question.getAnswer()){
+        if(player_answer != null && player_answer == question.getCorrectAnswer()){
             int numberOfPoints = calculatePoints(server.getTimeLeft(gameCtrl.getPlayer()));
             if(doublePointsPUUsed) numberOfPoints = numberOfPoints * 2;
             gameCtrl.getPlayer().addScore(numberOfPoints);
