@@ -188,7 +188,6 @@ public class HowMuchCtrl implements QuestionCtrl {
             gameCtrl.submitAnswer(new Answer(null));
         } finally {
             submit_guess.setDisable(true);
-            powerUp2.setDisable(true);
         }
     }
 

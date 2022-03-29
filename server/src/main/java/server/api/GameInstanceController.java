@@ -173,7 +173,7 @@ public class GameInstanceController {
     }
 
     /**
-     * Check if the game is in the right state and make a call to notify other players
+     * Check if the game is in the right state and make a call to notify other players that a player used this powerup
      *
      * @param gameInstanceId
      * @param cookie
@@ -181,7 +181,7 @@ public class GameInstanceController {
      * @return true if the game is in the right state, and the call was made successfully
      */
     @PostMapping("/{gameInstanceId}/remove-incorrect-answer")
-    public ResponseEntity<Boolean> doublePoints(@PathVariable int gameInstanceId,
+    public ResponseEntity<Boolean> removeAnswer(@PathVariable int gameInstanceId,
                                                 @CookieValue(name = "user-id", defaultValue = "null") String cookie,
                                                 @RequestBody AnswerPU answerPU) {
         if (!gameInstances.get(gameInstanceId).getState().equals(GameState.INQUESTION))
@@ -189,12 +189,12 @@ public class GameInstanceController {
         Player reqPlayer = getPlayerFromGameInstance(gameInstanceId, cookie);
         if (reqPlayer == null) return ResponseEntity.status(HttpStatus.FORBIDDEN).build();
         gameInstances.get(gameInstanceId).removeAnswer(answerPU);
-        logger.info(reqPlayer.getName() + " doubled their points.");
+        logger.info(reqPlayer.getName() + " removed an incorrect answer");
         return ResponseEntity.ok(true);
     }
 
     /**
-     * Check if the game is in the right state and make a call to reduce time for players
+     * Check if the game is in the right state and make a call to notify other players that a player used this powerup
      *
      * @param gameInstanceId
      * @param cookie

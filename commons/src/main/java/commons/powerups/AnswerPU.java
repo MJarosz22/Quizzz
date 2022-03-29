@@ -3,7 +3,7 @@ package commons.powerups;
 import org.apache.commons.lang3.builder.ToStringBuilder;
 
 /**
- * This is a powerUp that doubles your points if you answer the question that you used the powerUp for correctly
+ * This is a powerUp that removes one incorrect answer
  */
 public class AnswerPU extends PowerUp {
 

@@ -130,7 +130,6 @@ public class InsteadOfCtrl implements QuestionCtrl {
         answer2.setDisable(true);
         answer3.setDisable(true);
         powerUp1.setDisable(true);
-        powerUp2.setDisable(true);
         gameCtrl.submitAnswer(new Answer((long) 3));
         player_answer = question.getActivities()[2].getConsumption_in_wh();
     }
@@ -140,7 +139,6 @@ public class InsteadOfCtrl implements QuestionCtrl {
         answer2.setDisable(true);
         answer3.setDisable(true);
         powerUp1.setDisable(true);
-        powerUp2.setDisable(true);
         gameCtrl.submitAnswer(new Answer((long) 2));
         player_answer = question.getActivities()[1].getConsumption_in_wh();
     }
@@ -150,7 +148,6 @@ public class InsteadOfCtrl implements QuestionCtrl {
         answer2.setDisable(true);
         answer3.setDisable(true);
         powerUp1.setDisable(true);
-        powerUp2.setDisable(true);
         gameCtrl.submitAnswer(new Answer((long) 1));
         player_answer = question.getActivities()[0].getConsumption_in_wh();
     }
@@ -186,9 +183,9 @@ public class InsteadOfCtrl implements QuestionCtrl {
      */
     public void removeAnswer(ActionEvent actionEvent) {
         Random random = new Random();
-        int randomAnswer = random.nextInt(2)+1;
+        int randomAnswer = random.nextInt(3)+1;
         while(randomAnswer == question.getCorrectAnswer() || (randomAnswer != 1 && randomAnswer != 2 && randomAnswer != 3)) {
-            randomAnswer = random.nextInt(2)+1;
+            randomAnswer = random.nextInt(3)+1;
         }
         switch (randomAnswer) {
             case 1:
@@ -279,6 +276,7 @@ public class InsteadOfCtrl implements QuestionCtrl {
                 answer1.setDisable(true);
                 answer2.setDisable(true);
                 answer3.setDisable(true);
+                powerUp2.setDisable(true);
                 answer1.setStyle("-fx-background-color: green");
                 answer2.setStyle("-fx-background-color: red");
                 answer3.setStyle("-fx-background-color: red");
@@ -287,6 +285,7 @@ public class InsteadOfCtrl implements QuestionCtrl {
                 answer1.setDisable(true);
                 answer2.setDisable(true);
                 answer3.setDisable(true);
+                powerUp2.setDisable(true);
                 answer1.setStyle("-fx-background-color: red");
                 answer2.setStyle("-fx-background-color: green");
                 answer3.setStyle("-fx-background-color: red");
@@ -295,6 +294,7 @@ public class InsteadOfCtrl implements QuestionCtrl {
                 answer1.setDisable(true);
                 answer2.setDisable(true);
                 answer3.setDisable(true);
+                powerUp2.setDisable(true);
                 answer1.setStyle("-fx-background-color: red");
                 answer2.setStyle("-fx-background-color: red");
                 answer3.setStyle("-fx-background-color: green");
