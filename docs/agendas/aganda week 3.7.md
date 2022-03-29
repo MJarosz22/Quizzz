@@ -37,6 +37,7 @@ Secretary: Rafael Petouris
 ## Questions for the TA
 - Is there any team member that is currently 'behind' in terms of contribution? 
 - Is individual contribution of all peers starting to get somehow similar during past few weeks? 
+- Do we also need to have the game functional locally, or is Gradle bootRun fully-functional sufficient?
 
 ## Tips and Tops
 To the TA: do you have any tips and tops for us?
@@ -46,7 +47,7 @@ To the TA: do you have any tips and tops for us?
 
 ## Question round
 
-Address any arising quesions now.
+Address any arising questions now.
 
 ## Closing
 This is our last official meeting. Thank you for our work together on the project and thank the TA for guiding us.
