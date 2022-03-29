@@ -16,7 +16,8 @@ public class QuestionHowMuch extends Question {
 
     private Activity activity;
 
-    public QuestionHowMuch() {}
+    public QuestionHowMuch() {
+    }
 
     public QuestionHowMuch(Activity activity, int number) {
         this.setTitle("How much energy does it take?");
@@ -25,18 +26,42 @@ public class QuestionHowMuch extends Question {
     }
 
 
+    /**
+     * Getter for the activity the user will be asked to guess how much energy it consumes.
+     *
+     * @return an Activity object representing the object we are interested in
+     */
     public Activity getActivity() {
         return activity;
     }
 
+    /**
+     * Setter for the activity the user will be asked to guess how much energy it consumes.
+     *
+     * @param activity an Activity object representing the object we are interested in
+     */
     public void setActivity(Activity activity) {
         this.activity = activity;
     }
 
+    /**
+     * Getter for the correct answer to QuestionHowMuch instances.
+     * The user will be asked to input a number representing his guess. It will be compared to the correct answer in order to award
+     * this player a specific number of partial points.
+     *
+     * @return a long value representing how much energy a specific activity consumes
+     */
     public long getAnswer() {
         return activity.getConsumption_in_wh();
     }
 
+    /**
+     * Getter for the correct answer to QuestionHowMuch instances.
+     * The user will be asked to input a number representing his guess. It will be compared to the correct answer in order to award
+     * this player a specific number of partial points.
+     *
+     * @return a long value representing how much energy a specific activity consumes
+     */
     public long getCorrectAnswer() {
         return activity.getConsumption_in_wh();
     }

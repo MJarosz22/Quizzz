@@ -2,6 +2,7 @@ package server.api;
 
 
 import commons.GameInstance;
+import commons.GameState;
 import commons.player.Player;
 import commons.player.SimpleUser;
 import communication.RequestToJoin;
@@ -21,9 +22,7 @@ import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.InputStream;
 import java.nio.charset.StandardCharsets;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Random;
+import java.util.*;
 import java.util.stream.Collectors;
 
 
@@ -33,12 +32,12 @@ public class GameController {
 
     private final Logger logger = LoggerFactory.getLogger(GameController.class);
 
-    private final ActivityRepository activityRepository;
     private final SimpMessagingTemplate msgs;
     public ActivityController activityController;
     private final Random random;
     private final List<GameInstanceServer> gameInstances;
     private final List<SimpleUser> players;
+    private Map<String, Integer> serverNames;
     private static int currentMPGIId = 0; //Current ID of gameInstance for multiplayer
     private static int currentSPGIId = 0; //Current ID of gameInstance for singleplayer
 
@@ -51,12 +50,19 @@ public class GameController {
      */
     public GameController(Random random, ActivityRepository activityRepository, SimpMessagingTemplate msgs, ActivityController activityController) {
         this.random = random;
-        this.activityRepository = activityRepository;
         this.msgs = msgs;
         this.activityController = activityController;
-        gameInstances = new ArrayList<>();
-        gameInstances.add(new GameInstanceServer(gameInstances.size(), GameInstance.MULTI_PLAYER, this, msgs));
-        players = new ArrayList<>();
+        this.gameInstances = new ArrayList<>();
+        this.players = new ArrayList<>();
+        this.serverNames = new HashMap<>();
+
+        //hardcoded servers; perhaps we could create API for the serverNames
+        this.createNewMultiplayerLobby("default");
+        this.createNewMultiplayerLobby("first");
+        this.createNewMultiplayerLobby("second");
+
+        // ASSUMPTION: we consider the current last multiplayerGameInstanceID to be 0 (the one matching "default" serverName)
+        currentMPGIId = 0;
     }
 
 //    ---------------------------------------------------------------------------
@@ -78,7 +84,7 @@ public class GameController {
         SimpleUser savedPlayer;
         switch (request.getGameType()) {
             case GameInstance.SINGLE_PLAYER:
-                GameInstanceServer gameInstance = new GameInstanceServer(gameInstances.size(), GameInstance.SINGLE_PLAYER, this, msgs);
+                GameInstanceServer gameInstance = new GameInstanceServer(gameInstances.size(), GameInstance.SINGLE_PLAYER, this, msgs, null);
                 gameInstances.add(gameInstance);
                 currentSPGIId = gameInstance.getId();
                 savedPlayer = new SimpleUser(players.size(), request.getName(),
@@ -90,14 +96,22 @@ public class GameController {
                 break;
 
             case GameInstance.MULTI_PLAYER:
-                GameInstanceServer currGameInstance = gameInstances.get(currentMPGIId);
+                GameInstanceServer currGameInstance;
+                if (serverNames.containsKey(request.getServerName())) {
+                    currGameInstance = gameInstances.get(serverNames.get(request.getServerName()));
+                } else {
+                    throw new IllegalArgumentException("Server not found!");
+                }
+                if (currGameInstance.getState() != GameState.INLOBBY)
+                    throw new IllegalArgumentException("Wait for the game to end!");
                 savedPlayer = new SimpleUser(players.size(), request.getName(),
                         currGameInstance.getId(), tokenCookie.getValue());
                 players.add(savedPlayer);
                 currGameInstance.getPlayers().add(savedPlayer.toPlayer(currGameInstance));
                 logger.info("[GI " + (currGameInstance.getId()) + "] PLAYER (" + savedPlayer.getId() +
-                        ") STARTED MP GAME: NAME=" + savedPlayer.getName());
-                currGameInstance.updatePlayerList();
+                        ") ENTERED MP LOBBY: NAME=" + savedPlayer.getName());
+                if (msgs != null)
+                    currGameInstance.updatePlayerList();
                 break;
 
             default:
@@ -114,8 +128,8 @@ public class GameController {
             return ResponseEntity.ok(new InputStreamResource(inputStream));
         } catch (FileNotFoundException e) {
             logger.debug("Image " + activityFolder + "/" + activityFile + " not found!");
+            return ResponseEntity.notFound().build();
         }
-        return ResponseEntity.notFound().build();
     }
 
 
@@ -209,14 +223,52 @@ public class GameController {
 
     }
 
-    public void createNewMultiplayerLobby() {
-        GameInstanceServer newGameInstance = new GameInstanceServer(gameInstances.size(), GameInstance.MULTI_PLAYER, this, msgs);
+    @GetMapping("/available-servers")
+    public ResponseEntity<List<String>> getServers() {
+        List<String> res = new ArrayList<>();
+        for (String serverName : serverNames.keySet()) {
+            if (gameInstances.get(serverNames.get(serverName)).getState() == GameState.INLOBBY)
+                res.add(serverName);
+        }
+        return ResponseEntity.ok(res);
+    }
+
+    @GetMapping("/{serverName}/connectedPlayersOnServer")
+    public ResponseEntity<List<String>> connectedPlayersOnServer(@PathVariable String serverName) {
+        if (serverName == null) return ResponseEntity.badRequest().build();
+        List<String> availableServers = getServers().getBody();
+        if (!availableServers.contains(serverName)) return ResponseEntity.badRequest().build();
+
+
+        GameInstanceServer lastGIS = null;
+        for (GameInstanceServer gi : gameInstances)
+            if (gi.getType() == GameInstance.MULTI_PLAYER && gi.getServerName().equals(serverName))
+                lastGIS = gi;
+
+        List<String> playerNames = lastGIS.getPlayers().stream().map(Player::getName).collect(Collectors.toList());
+        return ResponseEntity.ok(playerNames);
+    }
+    // ------------------------------------ ADDITIONAL METHODS ------------------------------------------------------
+
+
+    public void createNewMultiplayerLobby(String serverName) {
+        GameInstanceServer newGameInstance = new GameInstanceServer(gameInstances.size(), GameInstance.MULTI_PLAYER, this, msgs, serverName);
+        newGameInstance.setState(GameState.INLOBBY);
         gameInstances.add(newGameInstance);
         currentMPGIId = newGameInstance.getId();
+        serverNames.put(serverName, currentMPGIId);
     }
 
     public List<GameInstanceServer> getGameInstances() {
         return gameInstances;
+    }
+
+    public List<SimpleUser> getPlayers() {
+        return players;
+    }
+
+    public Map<String, Integer> getServerNames() {
+        return serverNames;
     }
 
     public int getCurrentMPGIId() {

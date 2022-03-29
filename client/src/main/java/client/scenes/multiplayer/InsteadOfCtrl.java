@@ -3,7 +3,7 @@ package client.scenes.multiplayer;
 import client.scenes.MainCtrl;
 import client.utils.ServerUtils;
 import commons.Answer;
-import commons.QuestionWhichOne;
+import commons.QuestionInsteadOf;
 import commons.player.Player;
 import commons.player.SimpleUser;
 import commons.powerups.PowerUp;
@@ -25,11 +25,10 @@ import java.io.FileNotFoundException;
 import java.util.Timer;
 import java.util.TimerTask;
 
-public class WhichOneCtrl implements QuestionCtrl {
+public class InsteadOfCtrl implements QuestionCtrl {
 
     @FXML
-    private Text questionTitle, timer, score, points, answer, option4, correct_guess, questionCount,  heartText,
-            cryText, laughText, angryText, glassesText, disconnect;
+    private Text questionTitle, timer, score, points, answer, option4, correct_guess, questionCount, disconnect;
 
     @FXML
     private AnchorPane emoji;
@@ -56,17 +55,16 @@ public class WhichOneCtrl implements QuestionCtrl {
 
     private TimerTask scheduler;
 
-    private int timeReduced;
-
-    private QuestionWhichOne question;
+    private QuestionInsteadOf question;
     private final ServerUtils server;
     private final MainCtrl mainCtrl;
     private final GameCtrl gameCtrl;
+    private int timeReduced;
 
-    Long player_answer;
+    private Long  player_answer;
 
     @Inject
-    public WhichOneCtrl(ServerUtils server, MainCtrl mainCtrl, GameCtrl gameCtrl) {
+    public InsteadOfCtrl(ServerUtils server, MainCtrl mainCtrl, GameCtrl gameCtrl) {
         this.server = server;
         this.mainCtrl = mainCtrl;
         this.gameCtrl = gameCtrl;
@@ -77,22 +75,27 @@ public class WhichOneCtrl implements QuestionCtrl {
         }
     }
 
-    public void init(QuestionWhichOne question) {
+    /**
+     * Initiates the Instead Of question, sets the scene and starts the timer
+     *
+     * @param question
+     */
+    public void init(QuestionInsteadOf question) {
         this.question = question;
         this.timeReduced = 0;
         timerImage.setImage(timerImageSource);
-        answer1.setDisable(false);
-        answer2.setDisable(false);
-        answer3.setDisable(false);
         disablePopUp(null);
         questionTitle.setText(question.getTitle());
         questionCount.setText("Question " + question.getNumber() + "/20");
         option4.setText(question.getActivity().getTitle());
-        disconnect.setVisible(false);
         progressBar.setProgress(question.getNumber() / 20.0d + 0.05);
-        answer1.setText(String.valueOf(question.getAnswers()[0]));
-        answer2.setText(String.valueOf(question.getAnswers()[1]));
-        answer3.setText(String.valueOf(question.getAnswers()[2]));
+        disconnect.setVisible(false);
+        answer1.setText(question.getAnswers()[0]);
+        answer2.setText(question.getAnswers()[1]);
+        answer3.setText(question.getAnswers()[2]);
+        answer1.setDisable(false);
+        answer2.setDisable(false);
+        answer3.setDisable(false);
         score.setText("Your score: "+ gameCtrl.getPlayer().getScore());
         answer.setVisible(false);
         points.setVisible(false);
@@ -122,7 +125,7 @@ public class WhichOneCtrl implements QuestionCtrl {
         answer2.setDisable(true);
         answer3.setDisable(true);
         gameCtrl.submitAnswer(new Answer((long) 3));
-        player_answer = question.getAnswers()[2];
+        player_answer = question.getActivities()[2].getConsumption_in_wh();
     }
 
     public void answer2Selected(ActionEvent actionEvent) {
@@ -130,7 +133,7 @@ public class WhichOneCtrl implements QuestionCtrl {
         answer2.setDisable(true);
         answer3.setDisable(true);
         gameCtrl.submitAnswer(new Answer((long) 2));
-        player_answer = question.getAnswers()[1];
+        player_answer = question.getActivities()[2].getConsumption_in_wh();
     }
 
     public void answer1Selected(ActionEvent actionEvent) {
@@ -138,7 +141,7 @@ public class WhichOneCtrl implements QuestionCtrl {
         answer2.setDisable(true);
         answer3.setDisable(true);
         gameCtrl.submitAnswer(new Answer((long) 1));
-        player_answer = question.getAnswers()[0];
+        player_answer = question.getActivities()[2].getConsumption_in_wh();
     }
 
     public void disablePopUp(ActionEvent actionEvent) {
@@ -197,6 +200,11 @@ public class WhichOneCtrl implements QuestionCtrl {
         confirmationExit.setStyle("-fx-background-color: #91e4fb; ");
     }
 
+    /**
+     * Sends the answer to the server and starts a 5-second countdown
+     *
+     * @param answer
+     */
     @Override
     public void postQuestion(Answer answer) {
         if(player_answer != null && player_answer == question.getAnswer()){
@@ -253,20 +261,20 @@ public class WhichOneCtrl implements QuestionCtrl {
         }, 5000);
     }
 
+    public int calculatePoints(int timeLeft) {
+        timeLeft = (int) (timeLeft / 1000d);
+        return (timeLeft * 10) / 2;
+    }
+
     @Override
     public void resetUI() {
+        enableAnswers();
         answer1.setStyle("");
         answer2.setStyle("");
         answer3.setStyle("");
         answer1.setSelected(false);
         answer2.setSelected(false);
         answer3.setSelected(false);
-        enableAnswers();
-    }
-
-    public int calculatePoints(int timeLeft) {
-        timeLeft = (int) (timeLeft / 1000d);
-        return (timeLeft * 10) / 2;
     }
 
     /**
@@ -288,7 +296,6 @@ public class WhichOneCtrl implements QuestionCtrl {
     }
 
     /**
-     * <<<<<<< client/src/main/java/client/scenes/multiplayer/WhichOneCtrl.java
      * Method to select heart emoji
      */
 
@@ -335,23 +342,25 @@ public class WhichOneCtrl implements QuestionCtrl {
      *
      * @param id id of button (and image to increase size
      */
-    public void emojiSelector(String id, SimpleUser player){
+    public void emojiSelector(String id) {
 
+        //String currentQType = server.getCurrentQType(server.getLastGIIdMult());
+        System.out.println("ID SELECTION BEGINS");
         switch (id) {
             case "heart":
-                emojiBold(heart, heartPic, heartText, player);
+                emojiBold(heart, heartPic);
                 break;
             case "glasses":
-                emojiBold(glasses, glassesPic,  glassesText, player);
+                emojiBold(glasses, glassesPic);
                 break;
             case "angry":
-                emojiBold(angry, angryPic, angryText, player);
+                emojiBold(angry, angryPic);
                 break;
             case "cry":
-                emojiBold(cry, cryPic, cryText, player);
+                emojiBold(cry, cryPic);
                 break;
             case "laugh":
-                emojiBold(laugh, laughPic, laughText, player);
+                emojiBold(laugh, laughPic);
                 break;
             default:
                 break;
@@ -364,7 +373,7 @@ public class WhichOneCtrl implements QuestionCtrl {
      * @param emojiButton The emoji button to be enlarged
      * @param emojiPic    The corresponding image associated with that button
      */
-    public void emojiBold(Button emojiButton, ImageView emojiPic, Text text, SimpleUser player) {
+    public void emojiBold(Button emojiButton, ImageView emojiPic) {
         Platform.runLater(() -> {
             emojiButton.setStyle("-fx-pref-height: 50; -fx-pref-width: 50; -fx-background-color: transparent; ");
             emojiButton.setLayoutX(emojiButton.getLayoutX() - 10.0);
@@ -372,8 +381,6 @@ public class WhichOneCtrl implements QuestionCtrl {
             emojiButton.setMouseTransparent(true);
             emojiPic.setFitWidth(50);
             emojiPic.setFitHeight(50);
-            text.setText(player.getName().toUpperCase().substring(0,1));
-            text.setVisible(true);
 
             TimerTask timerTask = new TimerTask() {
                 @Override
@@ -385,7 +392,6 @@ public class WhichOneCtrl implements QuestionCtrl {
                         emojiButton.setMouseTransparent(false);
                         emojiPic.setFitWidth(30);
                         emojiPic.setFitHeight(30);
-                        text.setVisible(false);
                     });
                 }
             };
@@ -394,8 +400,8 @@ public class WhichOneCtrl implements QuestionCtrl {
     }
 
     @Override
-    public void showEmoji(String type, SimpleUser player) {
-        emojiSelector(type, player);
+    public void showEmoji(String type) {
+        emojiSelector(type);
     }
 
     /**
