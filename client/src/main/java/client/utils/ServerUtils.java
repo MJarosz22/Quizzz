@@ -3,6 +3,7 @@ package client.utils;
 import commons.Activity;
 import commons.Answer;
 import commons.Emoji;
+import commons.powerups.*;
 import commons.player.SimpleUser;
 import communication.RequestToJoin;
 import jakarta.ws.rs.NotFoundException;
@@ -39,7 +40,7 @@ public class ServerUtils {
     public List<SimpleUser> getPlayers(SimpleUser player) {
         Client client = ClientBuilder.newClient(new ClientConfig());
         return client //
-                .target(SERVER).path("api/gameinstance/ " + player.getGameInstanceId() + "/players") //
+                .target(SERVER).path("api/gameinstance/" + player.getGameInstanceId() + "/players") //
                 .request(APPLICATION_JSON).cookie("user-id", player.getCookie()) //
                 .accept(APPLICATION_JSON) //
                 .get(new GenericType<>() {
@@ -64,7 +65,8 @@ public class ServerUtils {
                 .get(new GenericType<>() {
                 });
     }
-    public List<Activity> getActivitiesRandomly() throws NotFoundException{
+
+    public List<Activity> getActivitiesRandomly() throws NotFoundException {
         return ClientBuilder.newClient(new ClientConfig())
                 .target(SERVER).path("api/activities/random60")
                 .request(APPLICATION_JSON)
@@ -79,8 +81,9 @@ public class ServerUtils {
                 .target(SERVER).path("api/game/activities/" + activity.getImage_path())
                 .request("image/*")
                 .accept("image/*")
-                .get(new GenericType<>() {});
-        if(response.getStatus() == 404) throw new FileNotFoundException();
+                .get(new GenericType<>() {
+                });
+        if (response.getStatus() == 404) throw new FileNotFoundException();
         return response.readEntity(InputStream.class);
     }
 
@@ -115,14 +118,14 @@ public class ServerUtils {
     public boolean disconnect(SimpleUser player) {
         Client client = ClientBuilder.newClient(new ClientConfig());
         return client //
-                .target(SERVER).path("api/gameinstance/ " + player.getGameInstanceId() + "/disconnect") //
+                .target(SERVER).path("api/gameinstance/" + player.getGameInstanceId() + "/disconnect") //
                 .request(APPLICATION_JSON).cookie("user-id", player.getCookie()) //
                 .accept(APPLICATION_JSON) //
                 .delete(new GenericType<>() {
                 });
     }
 
-    public SimpleUser addPlayerToLeaderboard(SimpleUser player){
+    public SimpleUser addPlayerToLeaderboard(SimpleUser player) {
         Client client = ClientBuilder.newClient(new ClientConfig());
         return client
                 .target(SERVER).path("api/leaderboard/addPlayer")
@@ -164,7 +167,7 @@ public class ServerUtils {
     public static List<SimpleUser> allPlayers(int gIId) {
         Client client = ClientBuilder.newClient(new ClientConfig());
         return client //
-                .target(SERVER).path("api/game/ " + gIId + "/allPlayers") //
+                .target(SERVER).path("api/game/" + gIId + "/allPlayers") //
                 .request(APPLICATION_JSON) //
                 .accept(APPLICATION_JSON) //
                 .get(new GenericType<>() {
@@ -174,7 +177,17 @@ public class ServerUtils {
     public static List<SimpleUser> connectedPlayers(int gIId) {
         Client client = ClientBuilder.newClient(new ClientConfig());
         return client //
-                .target(SERVER).path("api/game/ " + gIId + "/connectedPlayers") //
+                .target(SERVER).path("api/game/" + gIId + "/connectedPlayers") //
+                .request(APPLICATION_JSON) //
+                .accept(APPLICATION_JSON) //
+                .get(new GenericType<>() {
+                });
+    }
+
+    public static List<String> connectedPlayersOnServer(String serverName) {
+        Client client = ClientBuilder.newClient(new ClientConfig());
+        return client //
+                .target(SERVER).path("api/game/" + serverName + "/connectedPlayersOnServer") //
                 .request(APPLICATION_JSON) //
                 .accept(APPLICATION_JSON) //
                 .get(new GenericType<>() {
@@ -192,19 +205,21 @@ public class ServerUtils {
     public boolean startGame(SimpleUser player) {
         Client client = ClientBuilder.newClient(new ClientConfig());
         return client //
-                .target(SERVER).path("api/gameinstance/ " + player.getGameInstanceId() + "/start") //
+                .target(SERVER).path("api/gameinstance/" + player.getGameInstanceId() + "/start") //
                 .request(APPLICATION_JSON).cookie("user-id", player.getCookie()) //
                 .accept(APPLICATION_JSON) //
-                .get(new GenericType<>() {});
+                .get(new GenericType<>() {
+                });
     }
 
     public int getTimeLeft(SimpleUser player) {
         Client client = ClientBuilder.newClient(new ClientConfig());
         return client //
-                .target(SERVER).path("api/gameinstance/ " + player.getGameInstanceId() + "/timeleft") //
+                .target(SERVER).path("api/gameinstance/" + player.getGameInstanceId() + "/timeleft") //
                 .request(APPLICATION_JSON).cookie("user-id", player.getCookie()) //
                 .accept(APPLICATION_JSON) //
-                .get(new GenericType<>() {});
+                .get(new GenericType<>() {
+                });
     }
 
     public void initWebsocket() {
@@ -240,6 +255,7 @@ public class ServerUtils {
             }
         });
     }
+
     public boolean submitAnswer(SimpleUser player, Answer answer) {
         return ClientBuilder
                 .newClient(new ClientConfig())
@@ -250,14 +266,40 @@ public class ServerUtils {
                 .post(Entity.entity(answer, APPLICATION_JSON), Boolean.class);
     }
 
-    public void sendEmoji(SimpleUser player, String emoji){
+    /**
+     * Send a request to reduce time by the given percentage
+     *
+     * @param player     who used the powerUp
+     * @param percentage by which the time should be reduced
+     */
+    public void useTimePowerup(SimpleUser player, int percentage) {
         ClientBuilder
-            .newClient(new ClientConfig())
-            .target(SERVER)
-            .path("api/gameinstance/" + player.getGameInstanceId() + "/emoji")
-            .request(APPLICATION_JSON).cookie("user-id", player.getCookie())
-            .accept(APPLICATION_JSON)
-                .post(Entity.entity(new Emoji(emoji, player), APPLICATION_JSON));
+                .newClient(new ClientConfig())
+                .target(SERVER)
+                .path("api/gameinstance/" + player.getGameInstanceId() + "/decrease-time")
+                .request(APPLICATION_JSON).cookie("user-id", player.getCookie())
+                .accept(APPLICATION_JSON)
+                .post(Entity.entity(new TimePU(player.getCookie(), player.getName(), percentage), APPLICATION_JSON));
+    }
+
+    public void sendEmoji(SimpleUser player, String emoji) {
+        ClientBuilder
+                .newClient(new ClientConfig())
+                .target(SERVER)
+                .path("api/gameinstance/" + player.getGameInstanceId() + "/emoji")
+                .request(APPLICATION_JSON).cookie("user-id", player.getCookie())
+                .accept(APPLICATION_JSON)
+                .post(Entity.entity(new Emoji(emoji), APPLICATION_JSON));
+    }
+
+    public Integer gameInstanceType(int gameInstanceId) {
+        Client client = ClientBuilder.newClient(new ClientConfig());
+        return client
+                .target(SERVER).path("api/gameinstance/ " + gameInstanceId + "/gameInstanceType")
+                .request(APPLICATION_JSON)
+                .accept(APPLICATION_JSON)
+                .get(new GenericType<>() {
+                });
     }
 
     public void disconnectWebsocket() {
@@ -269,7 +311,7 @@ public class ServerUtils {
     }
 
 
-        // ------------------------------------ ADDITIONAL METHODS ------------------------------------ //
+    // ------------------------------------ ADDITIONAL METHODS ------------------------------------ //
 
     /**
      * Additional method that checks whether a player hasn't disconnected from a game, by comparing cookies, which are
@@ -285,13 +327,24 @@ public class ServerUtils {
         return (contains.isPresent());
     }
 
+    public List<String> availableServers() {
+        return ClientBuilder.newClient(new ClientConfig())
+                .target(SERVER)
+                .path("api/game/available-servers")
+                .request(APPLICATION_JSON)
+                .accept(APPLICATION_JSON)
+                .get(new GenericType<>() {
+                });
+    }
+
 
     public Activity deleteActivity(Activity activity) {
         return ClientBuilder.newClient(new ClientConfig())
                 .target(SERVER).path("api/activities/" + activity.getActivityID())
                 .request(APPLICATION_JSON)
                 .accept(APPLICATION_JSON)
-                .delete(new GenericType<>(){});
+                .delete(new GenericType<>() {
+                });
     }
 
 
