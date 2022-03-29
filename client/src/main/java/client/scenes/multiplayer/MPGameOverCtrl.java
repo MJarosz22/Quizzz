@@ -14,7 +14,6 @@ import javafx.scene.text.Text;
 
 import java.util.Comparator;
 import java.util.List;
-import java.util.Locale;
 import java.util.stream.Collectors;
 
 public class MPGameOverCtrl {
@@ -55,8 +54,8 @@ public class MPGameOverCtrl {
     }
 
     public void init(List<SimpleUser> players) {
-        if(players.get(players.size() - 1).getName().equals("SENTINEL") && players.get(players.size() - 1).getScore() == -1){
-            players.remove(players.get(players.size() -1 ));
+        if (players.get(players.size() - 1).getName().equals("SENTINEL") && players.get(players.size() - 1).getScore() == -1) {
+            players.remove(players.get(players.size() - 1));
             go_lobby.setDisable(true);
             go_lobby.setVisible(false);
             play_again.setDisable(true);
@@ -84,8 +83,8 @@ public class MPGameOverCtrl {
 
     public void playAgain() {
         List<String> playerNames = server.connectedPlayersOnServer(serverName);
-        if (!listContains(playerNames,playerName)){
-            gameCtrl.start(playerName,serverName);
+        if (!listContains(playerNames, playerName)) {
+            gameCtrl.start(playerName, serverName);
             mainCtrl.showLobby();
         } else {
             Alert alert = new Alert(Alert.AlertType.ERROR, "This name already exists. Try a different one");
@@ -102,7 +101,7 @@ public class MPGameOverCtrl {
 
         //show player positions
         positionColumn.setCellFactory(col -> {
-            TableCell<String,Integer> cell = new TableCell<>();
+            TableCell<String, Integer> cell = new TableCell<>();
             cell.textProperty().bind(Bindings.createStringBinding(() -> {
                 if (cell.isEmpty()) {
                     return null;
@@ -135,7 +134,7 @@ public class MPGameOverCtrl {
         if (list == null || list.isEmpty()) return false;
 
         for (String s : list) {
-            if (s.toLowerCase().trim().equals(string.toLowerCase().trim())){
+            if (s.toLowerCase().trim().equals(string.toLowerCase().trim())) {
                 return true;
             }
         }
