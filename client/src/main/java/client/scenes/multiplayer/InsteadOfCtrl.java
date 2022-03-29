@@ -65,7 +65,7 @@ public class InsteadOfCtrl implements QuestionCtrl {
 
     private QuestionInsteadOf question;
 
-    private Long  player_answer;
+    Long player_answer;
 
     @Inject
     public InsteadOfCtrl(ServerUtils server, MainCtrl mainCtrl, GameCtrl gameCtrl) {
@@ -131,7 +131,7 @@ public class InsteadOfCtrl implements QuestionCtrl {
         answer3.setDisable(true);
         powerUp1.setDisable(true);
         gameCtrl.submitAnswer(new Answer((long) 3));
-        player_answer = (long) 3;;
+        player_answer = (long) 3;
     }
 
     public void answer2Selected(ActionEvent actionEvent) {
@@ -140,7 +140,7 @@ public class InsteadOfCtrl implements QuestionCtrl {
         answer3.setDisable(true);
         powerUp1.setDisable(true);
         gameCtrl.submitAnswer(new Answer((long) 2));
-        player_answer = (long) 2;;
+        player_answer = (long) 2;
     }
 
     public void answer1Selected(ActionEvent actionEvent) {
