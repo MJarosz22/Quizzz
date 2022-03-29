@@ -53,12 +53,6 @@ public class GameCtrl {
             Platform.runLater(() -> mainCtrl.getCurrentQuestionScene().showEmoji(emoji.getType(), emoji.getPlayer()));
         });
 
-        //subscribe("/topic/" + player.getGameInstanceId() + "/playeremoji", SimpleUser.class, player -> {
-        //    System.out.println(player.getName());
-       //     Platform.runLater(() -> mainCtrl.getCurrentQuestionScene().updateLabel(player.getName()));
-        //});
-
-
         subscribe("/topic/" + player.getGameInstanceId() + "/postquestion", Answer.class, answer ->
                 Platform.runLater(() -> mainCtrl.getCurrentQuestionScene().postQuestion(answer)));
 

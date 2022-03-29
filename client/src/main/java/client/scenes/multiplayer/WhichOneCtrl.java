@@ -231,8 +231,6 @@ public class WhichOneCtrl implements QuestionCtrl {
      */
     public void emojiSelector(String id, SimpleUser player){
 
-        //String currentQType = server.getCurrentQType(server.getLastGIIdMult());
-        System.out.println("ID SELECTION BEGINS");
         switch (id) {
             case "heart":
                 emojiBold(heart, heartPic, heartText, player);
