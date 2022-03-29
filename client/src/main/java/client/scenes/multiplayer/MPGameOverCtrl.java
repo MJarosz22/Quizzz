@@ -14,6 +14,7 @@ import javafx.scene.text.Text;
 
 import java.util.Comparator;
 import java.util.List;
+import java.util.Locale;
 import java.util.stream.Collectors;
 
 public class MPGameOverCtrl {
@@ -82,8 +83,16 @@ public class MPGameOverCtrl {
     }
 
     public void playAgain() {
-        gameCtrl.start(playerName,serverName);
-        mainCtrl.showLobby();
+        List<String> playerNames = server.connectedPlayersOnServer(serverName);
+        if (!listContains(playerNames,playerName)){
+            gameCtrl.start(playerName,serverName);
+            mainCtrl.showLobby();
+        } else {
+            Alert alert = new Alert(Alert.AlertType.ERROR, "This name already exists. Try a different one");
+            alert.show();
+            mainCtrl.showMultiPlayerMode();
+        }
+
 //        lobbyCtrl.initialize(); //TODO LOOK AT THIS
     }
 
@@ -120,6 +129,18 @@ public class MPGameOverCtrl {
         /*for (SimpleUser simpleUser : sortedPlayers){
             tablePlayers.getItems().add(simpleUser);
         }*/
+    }
+
+    private boolean listContains(List<String> list, String string) {
+        if (list == null || list.isEmpty()) return false;
+
+        for (String s : list) {
+            if (s.toLowerCase().trim().equals(string.toLowerCase().trim())){
+                return true;
+            }
+        }
+
+        return false;
     }
 }
 

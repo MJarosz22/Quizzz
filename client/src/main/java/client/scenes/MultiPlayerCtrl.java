@@ -58,7 +58,7 @@ public class MultiPlayerCtrl {
 
     private boolean containsName(String name) {
         List<String> playerNames = server.connectedPlayersOnServer(getTextFieldServer());
-        return playerNames.contains(name);
+        return listContains(playerNames,name);
     }
 
     private boolean containsServer(String serverName) {
@@ -66,4 +66,15 @@ public class MultiPlayerCtrl {
         return availableServers.contains(serverName);
     }
 
+    private boolean listContains(List<String> list, String string) {
+        if (list == null || list.isEmpty()) return false;
+
+        for (String s : list) {
+            if (s.toLowerCase().trim().equals(string.toLowerCase().trim())){
+                return true;
+            }
+        }
+
+        return false;
+    }
 }
