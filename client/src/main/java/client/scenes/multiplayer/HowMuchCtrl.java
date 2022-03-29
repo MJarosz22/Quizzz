@@ -21,6 +21,7 @@ import javafx.scene.layout.Pane;
 import javafx.scene.text.Text;
 
 import java.io.FileNotFoundException;
+import java.net.URL;
 import java.util.Timer;
 import java.util.TimerTask;
 
@@ -70,8 +71,8 @@ public class HowMuchCtrl implements QuestionCtrl {
         this.mainCtrl = mainCtrl;
         this.gameCtrl = gameCtrl;
         try {
-            String absoluteTimerPath = MainCtrl.relativeToAbsolute(this.timerPath);
-            timerImageSource = new Image(absoluteTimerPath);
+            URL absoluteTimerPath = HowMuchCtrl.class.getResource(this.timerPath);
+            timerImageSource = new Image(absoluteTimerPath.toString());
         } catch (NullPointerException e) {
             System.out.println("Couldn't find timer image for multiplayer.");
         }

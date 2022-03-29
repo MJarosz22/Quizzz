@@ -20,6 +20,7 @@ import javafx.scene.text.Text;
 
 import javax.inject.Inject;
 import java.io.FileNotFoundException;
+import java.net.URL;
 import java.util.Timer;
 import java.util.TimerTask;
 
@@ -69,8 +70,8 @@ public class MoreExpensiveCtrl implements QuestionCtrl {
         this.gameCtrl = gameCtrl;
         this.server = server;
         try {
-            String absoluteTimerPath = MainCtrl.relativeToAbsolute(this.timerPath);
-            timerImageSource = new Image(absoluteTimerPath);
+            URL absoluteTimerPath = MoreExpensiveCtrl.class.getResource(this.timerPath);
+            timerImageSource = new Image(absoluteTimerPath.toString());
         } catch (NullPointerException e) {
             System.out.println("Couldn't find timer image for multiplayer.");
         }

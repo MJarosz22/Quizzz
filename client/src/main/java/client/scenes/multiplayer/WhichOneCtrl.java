@@ -21,6 +21,7 @@ import javafx.scene.text.Text;
 
 import javax.inject.Inject;
 import java.io.FileNotFoundException;
+import java.net.URL;
 import java.util.Timer;
 import java.util.TimerTask;
 
@@ -71,8 +72,8 @@ public class WhichOneCtrl implements QuestionCtrl {
         this.mainCtrl = mainCtrl;
         this.gameCtrl = gameCtrl;
         try {
-            String absoluteTimerPath = MainCtrl.relativeToAbsolute(this.timerPath);
-            timerImageSource = new Image(absoluteTimerPath);
+            URL absoluteTimerPath = WhichOneCtrl.class.getResource(this.timerPath);
+            timerImageSource = new Image(absoluteTimerPath.toString());
         } catch (NullPointerException e) {
             System.out.println("Couldn't find timer image for multiplayer.");
         }
