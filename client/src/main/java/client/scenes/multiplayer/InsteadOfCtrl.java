@@ -343,7 +343,7 @@ public class InsteadOfCtrl implements QuestionCtrl {
      *
      * @param id id of button (and image to increase size
      */
-    public void emojiSelector(String id, SimpleUser player){
+    public void emojiSelector(String id, SimpleUser player) throws Exception {
 
 
         switch (id) {
@@ -363,7 +363,7 @@ public class InsteadOfCtrl implements QuestionCtrl {
                 emojiBold(laugh, laughPic, laughText, player);
                 break;
             default:
-                break;
+                throw new Exception("Invalid emoji");
         }
     }
 
@@ -404,7 +404,11 @@ public class InsteadOfCtrl implements QuestionCtrl {
 
     @Override
     public void showEmoji(String type, SimpleUser player) {
-        emojiSelector(type, player);
+        try{
+            emojiSelector(type, player);
+        } catch(Exception e) {
+            e.printStackTrace();
+        }
     }
 
     /**
