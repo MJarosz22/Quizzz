@@ -299,7 +299,6 @@ public class MoreExpensiveCtrl implements QuestionCtrl {
     }
 
     /**
-     * <<<<<<< client/src/main/java/client/scenes/multiplayer/MoreExpensiveCtrl.java
      * Method to select heart emoji
      */
 
