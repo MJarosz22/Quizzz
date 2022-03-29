@@ -19,6 +19,7 @@ import client.scenes.*;
 import client.scenes.multiplayer.*;
 import client.utils.ServerUtils;
 import com.google.inject.Injector;
+import commons.GameInstance;
 import commons.player.SimpleUser;
 import javafx.application.Application;
 import javafx.application.Platform;
@@ -80,11 +81,14 @@ public class Main extends Application {
         var gameCtrl = INJECTOR.getInstance(GameCtrl.class);
         SimpleUser player = gameCtrl.getPlayer();
         ServerUtils server = new ServerUtils();
-        //if (player != null) //TODO IS THIS THE RIGHT IF STATEMENT TO CHECK WHETHER PLAYER EXISTS?
-            //gameCtrl.disconnect();
 
-        if (server.containsPlayer(player) && SinglePlayerGameCtrl.getGameIsOver() == false )
-           server.disconnect(player); //SINGLEPLAYER IMPL (DON'T KNOW HOW IT CORRELATES WITH MP)
+        if (server.containsPlayer(player)) {
+            int gameInstanceType = server.gameInstanceType(player.getGameInstanceId());
+            if (gameInstanceType == GameInstance.SINGLE_PLAYER && !SinglePlayerGameCtrl.getGameIsOver())
+                server.disconnect(player);
+            else if (gameInstanceType == GameInstance.MULTI_PLAYER)
+                gameCtrl.disconnect();
+        }
     }
 
 }

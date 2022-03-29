@@ -4,7 +4,9 @@ import client.scenes.MainCtrl;
 import client.utils.ServerUtils;
 import commons.Answer;
 import commons.QuestionWhichOne;
+import commons.player.Player;
 import commons.player.SimpleUser;
+import commons.powerups.PowerUp;
 import javafx.application.Platform;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
@@ -38,7 +40,7 @@ public class WhichOneCtrl implements QuestionCtrl {
     private RadioButton answer1, answer2, answer3;
 
     @FXML
-    private Button heart, cry, laugh, angry, glasses;
+    private Button heart, cry, laugh, angry, glasses, powerUp1, powerUp2, powerUp3;
 
     @FXML
     private ImageView image4, heartPic, cryPic, laughPic, angryPic, glassesPic;
@@ -52,6 +54,8 @@ public class WhichOneCtrl implements QuestionCtrl {
     private Image timerImageSource;
 
     private TimerTask scheduler;
+
+    private int timeReduced;
 
     private QuestionWhichOne question;
     private final ServerUtils server;
@@ -72,8 +76,9 @@ public class WhichOneCtrl implements QuestionCtrl {
         }
     }
 
-    public void init(QuestionWhichOne question){
+    public void init(QuestionWhichOne question) {
         this.question = question;
+        this.timeReduced = 0;
         timerImage.setImage(timerImageSource);
         answer1.setDisable(false);
         answer2.setDisable(false);
@@ -90,6 +95,7 @@ public class WhichOneCtrl implements QuestionCtrl {
         score.setText("Your score: "+ gameCtrl.getPlayer().getScore());
         answer.setVisible(false);
         points.setVisible(false);
+        setPowerUps();
         try {
             Image image = new Image(server.getImage(question.getActivity()));
             image4.setImage(image);
@@ -101,6 +107,8 @@ public class WhichOneCtrl implements QuestionCtrl {
             public void run() {
                 int timeLeft = server.getTimeLeft(gameCtrl.getPlayer());
                 Platform.runLater(() -> {
+                    if (Math.round((timeLeft) / 1000d) <= 2)
+                        powerUp3.setDisable(true);
                     timer.setText(String.valueOf(Math.round(timeLeft / 1000d)));
                 });
             }
@@ -137,6 +145,45 @@ public class WhichOneCtrl implements QuestionCtrl {
         confirmationExit.setDisable(true);
     }
 
+    /**
+     * Use the time reduction powerup
+     *
+     * @param actionEvent click on the powerUp
+     */
+    public void decreaseTime(ActionEvent actionEvent) {
+        server.useTimePowerup(gameCtrl.getPlayer(), 50);
+    }
+
+    /**
+     * reduce the time for this player by the given percentage
+     *
+     * @param percentage
+     */
+    @Override
+    public void reduceTimer(int percentage) {
+        scheduler.cancel();
+        timeReduced += (server.getTimeLeft(gameCtrl.getPlayer()) - timeReduced) * percentage / 100;
+        scheduler = new TimerTask() {
+
+            @Override
+            public void run() {
+                int timeLeft = server.getTimeLeft(gameCtrl.getPlayer());
+                Platform.runLater(() -> {
+                    timer.setText(String.valueOf(Math.max(Math.round((timeLeft - timeReduced) / 1000d), 0)));
+                });
+                if (Math.round((timeLeft) / 1000d) <= 2)
+                    powerUp3.setDisable(true);
+                if (Math.round((timeLeft - timeReduced) / 1000d) <= 0) {
+                    Platform.runLater(() -> {
+                        disableAnswers();
+                    });
+                }
+
+            }
+        };
+        new Timer().scheduleAtFixedRate(scheduler, 0, 100);
+    }
+
     public void leaveGame(ActionEvent actionEvent) {
         scheduler.cancel();
         gameCtrl.disconnect();
@@ -151,7 +198,7 @@ public class WhichOneCtrl implements QuestionCtrl {
 
     @Override
     public void postQuestion(Answer answer) {
-        if(player_answer == question.getAnswer()){
+        if(player_answer != null && player_answer == question.getAnswer()){
             int numberOfPoints = calculatePoints(server.getTimeLeft(gameCtrl.getPlayer()));
             gameCtrl.getPlayer().addScore(numberOfPoints);
             server.updatePlayer(gameCtrl.getPlayer());
@@ -195,6 +242,7 @@ public class WhichOneCtrl implements QuestionCtrl {
                 System.out.println(answer.getAnswer().intValue());
                 throw new IllegalStateException();
         }
+        timeReduced = 0;
         new Timer().schedule(new TimerTask() {
             @Override
             public void run() {
@@ -212,6 +260,7 @@ public class WhichOneCtrl implements QuestionCtrl {
         answer1.setSelected(false);
         answer2.setSelected(false);
         answer3.setSelected(false);
+        enableAnswers();
     }
 
     public int calculatePoints(int timeLeft) {
@@ -220,7 +269,25 @@ public class WhichOneCtrl implements QuestionCtrl {
     }
 
     /**
-<<<<<<< client/src/main/java/client/scenes/multiplayer/WhichOneCtrl.java
+     * Block answers for this player (for example when their time runs out)
+     */
+    public void disableAnswers() {
+        answer1.setDisable(true);
+        answer2.setDisable(true);
+        answer3.setDisable(true);
+    }
+
+    /**
+     * Enable answers for this player
+     */
+    public void enableAnswers() {
+        answer1.setDisable(false);
+        answer2.setDisable(false);
+        answer3.setDisable(false);
+    }
+
+    /**
+     * <<<<<<< client/src/main/java/client/scenes/multiplayer/WhichOneCtrl.java
      * Method to select heart emoji
      */
 
@@ -266,7 +333,7 @@ public class WhichOneCtrl implements QuestionCtrl {
      *
      * @param id id of button (and image to increase size
      */
-    public void emojiSelector(String id){
+    public void emojiSelector(String id) {
         System.out.println(id);
         switch (id) {
             case "heart":
@@ -293,7 +360,7 @@ public class WhichOneCtrl implements QuestionCtrl {
      * Method that boldens (enlargens) the emoji clicked, then shrinks it back into position
      *
      * @param emojiButton The emoji button to be enlarged
-     * @param emojiPic The corresponding image associated with that button
+     * @param emojiPic    The corresponding image associated with that button
      */
     public void emojiBold(Button emojiButton, ImageView emojiPic) {
         Platform.runLater(() -> {
@@ -307,7 +374,7 @@ public class WhichOneCtrl implements QuestionCtrl {
             TimerTask timerTask = new TimerTask() {
                 @Override
                 public void run() {
-                    Platform.runLater(()->{
+                    Platform.runLater(() -> {
                         emojiButton.setStyle("-fx-pref-height: 30; -fx-pref-width: 30; -fx-background-color: transparent; ");
                         emojiButton.setLayoutX(emojiButton.getLayoutX() + 10.0);
                         emojiButton.setLayoutY(emojiButton.getLayoutY() + 10.0);
@@ -327,8 +394,10 @@ public class WhichOneCtrl implements QuestionCtrl {
     public void showEmoji(String type) {
         emojiSelector(type);
     }
+
     /**
      * Displays a message when another player disconnects
+     *
      * @param disconnectPlayer
      */
     @Override
@@ -338,8 +407,35 @@ public class WhichOneCtrl implements QuestionCtrl {
         new Timer().schedule(new TimerTask() {
             @Override
             public void run() {
-                Platform.runLater(()-> disconnect.setVisible(false));
+                Platform.runLater(() -> disconnect.setVisible(false));
             }
         }, 5000);
+    }
+
+    /**
+     * Displays a message when another player uses a powerUp
+     *
+     * @param powerUp
+     */
+    public void showPowerUpUsed(PowerUp powerUp) {
+        disconnect.setText(powerUp.getPlayerName() + powerUp.getPrompt());
+        disconnect.setVisible(true);
+        new Timer().schedule(new TimerTask() {
+            @Override
+            public void run() {
+                Platform.runLater(() -> disconnect.setVisible(false));
+            }
+        }, 2000);
+    }
+
+    /**
+     * Get the powerUps available for this player from server
+     * and adjust the powerUp buttons accordingly
+     */
+    public void setPowerUps() {
+        boolean[] powerUps = ((Player) (gameCtrl.getPlayer())).getPowerUps();
+        powerUp1.setDisable(!powerUps[0]);
+        powerUp2.setDisable(!powerUps[1]);
+        powerUp3.setDisable(!powerUps[2]);
     }
 }

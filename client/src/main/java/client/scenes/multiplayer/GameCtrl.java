@@ -3,7 +3,9 @@ package client.scenes.multiplayer;
 import client.scenes.MainCtrl;
 import client.utils.ServerUtils;
 import commons.*;
+import commons.player.Player;
 import commons.player.SimpleUser;
+import commons.powerups.TimePU;
 import communication.RequestToJoin;
 import javafx.application.Platform;
 
@@ -29,7 +31,7 @@ public class GameCtrl {
     }
 
     public void start(String name, String serverName) {
-        player = server.addPlayer(new RequestToJoin(name, serverName, GameInstance.MULTI_PLAYER));
+        player = new Player(server.addPlayer(new RequestToJoin(name, serverName, GameInstance.MULTI_PLAYER)));
         server.initWebsocket();
         subscribeToWebsockets();
         getPlayer().setScore(0);
@@ -55,6 +57,17 @@ public class GameCtrl {
         subscribe("/topic/" + player.getGameInstanceId() + "/emoji", Emoji.class, emoji -> {
             System.out.println(emoji.getType());
             Platform.runLater(() -> mainCtrl.getCurrentQuestionScene().showEmoji(emoji.getType()));
+        });
+
+        subscribe("/topic/" + player.getGameInstanceId() + "/decrease-time", TimePU.class, timePU -> {
+            System.out.println("time reduced by " + timePU.getPercentage() + "%");
+            if (!player.getCookie().equals(timePU.getPlayerCookie())) {
+                Platform.runLater(() -> mainCtrl.getCurrentQuestionScene().reduceTimer(timePU.getPercentage()));
+                Platform.runLater(() -> mainCtrl.getCurrentQuestionScene().showPowerUpUsed(timePU));
+            } else {
+                ((Player) player).usePowerUp(2);
+                Platform.runLater(() -> mainCtrl.getCurrentQuestionScene().setPowerUps());
+            }
         });
 
         subscribe("/topic/" + player.getGameInstanceId() + "/postquestion", Answer.class, answer ->

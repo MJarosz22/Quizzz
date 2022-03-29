@@ -3,6 +3,7 @@ package client.utils;
 import commons.Activity;
 import commons.Answer;
 import commons.Emoji;
+import commons.powerups.*;
 import commons.player.SimpleUser;
 import communication.RequestToJoin;
 import jakarta.ws.rs.NotFoundException;
@@ -275,14 +276,40 @@ public class ServerUtils {
                 .post(Entity.entity(answer, APPLICATION_JSON), Boolean.class);
     }
 
-    public void sendEmoji(SimpleUser player, String emoji){
+    /**
+     * Send a request to reduce time by the given percentage
+     *
+     * @param player     who used the powerUp
+     * @param percentage by which the time should be reduced
+     */
+    public void useTimePowerup(SimpleUser player, int percentage) {
         ClientBuilder
-            .newClient(new ClientConfig())
-            .target(SERVER)
-            .path("api/gameinstance/" + player.getGameInstanceId() + "/emoji")
-            .request(APPLICATION_JSON).cookie("user-id", player.getCookie())
-            .accept(APPLICATION_JSON)
+                .newClient(new ClientConfig())
+                .target(SERVER)
+                .path("api/gameinstance/" + player.getGameInstanceId() + "/decrease-time")
+                .request(APPLICATION_JSON).cookie("user-id", player.getCookie())
+                .accept(APPLICATION_JSON)
+                .post(Entity.entity(new TimePU(player.getCookie(), player.getName(), percentage), APPLICATION_JSON));
+    }
+
+    public void sendEmoji(SimpleUser player, String emoji) {
+        ClientBuilder
+                .newClient(new ClientConfig())
+                .target(SERVER)
+                .path("api/gameinstance/" + player.getGameInstanceId() + "/emoji")
+                .request(APPLICATION_JSON).cookie("user-id", player.getCookie())
+                .accept(APPLICATION_JSON)
                 .post(Entity.entity(new Emoji(emoji), APPLICATION_JSON));
+    }
+
+    public Integer gameInstanceType(int gameInstanceId) {
+        Client client = ClientBuilder.newClient(new ClientConfig());
+        return client
+                .target(SERVER).path("api/gameinstance/ " + gameInstanceId + "/gameInstanceType")
+                .request(APPLICATION_JSON)
+                .accept(APPLICATION_JSON)
+                .get(new GenericType<>() {
+                });
     }
 
     public void disconnectWebsocket() {
@@ -294,7 +321,7 @@ public class ServerUtils {
     }
 
 
-        // ------------------------------------ ADDITIONAL METHODS ------------------------------------ //
+    // ------------------------------------ ADDITIONAL METHODS ------------------------------------ //
 
     /**
      * Additional method that checks whether a player hasn't disconnected from a game, by comparing cookies, which are

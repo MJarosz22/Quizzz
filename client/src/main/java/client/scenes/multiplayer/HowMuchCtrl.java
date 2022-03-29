@@ -5,7 +5,9 @@ import client.utils.ServerUtils;
 import com.google.inject.Inject;
 import commons.Answer;
 import commons.QuestionHowMuch;
+import commons.player.Player;
 import commons.player.SimpleUser;
+import commons.powerups.PowerUp;
 import javafx.application.Platform;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
@@ -35,7 +37,7 @@ public class HowMuchCtrl implements QuestionCtrl {
     private ImageView timerImage, heartPic, cryPic, laughPic, angryPic, glassesPic;
 
     @FXML
-    private Button submit_guess, heart, cry, laugh, angry, glasses;
+    private Button submit_guess, heart, cry, laugh, angry, glasses, powerUp1, powerUp2, powerUp3;
 
     @FXML
     private TextField player_answer;
@@ -52,6 +54,8 @@ public class HowMuchCtrl implements QuestionCtrl {
     private Image timerImageSource;
 
     private TimerTask scheduler;
+
+    private int timeReduced;
 
     private ServerUtils server;
     private MainCtrl mainCtrl;
@@ -76,11 +80,13 @@ public class HowMuchCtrl implements QuestionCtrl {
         disablePopUp(null);
         player_answer.clear();
         this.question = question;
+        this.timeReduced = 0;
         questionTitle.setText(question.getTitle());
         questionCount.setText("Question " + question.getNumber() + "/20");
         option4.setText(question.getActivity().getTitle());
         disconnect.setVisible(false);
         progressBar.setProgress(question.getNumber() / 20.0d + 0.05);
+        setPowerUps();
         score.setText("Your score: " + gameCtrl.getPlayer().getScore());
         answer.setVisible(false);
         points.setVisible(false);
@@ -97,6 +103,8 @@ public class HowMuchCtrl implements QuestionCtrl {
             public void run() {
                 int timeLeft = server.getTimeLeft(gameCtrl.getPlayer());
                 Platform.runLater(() -> {
+                    if (Math.round((timeLeft) / 1000d) <= 2)
+                        powerUp3.setDisable(true);
                     timer.setText(String.valueOf(Math.round(timeLeft / 1000d)));
                 });
             }
@@ -121,6 +129,46 @@ public class HowMuchCtrl implements QuestionCtrl {
         confirmationExit.setStyle("-fx-background-color: #91e4fb; ");
     }
 
+    /**
+     * Use the time reduction powerup
+     *
+     * @param actionEvent click on the powerUp
+     */
+    public void decreaseTime(ActionEvent actionEvent) {
+        server.useTimePowerup(gameCtrl.getPlayer(), 50);
+    }
+
+    /**
+     * reduce the time for this player by the given percentage
+     *
+     * @param percentage
+     */
+    @Override
+    public void reduceTimer(int percentage) {
+        scheduler.cancel();
+        timeReduced += (server.getTimeLeft(gameCtrl.getPlayer()) - timeReduced) * percentage / 100;
+        scheduler = new TimerTask() {
+
+            @Override
+            public void run() {
+                int timeLeft = server.getTimeLeft(gameCtrl.getPlayer());
+                Platform.runLater(() -> {
+                    timer.setText(String.valueOf(Math.max(Math.round((timeLeft - timeReduced) / 1000d), 0)));
+                });
+                if (Math.round((timeLeft) / 1000d) <= 2)
+                    powerUp3.setDisable(true);
+                if (Math.round((timeLeft - timeReduced) / 1000d) <= 0) {
+                    Platform.runLater(() -> {
+                        disableAnswers();
+                    });
+                }
+
+            }
+        };
+        new Timer().scheduleAtFixedRate(scheduler, 0, 100);
+    }
+
+
     public void submitAnswer(ActionEvent actionEvent) {
         try {
             gameCtrl.submitAnswer(new Answer(Long.valueOf(player_answer.getText())));
@@ -134,6 +182,7 @@ public class HowMuchCtrl implements QuestionCtrl {
     @Override
     public void postQuestion(Answer ans) {
         submit_guess.setDisable(true); // If an answer was not submitted already.
+        timeReduced = 0;
         try {
             CharSequence input = player_answer.getCharacters();
             long number = Long.parseLong(input.toString());
@@ -216,7 +265,22 @@ public class HowMuchCtrl implements QuestionCtrl {
     public void resetUI() {
         correct_guess.setVisible(false);
         player_answer.clear();
+        enableAnswers();
 //        timer.setText("12000");
+    }
+
+    /**
+     * Block answers for this player (for example when their time runs out)
+     */
+    public void disableAnswers() {
+        this.submit_guess.setDisable(true);
+    }
+
+    /**
+     * Enable answers for this player
+     */
+    public void enableAnswers() {
+        this.submit_guess.setDisable(false);
     }
 
     /**
@@ -343,5 +407,32 @@ public class HowMuchCtrl implements QuestionCtrl {
                 Platform.runLater(() -> disconnect.setVisible(false));
             }
         }, 5000);
+    }
+
+    /**
+     * Displays a message when another player uses a powerUp
+     *
+     * @param powerUp
+     */
+    public void showPowerUpUsed(PowerUp powerUp) {
+        disconnect.setText(powerUp.getPlayerName() + powerUp.getPrompt());
+        disconnect.setVisible(true);
+        new Timer().schedule(new TimerTask() {
+            @Override
+            public void run() {
+                Platform.runLater(() -> disconnect.setVisible(false));
+            }
+        }, 2000);
+    }
+
+    /**
+     * Get the powerUps available for this player from server
+     * and adjust the powerUp buttons accordingly
+     */
+    public void setPowerUps() {
+        boolean[] powerUps = ((Player) (gameCtrl.getPlayer())).getPowerUps();
+        powerUp1.setDisable(!powerUps[0]);
+        powerUp2.setDisable(!powerUps[1]);
+        powerUp3.setDisable(!powerUps[2]);
     }
 }

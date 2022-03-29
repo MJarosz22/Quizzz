@@ -3,6 +3,7 @@ package server.api;
 import commons.*;
 import commons.player.Player;
 import commons.player.SimpleUser;
+import commons.powerups.TimePU;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.http.HttpStatus;
@@ -114,7 +115,6 @@ public class GameInstanceController {
     }
 
 
-
     @GetMapping("/{gameInstanceId}/correctanswer")
     public ResponseEntity<Long> getCorrectAnswer(@PathVariable int gameInstanceId,
                                                  @CookieValue(name = "user-id", defaultValue = "null") String cookie) {
@@ -140,7 +140,7 @@ public class GameInstanceController {
     @PostMapping("/{gameInstanceId}/emoji")
     public ResponseEntity<Boolean> sendEmoji(@PathVariable int gameInstanceId,
                                              @CookieValue(name = "user-id", defaultValue = "null") String cookie,
-                                             @RequestBody Emoji emoji){
+                                             @RequestBody Emoji emoji) {
         if (gameInstances.get(gameInstanceId).getState().equals(GameState.STARTING)) return ResponseEntity.ok(true);
         Player reqPlayer = getPlayerFromGameInstance(gameInstanceId, cookie);
         if (reqPlayer == null) return ResponseEntity.status(HttpStatus.FORBIDDEN).build();
@@ -153,6 +153,33 @@ public class GameInstanceController {
     public ResponseEntity<String> getServerName(@PathVariable int gameInstanceId) {
         if (gameInstanceId < 0 || gameInstanceId >= gameInstances.size()) return ResponseEntity.badRequest().build();
         return ResponseEntity.ok(gameInstances.get(gameInstanceId).getServerName());
+    }
+
+    /**
+     * Check if the game is in the right state and make a call to reduce time for players
+     *
+     * @param gameInstanceId
+     * @param cookie
+     * @param timePU
+     * @return true if the game is in the right state, and the call was made successfully
+     */
+    @PostMapping("/{gameInstanceId}/decrease-time")
+    public ResponseEntity<Boolean> decreaseTime(@PathVariable int gameInstanceId,
+                                                @CookieValue(name = "user-id", defaultValue = "null") String cookie,
+                                                @RequestBody TimePU timePU) {
+        if (!gameInstances.get(gameInstanceId).getState().equals(GameState.INQUESTION))
+            return ResponseEntity.status(HttpStatus.FORBIDDEN).build();
+        Player reqPlayer = getPlayerFromGameInstance(gameInstanceId, cookie);
+        if (reqPlayer == null) return ResponseEntity.status(HttpStatus.FORBIDDEN).build();
+        gameInstances.get(gameInstanceId).decreaseTime(timePU);
+        logger.info("Time decreased by " + timePU.getPercentage() + "%");
+        return ResponseEntity.ok(true);
+    }
+
+    @GetMapping("/{gameInstanceId}/gameInstanceType")
+    public ResponseEntity<Integer> gameInstanceType(@PathVariable int gameInstanceId) {
+        if (gameInstanceId < 0 || gameInstanceId >= gameInstances.size()) return ResponseEntity.badRequest().build();
+        return ResponseEntity.ok(gameInstances.get(gameInstanceId).getType());
     }
 
     /**
