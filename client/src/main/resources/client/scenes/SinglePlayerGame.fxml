@@ -32,7 +32,7 @@
                 <Font name="Courier New Bold Italic" size="24.0" />
             </font>
         </Text>
-        <AnchorPane fx:id="timerImage" layoutX="434.0" layoutY="97.0" prefHeight="38.0" prefWidth="38.0" />
+      <ImageView fx:id="timerImage" fitHeight="38.0" fitWidth="38.0" layoutX="434.0" layoutY="97.0" pickOnBounds="true" preserveRatio="true" />
         <Text fx:id="timer" layoutX="480.0" layoutY="124.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Timer">
             <font>
                 <Font size="20.0" />

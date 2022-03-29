@@ -11,7 +11,6 @@ import javafx.fxml.FXML;
 import javafx.scene.control.*;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
-import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.Pane;
 import javafx.scene.text.Text;
 
@@ -46,7 +45,7 @@ public class SinglePlayerGameCtrl {
     private Text questionTitle, timer, score, points, answer, option4, correct_guess, questionCount;
 
     @FXML
-    private AnchorPane timerImage;
+    private ImageView timerImage;
 
     @FXML
     private Button option1Button, option2Button, option3Button, correct_answer, submit_guess;
@@ -67,6 +66,8 @@ public class SinglePlayerGameCtrl {
     private Pane confirmationExit;
 
     private static boolean gameIsOver;
+
+    private Image timerImageSource;
 
 
     @Inject
@@ -541,9 +542,10 @@ public class SinglePlayerGameCtrl {
      *
      * @param timerImage AnchorPane object that is meant to display a timer image.
      */
-    public void setTimerImage(AnchorPane timerImage) {
-        URL url = SinglePlayerGameCtrl.class.getResource(this.timerPath);
-        timerImage.setStyle("-fx-background-image: url(" + url + ");");
+    public void setTimerImage(ImageView timerImage) {
+        URL absoluteTimerPath = SinglePlayerGameCtrl.class.getResource(this.timerPath);
+        timerImageSource = new Image(absoluteTimerPath.toString());
+        timerImage.setImage(timerImageSource);
     }
 
 
