@@ -289,6 +289,8 @@ public class MoreExpensiveCtrl implements QuestionCtrl {
         option3Button.setDisable(true);
     }
 
+
+
     /**
      * Enable answers for this player
      */
@@ -407,6 +409,50 @@ public class MoreExpensiveCtrl implements QuestionCtrl {
     @Override
     public void showEmoji(String type, SimpleUser player) {
         emojiSelector(type, player);
+    }
+
+    /**
+     * Displays a message when another player disconnects
+     *
+     * @param disconnectPlayer
+     */
+    @Override
+    public void showDisconnect(SimpleUser disconnectPlayer) {
+        disconnect.setText(disconnectPlayer.getName() + " disconnected");
+        disconnect.setVisible(true);
+        new Timer().schedule(new TimerTask() {
+            @Override
+            public void run() {
+                Platform.runLater(() -> disconnect.setVisible(false));
+            }
+        }, 5000);
+    }
+
+    /**
+     * Displays a message when another player uses a powerUp
+     *
+     * @param powerUp
+     */
+    public void showPowerUpUsed(PowerUp powerUp) {
+        disconnect.setText(powerUp.getPlayerName() + powerUp.getPrompt());
+        disconnect.setVisible(true);
+        new Timer().schedule(new TimerTask() {
+            @Override
+            public void run() {
+                Platform.runLater(() -> disconnect.setVisible(false));
+            }
+        }, 2000);
+    }
+
+    /**
+     * Get the powerUps available for this player from server
+     * and adjust the powerUp buttons accordingly
+     */
+    public void setPowerUps() {
+        boolean[] powerUps = ((Player) (gameCtrl.getPlayer())).getPowerUps();
+        powerUp1.setDisable(!powerUps[0]);
+        powerUp2.setDisable(!powerUps[1]);
+        powerUp3.setDisable(!powerUps[2]);
     }
 
     /**
