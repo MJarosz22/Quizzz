@@ -16,6 +16,13 @@ public class TimePUTest {
         p2 = new TimePU("cookie", "player", 50);
     }
 
+
+    @Test
+    public void emptyConstructorTest() {
+        TimePU p3 = new TimePU();
+        assertNotNull(p3);
+    }
+
     @Test
     public void constructorTest() {
         assertNotNull(p1);
