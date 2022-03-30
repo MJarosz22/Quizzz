@@ -62,8 +62,8 @@ public class MPGameOverCtrl {
             play_again.setVisible(false);
             game_over.setVisible(false);
         } else {
-            serverName = server.getServerName(player.getGameInstanceId());
-            playerName = player.getName();
+            serverName = server.getServerName(gameCtrl.getPlayer().getGameInstanceId());
+            playerName = gameCtrl.getPlayer().getName();
             gameCtrl.disconnect();
             go_lobby.setDisable(false);
             go_lobby.setVisible(true);
