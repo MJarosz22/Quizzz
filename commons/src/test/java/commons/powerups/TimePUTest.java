@@ -17,6 +17,12 @@ public class TimePUTest {
     }
 
     @Test
+    public void constructorTest() {
+        assertNotNull(p1);
+    }
+
+
+    @Test
     public void getPercentageTest() {
         assertEquals(50, p1.getPercentage());
     }
@@ -41,5 +47,17 @@ public class TimePUTest {
     public void notEqualsHashCode() {
         p1.setPrompt("otherPrompt");
         assertNotEquals(p1.hashCode(), p2.hashCode());
+    }
+
+    @Test
+    public void equalsSameTest() {
+        TimePU p3 = p1;
+        assertTrue(p1.equals(p3));
+    }
+
+    @Test
+    public void equalsNullTest() {
+        TimePU p3 = null;
+        assertFalse(p1.equals(p3));
     }
 }

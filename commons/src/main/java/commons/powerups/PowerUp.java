@@ -32,13 +32,7 @@ public abstract class PowerUp {
     }
 
     @Override
-    public String toString() {
-        return "PowerUp{" +
-                "playerCookie='" + playerCookie + '\'' +
-                ", prompt='" + prompt + '\'' +
-                ", playerName='" + playerName + '\'' +
-                '}';
-    }
+    public abstract String toString() ;
 
     public String getPrompt() {
         return this.prompt;

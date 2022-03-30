@@ -17,6 +17,12 @@ public class AnswerPUTest {
     }
 
     @Test
+    public void emptyConstructorTest() {
+        AnswerPU p3 = new AnswerPU();
+        assertNotNull(p3);
+    }
+
+    @Test
     public void equalsTest() {
         assertTrue(p1.equals(p2));
     }
@@ -30,5 +36,13 @@ public class AnswerPUTest {
     public void notEqualsHashCode() {
         p1.setPrompt("otherPrompt");
         assertNotEquals(p1.hashCode(), p2.hashCode());
+    }
+
+    @Test
+    public void toStringTest() {
+        String s = p1.toString();
+        assertTrue(s.contains("playerCookie="));
+        assertTrue(s.contains("prompt="));
+        assertTrue(s.contains("playerName="));
     }
 }
