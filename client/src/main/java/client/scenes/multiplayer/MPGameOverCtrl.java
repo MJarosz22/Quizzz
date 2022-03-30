@@ -62,8 +62,8 @@ public class MPGameOverCtrl {
             play_again.setVisible(false);
             game_over.setVisible(false);
         } else {
-            serverName = server.getServerName(gameCtrl.getPlayer().getGameInstanceId());
-            playerName = gameCtrl.getPlayer().getName();
+            serverName = server.getServerName(player.getGameInstanceId());
+            playerName = player.getName();
             gameCtrl.disconnect();
             go_lobby.setDisable(false);
             go_lobby.setVisible(true);
@@ -85,6 +85,7 @@ public class MPGameOverCtrl {
         List<String> playerNames = server.connectedPlayersOnServer(serverName);
         if (!listContains(playerNames, playerName)) {
             gameCtrl.start(playerName, serverName);
+            mainCtrl.getLobbyCtrl().init();
             mainCtrl.showLobby();
         } else {
             Alert alert = new Alert(Alert.AlertType.ERROR, "This name already exists. Try a different one");
