@@ -32,7 +32,7 @@ public abstract class PowerUp {
     }
 
     @Override
-    public abstract String toString() ;
+    public abstract String toString();
 
     public String getPrompt() {
         return this.prompt;
