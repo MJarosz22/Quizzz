@@ -22,6 +22,7 @@ import javafx.scene.text.Text;
 import javax.inject.Inject;
 import java.io.FileNotFoundException;
 import java.net.URL;
+import java.util.Random;
 import java.util.Timer;
 import java.util.TimerTask;
 
@@ -56,13 +57,15 @@ public class InsteadOfCtrl implements QuestionCtrl {
 
     private TimerTask scheduler;
 
-    private QuestionInsteadOf question;
+    private int timeReduced;
+    private boolean doublePointsPUUsed;
+
     private final ServerUtils server;
     private final MainCtrl mainCtrl;
     private final GameCtrl gameCtrl;
-    private int timeReduced;
 
     private String timerPath = "/images/timer.png";
+    private QuestionInsteadOf question;
 
     private Long player_answer;
 
@@ -71,6 +74,7 @@ public class InsteadOfCtrl implements QuestionCtrl {
         this.server = server;
         this.mainCtrl = mainCtrl;
         this.gameCtrl = gameCtrl;
+        this.doublePointsPUUsed = false;
         try {
             URL absoluteTimerPath = InsteadOfCtrl.class.getResource(this.timerPath);
             timerImageSource = new Image(absoluteTimerPath.toString());
@@ -128,6 +132,7 @@ public class InsteadOfCtrl implements QuestionCtrl {
         answer1.setDisable(true);
         answer2.setDisable(true);
         answer3.setDisable(true);
+        powerUp1.setDisable(true);
         gameCtrl.submitAnswer(new Answer((long) 3));
         player_answer = question.getActivities()[2].getConsumption_in_wh();
     }
@@ -136,16 +141,18 @@ public class InsteadOfCtrl implements QuestionCtrl {
         answer1.setDisable(true);
         answer2.setDisable(true);
         answer3.setDisable(true);
+        powerUp1.setDisable(true);
         gameCtrl.submitAnswer(new Answer((long) 2));
-        player_answer = question.getActivities()[2].getConsumption_in_wh();
+        player_answer = question.getActivities()[1].getConsumption_in_wh();
     }
 
     public void answer1Selected(ActionEvent actionEvent) {
         answer1.setDisable(true);
         answer2.setDisable(true);
         answer3.setDisable(true);
+        powerUp1.setDisable(true);
         gameCtrl.submitAnswer(new Answer((long) 1));
-        player_answer = question.getActivities()[2].getConsumption_in_wh();
+        player_answer = question.getActivities()[0].getConsumption_in_wh();
     }
 
     public void disablePopUp(ActionEvent actionEvent) {
@@ -160,6 +167,46 @@ public class InsteadOfCtrl implements QuestionCtrl {
      */
     public void decreaseTime(ActionEvent actionEvent) {
         server.useTimePowerup(gameCtrl.getPlayer(), 50);
+    }
+
+    /**
+     * Use the double points powerup
+     *
+     * @param actionEvent click on the powerUp
+     */
+    public void doublePoints(ActionEvent actionEvent) {
+        doublePointsPUUsed = true;
+        server.usePointsPowerup(gameCtrl.getPlayer());
+    }
+
+    /**
+     * Use the remove incorrect answer powerup
+     *
+     * @param actionEvent click on the powerUp
+     */
+    public void removeAnswer(ActionEvent actionEvent) {
+        Random random = new Random();
+        int randomAnswer = random.nextInt(3)+1;
+        while(randomAnswer == question.getCorrectAnswer() || (randomAnswer != 1 && randomAnswer != 2 && randomAnswer != 3)) {
+            randomAnswer = random.nextInt(3)+1;
+        }
+        switch (randomAnswer) {
+            case 1:
+                answer1.setDisable(true);
+                answer1.setStyle("-fx-background-color: red");
+                break;
+            case 2:
+                answer2.setDisable(true);
+                answer2.setStyle("-fx-background-color: red");
+                break;
+            case 3:
+                answer3.setDisable(true);
+                answer3.setStyle("-fx-background-color: red");
+                break;
+            default:
+                throw new IllegalStateException();
+        }
+        server.useAnswerPowerup(gameCtrl.getPlayer());
     }
 
     /**
@@ -213,10 +260,11 @@ public class InsteadOfCtrl implements QuestionCtrl {
     public void postQuestion(Answer answer) {
         if (player_answer != null && player_answer == question.getAnswer()) {
             int numberOfPoints = calculatePoints(server.getTimeLeft(gameCtrl.getPlayer()));
+            if(doublePointsPUUsed) numberOfPoints = numberOfPoints * 2;
             gameCtrl.getPlayer().addScore(numberOfPoints);
             server.updatePlayer(gameCtrl.getPlayer());
             score.setText("Your score: " + gameCtrl.getPlayer().getScore());
-            points.setText("+" + numberOfPoints + "points");
+            points.setText("+" + numberOfPoints + " points");
             points.setVisible(true);
             this.answer.setText("Correct answer");
             this.answer.setVisible(true);
@@ -231,6 +279,7 @@ public class InsteadOfCtrl implements QuestionCtrl {
                 answer1.setDisable(true);
                 answer2.setDisable(true);
                 answer3.setDisable(true);
+                powerUp2.setDisable(true);
                 answer1.setStyle("-fx-background-color: green");
                 answer2.setStyle("-fx-background-color: red");
                 answer3.setStyle("-fx-background-color: red");
@@ -239,6 +288,7 @@ public class InsteadOfCtrl implements QuestionCtrl {
                 answer1.setDisable(true);
                 answer2.setDisable(true);
                 answer3.setDisable(true);
+                powerUp2.setDisable(true);
                 answer1.setStyle("-fx-background-color: red");
                 answer2.setStyle("-fx-background-color: green");
                 answer3.setStyle("-fx-background-color: red");
@@ -247,6 +297,7 @@ public class InsteadOfCtrl implements QuestionCtrl {
                 answer1.setDisable(true);
                 answer2.setDisable(true);
                 answer3.setDisable(true);
+                powerUp2.setDisable(true);
                 answer1.setStyle("-fx-background-color: red");
                 answer2.setStyle("-fx-background-color: red");
                 answer3.setStyle("-fx-background-color: green");
@@ -256,6 +307,7 @@ public class InsteadOfCtrl implements QuestionCtrl {
                 throw new IllegalStateException();
         }
         timeReduced = 0;
+        doublePointsPUUsed = false;
         new Timer().schedule(new TimerTask() {
             @Override
             public void run() {

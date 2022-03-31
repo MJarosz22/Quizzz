@@ -3,6 +3,8 @@ package server.api;
 import commons.*;
 import commons.player.Player;
 import commons.player.SimpleUser;
+import commons.powerups.AnswerPU;
+import commons.powerups.PointsPU;
 import commons.powerups.TimePU;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -167,6 +169,48 @@ public class GameInstanceController {
         if (reqPlayer == null) return ResponseEntity.status(HttpStatus.FORBIDDEN).build();
         gameInstances.get(gameInstanceId).decreaseTime(timePU);
         logger.info("Time decreased by " + timePU.getPercentage() + "%");
+        return ResponseEntity.ok(true);
+    }
+
+    /**
+     * Check if the game is in the right state and make a call to notify other players that a player used this powerup
+     *
+     * @param gameInstanceId
+     * @param cookie
+     * @param answerPU
+     * @return true if the game is in the right state, and the call was made successfully
+     */
+    @PostMapping("/{gameInstanceId}/remove-incorrect-answer")
+    public ResponseEntity<Boolean> removeAnswer(@PathVariable int gameInstanceId,
+                                                @CookieValue(name = "user-id", defaultValue = "null") String cookie,
+                                                @RequestBody AnswerPU answerPU) {
+        if (!gameInstances.get(gameInstanceId).getState().equals(GameState.INQUESTION))
+            return ResponseEntity.status(HttpStatus.FORBIDDEN).build();
+        Player reqPlayer = getPlayerFromGameInstance(gameInstanceId, cookie);
+        if (reqPlayer == null) return ResponseEntity.status(HttpStatus.FORBIDDEN).build();
+        gameInstances.get(gameInstanceId).removeAnswer(answerPU);
+        logger.info(reqPlayer.getName() + " removed an incorrect answer");
+        return ResponseEntity.ok(true);
+    }
+
+    /**
+     * Check if the game is in the right state and make a call to notify other players that a player used this powerup
+     *
+     * @param gameInstanceId
+     * @param cookie
+     * @param pointsPU
+     * @return true if the game is in the right state, and the call was made successfully
+     */
+    @PostMapping("/{gameInstanceId}/double-points")
+    public ResponseEntity<Boolean> doublePoints(@PathVariable int gameInstanceId,
+                                                @CookieValue(name = "user-id", defaultValue = "null") String cookie,
+                                                @RequestBody PointsPU pointsPU) {
+        if (!gameInstances.get(gameInstanceId).getState().equals(GameState.INQUESTION))
+            return ResponseEntity.status(HttpStatus.FORBIDDEN).build();
+        Player reqPlayer = getPlayerFromGameInstance(gameInstanceId, cookie);
+        if (reqPlayer == null) return ResponseEntity.status(HttpStatus.FORBIDDEN).build();
+        gameInstances.get(gameInstanceId).doublePoints(pointsPU);
+        logger.info(reqPlayer.getName() + " doubled their points.");
         return ResponseEntity.ok(true);
     }
 
