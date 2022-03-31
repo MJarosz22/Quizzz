@@ -21,6 +21,7 @@ import javafx.scene.text.Text;
 import javax.inject.Inject;
 import java.io.FileNotFoundException;
 import java.util.Random;
+import java.net.URL;
 import java.util.Timer;
 import java.util.TimerTask;
 
@@ -184,9 +185,9 @@ public class MoreExpensiveCtrl implements QuestionCtrl {
      */
     public void removeAnswer(ActionEvent actionEvent) {
         Random random = new Random();
-        int randomAnswer = random.nextInt(3)+1;
-        while(randomAnswer == question.getCorrectAnswer() || (randomAnswer != 1 && randomAnswer != 2 && randomAnswer != 3)) {
-            randomAnswer = random.nextInt(3)+1;
+        int randomAnswer = random.nextInt(3) + 1;
+        while (randomAnswer == question.getCorrectAnswer() || (randomAnswer != 1 && randomAnswer != 2 && randomAnswer != 3)) {
+            randomAnswer = random.nextInt(3) + 1;
         }
         switch (randomAnswer) {
             case 1:
@@ -253,7 +254,7 @@ public class MoreExpensiveCtrl implements QuestionCtrl {
     public void postQuestion(Answer answer) {
         if (player_answer != null && player_answer == question.getAnswer()) {
             int numberOfPoints = calculatePoints(server.getTimeLeft(gameCtrl.getPlayer()));
-            if(doublePointsPUUsed) numberOfPoints = numberOfPoints * 2;
+            if (doublePointsPUUsed) numberOfPoints = numberOfPoints * 2;
             gameCtrl.getPlayer().addScore(numberOfPoints);
             server.updatePlayer(gameCtrl.getPlayer());
             score.setText("Your score: " + gameCtrl.getPlayer().getScore());
@@ -457,9 +458,9 @@ public class MoreExpensiveCtrl implements QuestionCtrl {
 
     @Override
     public void showEmoji(String type, SimpleUser player) {
-        try{
+        try {
             emojiSelector(type, player);
-        } catch(Exception e) {
+        } catch (Exception e) {
             e.printStackTrace();
         }
     }
