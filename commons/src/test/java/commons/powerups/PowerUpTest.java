@@ -5,7 +5,6 @@ import org.junit.jupiter.api.Test;
 
 import static org.junit.jupiter.api.Assertions.*;
 
-//TODO test other powerups when implemented
 public class PowerUpTest {
 
     private PowerUp p1;
@@ -61,5 +60,18 @@ public class PowerUpTest {
     public void notEqualsHashCode() {
         p1.setPrompt("otherPrompt");
         assertNotEquals(p1.hashCode(), p2.hashCode());
+    }
+
+    @Test
+    public void getNameTest() {
+        p2 = new TimePU("cookie", "Marcin", 50);
+        assertEquals("Marcin", p2.getPlayerName());
+    }
+
+    @Test
+    public void toStringTest() {
+        p2 = new TimePU("cookie", "nameTest", 50);
+        String s = p2.toString();
+        assertTrue(s.contains("TimePU"));
     }
 }

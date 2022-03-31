@@ -21,6 +21,7 @@ import javafx.scene.text.Text;
 import javax.inject.Inject;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
+import java.util.Random;
 import java.util.Timer;
 import java.util.TimerTask;
 
@@ -54,6 +55,7 @@ public class MoreExpensiveCtrl implements QuestionCtrl {
     private TimerTask scheduler;
 
     private int timeReduced;
+    private boolean doublePointsPUUsed;
 
     private final MainCtrl mainCtrl;
     private final GameCtrl gameCtrl;
@@ -68,6 +70,7 @@ public class MoreExpensiveCtrl implements QuestionCtrl {
         this.mainCtrl = mainCtrl;
         this.gameCtrl = gameCtrl;
         this.server = server;
+        this.doublePointsPUUsed = false;
         try {
             timerImageSource = new Image(new FileInputStream("client/src/main/resources/images/timer.png"));
         } catch (FileNotFoundException e) {
@@ -123,6 +126,7 @@ public class MoreExpensiveCtrl implements QuestionCtrl {
         option1Button.setDisable(true);
         option2Button.setDisable(true);
         option3Button.setDisable(true);
+        powerUp1.setDisable(true);
         gameCtrl.submitAnswer(new Answer((long) 3));
         player_answer = question.getActivities()[2].getConsumption_in_wh();
     }
@@ -132,6 +136,7 @@ public class MoreExpensiveCtrl implements QuestionCtrl {
         option1Button.setDisable(true);
         option2Button.setDisable(true);
         option3Button.setDisable(true);
+        powerUp1.setDisable(true);
         gameCtrl.submitAnswer(new Answer((long) 2));
         player_answer = question.getActivities()[1].getConsumption_in_wh();
     }
@@ -141,6 +146,7 @@ public class MoreExpensiveCtrl implements QuestionCtrl {
         option1Button.setDisable(true);
         option2Button.setDisable(true);
         option3Button.setDisable(true);
+        powerUp1.setDisable(true);
         gameCtrl.submitAnswer(new Answer((long) 1));
         player_answer = question.getActivities()[0].getConsumption_in_wh();
     }
@@ -157,6 +163,46 @@ public class MoreExpensiveCtrl implements QuestionCtrl {
      */
     public void decreaseTime(ActionEvent actionEvent) {
         server.useTimePowerup(gameCtrl.getPlayer(), 50);
+    }
+
+    /**
+     * Use the double points powerup
+     *
+     * @param actionEvent click on the powerUp
+     */
+    public void doublePoints(ActionEvent actionEvent) {
+        doublePointsPUUsed = true;
+        server.usePointsPowerup(gameCtrl.getPlayer());
+    }
+
+    /**
+     * Use the remove incorrect answer powerup
+     *
+     * @param actionEvent click on the powerUp
+     */
+    public void removeAnswer(ActionEvent actionEvent) {
+        Random random = new Random();
+        int randomAnswer = random.nextInt(3)+1;
+        while(randomAnswer == question.getCorrectAnswer() || (randomAnswer != 1 && randomAnswer != 2 && randomAnswer != 3)) {
+            randomAnswer = random.nextInt(3)+1;
+        }
+        switch (randomAnswer) {
+            case 1:
+                option1Button.setDisable(true);
+                option1Button.setStyle("-fx-background-color: red");
+                break;
+            case 2:
+                option2Button.setDisable(true);
+                option2Button.setStyle("-fx-background-color: red");
+                break;
+            case 3:
+                option3Button.setDisable(true);
+                option3Button.setStyle("-fx-background-color: red");
+                break;
+            default:
+                throw new IllegalStateException();
+        }
+        server.useAnswerPowerup(gameCtrl.getPlayer());
     }
 
     /**
@@ -205,10 +251,11 @@ public class MoreExpensiveCtrl implements QuestionCtrl {
     public void postQuestion(Answer answer){
         if(player_answer != null && player_answer == question.getAnswer()){
             int numberOfPoints = calculatePoints(server.getTimeLeft(gameCtrl.getPlayer()));
+            if(doublePointsPUUsed) numberOfPoints = numberOfPoints * 2;
             gameCtrl.getPlayer().addScore(numberOfPoints);
             server.updatePlayer(gameCtrl.getPlayer());
             score.setText("Your score: " + gameCtrl.getPlayer().getScore());
-            points.setText("+" + numberOfPoints + "points");
+            points.setText("+" + numberOfPoints + " points");
             points.setVisible(true);
             this.answer.setText("Correct answer");
             this.answer.setVisible(true);
@@ -226,6 +273,7 @@ public class MoreExpensiveCtrl implements QuestionCtrl {
                 option1Button.setBorder(null);
                 option2Button.setBorder(null);
                 option3Button.setBorder(null);
+                powerUp2.setDisable(true);
                 option1Button.setStyle("-fx-background-color: green");
                 option2Button.setStyle("-fx-background-color: red");
                 option3Button.setStyle("-fx-background-color: red");
@@ -237,6 +285,7 @@ public class MoreExpensiveCtrl implements QuestionCtrl {
                 option1Button.setBorder(null);
                 option2Button.setBorder(null);
                 option3Button.setBorder(null);
+                powerUp2.setDisable(true);
                 option1Button.setStyle("-fx-background-color: red");
                 option2Button.setStyle("-fx-background-color: green");
                 option3Button.setStyle("-fx-background-color: red");
@@ -248,6 +297,7 @@ public class MoreExpensiveCtrl implements QuestionCtrl {
                 option1Button.setBorder(null);
                 option2Button.setBorder(null);
                 option3Button.setBorder(null);
+                powerUp2.setDisable(true);
                 option1Button.setStyle("-fx-background-color: red");
                 option2Button.setStyle("-fx-background-color: red");
                 option3Button.setStyle("-fx-background-color: green");
@@ -256,6 +306,7 @@ public class MoreExpensiveCtrl implements QuestionCtrl {
                 throw new IllegalStateException();
         }
         timeReduced = 0;
+        doublePointsPUUsed = false;
         new Timer().schedule(new TimerTask() {
             @Override
             public void run() {
