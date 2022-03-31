@@ -56,10 +56,9 @@ public class GameController {
         this.players = new ArrayList<>();
         this.serverNames = new HashMap<>();
 
-        //hardcoded servers; perhaps we could create API for the serverNames
-        this.createNewMultiplayerLobby("default");
-        this.createNewMultiplayerLobby("first");
-        this.createNewMultiplayerLobby("second");
+        addServer("default");
+        addServer("first");
+        addServer("second");
 
         // ASSUMPTION: we consider the current last multiplayerGameInstanceID to be 0 (the one matching "default" serverName)
         currentMPGIId = 0;
@@ -120,6 +119,13 @@ public class GameController {
         return ResponseEntity.ok().header(HttpHeaders.SET_COOKIE, tokenCookie.toString()).body(savedPlayer);
     }
 
+    /**
+     * Method that returns InputStream with all the image files
+     *
+     * @param activityFolder folder with the activities
+     * @param activityFile   the wanted file
+     * @return InputStream with the file
+     */
     @GetMapping(value = "/activities/{activityFolder}/{activityFile}",
             produces = "image/jpg")
     public ResponseEntity<InputStreamResource> getImage(@PathVariable String activityFolder, @PathVariable String activityFile) {
@@ -223,6 +229,15 @@ public class GameController {
 
     }
 
+    //    ---------------------------------------------------------------------------
+    //    ----------------------------     SERVERS     ------------------------------
+    //    ---------------------------------------------------------------------------
+
+    /**
+     * Method that returns a list of available servers
+     *
+     * @return List of all the servers with gameState = INLOBBY
+     */
     @GetMapping("/available-servers")
     public ResponseEntity<List<String>> getServers() {
         List<String> res = new ArrayList<>();
@@ -233,6 +248,22 @@ public class GameController {
         return ResponseEntity.ok(res);
     }
 
+    /**
+     * Method that returns a List of all servers
+     *
+     * @return List of all servers
+     */
+    @GetMapping("/servers")
+    public ResponseEntity<Set<String>> getAllServers() {
+        return ResponseEntity.ok(serverNames.keySet());
+    }
+
+    /**
+     * Method that returns a List of all players connected to a given server.
+     *
+     * @param serverName name of the server
+     * @return List of all players connected to a given server
+     */
     @GetMapping("/{serverName}/connectedPlayersOnServer")
     public ResponseEntity<List<String>> connectedPlayersOnServer(@PathVariable String serverName) {
         if (serverName == null) return ResponseEntity.badRequest().build();
@@ -248,9 +279,61 @@ public class GameController {
         List<String> playerNames = lastGIS.getPlayers().stream().map(Player::getName).collect(Collectors.toList());
         return ResponseEntity.ok(playerNames);
     }
+
+    /**
+     * Method that adds a new server to the list of all servers
+     *
+     * @param serverName
+     * @return serverName if added successfully, if the server is already there
+     */
+    @PostMapping("/servers")
+    public ResponseEntity<String> addServer(@RequestBody String serverName) {
+        if (this.serverNames.containsKey(serverName))
+            return ResponseEntity.badRequest().build();
+        createNewMultiplayerLobby(serverName);
+        return ResponseEntity.ok(serverName);
+    }
+
+    /**
+     * Method that changes the name of a given server
+     *
+     * @param oldServerName the server to rename
+     * @param newServerName new server name
+     * @return newServerName if renamed succesfully, bad request if oldServerName not found or if the names are the same
+     */
+    @PutMapping("/{oldServerName}/updateServer")
+    public ResponseEntity<String> updateServer(@PathVariable String oldServerName, @RequestBody String newServerName) {
+        if (!this.serverNames.containsKey(oldServerName) || oldServerName.equals(newServerName))
+            return ResponseEntity.badRequest().build();
+        serverNames.put(newServerName, serverNames.get(oldServerName));
+        serverNames.remove(oldServerName);
+        return ResponseEntity.ok(newServerName);
+    }
+
+    /**
+     * Method that deletes a server from the server list
+     *
+     * @param serverName to remove
+     * @return removed server name, bad request if not found
+     */
+    @DeleteMapping("/{serverName}/removeServer")
+    public ResponseEntity<String> removeServer(@PathVariable String serverName) {
+        if (!this.serverNames.containsKey(serverName))
+            return ResponseEntity.notFound().build();
+        serverNames.remove(serverName);
+        return ResponseEntity.ok().build();
+
+    }
+
+
     // ------------------------------------ ADDITIONAL METHODS ------------------------------------------------------
 
-
+    /**
+     * Creates a new multiplayer gameInstanceServer, with the next available Id, this class as a controller,
+     * and assigns it to a given, putting it in a map as an serverName - Id pair.
+     *
+     * @param serverName Server to create the lobby on
+     */
     public void createNewMultiplayerLobby(String serverName) {
         GameInstanceServer newGameInstance = new GameInstanceServer(gameInstances.size(), GameInstance.MULTI_PLAYER, this, msgs, serverName);
         newGameInstance.setState(GameState.INLOBBY);
@@ -259,18 +342,38 @@ public class GameController {
         serverNames.put(serverName, currentMPGIId);
     }
 
+    /**
+     * A getter for all the gameInstances
+     *
+     * @return a list of all gameInstances
+     */
     public List<GameInstanceServer> getGameInstances() {
         return gameInstances;
     }
 
+    /**
+     * A getter for all the players
+     *
+     * @return A list of all players
+     */
     public List<SimpleUser> getPlayers() {
         return players;
     }
 
+    /**
+     * A getter for the map of serverNames and gameInstance Ids
+     *
+     * @return A Map of all serverName - gameInstanceID pairs
+     */
     public Map<String, Integer> getServerNames() {
         return serverNames;
     }
 
+    /**
+     * A getter for ID of the current MP gameInstance
+     *
+     * @return An integer representing current MP gameInstance ID
+     */
     public int getCurrentMPGIId() {
         return currentMPGIId;
     }

@@ -1,16 +1,16 @@
 package server.api;
 
 import commons.GameInstance;
+import commons.GameState;
 import commons.player.SimpleUser;
 import communication.RequestToJoin;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.messaging.simp.SimpMessagingTemplate;
 
-import java.util.Random;
+import java.util.*;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.junit.jupiter.api.Assertions.*;
 import static org.springframework.http.HttpStatus.*;
 
 //TODO: Fix the commented test for getImage() method (it should have worked, I don't get what's wrong there)
@@ -30,6 +30,11 @@ public class GameControllerTest {
         msgs = null;
         ActivityController activityController = new ActivityController(random, activityRepository);
         sut = new GameController(random, activityRepository, msgs, activityController);
+    }
+
+    @Test
+    public void constructorTest() {
+        assertNotNull(sut);
     }
 
     // ------------------------------------ TEST ADDITIONAL METHODS ------------------------------------------------------
@@ -65,11 +70,17 @@ public class GameControllerTest {
     }
 
     @Test
-    public void createNewMultiplayerLobby() {
+    public void createNewMultiplayerLobbyTest() {
         // 3 initially hard-coded servers
         assertEquals(3, sut.getGameInstances().size());
         assertEquals(GameInstance.MULTI_PLAYER, sut.getGameInstances().get(0).getType());
         assertEquals(0, sut.getCurrentMPGIId());
+    }
+
+    @Test
+    public void getServerNamesTest() {
+        assertNotNull(sut.getServerNames());
+        assertEquals(0, sut.getServerNames().get("default"));
     }
 
     // ------------------------------------ TEST METHODS USED BY THE CONTROLLER ------------------------------------------------------
@@ -215,6 +226,58 @@ public class GameControllerTest {
         assertEquals(500, actual.getBody().getScore());
         assertEquals(3, actual.getBody().getId());
         assertEquals(cookieForMarcin, actual.getBody().getCookie());
+    }
+
+    @Test
+    public void getAllServersTest() {
+        Set<String> testSet = new HashSet<>();
+        testSet.add("default");
+        testSet.add("first");
+        testSet.add("second");
+        assertEquals(testSet, sut.getAllServers().getBody());
+        testSet.add("fourth");
+        assertNotEquals(testSet, sut.getAllServers().getBody());
+    }
+
+    @Test
+    public void getAvailableServersTest() {
+        List<String> testList = new ArrayList<>();
+        testList.add("default");
+        testList.add("first");
+        testList.add("second");
+        assertEquals(testList, sut.getServers().getBody());
+        sut.getGameInstances().get(sut.getServerNames().get(sut.getServers().getBody().get(0))).setState(GameState.INQUESTION);
+        assertNotEquals(testList, sut.getServers().getBody());
+    }
+
+    @Test
+    public void connectedPlayersOnServerTest() {
+        sut.addPlayer(new RequestToJoin("Vlad", "default", GameInstance.MULTI_PLAYER));
+        sut.addPlayer(new RequestToJoin("Joshua", "default", GameInstance.MULTI_PLAYER));
+        List<String> testList = new ArrayList<>();
+        testList.add("Vlad");
+        testList.add("Joshua");
+        assertEquals(testList, sut.connectedPlayersOnServer("default").getBody());
+        assertNotEquals(testList, sut.connectedPlayersOnServer("first").getBody());
+    }
+
+    @Test
+    public void addServerTest() {
+        sut.addServer("third");
+        assertTrue(sut.getServers().getBody().contains("third"));
+    }
+
+    @Test
+    public void updateServerTest() {
+        sut.updateServer("first", "third");
+        assertTrue(sut.getServers().getBody().contains("third"));
+        assertFalse(sut.getServers().getBody().contains("first"));
+    }
+
+    @Test
+    public void deleteServerTest() {
+        sut.removeServer("default");
+        assertFalse(sut.getServers().getBody().contains("default"));
     }
 
 
