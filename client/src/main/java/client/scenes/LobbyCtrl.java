@@ -11,8 +11,11 @@ import javafx.fxml.FXML;
 import javafx.scene.control.Label;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
+import javafx.scene.image.Image;
+import javafx.scene.image.ImageView;
 import javafx.scene.text.Text;
 
+import java.net.URL;
 import java.util.List;
 import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
@@ -38,16 +41,32 @@ public class LobbyCtrl {
     @FXML
     private TableColumn<SimpleUser, String> columnName;
 
+    @FXML
+    private ImageView timerImage;
+
+    private String timerPath = "/images/timer.png";
+
+    private Image timerImageSource;
+
     @Inject
     public LobbyCtrl(ServerUtils server, MainCtrl mainCtrl, GameCtrl gameCtrl) {
         this.server = server;
         this.mainCtrl = mainCtrl;
         this.gameCtrl = gameCtrl;
+        try {
+            URL url = LobbyCtrl.class.getResource(this.timerPath);
+            timerImageSource = new Image(url.toString());
+        } catch (Exception e) {
+            System.out.println("Couldn't find timer image for lobby scene.");
+        }
     }
 
+
     public void init() {
+        timerImage.setImage(timerImageSource);
         Platform.runLater(() -> {
             timer.setVisible(false);
+            timerImage.setVisible(false);
             List<SimpleUser> players = server.getPlayers(gameCtrl.getPlayer());
             updatePlayers(players);
         });
@@ -104,10 +123,6 @@ public class LobbyCtrl {
 
     }
 
-    /*
-    public void setLabelName(String name) {
-        labelName.setText(name);
-    }*/
 
     public void setTablePlayers(List<SimpleUser> players) {
         tablePlayers.setItems(FXCollections.observableList(players));
@@ -117,26 +132,6 @@ public class LobbyCtrl {
         return server.connectedPlayers(server.getLastGIIdMult()).size();
     }
 
-    /**
-     * Additional method that decreases the number of players that are currently in the lobby, when a player leaves.
-     */
-    /*
-     public void decreaseNumberOfPlayers() {
-     setPersons(getPersons() - 1);
-     changePrompt();
-     }
-     */
-
-    /**
-     * Additional method that increases the number of players that are currently in the lobby, when a player joins.
-     */
-
-    /*
-     public void increaseNumberOfPlayers() {
-     setPersons(getPersons() + 1);
-     changePrompt();
-     }
-     */
 
     /**
      * Additional method that changes the prompt that gets called whenever a player joins/leaves the lobby
@@ -144,21 +139,15 @@ public class LobbyCtrl {
 
     public void changePrompt() {
         if (getPersons() > 1)
-            personsText.setText("There are " + persons + " players out of the maximum capacity of 50");
+            personsText.setText("There are currently " + persons + " players waiting");
         else
-            personsText.setText("There is " + persons + " player out of the maximum capacity of 50");
+            personsText.setText("There is currently " + persons + " player waiting");
     }
 
     public void setCountdown(int time) {
+        timerImage.setVisible(true);
         timer.setVisible(true);
         timer.setText(String.valueOf(time));
     }
-
-    /*
-     public void setPersonsText(String s) {
-     this.personsText.setText(s);
-     }
-     */
-
 
 }

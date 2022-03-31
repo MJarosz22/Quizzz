@@ -95,7 +95,10 @@ public class GameCtrl {
         subscribe("/topic/" + player.getGameInstanceId() + "/postquestion", Answer.class, answer ->
                 Platform.runLater(() -> mainCtrl.getCurrentQuestionScene().postQuestion(answer)));
         subscribe("/topic/" + player.getGameInstanceId() + "/disconnectplayer", SimpleUser.class, playerDisconnect ->
-                Platform.runLater(() -> mainCtrl.getCurrentQuestionScene().showDisconnect(playerDisconnect)));
+                Platform.runLater(() -> {
+                    if (mainCtrl.getCurrentQuestionScene() != null)
+                        mainCtrl.getCurrentQuestionScene().showDisconnect(playerDisconnect);
+                }));
 
         //TODO FIND WAY TO DEAL WITH SUBCLASSES OF QUESTION
         //TODO MAKE IT SO THAT TIMERS WITHIN QUESTION CLASSES STOP WHEN DISCONNECTED
