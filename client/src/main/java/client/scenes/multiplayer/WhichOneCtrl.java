@@ -245,6 +245,7 @@ public class WhichOneCtrl implements QuestionCtrl {
 
     @Override
     public void postQuestion(Answer answer) {
+        powerUp3.setDisable(true);
         if(player_answer != null && player_answer == question.getAnswer()){
             int numberOfPoints = calculatePoints(server.getTimeLeft(gameCtrl.getPlayer()));
             gameCtrl.getPlayer().addScore(numberOfPoints);
