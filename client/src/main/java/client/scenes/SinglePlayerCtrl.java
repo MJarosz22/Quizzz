@@ -27,13 +27,19 @@ public class SinglePlayerCtrl {
         this.gameCtrl = gameCtrl;
     }
 
+
+    /**
+     * Method triggered when the "BACK" button is pressed
+     * Goes back to the splash screen
+     */
     public void back() {
         this.textField.clear();
         mainCtrl.showSplash();
     }
 
     /**
-     * To be added when making the main game scene, in order for the player to play
+     * Method triggered when the player presses the "PLAY" button
+     * It adds the player to the game instance and starts to show the questions
      */
     public void play() {
         if (!getTextField().equals("")) {
@@ -42,8 +48,6 @@ public class SinglePlayerCtrl {
             playerName = player.getName();
             this.textField.clear();
             mainCtrl.showSinglePlayerGame();
-            // mainCtrl.showLobby(); -> Disabled, since we won't have a lobby for SinglePlayer and it messed the counter of players implementation
-            //TODO Make it so that player goes directly into game instead of going to lobby
         }
     }
 

@@ -97,6 +97,11 @@ public class GameInstanceServer extends GameInstance {
         countdownTimer.scheduleAtFixedRate(countdownTask, 0, 1000);
     }
 
+
+    /**
+     * Generates the questions for the new game and displays the first question
+     * @param activities the activities that were generated for the game
+     */
     @Async
     public void startGame(List<Activity> activities) {
         // gameController.createNewMultiplayerLobby();
@@ -104,6 +109,11 @@ public class GameInstanceServer extends GameInstance {
         nextQuestion();
     }
 
+
+    /**
+     * Sends the current question to all the clients
+     * @param questionNumber the number of the question that has to be sent
+     */
     private void sendQuestion(int questionNumber) {
         Question currentQuestion = getQuestions().get(questionNumber);
         logger.info("[GI " + getId() + "] Question " + questionNumber + " sent.");
@@ -118,6 +128,10 @@ public class GameInstanceServer extends GameInstance {
         } else throw new IllegalStateException();
     }
 
+    /**
+     * Goes to the next question in the game
+     * Displays the leaderboard after 10 and 20 questions
+     */
     private void nextQuestion() {
         setState(GameState.INQUESTION);
         if (questionTask != null) questionTask.cancel();
@@ -165,6 +179,9 @@ public class GameInstanceServer extends GameInstance {
         }
     }
 
+    /**
+     * After all the players answered the question, a message is sent to all the clients to display the answers
+     */
     public void postQuestion() {
         questionTask.cancel();
         setState(GameState.POSTQUESTION);
@@ -179,33 +196,52 @@ public class GameInstanceServer extends GameInstance {
         questionTimer.schedule(questionTask, postQuestionTime);
     }
 
+    /**
+     * Gets the time left in a question
+     * @return the time left
+     */
     public int getTimeLeft() {
         int timeSpent = (int) (System.currentTimeMillis() - startingTime);
         if (getState() == GameState.POSTQUESTION) return (postQuestionTime - timeSpent);
         return Math.max(questionTime - timeSpent, 0);
     }
 
+    /**
+     * gets the current question in the game
+     * @return the current question
+     */
     public Question getCurrentQuestion() {
         return getQuestions().get(questionNumber);
     }
 
-
+    /**
+     * Gets the correct answer for the current question in the game
+     * @return the correct answer
+     */
     public long getCorrectAnswer() {
         return getQuestions().get(questionNumber).getAnswer();
     }
 
-
+    /**
+     * Sends a message with the players that are in the gameInstance
+     */
     public void updatePlayerList() {
         msgs.convertAndSend("/topic/" + getId() + "/players", getPlayers().size());
     }
 
+    /**
+     * Adds a player's answer to the answers list, and if that list is the size of the list of all players,
+     * that means all the players have answered and we go to method postQuestion()
+     * @param player the player that sent the answer
+     * @param answer the answer the player gave
+     * @return false if anything goes wrong (the player already sent that answer), true otherwise
+     */
     public boolean answerQuestion(SimpleUser player, Answer answer) {
         if (answers.stream()
                 .map(x -> x.getPlayer().getName())
                 .noneMatch(x -> x.equals(player.getName()))) {
             answers.add(new ServerAnswer(answer.getAnswer(), player));
             if (answers.size() == getPlayers().size()) {
-                //TODO POST QUESTION
                 postQuestion();
 //                nextQuestion();
             }
@@ -249,6 +285,11 @@ public class GameInstanceServer extends GameInstance {
         msgs.convertAndSend("/topic/" + getId() + "/remove-incorrect-answer", answerPU);
     }
 
+    /**
+     * Removes a player from the game
+     * @param player the player to be removed
+     * @return true if the disconnection was successful, false otherwise
+     */
     public boolean disconnectPlayer(SimpleUser player) {
         boolean status = getPlayers().remove(player);
         msgs.convertAndSend("/topic/" + getId() + "/disconnectplayer", player);
@@ -259,6 +300,10 @@ public class GameInstanceServer extends GameInstance {
         return status;
     }
 
+    /**
+     * Stops the gameInstance and creates a new lobby for the server the gameInstance was on
+     * Also stops the timers
+     */
     public void stopGameInstance() {
         if (gameController.getServerNames().get(serverName) == getId())
             gameController.createNewMultiplayerLobby(this.serverName);
@@ -273,6 +318,10 @@ public class GameInstanceServer extends GameInstance {
         }
     }
 
+    /**
+     * Gets the name of the server this game instance is on
+     * @return the nam eof the server
+     */
     public String getServerName() {
         return serverName;
     }
