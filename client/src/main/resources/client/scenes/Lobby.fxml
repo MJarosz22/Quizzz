@@ -12,7 +12,7 @@
 <AnchorPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="540.0"
             prefWidth="960.0" style="-fx-background-color: #91e4fb;" xmlns="http://javafx.com/javafx/17"
             xmlns:fx="http://javafx.com/fxml/1" fx:controller="client.scenes.LobbyCtrl">
-    <Button layoutX="424.0" layoutY="443.0" mnemonicParsing="false" onAction="#play" prefWidth="90.0"
+    <Button fx:id="start" layoutX="424.0" layoutY="443.0" mnemonicParsing="false" onAction="#play" prefWidth="90.0"
             style="-fx-background-color: #fff;" text="PLAY">
         <font>
             <Font name="Courier New" size="24.0"/>

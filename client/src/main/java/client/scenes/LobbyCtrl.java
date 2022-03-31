@@ -8,6 +8,7 @@ import javafx.application.Platform;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.collections.FXCollections;
 import javafx.fxml.FXML;
+import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
@@ -17,9 +18,6 @@ import javafx.scene.text.Text;
 
 import java.net.URL;
 import java.util.List;
-import java.util.concurrent.Executors;
-import java.util.concurrent.ScheduledExecutorService;
-import java.util.concurrent.TimeUnit;
 
 public class LobbyCtrl {
 
@@ -44,6 +42,9 @@ public class LobbyCtrl {
     @FXML
     private ImageView timerImage;
 
+    @FXML
+    private Button start;
+
     private String timerPath = "/images/timer.png";
 
     private Image timerImageSource;
@@ -62,67 +63,64 @@ public class LobbyCtrl {
     }
 
 
+    /**
+     * Called whenever a player joins a specific gameInstance, initialises the Lobby screen that is shown to this player.
+     * Displays the list of players that are waiting in the same lobby and enables the "PLAY" button if the minimum number of
+     * players is fulfilled (currently chosen to be 3).
+     */
     public void init() {
-        timerImage.setImage(timerImageSource);
         Platform.runLater(() -> {
+            timerImage.setImage(timerImageSource);
             timer.setVisible(false);
             timerImage.setVisible(false);
             List<SimpleUser> players = server.getPlayers(gameCtrl.getPlayer());
             updatePlayers(players);
+            //TODO: Discuss whether this minimum number of players is OK
+            if (persons >= 3)
+                start.setDisable(false);
+            else start.setDisable(true);
         });
     }
 
     public void initialize() {
-//        persons = 0;
         columnName.setCellValueFactory(q -> new SimpleStringProperty(q.getValue().getName()));
-//        this.sceneChanged = false;
-//        startPolling();
     }
 
-    public void startPolling() {
-        ScheduledExecutorService executor = Executors.newScheduledThreadPool(1);
-        Runnable poller = new Runnable() {
-            @Override
-            public void run() {
-                if (gameCtrl.getPlayer() != null) {
-                    if (sceneChanged)
-                        executor.shutdown();
-                    setTablePlayers(server.getPlayers(gameCtrl.getPlayer()));
-                    changePrompt();
-                }
-            }
-        };
-
-
-        executor.scheduleAtFixedRate(poller, 0, 1, TimeUnit.SECONDS);
-    }
-
+    /**
+     * Updates the list of players that are currently waiting in a specific Lobby.
+     * Enables the "PLAY" button when at least 3 players are waiting in the same waiting room.
+     * NOTE that is method is synchronised for all players in a specific gameInstance using WebSockets.
+     *
+     * @param players list of SimpleUser instances that provides information about each player that is currently waiting in a specific Lobby
+     */
     public void updatePlayers(List<SimpleUser> players) {
         persons = players.size();
         setTablePlayers(players);
         changePrompt();
+        if (persons >= 3)
+            start.setDisable(false);
+        else start.setDisable(true);
     }
 
     /**
      * When you press "LEAVE LOBBY" for the multi-player variant of the game, or "BACK"
-     * in the singleplayer variant, the player should be disconnected and guided back to the splash screen.
+     * in the singlePlayer variant, the player should be disconnected and guided back to the splash screen.
      */
     public void back() {
         SimpleUser player = gameCtrl.getPlayer();
         this.sceneChanged = true;
         gameCtrl.disconnect();
-        // if (server.disconnect(player))
         System.out.println(player.getName() + " disconnected!");
-        //decreaseNumberOfPlayers();
         mainCtrl.showSplash();
     }
 
+    /**
+     * Method that gets triggered when a player presses the "PLAY" button
+     */
     public void play() {
         this.sceneChanged = true;
         server.startGame(gameCtrl.getPlayer());
-
     }
-
 
     public void setTablePlayers(List<SimpleUser> players) {
         tablePlayers.setItems(FXCollections.observableList(players));
@@ -136,7 +134,6 @@ public class LobbyCtrl {
     /**
      * Additional method that changes the prompt that gets called whenever a player joins/leaves the lobby
      */
-
     public void changePrompt() {
         if (getPersons() > 1)
             personsText.setText("There are currently " + persons + " players waiting");
@@ -144,7 +141,16 @@ public class LobbyCtrl {
             personsText.setText("There is currently " + persons + " player waiting");
     }
 
+    /**
+     * Additional method that starts the 5-seconds countdown that is shown to each player in the top-right corner.
+     * This also enables the timer image directly to the left of the timer.
+     * NOTE that this method is synchronised for all players in a specific gameInstaance by using WebSockets
+     * It is triggered when one player from a lobby presses the "PLAY" button.
+     *
+     * @param time integer value that goes from 5 to 0, representing how many seconds are there before the actual game will start.
+     */
     public void setCountdown(int time) {
+        start.setDisable(true);
         timerImage.setVisible(true);
         timer.setVisible(true);
         timer.setText(String.valueOf(time));
