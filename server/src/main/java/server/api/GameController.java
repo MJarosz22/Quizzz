@@ -295,7 +295,7 @@ public class GameController {
     }
 
     /**
-     * Method that changes the name of a given server
+     * Method that changes the name of a given server, if the server does not have any connected players
      *
      * @param oldServerName the server to rename
      * @param newServerName new server name
@@ -305,13 +305,15 @@ public class GameController {
     public ResponseEntity<String> updateServer(@PathVariable String oldServerName, @RequestBody String newServerName) {
         if (!this.serverNames.containsKey(oldServerName) || oldServerName.equals(newServerName))
             return ResponseEntity.badRequest().build();
+        if (this.gameInstances.get(this.serverNames.get(oldServerName)).getPlayers().size() != 0)
+            return ResponseEntity.badRequest().build();
         serverNames.put(newServerName, serverNames.get(oldServerName));
         serverNames.remove(oldServerName);
         return ResponseEntity.ok(newServerName);
     }
 
     /**
-     * Method that deletes a server from the server list
+     * Method that deletes a server from the server list, if the server does not have any connected players
      *
      * @param serverName to remove
      * @return removed server name, bad request if not found
@@ -320,6 +322,8 @@ public class GameController {
     public ResponseEntity<String> removeServer(@PathVariable String serverName) {
         if (!this.serverNames.containsKey(serverName))
             return ResponseEntity.notFound().build();
+        if (this.gameInstances.get(this.serverNames.get(serverName)).getPlayers().size() != 0)
+            return ResponseEntity.badRequest().build();
         serverNames.remove(serverName);
         return ResponseEntity.ok().build();
 
