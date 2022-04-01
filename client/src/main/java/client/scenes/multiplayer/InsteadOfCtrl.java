@@ -258,7 +258,8 @@ public class InsteadOfCtrl implements QuestionCtrl {
      */
     @Override
     public void postQuestion(Answer answer) {
-        if (player_answer != null && player_answer == question.getAnswer()) {
+        powerUp3.setDisable(true);
+        if(player_answer != null && player_answer == question.getAnswer()){
             int numberOfPoints = calculatePoints(server.getTimeLeft(gameCtrl.getPlayer()));
             if(doublePointsPUUsed) numberOfPoints = numberOfPoints * 2;
             gameCtrl.getPlayer().addScore(numberOfPoints);
