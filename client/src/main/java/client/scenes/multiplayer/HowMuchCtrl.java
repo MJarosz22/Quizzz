@@ -28,7 +28,8 @@ import java.util.TimerTask;
 public class HowMuchCtrl implements QuestionCtrl {
 
     @FXML
-    private Text questionTitle, timer, score, points, answer, option4, correct_guess, questionCount, disconnect;
+    private Text questionTitle, timer, score, points, answer, option4, correct_guess, questionCount, heartText,
+            cryText, laughText, angryText, glassesText, disconnect;
 
     @FXML
     private AnchorPane emoji;
@@ -56,6 +57,7 @@ public class HowMuchCtrl implements QuestionCtrl {
     private TimerTask scheduler;
 
     private int timeReduced;
+    private boolean doublePointsPUUsed;
 
     private ServerUtils server;
     private MainCtrl mainCtrl;
@@ -68,6 +70,7 @@ public class HowMuchCtrl implements QuestionCtrl {
         this.server = server;
         this.mainCtrl = mainCtrl;
         this.gameCtrl = gameCtrl;
+        this.doublePointsPUUsed = false;
         try {
             timerImageSource = new Image(new FileInputStream("client/src/main/resources/images/timer.png"));
         } catch (FileNotFoundException e) {
@@ -139,6 +142,16 @@ public class HowMuchCtrl implements QuestionCtrl {
     }
 
     /**
+     * Use the double points powerup
+     *
+     * @param actionEvent click on the powerUp
+     */
+    public void doublePoints(ActionEvent actionEvent) {
+        doublePointsPUUsed = true;
+        server.usePointsPowerup(gameCtrl.getPlayer());
+    }
+
+    /**
      * reduce the time for this player by the given percentage
      *
      * @param percentage
@@ -181,6 +194,7 @@ public class HowMuchCtrl implements QuestionCtrl {
 
     @Override
     public void postQuestion(Answer ans) {
+        powerUp3.setDisable(true);
         submit_guess.setDisable(true); // If an answer was not submitted already.
         timeReduced = 0;
         try {
@@ -196,6 +210,7 @@ public class HowMuchCtrl implements QuestionCtrl {
         } finally {
             correct_guess.setText("The correct answer is: " + ans.getAnswer());
             correct_guess.setVisible(true);
+            doublePointsPUUsed = false;
             new Timer().schedule(new TimerTask() {
                 @Override
                 public void run() {
@@ -211,53 +226,39 @@ public class HowMuchCtrl implements QuestionCtrl {
      * the correct answer, on behalf of our chosen strategy for this type of question.
      *
      * @param number         long value that represents the number inputted by the player.
-     * @param correct_number long value that represents the correct answer to our QuestionHowMuch type of question
+     * @param correct_number long value that represents the correct answer to our QuestionHowMuch type of question.
      */
     public void awardPointsQuestionHowMuch(long number, long correct_number) {
+        int scoreAdd = 0;
         if (number == correct_number) {
-            gameCtrl.getPlayer().addScore(100);
-            server.updatePlayer(gameCtrl.getPlayer());
-            score.setText("Your score: " + gameCtrl.getPlayer().getScore());
-            points.setText("+100 points");
-            points.setVisible(true);
+            scoreAdd = 100;
             answer.setText("Correct answer");
-            answer.setVisible(true);
         } else {
             if (number <= correct_number + (25 * correct_number) / 100 && number >= correct_number - (25 * correct_number) / 100) {
-                gameCtrl.getPlayer().addScore(75);
-                server.updatePlayer(gameCtrl.getPlayer());
-                score.setText("Your score: " + gameCtrl.getPlayer().getScore());
-                points.setText("+75 points");
-                points.setVisible(true);
+                scoreAdd = 75;
                 answer.setText("Almost the correct answer");
-                answer.setVisible(true);
             } else {
                 if (number <= correct_number + (50 * correct_number) / 100 && number >= correct_number - (50 * correct_number) / 100) {
-                    gameCtrl.getPlayer().addScore(50);
-                    server.updatePlayer(gameCtrl.getPlayer());
-                    score.setText("Your score: " + gameCtrl.getPlayer().getScore());
-                    points.setText("+50 points");
-                    points.setVisible(true);
+                    scoreAdd = 50;
                     answer.setText("Not quite the correct answer");
-                    answer.setVisible(true);
                 } else {
                     if (number <= correct_number + (75 * correct_number) / 100 && number >= correct_number - (75 * correct_number) / 100) {
-                        gameCtrl.getPlayer().addScore(25);
-                        server.updatePlayer(gameCtrl.getPlayer());
-                        score.setText("Your score: " + gameCtrl.getPlayer().getScore());
-                        points.setText("+25 points");
-                        points.setVisible(true);
+                        scoreAdd = 25;
                         answer.setText("Pretty far from the correct answer");
-                        answer.setVisible(true);
                     } else {
-                        points.setText("+0 points");
-                        points.setVisible(true);
+                        scoreAdd = 0;
                         answer.setText("Wrong answer");
-                        answer.setVisible(true);
                     }
                 }
             }
         }
+        if(this.doublePointsPUUsed) scoreAdd = scoreAdd * 2;
+        gameCtrl.getPlayer().addScore(scoreAdd);
+        server.updatePlayer(gameCtrl.getPlayer());
+        score.setText("Your score: " + gameCtrl.getPlayer().getScore());
+        points.setVisible(true);
+        points.setText("+" + scoreAdd + " points");
+        answer.setVisible(true);
     }
 
 
@@ -330,30 +331,29 @@ public class HowMuchCtrl implements QuestionCtrl {
      *
      * @param id id of button (and image to increase size
      */
-    public void emojiSelector(String id) {
+    public void emojiSelector(String id, SimpleUser player) throws Exception {
 
-        //String currentQType = server.getCurrentQType(server.getLastGIIdMult());
-        System.out.println("ID SELECTION BEGINS");
-        switch (id) {
-            case "heart":
-                emojiBold(heart, heartPic);
-                break;
-            case "glasses":
-                emojiBold(glasses, glassesPic);
-                break;
-            case "angry":
-                emojiBold(angry, angryPic);
-                break;
-            case "cry":
-                emojiBold(cry, cryPic);
-                break;
-            case "laugh":
-                emojiBold(laugh, laughPic);
-                break;
-            default:
-                break;
+
+            switch (id) {
+                case "heart":
+                    emojiBold(heart, heartPic, heartText, player);
+                    break;
+                case "glasses":
+                    emojiBold(glasses, glassesPic,  glassesText, player);
+                    break;
+                case "angry":
+                    emojiBold(angry, angryPic, angryText, player);
+                    break;
+                case "cry":
+                    emojiBold(cry, cryPic, cryText, player);
+                    break;
+                case "laugh":
+                    emojiBold(laugh, laughPic, laughText, player);
+                    break;
+                default:
+                    throw new Exception("Invalid emoji");
+            }
         }
-    }
 
     /**
      * Method that boldens (enlargens) the emoji clicked, then shrinks it back into position
@@ -361,7 +361,7 @@ public class HowMuchCtrl implements QuestionCtrl {
      * @param emojiButton The emoji button to be enlarged
      * @param emojiPic    The corresponding image associated with that button
      */
-    public void emojiBold(Button emojiButton, ImageView emojiPic) {
+    public void emojiBold(Button emojiButton, ImageView emojiPic, Text text, SimpleUser player) {
         Platform.runLater(() -> {
             emojiButton.setStyle("-fx-pref-height: 50; -fx-pref-width: 50; -fx-background-color: transparent; ");
             emojiButton.setLayoutX(emojiButton.getLayoutX() - 10.0);
@@ -369,6 +369,8 @@ public class HowMuchCtrl implements QuestionCtrl {
             emojiButton.setMouseTransparent(true);
             emojiPic.setFitWidth(50);
             emojiPic.setFitHeight(50);
+            text.setText(player.getName().toUpperCase().substring(0,1));
+            text.setVisible(true);
 
             TimerTask timerTask = new TimerTask() {
                 @Override
@@ -380,6 +382,7 @@ public class HowMuchCtrl implements QuestionCtrl {
                         emojiButton.setMouseTransparent(false);
                         emojiPic.setFitWidth(30);
                         emojiPic.setFitHeight(30);
+                        text.setVisible(false);
                     });
                 }
             };
@@ -388,8 +391,12 @@ public class HowMuchCtrl implements QuestionCtrl {
     }
 
     @Override
-    public void showEmoji(String type) {
-        emojiSelector(type);
+    public void showEmoji(String type, SimpleUser player) {
+        try{
+            emojiSelector(type, player);
+        } catch(Exception e) {
+            e.printStackTrace();
+        }
     }
 
     /**
@@ -431,7 +438,7 @@ public class HowMuchCtrl implements QuestionCtrl {
      */
     public void setPowerUps() {
         boolean[] powerUps = ((Player) (gameCtrl.getPlayer())).getPowerUps();
-        powerUp1.setDisable(!powerUps[0]);
+        powerUp1.setDisable(true);
         powerUp2.setDisable(!powerUps[1]);
         powerUp3.setDisable(!powerUps[2]);
     }

@@ -10,7 +10,7 @@ public interface QuestionCtrl {
 
     public void resetUI();
 
-    public void showEmoji(String type);
+    public void showEmoji(String type, SimpleUser player);
 
     public void showDisconnect(SimpleUser playerDisconnect);
 
@@ -19,4 +19,5 @@ public interface QuestionCtrl {
     public void setPowerUps();
 
     public void showPowerUpUsed(PowerUp powerUp);
+    
 }

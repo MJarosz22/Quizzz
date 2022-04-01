@@ -22,13 +22,15 @@ import javafx.scene.text.Text;
 import javax.inject.Inject;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
+import java.util.Random;
 import java.util.Timer;
 import java.util.TimerTask;
 
 public class WhichOneCtrl implements QuestionCtrl {
 
     @FXML
-    private Text questionTitle, timer, score, points, answer, option4, correct_guess, questionCount, disconnect;
+    private Text questionTitle, timer, score, points, answer, option4, correct_guess, questionCount,  heartText,
+            cryText, laughText, angryText, glassesText, disconnect;
 
     @FXML
     private AnchorPane emoji;
@@ -56,6 +58,7 @@ public class WhichOneCtrl implements QuestionCtrl {
     private TimerTask scheduler;
 
     private int timeReduced;
+    private boolean doublePointsPUUsed;
 
     private QuestionWhichOne question;
     private final ServerUtils server;
@@ -69,6 +72,7 @@ public class WhichOneCtrl implements QuestionCtrl {
         this.server = server;
         this.mainCtrl = mainCtrl;
         this.gameCtrl = gameCtrl;
+        this.doublePointsPUUsed = false;
         try {
             timerImageSource = new Image(new FileInputStream("client/src/main/resources/images/timer.png"));
         } catch (FileNotFoundException e) {
@@ -120,6 +124,7 @@ public class WhichOneCtrl implements QuestionCtrl {
         answer1.setDisable(true);
         answer2.setDisable(true);
         answer3.setDisable(true);
+        powerUp1.setDisable(true);
         gameCtrl.submitAnswer(new Answer((long) 3));
         player_answer = question.getAnswers()[2];
     }
@@ -128,6 +133,7 @@ public class WhichOneCtrl implements QuestionCtrl {
         answer1.setDisable(true);
         answer2.setDisable(true);
         answer3.setDisable(true);
+        powerUp1.setDisable(true);
         gameCtrl.submitAnswer(new Answer((long) 2));
         player_answer = question.getAnswers()[1];
     }
@@ -136,6 +142,7 @@ public class WhichOneCtrl implements QuestionCtrl {
         answer1.setDisable(true);
         answer2.setDisable(true);
         answer3.setDisable(true);
+        powerUp1.setDisable(true);
         gameCtrl.submitAnswer(new Answer((long) 1));
         player_answer = question.getAnswers()[0];
     }
@@ -152,6 +159,46 @@ public class WhichOneCtrl implements QuestionCtrl {
      */
     public void decreaseTime(ActionEvent actionEvent) {
         server.useTimePowerup(gameCtrl.getPlayer(), 50);
+    }
+
+    /**
+     * Use the double points powerup
+     *
+     * @param actionEvent click on the powerUp
+     */
+    public void doublePoints(ActionEvent actionEvent) {
+        doublePointsPUUsed = true;
+        server.usePointsPowerup(gameCtrl.getPlayer());
+    }
+
+    /**
+     * Use the remove incorrect answer powerup
+     *
+     * @param actionEvent click on the powerUp
+     */
+    public void removeAnswer(ActionEvent actionEvent) {
+        Random random = new Random();
+        int randomAnswer = random.nextInt(3)+1;
+        while(randomAnswer == question.getCorrectAnswer() || (randomAnswer != 1 && randomAnswer != 2 && randomAnswer != 3)) {
+            randomAnswer = random.nextInt(3)+1;
+        }
+        switch (randomAnswer) {
+            case 1:
+                answer1.setDisable(true);
+                answer1.setStyle("-fx-background-color: red");
+                break;
+            case 2:
+                answer2.setDisable(true);
+                answer2.setStyle("-fx-background-color: red");
+                break;
+            case 3:
+                answer3.setDisable(true);
+                answer3.setStyle("-fx-background-color: red");
+                break;
+            default:
+                throw new IllegalStateException();
+        }
+        server.useAnswerPowerup(gameCtrl.getPlayer());
     }
 
     /**
@@ -198,12 +245,14 @@ public class WhichOneCtrl implements QuestionCtrl {
 
     @Override
     public void postQuestion(Answer answer) {
+        powerUp3.setDisable(true);
         if(player_answer != null && player_answer == question.getAnswer()){
             int numberOfPoints = calculatePoints(server.getTimeLeft(gameCtrl.getPlayer()));
             gameCtrl.getPlayer().addScore(numberOfPoints);
+            if(doublePointsPUUsed) numberOfPoints = numberOfPoints * 2;
             server.updatePlayer(gameCtrl.getPlayer());
             score.setText("Your score: " + gameCtrl.getPlayer().getScore());
-            points.setText("+" + numberOfPoints + "points");
+            points.setText("+" + numberOfPoints + " points");
             points.setVisible(true);
             this.answer.setText("Correct answer");
             this.answer.setVisible(true);
@@ -218,6 +267,7 @@ public class WhichOneCtrl implements QuestionCtrl {
                 answer1.setDisable(true);
                 answer2.setDisable(true);
                 answer3.setDisable(true);
+                powerUp2.setDisable(true);
                 answer1.setStyle("-fx-background-color: green");
                 answer2.setStyle("-fx-background-color: red");
                 answer3.setStyle("-fx-background-color: red");
@@ -226,6 +276,7 @@ public class WhichOneCtrl implements QuestionCtrl {
                 answer1.setDisable(true);
                 answer2.setDisable(true);
                 answer3.setDisable(true);
+                powerUp2.setDisable(true);
                 answer1.setStyle("-fx-background-color: red");
                 answer2.setStyle("-fx-background-color: green");
                 answer3.setStyle("-fx-background-color: red");
@@ -234,6 +285,7 @@ public class WhichOneCtrl implements QuestionCtrl {
                 answer1.setDisable(true);
                 answer2.setDisable(true);
                 answer3.setDisable(true);
+                powerUp2.setDisable(true);
                 answer1.setStyle("-fx-background-color: red");
                 answer2.setStyle("-fx-background-color: red");
                 answer3.setStyle("-fx-background-color: green");
@@ -243,6 +295,7 @@ public class WhichOneCtrl implements QuestionCtrl {
                 throw new IllegalStateException();
         }
         timeReduced = 0;
+        doublePointsPUUsed = false;
         new Timer().schedule(new TimerTask() {
             @Override
             public void run() {
@@ -327,32 +380,33 @@ public class WhichOneCtrl implements QuestionCtrl {
         server.sendEmoji(gameCtrl.getPlayer(), "laugh");
     }
 
+
     /**
      * Switch case method to call from Websockets that associates an id with its button and a picture
      * and makes them bold
      *
      * @param id id of button (and image to increase size
      */
-    public void emojiSelector(String id) {
-        System.out.println(id);
+    public void emojiSelector(String id, SimpleUser player) throws Exception {
+
         switch (id) {
             case "heart":
-                emojiBold(heart, heartPic);
+                emojiBold(heart, heartPic, heartText, player);
                 break;
             case "glasses":
-                emojiBold(glasses, glassesPic);
+                emojiBold(glasses, glassesPic,  glassesText, player);
                 break;
             case "angry":
-                emojiBold(angry, angryPic);
+                emojiBold(angry, angryPic, angryText, player);
                 break;
             case "cry":
-                emojiBold(cry, cryPic);
+                emojiBold(cry, cryPic, cryText, player);
                 break;
             case "laugh":
-                emojiBold(laugh, laughPic);
+                emojiBold(laugh, laughPic, laughText, player);
                 break;
             default:
-                System.out.println("INVALID EMOJI");
+                throw new Exception("Invalid emoji");
         }
     }
 
@@ -362,7 +416,7 @@ public class WhichOneCtrl implements QuestionCtrl {
      * @param emojiButton The emoji button to be enlarged
      * @param emojiPic    The corresponding image associated with that button
      */
-    public void emojiBold(Button emojiButton, ImageView emojiPic) {
+    public void emojiBold(Button emojiButton, ImageView emojiPic, Text text, SimpleUser player) {
         Platform.runLater(() -> {
             emojiButton.setStyle("-fx-pref-height: 50; -fx-pref-width: 50; -fx-background-color: transparent; ");
             emojiButton.setLayoutX(emojiButton.getLayoutX() - 10.0);
@@ -370,6 +424,8 @@ public class WhichOneCtrl implements QuestionCtrl {
             emojiButton.setMouseTransparent(true);
             emojiPic.setFitWidth(50);
             emojiPic.setFitHeight(50);
+            text.setText(player.getName().toUpperCase().substring(0,1));
+            text.setVisible(true);
 
             TimerTask timerTask = new TimerTask() {
                 @Override
@@ -381,18 +437,21 @@ public class WhichOneCtrl implements QuestionCtrl {
                         emojiButton.setMouseTransparent(false);
                         emojiPic.setFitWidth(30);
                         emojiPic.setFitHeight(30);
+                        text.setVisible(false);
                     });
                 }
             };
             new Timer().schedule(timerTask, 5000);
-
-
         });
     }
 
     @Override
-    public void showEmoji(String type) {
-        emojiSelector(type);
+    public void showEmoji(String type, SimpleUser player) {
+        try{
+            emojiSelector(type, player);
+        } catch(Exception e) {
+            e.printStackTrace();
+        }
     }
 
     /**

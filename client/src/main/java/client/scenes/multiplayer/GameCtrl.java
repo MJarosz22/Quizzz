@@ -5,6 +5,8 @@ import client.utils.ServerUtils;
 import commons.*;
 import commons.player.Player;
 import commons.player.SimpleUser;
+import commons.powerups.AnswerPU;
+import commons.powerups.PointsPU;
 import commons.powerups.TimePU;
 import communication.RequestToJoin;
 import javafx.application.Platform;
@@ -56,7 +58,7 @@ public class GameCtrl {
 
         subscribe("/topic/" + player.getGameInstanceId() + "/emoji", Emoji.class, emoji -> {
             System.out.println(emoji.getType());
-            Platform.runLater(() -> mainCtrl.getCurrentQuestionScene().showEmoji(emoji.getType()));
+            Platform.runLater(() -> mainCtrl.getCurrentQuestionScene().showEmoji(emoji.getType(), emoji.getPlayer()));
         });
 
         subscribe("/topic/" + player.getGameInstanceId() + "/decrease-time", TimePU.class, timePU -> {
@@ -66,6 +68,26 @@ public class GameCtrl {
                 Platform.runLater(() -> mainCtrl.getCurrentQuestionScene().showPowerUpUsed(timePU));
             } else {
                 ((Player) player).usePowerUp(2);
+                Platform.runLater(() -> mainCtrl.getCurrentQuestionScene().setPowerUps());
+            }
+        });
+
+        subscribe("/topic/" + player.getGameInstanceId() + "/double-points", PointsPU.class, pointsPU -> {
+            System.out.println("doubled points");
+            if (!player.getCookie().equals(pointsPU.getPlayerCookie())) {
+                Platform.runLater(() -> mainCtrl.getCurrentQuestionScene().showPowerUpUsed(pointsPU));
+            } else {
+                ((Player) player).usePowerUp(1);
+                Platform.runLater(() -> mainCtrl.getCurrentQuestionScene().setPowerUps());
+            }
+        });
+
+        subscribe("/topic/" + player.getGameInstanceId() + "/remove-incorrect-answer", AnswerPU.class, answerPU -> {
+            System.out.println("removed one incorrect answer");
+            if (!player.getCookie().equals(answerPU.getPlayerCookie())) {
+                Platform.runLater(() -> mainCtrl.getCurrentQuestionScene().showPowerUpUsed(answerPU));
+            } else {
+                ((Player) player).usePowerUp(0);
                 Platform.runLater(() -> mainCtrl.getCurrentQuestionScene().setPowerUps());
             }
         });

@@ -2,6 +2,8 @@ package server.api;
 
 import commons.*;
 import commons.player.SimpleUser;
+import commons.powerups.AnswerPU;
+import commons.powerups.PointsPU;
 import commons.powerups.TimePU;
 import org.apache.commons.lang3.builder.EqualsBuilder;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
@@ -219,7 +221,7 @@ public class GameInstanceServer extends GameInstance {
     }
 
     /**
-     * A player has used time-reducing powerUp. Send it to all the players from their game
+     * A player has used time-reducing powerUp. Send it to all the players from their game.
      *
      * @param timePU powerUp used
      */
@@ -227,6 +229,24 @@ public class GameInstanceServer extends GameInstance {
         if (getTimeLeft() > 1) {
             msgs.convertAndSend("/topic/" + getId() + "/decrease-time", timePU);
         }
+    }
+
+    /**
+     * A player has used the double-points powerUp. Send it to all the players from their game.
+     *
+     * @param pointsPU powerUp used
+     */
+    public void doublePoints(PointsPU pointsPU) {
+        msgs.convertAndSend("/topic/" + getId() + "/double-points", pointsPU);
+    }
+
+    /**
+     * A player has used the remove-answer powerUp. Send it to all the players from their game.
+     *
+     * @param answerPU powerUp used
+     */
+    public void removeAnswer(AnswerPU answerPU) {
+        msgs.convertAndSend("/topic/" + getId() + "/remove-incorrect-answer", answerPU);
     }
 
     public boolean disconnectPlayer(SimpleUser player) {
