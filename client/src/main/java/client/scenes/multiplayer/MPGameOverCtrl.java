@@ -82,15 +82,22 @@ public class MPGameOverCtrl {
     }
 
     public void playAgain() {
-        List<String> playerNames = server.connectedPlayersOnServer(serverName);
-        if (!listContains(playerNames, playerName)) {
-            gameCtrl.start(playerName, serverName);
-            mainCtrl.getLobbyCtrl().init();
-            mainCtrl.showLobby();
-        } else {
-            Alert alert = new Alert(Alert.AlertType.ERROR, "This name already exists. Try a different one");
+
+        if (!server.availableServers().contains(serverName)){
+            Alert alert = new Alert(Alert.AlertType.ERROR, "This session is not valid.");
             alert.show();
             mainCtrl.showMultiPlayerMode();
+        } else {
+            List<String> playerNames = server.connectedPlayersOnServer(serverName);
+            if (!listContains(playerNames, playerName)) {
+                gameCtrl.start(playerName, serverName);
+                mainCtrl.getLobbyCtrl().init();
+                mainCtrl.showLobby();
+            } else {
+                Alert alert = new Alert(Alert.AlertType.ERROR, "This name already exists. Try a different one");
+                alert.show();
+                mainCtrl.showMultiPlayerMode();
+            }
         }
 
 //        lobbyCtrl.initialize(); //TODO LOOK AT THIS
