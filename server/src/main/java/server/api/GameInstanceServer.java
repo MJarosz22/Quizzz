@@ -223,7 +223,7 @@ public class GameInstanceServer extends GameInstance {
     }
 
     /**
-     * Sends a message with the players that are in the gameInstance
+     * Sends a message to the players that are in the gameInstance
      */
     public void updatePlayerList() {
         msgs.convertAndSend("/topic/" + getId() + "/players", getPlayers().size());

@@ -130,7 +130,7 @@ public class HowMuchCtrl implements QuestionCtrl {
     }
 
     /**
-     * Method is triggered when the player exists the game
+     * Method is triggered when the player exits the game
      */
     public void leaveGame(ActionEvent actionEvent) {
         scheduler.cancel();
@@ -213,7 +213,7 @@ public class HowMuchCtrl implements QuestionCtrl {
     /**
      * Method is triggered after all players have submitted their answer
      * The points are awarded to the player, the correct answer is displayed and the power ups are disabled
-     * @param ans
+     * @param ans the answer that was sent by the player, or "null" if the player did not answer that specific question
      */
     @Override
     public void postQuestion(Answer ans) {

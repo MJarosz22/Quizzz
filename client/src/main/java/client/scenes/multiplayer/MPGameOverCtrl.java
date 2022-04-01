@@ -48,7 +48,7 @@ public class MPGameOverCtrl {
     }
 
     /**
-     * Method is triggered after 10 questions
+     * Method is triggered after 10 and 20 questions, respectively
      * It shows the leaderboard with the players that are still in the game
      * @param players the players that are still in the game
      */
