@@ -16,7 +16,7 @@
                 <TableColumn fx:id="scoreColumn" prefWidth="95.0" text="Score" />
             </columns>
         </TableView>
-        <Button fx:id="play_again" layoutX="804.0" layoutY="53.0" mnemonicParsing="false" onAction="#back" prefHeight="56.0" prefWidth="96.0" style="-fx-background-color: #fff;" text="PLAY AGAIN" textAlignment="CENTER" wrapText="true">
+        <Button fx:id="go_lobby" layoutX="804.0" layoutY="53.0" mnemonicParsing="false" onAction="#back" prefHeight="56.0" prefWidth="96.0" style="-fx-background-color: #fff;" text="LEAVE" textAlignment="CENTER" wrapText="true">
             <font>
                 <Font name="Courier New" size="15.0" />
             </font>
@@ -31,5 +31,10 @@
                 <Font name="Courier New" size="36.0" />
             </font>
         </Text>
+      <Button fx:id="play_again" layoutX="804.0" layoutY="131.0" mnemonicParsing="false" onAction="#playAgain" prefHeight="56.0" prefWidth="96.0" style="-fx-background-color: #fff;" text="PLAY AGAIN" textAlignment="CENTER" wrapText="true">
+         <font>
+            <Font name="Courier New" size="15.0" />
+         </font>
+      </Button>
     </children>
 </AnchorPane>
