@@ -94,7 +94,7 @@ public class MPGameOverCtrl {
             alert.show();
             mainCtrl.showMultiPlayerMode();
         } else {
-            List<String> playerNames = server.connectedPlayersOnServer(serverName);
+            List<String> playerNames = ServerUtils.connectedPlayersOnServer(serverName);
             if (!listContains(playerNames, playerName)) {
                 gameCtrl.start(playerName, serverName);
                 mainCtrl.getLobbyCtrl().init();
@@ -105,8 +105,6 @@ public class MPGameOverCtrl {
                 mainCtrl.showMultiPlayerMode();
             }
         }
-
-//        lobbyCtrl.initialize(); //TODO LOOK AT THIS
     }
 
     /**
@@ -131,22 +129,14 @@ public class MPGameOverCtrl {
             return cell;
         });
 
-
         //sort players
         var sortedPlayers = players.stream().sorted(Comparator
                         .comparingLong(SimpleUser::getScore).reversed())
                 .collect(Collectors.toList());
 
-
         // Load players into table
         ObservableList<SimpleUser> data = FXCollections.observableList(sortedPlayers);
         tablePlayers.setItems(data);
-
-
-        // alternative for loading players
-        /*for (SimpleUser simpleUser : sortedPlayers){
-            tablePlayers.getItems().add(simpleUser);
-        }*/
     }
 
     private boolean listContains(List<String> list, String string) {

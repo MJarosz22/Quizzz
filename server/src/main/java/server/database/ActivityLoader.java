@@ -63,9 +63,9 @@ public class ActivityLoader {
      * @param repo the activity repository to add the activities to
      */
     @Bean
-    ApplicationRunner init(ActivityRepository repo) {
-        try {
-            unzip(new FileInputStream(new File(absolutePath + "activities.zip")), new File(absolutePath + location).toPath());
+    ApplicationRunner init(ActivityRepository repo){
+        try{
+            unzip(new FileInputStream(relativePath + "activities.zip"), new File(relativePath + location).toPath());
             logger.info("Successfully unzipped activities.zip");
         } catch (IOException e) {
             logger.info(absolutePath);

@@ -1,16 +1,14 @@
 package client.scenes;
 
-import client.utils.ServerUtils;
 import com.google.inject.Inject;
 
 public class SplashScreenCtrl {
 
-    private final ServerUtils server;
+
     private final MainCtrl mainCtrl;
 
     @Inject
-    public SplashScreenCtrl(ServerUtils server, MainCtrl mainCtrl) {
-        this.server = server;
+    public SplashScreenCtrl(MainCtrl mainCtrl) {
         this.mainCtrl = mainCtrl;
     }
 

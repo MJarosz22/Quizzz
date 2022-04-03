@@ -26,8 +26,7 @@ public class LeaderboardController {
      */
     @GetMapping(path = {"", "/"})
     public List<SimpleUser> getAll() {
-        List<SimpleUser> players = leaderboardRepository.findAll();
-        return players;
+        return leaderboardRepository.findAll();
     }
 
 
@@ -41,7 +40,6 @@ public class LeaderboardController {
         if (isNullOrEmpty(player.getName())) {
             return ResponseEntity.badRequest().build();
         }
-        System.out.println(player);
         SimpleUser savedPlayer = leaderboardRepository.save(player);
         return ResponseEntity.ok(savedPlayer);
     }

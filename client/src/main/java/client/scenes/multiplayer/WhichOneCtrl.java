@@ -234,9 +234,7 @@ public class WhichOneCtrl implements QuestionCtrl {
                 if (Math.round((timeLeft) / 1000d) <= 2)
                     powerUp3.setDisable(true);
                 if (Math.round((timeLeft - timeReduced) / 1000d) <= 0) {
-                    Platform.runLater(() -> {
-                        disableAnswers();
-                    });
+                    Platform.runLater(WhichOneCtrl.this::disableAnswers);
                 }
 
             }
@@ -319,7 +317,6 @@ public class WhichOneCtrl implements QuestionCtrl {
                 answer3.setStyle("-fx-background-color: green");
                 break;
             default:
-                System.out.println(answer.getAnswer().intValue());
                 throw new IllegalStateException();
         }
         timeReduced = 0;

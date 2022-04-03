@@ -1,6 +1,5 @@
 package client.scenes;
 
-import client.utils.ServerUtils;
 import com.google.inject.Inject;
 import commons.player.SimpleUser;
 import javafx.application.Platform;
@@ -38,14 +37,12 @@ public class LeaderBoardCtrl {
     @FXML
     private Text displayHighScore;
 
-    private final ServerUtils server;
     private final MainCtrl mainCtrl;
     private List<SimpleUser> players;
     private TimerTask scheduler;
 
     @Inject
-    public LeaderBoardCtrl(ServerUtils server, MainCtrl mainCtrl) {
-        this.server = server;
+    public LeaderBoardCtrl(MainCtrl mainCtrl) {
         this.mainCtrl = mainCtrl;
     }
 

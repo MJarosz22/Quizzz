@@ -57,12 +57,10 @@ public class GameCtrl {
         });
 
         subscribe("/topic/" + player.getGameInstanceId() + "/emoji", Emoji.class, emoji -> {
-            System.out.println(emoji.getType());
             Platform.runLater(() -> mainCtrl.getCurrentQuestionScene().showEmoji(emoji.getType(), emoji.getPlayer()));
         });
 
         subscribe("/topic/" + player.getGameInstanceId() + "/decrease-time", TimePU.class, timePU -> {
-            System.out.println("time reduced by " + timePU.getPercentage() + "%");
             if (!player.getCookie().equals(timePU.getPlayerCookie())) {
                 Platform.runLater(() -> mainCtrl.getCurrentQuestionScene().reduceTimer(timePU.getPercentage()));
                 Platform.runLater(() -> mainCtrl.getCurrentQuestionScene().showPowerUpUsed(timePU));
@@ -73,7 +71,6 @@ public class GameCtrl {
         });
 
         subscribe("/topic/" + player.getGameInstanceId() + "/double-points", PointsPU.class, pointsPU -> {
-            System.out.println("doubled points");
             if (!player.getCookie().equals(pointsPU.getPlayerCookie())) {
                 Platform.runLater(() -> mainCtrl.getCurrentQuestionScene().showPowerUpUsed(pointsPU));
             } else {
@@ -83,7 +80,6 @@ public class GameCtrl {
         });
 
         subscribe("/topic/" + player.getGameInstanceId() + "/remove-incorrect-answer", AnswerPU.class, answerPU -> {
-            System.out.println("removed one incorrect answer");
             if (!player.getCookie().equals(answerPU.getPlayerCookie())) {
                 Platform.runLater(() -> mainCtrl.getCurrentQuestionScene().showPowerUpUsed(answerPU));
             } else {
@@ -119,7 +115,6 @@ public class GameCtrl {
                     LinkedHashMap linkedHashMap = (LinkedHashMap) o;
                     String name = (String) linkedHashMap.get("name");
                     Integer score = (Integer) linkedHashMap.get("score");
-                    System.out.println(name + " " + score);
                     SimpleUser aux = new SimpleUser(name,score);
                     simpleUserList.add(aux);
                 }
@@ -142,7 +137,6 @@ public class GameCtrl {
                                 && getPlayer().getGameInstanceId() == gameInstanceId) {
                             server.addPlayerToLeaderboard(getPlayer());
                         }
-                        System.out.println(name + " " + score);
                         SimpleUser aux = new SimpleUser(name,score);
                         simpleUserList.add(aux);
                     }

@@ -81,7 +81,7 @@ public class MultiPlayerCtrl {
      * @return true if the name is already chose, false otherwise
      */
     private boolean containsName(String name) {
-        List<String> playerNames = server.connectedPlayersOnServer(getTextFieldServer());
+        List<String> playerNames = ServerUtils.connectedPlayersOnServer(getTextFieldServer());
         return listContains(playerNames, name);
     }
 
