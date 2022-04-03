@@ -27,7 +27,6 @@ import javafx.scene.Scene;
 import javafx.stage.Stage;
 import javafx.util.Pair;
 
-import java.nio.file.FileSystems;
 import java.util.List;
 
 
@@ -219,7 +218,7 @@ public class MainCtrl {
         primaryStage.setScene(insteadOf);
     }
 
-    public void showMPGameOver(List<SimpleUser> players){
+    public void showMPGameOver(List<SimpleUser> players) {
         primaryStage.setTitle("MPGameOver");
         gameOverCtrl.init(players);
         primaryStage.setScene(gameOver);
@@ -253,8 +252,8 @@ public class MainCtrl {
         return insteadOfCtrl;
     }
 
-    public MPGameOverCtrl getGameOverCtrl(){
-        return  gameOverCtrl;
+    public MPGameOverCtrl getGameOverCtrl() {
+        return gameOverCtrl;
     }
 
 }
