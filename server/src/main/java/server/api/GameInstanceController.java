@@ -20,7 +20,6 @@ import java.util.stream.Collectors;
 @RequestMapping("api/gameinstance")
 public class GameInstanceController {
 
-    //TODO ADD SCORING
 
     private final Logger logger = LoggerFactory.getLogger(GameInstanceController.class);
     private final List<GameInstanceServer> gameInstances;
@@ -70,6 +69,13 @@ public class GameInstanceController {
                 .stream().map(x -> x.unsafe()).collect(Collectors.toList()));
     }
 
+
+    /**
+     * Disconnects a certain player from the gameInstance he/she is in
+     * @param gameInstanceId the id of the gameInstance the player has to be disconnected from
+     * @param cookie the cookie of the player that has to be disconnected
+     * @return true if the player was successfully disconnected, false otherwise
+     */
     @DeleteMapping("/{gameInstanceId}/disconnect")
     public ResponseEntity<Boolean> disconnect(@PathVariable int gameInstanceId,
                                               @CookieValue(name = "user-id", defaultValue = "null") String cookie) {
@@ -79,12 +85,25 @@ public class GameInstanceController {
         return ResponseEntity.ok(gameInstances.get(gameInstanceId).disconnectPlayer(removePlayer));
     }
 
+
+    /**
+     * Gets the type of the current question in the specified gameInstance
+     * @param gameInstanceId the id of the gameInstance to get the question from
+     * @return the name of the type of question
+     */
     @GetMapping("/{gameInstanceId}/getCurrentQType")
     public ResponseEntity<String> getCurrentQType(@PathVariable int gameInstanceId) {
         if (gameInstanceId < 0 || gameInstanceId >= gameInstances.size()) return ResponseEntity.badRequest().build();
         return ResponseEntity.ok(gameInstances.get(gameInstanceId).getCurrentQuestion().getClass().getName());
     }
 
+
+    /**
+     * Gets the current question from the specified gameInstance
+     * @param gameInstanceId the id of the gameInstance to get the question from
+     * @param cookie the cookie of a player in that gameInstance
+     * @return the current question
+     */
     @GetMapping("/{gameInstanceId}/question")
     public ResponseEntity<Question> getQuestion(@PathVariable int gameInstanceId,
                                                 @CookieValue(name = "user-id", defaultValue = "null") String cookie) {
@@ -95,6 +114,13 @@ public class GameInstanceController {
         return ResponseEntity.ok(gameInstance.getCurrentQuestion());
     }
 
+
+    /**
+     * Gets the time left for the question that a certain player is shown
+     * @param  gameInstanceId the id of the gameInstance that the question is in
+     * @param cookie a cookie of a player from the gameInstance for which we want to get the time left
+     * @return the time left
+     */
     @GetMapping("/{gameInstanceId}/timeleft")
     public ResponseEntity<Integer> getTimeLeft(@PathVariable int gameInstanceId,
                                                @CookieValue(name = "user-id", defaultValue = "null") String cookie) {
@@ -106,6 +132,14 @@ public class GameInstanceController {
         return ResponseEntity.ok(gameInstance.getTimeLeft());
     }
 
+
+    /**
+     * Sends the answer of the player to the server
+     * @param gameInstanceId the id of the gameInstance the player is in
+     * @param cookie the cookie of the player that answered
+     * @param answer the answer of the player
+     * @return true if the answer was sent successfully, false otherwise
+     */
     @PostMapping("/{gameInstanceId}/answer")
     public ResponseEntity<Boolean> answerQuestion(@PathVariable int gameInstanceId, @RequestBody Answer answer,
                                                   @CookieValue(name = "user-id", defaultValue = "null") String cookie) {
@@ -117,6 +151,12 @@ public class GameInstanceController {
     }
 
 
+    /**
+     * Gets the correct answer for a certain question
+     * @param gameInstanceId the id of the gameInstance the question is in
+     * @param cookie the cookie of a player in that gameInstance
+     * @return the correct answer
+     */
     @GetMapping("/{gameInstanceId}/correctanswer")
     public ResponseEntity<Long> getCorrectAnswer(@PathVariable int gameInstanceId,
                                                  @CookieValue(name = "user-id", defaultValue = "null") String cookie) {
@@ -127,6 +167,12 @@ public class GameInstanceController {
         return ResponseEntity.ok(gameInstance.getCorrectAnswer());
     }
 
+    /**
+     * Starts the game, by changing the status of the gameInstance the specified player is in
+     * @param gameInstanceId the id of the gameInstance the player is in
+     * @param cookie the cookie of the player that pressed the play button
+     * @return true if the game successfully started, false otherwise
+     */
     @GetMapping("/{gameInstanceId}/start")
     public ResponseEntity<Boolean> startGame(@PathVariable int gameInstanceId,
                                              @CookieValue(name = "user-id", defaultValue = "null") String cookie) {
@@ -139,6 +185,14 @@ public class GameInstanceController {
         return ResponseEntity.ok(true);
     }
 
+
+    /**
+     * Makes a call to send an emoji to all the players
+     * @param gameInstanceId the id of the gameInstance the emoji is being sent in
+     * @param cookie the cookie of the player that sent the emoji
+     * @param emoji the emoji that was sent
+     * @return true if the game is in the right state, and the call was made successfully
+     */
     @PostMapping("/{gameInstanceId}/emoji")
     public ResponseEntity<Boolean> sendEmoji(@PathVariable int gameInstanceId,
                                              @CookieValue(name = "user-id", defaultValue = "null") String cookie,
@@ -220,6 +274,12 @@ public class GameInstanceController {
         return ResponseEntity.ok(true);
     }
 
+
+    /**
+     * Gets the type of a certain gameInstance
+     * @param gameInstanceId the id of the gameInstance to get the type for
+     * @return 0 if the game is single player, 1 if it's multiplayer
+     */
     @GetMapping("/{gameInstanceId}/gameInstanceType")
     public ResponseEntity<Integer> gameInstanceType(@PathVariable int gameInstanceId) {
         if (gameInstanceId < 0 || gameInstanceId >= gameInstances.size()) return ResponseEntity.badRequest().build();

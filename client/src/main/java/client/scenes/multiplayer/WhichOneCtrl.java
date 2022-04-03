@@ -80,6 +80,12 @@ public class WhichOneCtrl implements QuestionCtrl {
         }
     }
 
+
+    /**
+     * Method triggered when the current question in the game is of type Which One
+     * Initiates the Which One question, sets the scene and starts the timer
+     * @param question the question that is asked
+     */
     public void init(QuestionWhichOne question) {
         this.question = question;
         this.timeReduced = 0;
@@ -147,6 +153,10 @@ public class WhichOneCtrl implements QuestionCtrl {
         player_answer = question.getAnswers()[0];
     }
 
+
+    /**
+     * The pop-up to confirm the exit from a game is disabled
+     */
     public void disablePopUp(ActionEvent actionEvent) {
         confirmationExit.setVisible(false);
         confirmationExit.setDisable(true);
@@ -231,18 +241,32 @@ public class WhichOneCtrl implements QuestionCtrl {
         new Timer().scheduleAtFixedRate(scheduler, 0, 100);
     }
 
+
+    /**
+     * Method is triggered when the player exists the game
+     */
     public void leaveGame(ActionEvent actionEvent) {
         scheduler.cancel();
         gameCtrl.disconnect();
         mainCtrl.showSplash();
     }
 
+
+    /**
+     * The pop-up to confirm the exit from a game is shown
+     */
     public void enablePopUp(ActionEvent actionEvent) {
         confirmationExit.setVisible(true);
         confirmationExit.setDisable(false);
         confirmationExit.setStyle("-fx-background-color: #91e4fb; ");
     }
 
+
+    /**
+     * Method is triggered after all players have submitted their answer
+     * The points are awarded to the player, the correct answer is displayed and the power ups are disabled
+     * @param answer
+     */
     @Override
     public void postQuestion(Answer answer) {
         powerUp3.setDisable(true);
@@ -316,6 +340,12 @@ public class WhichOneCtrl implements QuestionCtrl {
         enableAnswers();
     }
 
+
+    /**
+     * Method to calculate the points according to how fast the player answered
+     * @param timeLeft the time left to answer the question
+     * @return the points the player receives
+     */
     public int calculatePoints(int timeLeft) {
         timeLeft = (int) (timeLeft / 1000d);
         return (timeLeft * 10) / 2;
@@ -340,7 +370,6 @@ public class WhichOneCtrl implements QuestionCtrl {
     }
 
     /**
-     * <<<<<<< client/src/main/java/client/scenes/multiplayer/WhichOneCtrl.java
      * Method to select heart emoji
      */
 

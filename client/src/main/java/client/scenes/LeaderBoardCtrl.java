@@ -49,6 +49,9 @@ public class LeaderBoardCtrl {
         this.mainCtrl = mainCtrl;
     }
 
+    /**
+     * When the back button is pressed, the splash screen is displayed
+     */
     public void back() {
         mainCtrl.showSplash();
         tablePlayers.getItems().clear();
@@ -121,6 +124,12 @@ public class LeaderBoardCtrl {
         new Timer().schedule(scheduler, 3000);
     }
 
+
+    /**
+     * Puts all the players with their scores on the leaderboard table,
+     * with the positions that they obtained during the game
+     * @param players all the players that are shown on the leaderboard
+     */
     public void setTablePlayers(List<SimpleUser> players) {
         this.initialise(players);
         nameColumn.setCellValueFactory(new PropertyValueFactory<>("name"));

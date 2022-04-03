@@ -53,6 +53,11 @@ public class MPGameOverCtrl {
         this.playerName = "";
     }
 
+    /**
+     * Method is triggered after 10 and 20 questions, respectively
+     * It shows the leaderboard with the players that are still in the game
+     * @param players the players that are still in the game
+     */
     public void init(List<SimpleUser> players) {
         if (players.get(players.size() - 1).getName().equals("SENTINEL") && players.get(players.size() - 1).getScore() == -1) {
             players.remove(players.get(players.size() - 1));
@@ -81,6 +86,7 @@ public class MPGameOverCtrl {
         mainCtrl.showSplash();
     }
 
+
     public void playAgain() {
 
         if (!server.availableServers().contains(serverName)){
@@ -103,6 +109,11 @@ public class MPGameOverCtrl {
 //        lobbyCtrl.initialize(); //TODO LOOK AT THIS
     }
 
+    /**
+     * Puts all the players with their scores on the leaderboard table,
+     * with the positions that they obtained during the game
+     * @param players all the players that are shown on the leaderboard
+     */
     public void setTablePlayers(List<SimpleUser> players) {
         nameColumn.setCellValueFactory(new PropertyValueFactory<>("name"));
         scoreColumn.setCellValueFactory(new PropertyValueFactory<>("score"));
