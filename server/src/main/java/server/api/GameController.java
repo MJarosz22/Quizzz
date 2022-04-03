@@ -120,7 +120,7 @@ public class GameController {
     }
 
     /**
-     * Method that returns InputStream with all the image files
+     * Method that returns an InputStream object instance that resides at the specific {activityFolder}/{activityFile}
      *
      * @param activityFolder folder with the activities
      * @param activityFile   the wanted file
@@ -308,6 +308,9 @@ public class GameController {
         if (this.gameInstances.get(this.serverNames.get(oldServerName)).getPlayers().size() != 0)
             return ResponseEntity.badRequest().build();
         serverNames.put(newServerName, serverNames.get(oldServerName));
+        if (gameInstances.get(serverNames.get(newServerName)) == null)
+            createNewMultiplayerLobby(newServerName);
+        gameInstances.get(serverNames.get(oldServerName)).setServerName(newServerName);
         serverNames.remove(oldServerName);
         return ResponseEntity.ok(newServerName);
     }

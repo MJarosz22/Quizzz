@@ -277,6 +277,10 @@ public class GameInstanceServer extends GameInstance {
         return serverName;
     }
 
+    public void setServerName(String serverName) {
+        this.serverName = serverName;
+    }
+
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
