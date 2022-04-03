@@ -95,7 +95,6 @@ public class SinglePlayerGameCtrl {
                 leaveGame();
                 return;
             }
-            timerPath = MainCtrl.relativeToAbsolute(timerPath);
             setTimerImage(timerImage);
             progressBar.setProgress(0);
             score.setText("Your score: 0");
