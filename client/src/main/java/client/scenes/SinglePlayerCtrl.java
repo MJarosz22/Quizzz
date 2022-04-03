@@ -42,8 +42,6 @@ public class SinglePlayerCtrl {
             playerName = player.getName();
             this.textField.clear();
             mainCtrl.showSinglePlayerGame();
-            // mainCtrl.showLobby(); -> Disabled, since we won't have a lobby for SinglePlayer and it messed the counter of players implementation
-            //TODO Make it so that player goes directly into game instead of going to lobby
         }
     }
 

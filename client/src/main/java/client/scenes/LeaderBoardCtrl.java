@@ -1,6 +1,5 @@
 package client.scenes;
 
-import client.utils.ServerUtils;
 import com.google.inject.Inject;
 import commons.player.SimpleUser;
 import javafx.beans.binding.Bindings;
@@ -30,12 +29,10 @@ public class LeaderBoardCtrl {
     @FXML
     TableColumn<String, Integer> positionColumn;
 
-    private final ServerUtils server;
     private final MainCtrl mainCtrl;
 
     @Inject
-    public LeaderBoardCtrl(ServerUtils server, MainCtrl mainCtrl) {
-        this.server = server;
+    public LeaderBoardCtrl(MainCtrl mainCtrl) {
         this.mainCtrl = mainCtrl;
     }
 

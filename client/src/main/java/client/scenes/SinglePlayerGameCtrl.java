@@ -136,8 +136,6 @@ public class SinglePlayerGameCtrl {
             answered = false;
             startTimer(20);
         });
-
-        //TODO: implement power-ups
     }
 
     /**
@@ -288,7 +286,6 @@ public class SinglePlayerGameCtrl {
     /**
      * Randomly choose which one of the three RadioButtons(answer1, answer2, answer3) will hold the correct answer
      * The other 2 wrong answers are somewhat randomly generated
-     * * TODO: Work on a 'smarter' random generation of wrong answers
      */
     private void randomlyChooseCorrectAnswerButton() {
         Random random = new Random();
@@ -908,7 +905,6 @@ public class SinglePlayerGameCtrl {
     /**
      * Makes the confirmation pop-up visible
      * This method is triggered when the player presses the 'LEAVE BUTTON' game.
-     * TODO: trigger the same method when clicking on 'x' of the window
      */
     public void enablePopUp() {
         confirmationExit.setOpacity(1);
