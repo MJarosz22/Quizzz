@@ -7,6 +7,19 @@ import static org.junit.jupiter.api.Assertions.*;
 
 public class SimpleUserTest {
 
+
+    @Test
+    public void emptyConstructorTest() {
+        SimpleUser player = new SimpleUser();
+        assertNotNull(player);
+    }
+
+    @Test
+    public void constructorTest() {
+        SimpleUser player = new SimpleUser(2, "Vlad", 0, "ec04009d98eb9e994d7563480477693c");
+        assertNotNull(player);
+    }
+
     @Test
     public void checkConstructor() {
         SimpleUser player = new SimpleUser(2, "Vlad", 0, "ec04009d98eb9e994d7563480477693c");
@@ -97,4 +110,39 @@ public class SimpleUserTest {
         player.setGameInstanceId(12);
         assertEquals(12, player.getGameInstanceId());
     }
+
+    @Test
+    public void toStringTest() {
+        SimpleUser player = new SimpleUser(2, "Vlad", 0, "ec04009d98eb9e994d7563480477693c");
+        String s = player.toString();
+        assertTrue(s.contains("id="));
+        assertTrue(s.contains("gameInstanceId="));
+        assertTrue(s.contains("name="));
+        assertTrue(s.contains("score="));
+        assertTrue(s.contains("cookie="));
+    }
+
+    @Test
+    public void sameEqualsTest() {
+        SimpleUser player = new SimpleUser(2, "Vlad", 0, "ec04009d98eb9e994d7563480477693c");
+        SimpleUser newPlayer = player;
+        assertEquals(player, newPlayer);
+    }
+
+    @Test
+    public void nullEqualsTest() {
+        SimpleUser player = new SimpleUser(2, "Vlad", 0, "ec04009d98eb9e994d7563480477693c");
+        SimpleUser newPlayer = null;
+        assertFalse(player.equals(newPlayer));
+    }
+
+    @Test
+    public void unsafeTest() {
+        SimpleUser player = new SimpleUser(2, "Vlad", 0, "ec04009d98eb9e994d7563480477693c");
+        SimpleUser newPlayer = player.unsafe();
+        assertEquals(2, newPlayer.getId());
+        assertEquals("Vlad", newPlayer.getName());
+        assertEquals(0, newPlayer.getGameInstanceId());
+    }
+
 }

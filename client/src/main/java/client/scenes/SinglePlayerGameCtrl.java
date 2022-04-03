@@ -136,7 +136,6 @@ public class SinglePlayerGameCtrl {
             startTimer(20);
         });
 
-        //TODO: implement power-ups
     }
 
     /**
@@ -287,7 +286,6 @@ public class SinglePlayerGameCtrl {
     /**
      * Randomly choose which one of the three RadioButtons(answer1, answer2, answer3) will hold the correct answer
      * The other 2 wrong answers are somewhat randomly generated
-     * * TODO: Work on a 'smarter' random generation of wrong answers
      */
     private void randomlyChooseCorrectAnswerButton() {
         Random random = new Random();
@@ -730,6 +728,14 @@ public class SinglePlayerGameCtrl {
         }
     }
 
+    /**
+     * For QuestionInsteadOf
+     * Checks whether the selected answer was correct and awards the player partial points, depending on how fast
+     * he/she answered to this specific question, on behalf of our chosen strategy for this type of question.
+     *
+     * @param player_answer the RadioButton selected by the player
+     * @param response      the correct answer
+     */
     public void isSelectionCorrectInsteadOf(RadioButton player_answer, long response) {
         if (response == currentQuestion.getCorrectAnswer()) {
             int numberOfPoints = calculatePoints(timeLeft);
@@ -876,7 +882,6 @@ public class SinglePlayerGameCtrl {
     /**
      * Makes the confirmation pop-up visible
      * This method is triggered when the player presses the 'LEAVE BUTTON' game.
-     * TODO: trigger the same method when clicking on 'x' of the window
      */
     public void enablePopUp() {
         confirmationExit.setOpacity(1);
@@ -885,7 +890,11 @@ public class SinglePlayerGameCtrl {
     }
 
 
-    public static boolean getGameIsOver() {
+    /**
+     * This method helps with adding players to the repository, only if the game is over
+     * @return if the game is over or not
+     */
+    public static boolean getGameIsOver(){
         return gameIsOver;
     }
 

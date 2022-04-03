@@ -81,6 +81,12 @@ public class HowMuchCtrl implements QuestionCtrl {
         }
     }
 
+
+    /**
+     * Method triggered when the current question in the game is of type How Much
+     * Initiates the How Much question, sets the scene and starts the timer
+     * @param question the question that is asked
+     */
     public void init(QuestionHowMuch question) {
         timerImage.setImage(timerImageSource);
         disablePopUp(null);
@@ -118,17 +124,26 @@ public class HowMuchCtrl implements QuestionCtrl {
         new Timer().scheduleAtFixedRate(scheduler, 0, 100);
     }
 
+    /**
+     * The pop-up to confirm the exit from a game is disabled
+     */
     public void disablePopUp(ActionEvent actionEvent) {
         confirmationExit.setVisible(false);
         confirmationExit.setDisable(true);
     }
 
+    /**
+     * Method is triggered when the player exits the game
+     */
     public void leaveGame(ActionEvent actionEvent) {
         scheduler.cancel();
         gameCtrl.disconnect();
         mainCtrl.showSplash();
     }
 
+    /**
+     * The pop-up to confirm the exit from a game is shown
+     */
     public void enablePopUp(ActionEvent actionEvent) {
         confirmationExit.setVisible(true);
         confirmationExit.setDisable(false);
@@ -185,6 +200,9 @@ public class HowMuchCtrl implements QuestionCtrl {
     }
 
 
+    /**
+     * The answer of the player is sent to the server
+     */
     public void submitAnswer(ActionEvent actionEvent) {
         try {
             gameCtrl.submitAnswer(new Answer(Long.valueOf(player_answer.getText())));
@@ -195,6 +213,11 @@ public class HowMuchCtrl implements QuestionCtrl {
         }
     }
 
+    /**
+     * Method is triggered after all players have submitted their answer
+     * The points are awarded to the player, the correct answer is displayed and the power ups are disabled
+     * @param ans the answer that was sent by the player, or "null" if the player did not answer that specific question
+     */
     @Override
     public void postQuestion(Answer ans) {
         powerUp3.setDisable(true);
