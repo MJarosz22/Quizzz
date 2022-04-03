@@ -58,6 +58,8 @@ public class GameController {
         this.createNewMultiplayerLobby("default");
         this.createNewMultiplayerLobby("first");
         this.createNewMultiplayerLobby("second");
+
+        currentMPGIId = 0;
     }
 
     /**
