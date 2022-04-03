@@ -20,8 +20,6 @@ import java.util.stream.Collectors;
 @RequestMapping("api/gameinstance")
 public class GameInstanceController {
 
-    //TODO ADD SCORING
-
     private final Logger logger = LoggerFactory.getLogger(GameInstanceController.class);
     private final List<GameInstanceServer> gameInstances;
     private final GameController gameController;
@@ -67,7 +65,7 @@ public class GameInstanceController {
                                                        @CookieValue(name = "user-id", defaultValue = "null") String cookie) {
         if (getPlayerFromGameInstance(gameInstanceId, cookie) == null) return ResponseEntity.badRequest().build();
         return ResponseEntity.ok(gameInstances.get(gameInstanceId).getPlayers()
-                .stream().map(x -> x.unsafe()).collect(Collectors.toList()));
+                .stream().map(SimpleUser::unsafe).collect(Collectors.toList()));
     }
 
     @DeleteMapping("/{gameInstanceId}/disconnect")

@@ -34,7 +34,6 @@ public class GameController {
 
     private final SimpMessagingTemplate msgs;
     public ActivityController activityController;
-    private final Random random;
     private final List<GameInstanceServer> gameInstances;
     private final List<SimpleUser> players;
     private Map<String, Integer> serverNames;
@@ -45,11 +44,8 @@ public class GameController {
     /**
      * Creates the GameController and initializes the first gameInstance
      *
-     * @param random             Random class
-     * @param activityRepository Repository of all Activities
      */
-    public GameController(Random random, ActivityRepository activityRepository, SimpMessagingTemplate msgs, ActivityController activityController) {
-        this.random = random;
+    public GameController(SimpMessagingTemplate msgs, ActivityController activityController) {
         this.msgs = msgs;
         this.activityController = activityController;
         this.gameInstances = new ArrayList<>();
@@ -60,14 +56,7 @@ public class GameController {
         this.createNewMultiplayerLobby("default");
         this.createNewMultiplayerLobby("first");
         this.createNewMultiplayerLobby("second");
-
-        // ASSUMPTION: we consider the current last multiplayerGameInstanceID to be 0 (the one matching "default" serverName)
-        currentMPGIId = 0;
     }
-
-//    ---------------------------------------------------------------------------
-//    ---------------------------     PRE-LOBBY     -----------------------------
-//    ---------------------------------------------------------------------------
 
     /**
      * Lets a client join a gameInstance as a player
@@ -248,8 +237,6 @@ public class GameController {
         List<String> playerNames = lastGIS.getPlayers().stream().map(Player::getName).collect(Collectors.toList());
         return ResponseEntity.ok(playerNames);
     }
-    // ------------------------------------ ADDITIONAL METHODS ------------------------------------------------------
-
 
     public void createNewMultiplayerLobby(String serverName) {
         GameInstanceServer newGameInstance = new GameInstanceServer(gameInstances.size(), GameInstance.MULTI_PLAYER, this, msgs, serverName);

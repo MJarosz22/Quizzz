@@ -23,8 +23,8 @@ public class GameInstanceServer extends GameInstance {
     GameController gameController;
     SimpMessagingTemplate msgs;
     int questionNumber = -1;
-    private final int questionTime = 12000;
-    private final int postQuestionTime = 5000;
+    private static final int questionTime = 12000;
+    private static final int postQuestionTime = 5000;
     private final List<ServerAnswer> answers;
     private long startingTime;
     Logger logger = LoggerFactory.getLogger(GameInstanceServer.class);
@@ -34,6 +34,14 @@ public class GameInstanceServer extends GameInstance {
 
     private final Timer countdownTimer;
 
+    /**
+     * Creates new GameInstance for multiplayer purposes
+     * @param id ID of GameInstance
+     * @param type Type of GameInstance (SINGLEPLAYER OR MULTIPLAYER)
+     * @param controller GameController (injected)
+     * @param msgs SimpMessagingTemplate for websockets
+     * @param serverName Name of Server
+     */
     public GameInstanceServer(int id, int type, GameController controller, SimpMessagingTemplate msgs, String serverName) {
         super(id, type);
         this.gameController = controller;
@@ -77,6 +85,9 @@ public class GameInstanceServer extends GameInstance {
         setQuestions(questions);
     }
 
+    /**
+     * Starts countdown of this gameInstance, and starts the game after n seconds
+     */
     public void startCountdown() {
         setState(GameState.STARTING);
 
@@ -97,13 +108,20 @@ public class GameInstanceServer extends GameInstance {
         countdownTimer.scheduleAtFixedRate(countdownTask, 0, 1000);
     }
 
+    /**
+     * Starts the game (without countdown)
+     * @param activities List of activities used for generating questions (needs 60 activities.)
+     */
     @Async
     public void startGame(List<Activity> activities) {
-        // gameController.createNewMultiplayerLobby();
         generateQuestions(activities);
         nextQuestion();
     }
 
+    /**
+     * Sends a new question to all clients connected to this gameInstance
+     * @param questionNumber Number of question that needs to be sent.
+     */
     private void sendQuestion(int questionNumber) {
         Question currentQuestion = getQuestions().get(questionNumber);
         logger.info("[GI " + getId() + "] Question " + questionNumber + " sent.");
@@ -118,6 +136,9 @@ public class GameInstanceServer extends GameInstance {
         } else throw new IllegalStateException();
     }
 
+    /**
+     * Lets the gameInstance go to the next question, and sending this question to the client.
+     */
     private void nextQuestion() {
         setState(GameState.INQUESTION);
         if (questionTask != null) questionTask.cancel();
@@ -140,7 +161,6 @@ public class GameInstanceServer extends GameInstance {
                         @Override
                         public void run() {
                             postQuestion();
-//                nextQuestion();
                         }
                     };
                     questionTimer.schedule(questionTask, questionTime);
@@ -158,13 +178,15 @@ public class GameInstanceServer extends GameInstance {
                     @Override
                     public void run() {
                         postQuestion();
-//                nextQuestion();
                     }
                 };
             questionTimer.schedule(questionTask, questionTime);
         }
     }
 
+    /**
+     * Sends the post-question state to all clients and goes to the next question after n seconds.
+     */
     public void postQuestion() {
         questionTask.cancel();
         setState(GameState.POSTQUESTION);
@@ -179,6 +201,10 @@ public class GameInstanceServer extends GameInstance {
         questionTimer.schedule(questionTask, postQuestionTime);
     }
 
+    /**
+     * Returns the time left for the question or post-question
+     * @return
+     */
     public int getTimeLeft() {
         int timeSpent = (int) (System.currentTimeMillis() - startingTime);
         if (getState() == GameState.POSTQUESTION) return (postQuestionTime - timeSpent);
@@ -199,15 +225,19 @@ public class GameInstanceServer extends GameInstance {
         msgs.convertAndSend("/topic/" + getId() + "/players", getPlayers().size());
     }
 
+    /**
+     * Receives the answer from a player and saves this temporarily.
+     * @param player PLayer which sent the answer
+     * @param answer The answer
+     * @return True if answer has been taken into, false otherwise
+     */
     public boolean answerQuestion(SimpleUser player, Answer answer) {
         if (answers.stream()
                 .map(x -> x.getPlayer().getName())
                 .noneMatch(x -> x.equals(player.getName()))) {
             answers.add(new ServerAnswer(answer.getAnswer(), player));
             if (answers.size() == getPlayers().size()) {
-                //TODO POST QUESTION
                 postQuestion();
-//                nextQuestion();
             }
             logger.info("[GI " + getId() + "] Answer received from " + player.getName() + " = " + answer.getAnswer());
             return true;
@@ -215,8 +245,11 @@ public class GameInstanceServer extends GameInstance {
         return false;
     }
 
+    /**
+     * Sends emoji to all connected clients
+     * @param emoji Emoji to show
+     */
     public void sendEmoji(Emoji emoji) {
-        System.out.println(emoji);
         msgs.convertAndSend("/topic/" + getId() + "/emoji", emoji);
     }
 
@@ -259,6 +292,9 @@ public class GameInstanceServer extends GameInstance {
         return status;
     }
 
+    /**
+     * Stops the current gameIstnace, and creates a new one in case this is needed.
+     */
     public void stopGameInstance() {
         if (gameController.getServerNames().get(serverName) == getId())
             gameController.createNewMultiplayerLobby(this.serverName);
@@ -286,7 +322,7 @@ public class GameInstanceServer extends GameInstance {
         GameInstanceServer that = (GameInstanceServer) o;
 
         return new EqualsBuilder().appendSuper(super.equals(o)).append(questionNumber, that.questionNumber)
-                .append(questionTime, that.questionTime).append(gameController, that.gameController)
+                .append(questionTime, GameInstanceServer.questionTime).append(gameController, that.gameController)
                 .append(msgs, that.msgs).isEquals();
     }
 

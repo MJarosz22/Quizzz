@@ -29,7 +29,7 @@ public class GameControllerTest {
         activityRepository = new TestActivityRepository();
         msgs = null;
         ActivityController activityController = new ActivityController(random, activityRepository);
-        sut = new GameController(random, activityRepository, msgs, activityController);
+        sut = new GameController(msgs, activityController);
     }
 
     // ------------------------------------ TEST ADDITIONAL METHODS ------------------------------------------------------

@@ -55,7 +55,7 @@ public class ActivityLoader {
     @Bean
     ApplicationRunner init(ActivityRepository repo){
         try{
-            unzip(new FileInputStream(new File(relativePath + "activities.zip")), new File(relativePath + location).toPath());
+            unzip(new FileInputStream(relativePath + "activities.zip"), new File(relativePath + location).toPath());
             logger.info("Successfully unzipped activities.zip");
         }catch (IOException e){
             logger.warn("Activities.zip is missing (or something else went wrong while loading activities.zip)");
