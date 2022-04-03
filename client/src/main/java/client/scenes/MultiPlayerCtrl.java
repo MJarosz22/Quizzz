@@ -25,11 +25,22 @@ public class MultiPlayerCtrl {
         this.gameCtrl = gameCtrl;
     }
 
+    /**
+     * Method triggered when the "BACK" button is pressed
+     * The splash screen is displayed
+     */
     public void back() {
         this.textfieldName.clear();
         mainCtrl.showSplash();
     }
 
+    /**
+     * Method triggered when the player presses the "JOIN LOBBY" button
+     * Displays an alert if the server is unavailable
+     * Displays an alert if the chosen name is taken
+     * Displays an alert if the player doesn't choose a name
+     * Else it adds the player to the lobby
+     */
     public void join() {
         if (!containsServer(getTextFieldServer())) {
             Alert alert = new Alert(Alert.AlertType.ERROR, "Provided server is not available!");
@@ -48,19 +59,37 @@ public class MultiPlayerCtrl {
         }
     }
 
+    /**
+     * Getter for the name the player inputs
+     * @return the chosen name of the player
+     */
     public String getTextFieldName() {
         return textfieldName.getText();
     }
 
+    /**
+     * Getter for the server the player inputs
+     * @return the chosen server of the player
+     */
     public String getTextFieldServer() {
         return textfieldServer.getText();
     }
 
+    /**
+     * Method to determine if another player in the lobby already has the name the player inputs
+     * @param name the player input
+     * @return true if the name is already chose, false otherwise
+     */
     private boolean containsName(String name) {
         List<String> playerNames = ServerUtils.connectedPlayersOnServer(getTextFieldServer());
         return listContains(playerNames, name);
     }
 
+    /**
+     * Method to determine if the server the player is trying to play on already hosts an ongoing game
+     * @param serverName the server the player inputs
+     * @return true if the server is hosting a game, false otherwise
+     */
     private boolean containsServer(String serverName) {
         List<String> availableServers = server.availableServers();
         return availableServers.contains(serverName);

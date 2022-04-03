@@ -756,6 +756,14 @@ public class SinglePlayerGameCtrl {
         }
     }
 
+    /**
+     * For QuestionInsteadOf
+     * Checks whether the selected answer was correct and awards the player partial points, depending on how fast
+     * he/she answered to this specific question, on behalf of our chosen strategy for this type of question.
+     *
+     * @param player_answer the RadioButton selected by the player
+     * @param response      the correct answer
+     */
     public void isSelectionCorrectInsteadOf(RadioButton player_answer, long response) {
         if(response == currentQuestion.getCorrectAnswer()) {
             int numberOfPoints = calculatePoints(timeLeft);
@@ -913,7 +921,10 @@ public class SinglePlayerGameCtrl {
     }
 
 
-
+    /**
+     * This method helps with adding players to the repository, only if the game is over
+     * @return if the game is over or not
+     */
     public static boolean getGameIsOver(){
         return gameIsOver;
     }
