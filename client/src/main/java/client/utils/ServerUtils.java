@@ -41,7 +41,7 @@ public class ServerUtils {
     /**
      * Returns all players from a gameInstance (if you are also connected to that gameInstance)
      *
-     * @param player One of the players in the gameInstance
+     * @param player The player in the gameInstance that made the request
      * @return List of all players connected to gameInstance
      */
     public List<SimpleUser> getPlayers(SimpleUser player) {
@@ -487,7 +487,7 @@ public class ServerUtils {
     }
 
     /**
-     * Gets the list of available server
+     * Gets the list of available servers
      * @return a list of the names of the available servers
      */
     public List<String> availableServers() {

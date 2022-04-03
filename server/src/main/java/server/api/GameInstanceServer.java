@@ -320,7 +320,7 @@ public class GameInstanceServer extends GameInstance {
 
     /**
      * Gets the name of the server this game instance is on
-     * @return the nam eof the server
+     * @return the name of the server
      */
     public String getServerName() {
         return serverName;
