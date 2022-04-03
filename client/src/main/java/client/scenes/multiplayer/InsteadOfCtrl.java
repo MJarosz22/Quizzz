@@ -302,7 +302,6 @@ public class InsteadOfCtrl implements QuestionCtrl {
                 answer3.setStyle("-fx-background-color: green");
                 break;
             default:
-                System.out.println(answer.getAnswer().intValue());
                 throw new IllegalStateException();
         }
         timeReduced = 0;

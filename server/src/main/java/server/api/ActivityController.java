@@ -25,11 +25,21 @@ public class ActivityController {
         this.activityRepository = activityRepository;
     }
 
+
+    /**
+     * Gets all the activities from the activity repository
+     * @return all the activities from the activity repository
+     */
     @GetMapping(path = {"", "/"})
     public List<Activity> getAll() {
         return activityRepository.findAll();
     }
 
+    /**
+     * Adds an activity to the activity repository
+     * @param activity the activity to be added to the repo
+     * @return the activity that was added to the repo
+     */
     @PostMapping(path = {"", "/"})
     public ResponseEntity<Activity> addActivity(@RequestBody Activity activity) {
         if (isNullOrEmpty(activity.getSource())
@@ -89,6 +99,13 @@ public class ActivityController {
         return size <= 140 && endOfSentence <= 1;
     }
 
+
+    /**
+     * Updates a certain activity
+     * @param id the id of the activity to be updated
+     * @param activity the activity to be updated
+     * @return the updated activity
+     */
     @PutMapping("/{id}")
     public ResponseEntity<Activity> updateActivity(@PathVariable("id") long id, @RequestBody Activity activity) {
         Optional<Activity> activityData = activityRepository.findById(id);
@@ -106,6 +123,12 @@ public class ActivityController {
         return ResponseEntity.notFound().build();
     }
 
+
+    /**
+     * Deletes a certain activity
+     * @param id the id of the activity to be deleted
+     * @return the deleted activity
+     */
     @DeleteMapping("/{id}")
     public ResponseEntity<Activity> deleteActivity(@PathVariable("id") long id) {
         if (activityRepository.existsById(id)) {
@@ -119,6 +142,11 @@ public class ActivityController {
         return ResponseEntity.notFound().build();
     }
 
+
+    /**
+     * Gets a random activity from the activity repository
+     * @return the random activity
+     */
     @GetMapping("/random")
     public ResponseEntity<Activity> getRandom() {
         List<Activity> allAct = getAll();
@@ -156,13 +184,17 @@ public class ActivityController {
                 setOfActivities.add(a.get());
                 i++;
             }
-            idRandom = (int) Math.abs(Math.random() * countIds) - 60;
+            idRandom = (int) Math.abs(random.nextDouble() * countIds) - 60;
         }
         if (setOfActivities.isEmpty()) return ResponseEntity.notFound().build();
         List<Activity> listOfActivities = new ArrayList<>(setOfActivities);
         return ResponseEntity.ok(listOfActivities);
     }
 
+
+    /**
+     * Deletes all the activities in the activity repository
+     */
     @DeleteMapping("/all")
     public ResponseEntity<Activity> deleteAll() {
         try {

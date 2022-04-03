@@ -1,6 +1,5 @@
 package client.scenes;
 
-import client.utils.ServerUtils;
 import com.google.inject.Inject;
 import commons.player.SimpleUser;
 import javafx.beans.binding.Bindings;
@@ -30,12 +29,10 @@ public class SinglePlayerGameOverCtrl {
     @FXML
     TableColumn<String, Integer> positionColumn;
 
-    private final ServerUtils server;
     private final MainCtrl mainCtrl;
 
     @Inject
-    public SinglePlayerGameOverCtrl(ServerUtils server, MainCtrl mainCtrl) {
-        this.server = server;
+    public SinglePlayerGameOverCtrl(MainCtrl mainCtrl) {
         this.mainCtrl = mainCtrl;
     }
 
@@ -49,6 +46,11 @@ public class SinglePlayerGameOverCtrl {
         mainCtrl.showSplash();
     }
 
+    /**
+     * Puts all the players with their scores on the leaderboard table,
+     * with the positions that they obtained during the game
+     * @param players all the players that are shown on the leaderboard
+     */
     public void setTablePlayers(List<SimpleUser> players) {
         nameColumn.setCellValueFactory(new PropertyValueFactory<>("name"));
         scoreColumn.setCellValueFactory(new PropertyValueFactory<>("score"));
