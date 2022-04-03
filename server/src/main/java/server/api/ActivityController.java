@@ -184,7 +184,7 @@ public class ActivityController {
                 setOfActivities.add(a.get());
                 i++;
             }
-            idRandom = (int) Math.abs(Math.random() * countIds) - 60;
+            idRandom = (int) Math.abs(random.nextDouble() * countIds) - 60;
         }
         if (setOfActivities.isEmpty()) return ResponseEntity.notFound().build();
         List<Activity> listOfActivities = new ArrayList<>(setOfActivities);

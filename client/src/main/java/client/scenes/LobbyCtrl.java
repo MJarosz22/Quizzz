@@ -25,7 +25,6 @@ public class LobbyCtrl {
     private final MainCtrl mainCtrl;
     private final GameCtrl gameCtrl;
     private static int persons;
-    private boolean sceneChanged;
 
     @FXML
     private Label timer;
@@ -75,10 +74,7 @@ public class LobbyCtrl {
             timerImage.setVisible(false);
             List<SimpleUser> players = server.getPlayers(gameCtrl.getPlayer());
             updatePlayers(players);
-            //TODO: Discuss whether this minimum number of players is OK
-            if (persons >= 3)
-                start.setDisable(false);
-            else start.setDisable(true);
+            start.setDisable(persons < 3);
         });
     }
 
@@ -97,9 +93,7 @@ public class LobbyCtrl {
         persons = players.size();
         setTablePlayers(players);
         changePrompt();
-        if (persons >= 3)
-            start.setDisable(false);
-        else start.setDisable(true);
+        start.setDisable(persons < 3);
     }
 
     /**
@@ -107,10 +101,7 @@ public class LobbyCtrl {
      * in the singlePlayer variant, the player should be disconnected and guided back to the splash screen.
      */
     public void back() {
-        SimpleUser player = gameCtrl.getPlayer();
-        this.sceneChanged = true;
         gameCtrl.disconnect();
-        System.out.println(player.getName() + " disconnected!");
         mainCtrl.showSplash();
     }
 
@@ -118,7 +109,6 @@ public class LobbyCtrl {
      * Method that gets triggered when a player presses the "PLAY" button
      */
     public void play() {
-        this.sceneChanged = true;
         server.startGame(gameCtrl.getPlayer());
     }
 

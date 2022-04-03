@@ -136,7 +136,6 @@ public class SinglePlayerGameCtrl {
             answered = false;
             startTimer(20);
         });
-
     }
 
     /**
