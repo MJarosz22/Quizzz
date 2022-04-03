@@ -217,6 +217,7 @@ public class HowMuchCtrl implements QuestionCtrl {
      */
     @Override
     public void postQuestion(Answer ans) {
+        powerUp3.setDisable(true);
         submit_guess.setDisable(true); // If an answer was not submitted already.
         timeReduced = 0;
         try {

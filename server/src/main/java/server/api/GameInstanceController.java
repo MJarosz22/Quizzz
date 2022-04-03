@@ -205,6 +205,12 @@ public class GameInstanceController {
         return ResponseEntity.ok(true);
     }
 
+    @GetMapping("/{gameInstanceId}/getServerName")
+    public ResponseEntity<String> getServerName(@PathVariable int gameInstanceId) {
+        if (gameInstanceId < 0 || gameInstanceId >= gameInstances.size()) return ResponseEntity.badRequest().build();
+        return ResponseEntity.ok(gameInstances.get(gameInstanceId).getServerName());
+    }
+
     /**
      * Check if the game is in the right state and make a call to reduce time for players
      *
@@ -279,7 +285,6 @@ public class GameInstanceController {
         if (gameInstanceId < 0 || gameInstanceId >= gameInstances.size()) return ResponseEntity.badRequest().build();
         return ResponseEntity.ok(gameInstances.get(gameInstanceId).getType());
     }
-
 
     /**
      * Additional method that checks whether cookie given is from a player connected to gameInstance with ID

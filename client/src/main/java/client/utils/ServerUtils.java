@@ -188,6 +188,16 @@ public class ServerUtils {
     }
 
 
+    public String getServerName(int gameInstanceId) {
+        Client client = ClientBuilder.newClient(new ClientConfig());
+        return client
+                .target(SERVER).path("api/gameinstance/ " + gameInstanceId + "/getServerName")
+                .request(APPLICATION_JSON)
+                .accept(APPLICATION_JSON)
+                .get(new GenericType<>() {
+                });
+    }
+
     /**
      * Gets all entries in the leaderboard repository
      * @return a list of Simple Users that are all the entries in the global leaderboard
