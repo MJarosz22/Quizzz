@@ -137,7 +137,7 @@ public class GameInstanceServer extends GameInstance {
     }
 
     /**
-     * Lets the gameInstance go to the next question, and sending this question to the client.
+     * Lets the gameInstance go to the next question, and sends this question to the client.
      */
     private void nextQuestion() {
         setState(GameState.INQUESTION);
@@ -202,7 +202,7 @@ public class GameInstanceServer extends GameInstance {
 
     /**
      * Returns the time left for the question or post-question
-     * @return
+     * @return Time left in milliseconds.
      */
     public int getTimeLeft() {
         int timeSpent = (int) (System.currentTimeMillis() - startingTime);
@@ -226,7 +226,7 @@ public class GameInstanceServer extends GameInstance {
 
     /**
      * Receives the answer from a player and saves this temporarily.
-     * @param player PLayer which sent the answer
+     * @param player Player which sent the answer
      * @param answer The answer
      * @return True if answer has been taken into, false otherwise
      */
@@ -292,7 +292,7 @@ public class GameInstanceServer extends GameInstance {
     }
 
     /**
-     * Stops the current gameIstnace, and creates a new one in case this is needed.
+     * Stops the current gameInstance, and creates a new one in case this is needed.
      */
     public void stopGameInstance() {
         if (gameController.getServerNames().get(serverName) == getId())
