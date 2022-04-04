@@ -88,14 +88,19 @@ public class QuestionTest {
     }
 
     @Test
-    public void getNumberTest(){
+    public void getNumberTest() {
         assertEquals(1, q1.getNumber());
     }
 
     @Test
-    public void setNumberTest(){
+    public void setNumberTest() {
         q1.setNumber(2);
         assertEquals(2, q1.getNumber());
+    }
+
+    @Test
+    public void getIdTest() {
+        assertEquals(0, q1.getId());
     }
 
 }
