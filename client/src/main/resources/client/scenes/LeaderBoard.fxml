@@ -22,4 +22,14 @@
             <Font name="Courier New" size="36.0" />
         </font>
     </Text>
+   <TextField fx:id="nameForHighScore" layoutX="710.0" layoutY="156.0" onAction="#obtainHighScore" prefHeight="35.0" prefWidth="186.0" promptText="Enter your name">
+      <font>
+         <Font name="Courier New" size="18.0" />
+      </font>
+   </TextField>
+   <Text fx:id="displayHighScore" layoutX="710.0" layoutY="223.0" strokeType="OUTSIDE" strokeWidth="0.0" text="The highest score of  player X is: " wrappingWidth="226.42333984375">
+      <font>
+         <Font name="Courier New" size="18.0" />
+      </font>
+   </Text>
 </AnchorPane>

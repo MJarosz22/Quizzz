@@ -78,6 +78,12 @@ public class MoreExpensiveCtrl implements QuestionCtrl {
         }
     }
 
+
+    /**
+     * Method triggered when the current question in the game is of type More Expensive
+     * Initiates the More Expensive question, sets the scene and starts the timer
+     * @param question the question that is asked
+     */
     public void init(QuestionMoreExpensive question) {
         this.question = question;
         this.timeReduced = 0;
@@ -151,6 +157,10 @@ public class MoreExpensiveCtrl implements QuestionCtrl {
         player_answer = question.getActivities()[0].getConsumption_in_wh();
     }
 
+
+    /**
+     * The pop-up to confirm the exit from a game is disabled
+     */
     public void disablePopUp(ActionEvent actionEvent) {
         confirmationExit.setVisible(false);
         confirmationExit.setDisable(true);
@@ -235,20 +245,35 @@ public class MoreExpensiveCtrl implements QuestionCtrl {
         new Timer().scheduleAtFixedRate(scheduler, 0, 100);
     }
 
+
+    /**
+     * Method is triggered when the player exists the game
+     */
     public void leaveGame(ActionEvent actionEvent) {
         scheduler.cancel();
         gameCtrl.disconnect();
         mainCtrl.showSplash();
     }
 
+
+    /**
+     * The pop-up to confirm the exit from a game is shown
+     */
     public void enablePopUp(ActionEvent actionEvent) {
         confirmationExit.setVisible(true);
         confirmationExit.setDisable(false);
         confirmationExit.setStyle("-fx-background-color: #91e4fb; ");
     }
 
+
+    /**
+     * Method is triggered after all players have submitted their answer
+     * The points are awarded to the player, the correct answer is displayed and the power ups are disabled
+     * @param answer
+     */
     @Override
     public void postQuestion(Answer answer){
+        powerUp3.setDisable(true);
         if(player_answer != null && player_answer == question.getAnswer()){
             int numberOfPoints = calculatePoints(server.getTimeLeft(gameCtrl.getPlayer()));
             if(doublePointsPUUsed) numberOfPoints = numberOfPoints * 2;
@@ -324,6 +349,12 @@ public class MoreExpensiveCtrl implements QuestionCtrl {
         enableAnswers();
     }
 
+
+    /**
+     * Method to calculate the points according to how fast the player answered
+     * @param timeLeft the time left to answer the question
+     * @return the points the player receives
+     */
     public int calculatePoints(int timeLeft) {
         timeLeft = (int) (timeLeft / 1000d);
         return (timeLeft * 10) / 2;

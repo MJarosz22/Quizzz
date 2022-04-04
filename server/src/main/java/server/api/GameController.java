@@ -16,13 +16,15 @@ import org.springframework.messaging.simp.SimpMessagingTemplate;
 import org.springframework.util.DigestUtils;
 import org.springframework.web.bind.annotation.*;
 import server.database.ActivityLoader;
-import server.database.ActivityRepository;
 
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.InputStream;
 import java.nio.charset.StandardCharsets;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 import java.util.stream.Collectors;
 
 
@@ -34,7 +36,6 @@ public class GameController {
 
     private final SimpMessagingTemplate msgs;
     public ActivityController activityController;
-    private final Random random;
     private final List<GameInstanceServer> gameInstances;
     private final List<SimpleUser> players;
     private Map<String, Integer> serverNames;
@@ -45,11 +46,8 @@ public class GameController {
     /**
      * Creates the GameController and initializes the first gameInstance
      *
-     * @param random             Random class
-     * @param activityRepository Repository of all Activities
      */
-    public GameController(Random random, ActivityRepository activityRepository, SimpMessagingTemplate msgs, ActivityController activityController) {
-        this.random = random;
+    public GameController(SimpMessagingTemplate msgs, ActivityController activityController) {
         this.msgs = msgs;
         this.activityController = activityController;
         this.gameInstances = new ArrayList<>();
@@ -60,13 +58,8 @@ public class GameController {
         addServer("first");
         addServer("second");
 
-        // ASSUMPTION: we consider the current last multiplayerGameInstanceID to be 0 (the one matching "default" serverName)
         currentMPGIId = 0;
     }
-
-//    ---------------------------------------------------------------------------
-//    ---------------------------     PRE-LOBBY     -----------------------------
-//    ---------------------------------------------------------------------------
 
     /**
      * Lets a client join a gameInstance as a player

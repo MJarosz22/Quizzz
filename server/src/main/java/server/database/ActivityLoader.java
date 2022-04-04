@@ -28,6 +28,9 @@ public class ActivityLoader {
     private final static Logger logger = LoggerFactory.getLogger(ActivityLoader.class);
 
     //Credits to StackOverflow user Oliv at https://stackoverflow.com/questions/10633595/java-zip-how-to-unzip-folder
+    /**
+     * Method to unzip the activity.zip file
+     */
     public static void unzip(InputStream is, Path targetDir) throws IOException {
         targetDir = targetDir.toAbsolutePath();
         try (ZipInputStream zipIn = new ZipInputStream(is)) {
@@ -52,10 +55,15 @@ public class ActivityLoader {
         }
     }
 
+
+    /**
+     * Method to add the activities form the activities.json file to the activity repository
+     * @param repo the activity repository to add the activities to
+     */
     @Bean
     ApplicationRunner init(ActivityRepository repo){
         try{
-            unzip(new FileInputStream(new File(relativePath + "activities.zip")), new File(relativePath + location).toPath());
+            unzip(new FileInputStream(relativePath + "activities.zip"), new File(relativePath + location).toPath());
             logger.info("Successfully unzipped activities.zip");
         }catch (IOException e){
             logger.warn("Activities.zip is missing (or something else went wrong while loading activities.zip)");

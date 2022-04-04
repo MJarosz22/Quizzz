@@ -256,6 +256,7 @@ public class InsteadOfCtrl implements QuestionCtrl {
      */
     @Override
     public void postQuestion(Answer answer) {
+        powerUp3.setDisable(true);
         if(player_answer != null && player_answer == question.getAnswer()){
             int numberOfPoints = calculatePoints(server.getTimeLeft(gameCtrl.getPlayer()));
             if(doublePointsPUUsed) numberOfPoints = numberOfPoints * 2;
@@ -301,7 +302,6 @@ public class InsteadOfCtrl implements QuestionCtrl {
                 answer3.setStyle("-fx-background-color: green");
                 break;
             default:
-                System.out.println(answer.getAnswer().intValue());
                 throw new IllegalStateException();
         }
         timeReduced = 0;
