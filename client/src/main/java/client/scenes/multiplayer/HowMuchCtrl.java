@@ -20,8 +20,8 @@ import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.Pane;
 import javafx.scene.text.Text;
 
-import java.io.FileInputStream;
 import java.io.FileNotFoundException;
+import java.net.URL;
 import java.util.Timer;
 import java.util.TimerTask;
 
@@ -63,6 +63,8 @@ public class HowMuchCtrl implements QuestionCtrl {
     private MainCtrl mainCtrl;
     private GameCtrl gameCtrl;
 
+    private String timerPath = "/images/timer.png";
+
     private QuestionHowMuch question;
 
     @Inject
@@ -72,9 +74,10 @@ public class HowMuchCtrl implements QuestionCtrl {
         this.gameCtrl = gameCtrl;
         this.doublePointsPUUsed = false;
         try {
-            timerImageSource = new Image(new FileInputStream("client/src/main/resources/images/timer.png"));
-        } catch (FileNotFoundException e) {
-            System.out.println("Couldn't find timer image.");
+            URL absoluteTimerPath = HowMuchCtrl.class.getResource(this.timerPath);
+            timerImageSource = new Image(absoluteTimerPath.toString());
+        } catch (NullPointerException e) {
+            System.out.println("Couldn't find timer image for multiplayer.");
         }
     }
 
