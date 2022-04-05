@@ -134,7 +134,7 @@ public class QuestionInsteadOf extends Question {
      * @param times, the amount of times calculated in changeActivity
      * @param title, the title of the activity that needs to change
      * @param unit, the unit that was in the title
-     * @return
+     * @return the new title of the activity that needs to change
      */
     public String changeActivityTitle(double times, String title, String unit) {
         String[] titleArray = title.split(" ");
@@ -156,9 +156,10 @@ public class QuestionInsteadOf extends Question {
             }
         }
         StringBuilder builder = new StringBuilder();
-        for(int i = 0; i < titleArray.length; i++) {
+        for(int i = 0; i < titleArray.length-1; i++) {
             builder.append(titleArray[i] + " ");
         }
+        builder.append(titleArray[titleArray.length-1]);
         return builder.toString();
     }
 

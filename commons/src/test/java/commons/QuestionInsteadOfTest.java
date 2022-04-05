@@ -57,7 +57,7 @@ public class QuestionInsteadOfTest {
     }
 
     @Test
-    public void getActivitesTest() {
+    public void getActivitiesTest() {
         assertTrue(Arrays.equals(activities, q.getActivities()));
     }
 
@@ -128,91 +128,91 @@ public class QuestionInsteadOfTest {
     @Test
     public void changeActivityTitle1TitleTest() {
         String result = q.changeActivityTitle(2.0, "I take a shower for 5 seconds", "seconds");
-        String expected = "I take a shower for 10.0 seconds ";
+        String expected = "I take a shower for 10.0 seconds";
         assertEquals(expected, result);
     }
 
     @Test
     public void changeActivityTitle2TitleTest() {
         String result = q.changeActivityTitle(10.0, "I take a shower for 1 second", "second");
-        String expected = "I take a shower for 10.0 seconds ";
+        String expected = "I take a shower for 10.0 seconds";
         assertEquals(expected, result);
     }
 
     @Test
     public void changeActivitySecondTest() {
         Activity otherActivity = new Activity(
-                "Activity-ID-3", "02/test.png", "title3", 12L, "https://www.brightspace.com"
+                "Activity-ID-3", "02/test.png", "title3", 200L, "https://www.brightspace.com"
         );
-        mainActivity.setTitle("I take a shower for 12 second");
-        String before = q.getTitle();
+        mainActivity.setTitle("I take a shower for 12 seconds");
+        String expected = "I take a shower for 24.0 seconds";
         q.changeActivity(otherActivity);
-        assertNotEquals(before, mainActivity.getTitle());
+        assertEquals(expected, mainActivity.getTitle());
     }
 
     @Test
     public void changeActivityMinuteTest() {
         Activity otherActivity = new Activity(
-                "Activity-ID-3", "02/test.png", "title3", 12L, "https://www.brightspace.com"
+                "Activity-ID-3", "02/test.png", "title3", 200L, "https://www.brightspace.com"
         );
-        mainActivity.setTitle("I take a shower for 12 minute");
-        String before = q.getTitle();
+        mainActivity.setTitle("I take a shower for 12 minutes");
+        String expected = "I take a shower for 24.0 minutes";
         q.changeActivity(otherActivity);
-        assertNotEquals(before, mainActivity.getTitle());
+        assertEquals(expected, mainActivity.getTitle());
     }
 
     @Test
     public void changeActivityHourTest() {
         Activity otherActivity = new Activity(
-                "Activity-ID-3", "02/test.png", "title3", 12L, "https://www.brightspace.com"
+                "Activity-ID-3", "02/test.png", "title3", 200L, "https://www.brightspace.com"
         );
-        mainActivity.setTitle("I take a shower for 12 hour");
-        String before = q.getTitle();
+        mainActivity.setTitle("I take a shower for 12 hours");
+        String expected = "I take a shower for 24.0 hours";
         q.changeActivity(otherActivity);
-        assertNotEquals(before, mainActivity.getTitle());
+        assertEquals(expected, mainActivity.getTitle());
     }
 
     @Test
     public void changeActivityDayTest() {
         Activity otherActivity = new Activity(
-                "Activity-ID-3", "02/test.png", "title3", 12L, "https://www.brightspace.com"
+                "Activity-ID-3", "02/test.png", "title3", 200L, "https://www.brightspace.com"
         );
-        mainActivity.setTitle("I take a shower for 12 day");
-        String before = q.getTitle();
+        mainActivity.setTitle("I take a shower for 12 days");
+        String expected = "I take a shower for 24.0 days";
         q.changeActivity(otherActivity);
-        assertNotEquals(before, mainActivity.getTitle());
+        assertEquals(expected, mainActivity.getTitle());
     }
 
     @Test
     public void changeActivityMonthTest() {
         Activity otherActivity = new Activity(
-                "Activity-ID-3", "02/test.png", "title3", 12L, "https://www.brightspace.com"
+                "Activity-ID-3", "02/test.png", "title3", 200L, "https://www.brightspace.com"
         );
-        mainActivity.setTitle("I take a shower for 12 month");
-        String before = q.getTitle();
+        mainActivity.setTitle("I take a shower for 12 months");
+        String expected = "I take a shower for 24.0 months";
         q.changeActivity(otherActivity);
-        assertNotEquals(before, mainActivity.getTitle());
+        assertEquals(expected, mainActivity.getTitle());
     }
 
     @Test
     public void changeActivityYearTest() {
         Activity otherActivity = new Activity(
-                "Activity-ID-3", "02/test.png", "title3", 12L, "https://www.brightspace.com"
+                "Activity-ID-3", "02/test.png", "title3", 200L, "https://www.brightspace.com"
         );
-        mainActivity.setTitle("I take a shower for 12 year");
-        String before = q.getTitle();
+        mainActivity.setTitle("I take a shower for 12 years");
+        String expected = "I take a shower for 24.0 years";
         q.changeActivity(otherActivity);
-        assertNotEquals(before, mainActivity.getTitle());
+        assertEquals(expected, mainActivity.getTitle());
     }
 
     @Test
     public void changeActivityTimesTest() {
         Activity otherActivity = new Activity(
-                "Activity-ID-3", "02/test.png", "title3", 12L, "https://www.brightspace.com"
+                "Activity-ID-3", "02/test.png", "title3", 200L, "https://www.brightspace.com"
         );
         mainActivity.setTitle("I take a shower 12 times");
-        String before = q.getTitle();
+        String expected = "I take a shower 24.0 times";
         q.changeActivity(otherActivity);
-        assertNotEquals(before, mainActivity.getTitle());
+        assertEquals(expected, mainActivity.getTitle());
     }
 }
