@@ -4,11 +4,10 @@ import commons.GameInstance;
 import communication.RequestToJoin;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import org.springframework.http.HttpStatus;
 import org.springframework.messaging.simp.SimpMessagingTemplate;
 
 import java.util.List;
-import java.util.Random;
+
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
@@ -38,28 +37,29 @@ public class GameInstanceControllerTest {
     }
 
     @Test
-    public void getQuestionBadRequestTest(){
-        var actual = sut.getQuestion(-1, 20,  mainCookie);
+    public void getQuestionBadRequestTest() {
+        var actual = sut.getQuestion(-1, 20, mainCookie);
         assertEquals(BAD_REQUEST, actual.getStatusCode());
     }
+
     @Test
-    public void getQuestionForbiddenTest(){
-        var actual = sut.getQuestion(0, 15,  mainCookie);
+    public void getQuestionForbiddenTest() {
+        var actual = sut.getQuestion(0, 15, mainCookie);
         assertEquals(FORBIDDEN, actual.getStatusCode());
     }
 
     @Test
-    public void getQuestionTest(){
-        var actual = sut.getQuestion(0, 15,  mainCookie);
+    public void getQuestionTest() {
+        var actual = sut.getQuestion(0, 15, mainCookie);
         assertEquals(FORBIDDEN, actual.getStatusCode());
     }
 
 
-    public  GameController initGameController() {
+    public GameController initGameController() {
         activityRepository = new TestActivityRepository();
         msgs = null;
         ActivityController activityController = new ActivityController(null, activityRepository);
-        GameController gameCtrl =  new GameController(msgs, activityController);
+        GameController gameCtrl = new GameController(msgs, activityController);
         gameCtrl.addPlayer(new RequestToJoin("Petra", "default", GameInstance.MULTI_PLAYER));
         gameCtrl.addPlayer(new RequestToJoin("Marcin", "default", GameInstance.MULTI_PLAYER));
         gameCtrl.addPlayer(new RequestToJoin("Joshua", "default", GameInstance.MULTI_PLAYER));
