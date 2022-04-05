@@ -299,4 +299,12 @@ public class GameInstanceController {
         if (optPlayer.isEmpty()) return null;
         else return optPlayer.get();
     }
+
+    /**
+     * Getter for the list of gameInstances associated with the controller instance
+     * @return a list of GameInstanceServer object
+     */
+    public List<GameInstanceServer> getGameInstances() {
+        return gameInstances;
+    }
 }
