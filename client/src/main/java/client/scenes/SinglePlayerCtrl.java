@@ -33,7 +33,6 @@ public class SinglePlayerCtrl {
      * Goes back to the splash screen
      */
     public void back() {
-        this.textField.clear();
         mainCtrl.showSplash();
     }
 
@@ -46,7 +45,6 @@ public class SinglePlayerCtrl {
             SimpleUser player = server.addPlayer(new RequestToJoin(getTextField(), null, GameInstance.SINGLE_PLAYER));
             gameCtrl.setPlayer(player);
             playerName = player.getName();
-            this.textField.clear();
             mainCtrl.showSinglePlayerGame();
         }
     }

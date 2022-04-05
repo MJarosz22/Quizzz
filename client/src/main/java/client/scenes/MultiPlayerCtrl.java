@@ -30,7 +30,6 @@ public class MultiPlayerCtrl {
      * The splash screen is displayed
      */
     public void back() {
-        this.textfieldName.clear();
         mainCtrl.showSplash();
     }
 
@@ -53,7 +52,6 @@ public class MultiPlayerCtrl {
             alert.show();
         } else {
             gameCtrl.start(getTextFieldName(), getTextFieldServer());
-            this.textfieldName.clear();
             mainCtrl.getLobbyCtrl().init();
             mainCtrl.showLobby();
         }

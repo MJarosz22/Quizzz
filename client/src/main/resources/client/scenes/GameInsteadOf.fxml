@@ -40,9 +40,9 @@
             </font>
         </Text>
         <AnchorPane fx:id="emoji" layoutX="187.0" layoutY="84.0" prefHeight="30.0" prefWidth="30.0" style="-fx-background-size: contain;" />
-        <RadioButton fx:id="answer1" layoutX="581.0" layoutY="193.0" mnemonicParsing="false" onAction="#answer1Selected" prefHeight="50.0" prefWidth="275.0" text="answer1" wrapText="true" />
-        <RadioButton fx:id="answer2" layoutX="581.0" layoutY="243.0" mnemonicParsing="false" onAction="#answer2Selected" prefHeight="50.0" prefWidth="275.0" text="answer2" wrapText="true" />
-        <RadioButton fx:id="answer3" layoutX="581.0" layoutY="293.0" mnemonicParsing="false" onAction="#answer3Selected" prefHeight="50.0" prefWidth="275.0" text="answer3" wrapText="true" />
+        <RadioButton fx:id="answer1" layoutX="581.0" layoutY="193.0" mnemonicParsing="false" onAction="#answer1Selected" prefHeight="50.0" prefWidth="350.0" text="answer1" wrapText="true" />
+        <RadioButton fx:id="answer2" layoutX="581.0" layoutY="243.0" mnemonicParsing="false" onAction="#answer2Selected" prefHeight="50.0" prefWidth="350.0" text="answer2" wrapText="true" />
+        <RadioButton fx:id="answer3" layoutX="581.0" layoutY="293.0" mnemonicParsing="false" onAction="#answer3Selected" prefHeight="50.0" prefWidth="350.0" text="answer3" wrapText="true" />
         <ImageView fx:id="image4" fitHeight="200.0" fitWidth="309.0" layoutX="205.0" layoutY="160.0" pickOnBounds="true" preserveRatio="true" />
         <Text fx:id="option4" fill="WHITE" layoutX="202.0" layoutY="396.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Option 4 " wrappingWidth="315.2109375">
             <font>
