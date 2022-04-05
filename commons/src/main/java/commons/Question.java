@@ -3,7 +3,7 @@ package commons;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
-import java.util.Objects;
+
 
 /**
  * Abstract base class for all Question-related classes
@@ -74,8 +74,9 @@ public abstract class Question {
     public abstract String toString();
 
     /**
-     * @param o
-     * @return
+     * Equals method that is going to be implemented by all question-related subclasses
+     * @param o Object that is checked whether it is equal to 'this' instance
+     * @return true, if this is the case, or false otherwise
      */
     public abstract boolean equals(Object o);
 
@@ -100,9 +101,11 @@ public abstract class Question {
         this.number = number;
     }
 
+    /**
+     * Method that generates the hashCode for a specific object
+     * @return an integer value representing the hashCode
+     */
     @Override
-    public int hashCode() {
-        return Objects.hash(id, title);
-    }
+    public abstract int hashCode();
 
 }

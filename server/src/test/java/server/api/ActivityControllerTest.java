@@ -55,6 +55,16 @@ public class ActivityControllerTest {
         assertEquals(true, repo.calledMethods.contains("save"));
     }
 
+    @Test
+    public void addActivityEdgeCasesTest() {
+        var actual = sut.addActivity(getActivity(null, "00/1.png", "Boil 2L of water", 120L, "https://www.some-site.com"));
+        assertEquals(BAD_REQUEST, actual.getStatusCode());
+        actual = sut.addActivity(getActivity("id-1", "00/1.png", null, 120L, "https://www.some-site.com"));
+        assertEquals(BAD_REQUEST, actual.getStatusCode());
+        actual = sut.addActivity(getActivity("id-1", "00/1.png", "Boil some water", -15L, "https://www.some-site.com"));
+        assertEquals(BAD_REQUEST, actual.getStatusCode());
+
+    }
 
     @Test
     public void getAllTest() {
@@ -158,6 +168,28 @@ public class ActivityControllerTest {
         );
         assertEquals(BAD_REQUEST, actual.getStatusCode());
     }
+
+    @Test
+    public void getRandomEmptyTest() {
+        var actual = sut.getRandom();
+        assertEquals(NOT_FOUND, actual.getStatusCode());
+    }
+
+    @Test
+    public void getRandomTest() {
+        sut.addActivity(getActivity("id-1", "00/1.png", "Boil 2L of water", 120L, "https://www.some-site.com"));
+        sut.addActivity(getActivity("id-2", "00/2.png", "Do another activity", 15L, "https://www.another-site.com"));
+        sut.addActivity(getActivity("id-3", "00/3.png", "Take a shower for 10 minutes", 60L, "https://www.showers.com"));
+        var actual = sut.getRandom();
+        assertEquals(OK, actual.getStatusCode());
+    }
+
+    @Test
+    public void getRandom60EmptyTest(){
+        var actual = sut.getRandom60();
+        assertEquals(NOT_FOUND, actual.getStatusCode());
+    }
+
 
 
     private static Activity getActivity(String id, String image_path, String title, Long consumption, String source) {
