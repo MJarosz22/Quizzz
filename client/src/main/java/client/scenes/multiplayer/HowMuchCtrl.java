@@ -290,7 +290,6 @@ public class HowMuchCtrl implements QuestionCtrl {
         correct_guess.setVisible(false);
         player_answer.clear();
         enableAnswers();
-//        timer.setText("12000");
     }
 
     /**

@@ -23,7 +23,7 @@ public class GameInstanceServer extends GameInstance {
     GameController gameController;
     SimpMessagingTemplate msgs;
     int questionNumber = -1;
-    private static final int questionTime = 12000;
+    private static final int questionTime = 20000;
     private static final int postQuestionTime = 5000;
     private final List<ServerAnswer> answers;
     private long startingTime;

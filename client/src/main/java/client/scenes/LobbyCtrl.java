@@ -74,7 +74,7 @@ public class LobbyCtrl {
             timerImage.setVisible(false);
             List<SimpleUser> players = server.getPlayers(gameCtrl.getPlayer());
             updatePlayers(players);
-            start.setDisable(persons < 3);
+            start.setDisable(persons < 2);
         });
     }
 
@@ -93,7 +93,7 @@ public class LobbyCtrl {
         persons = players.size();
         setTablePlayers(players);
         changePrompt();
-        start.setDisable(persons < 3);
+        start.setDisable(persons < 2);
     }
 
     /**
