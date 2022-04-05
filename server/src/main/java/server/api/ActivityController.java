@@ -105,7 +105,7 @@ public class ActivityController {
     /**
      * Updates a certain activity
      *
-     * @param id       the id of the activity to be updated
+     * @param id the id of the activity to be updated
      * @param activity the activity to be updated
      * @return the updated activity
      */
