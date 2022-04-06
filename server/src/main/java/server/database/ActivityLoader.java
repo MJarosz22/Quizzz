@@ -9,10 +9,7 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
 import java.io.*;
-import java.nio.file.FileAlreadyExistsException;
-import java.nio.file.Files;
-import java.nio.file.Path;
-import java.nio.file.Paths;
+import java.nio.file.*;
 import java.util.Arrays;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -23,8 +20,13 @@ import java.util.zip.ZipInputStream;
 public class ActivityLoader {
 
     private static final String location = "activities";
-    public static final String relativePath = "server/src/main/resources/";
-    public static final String path = relativePath + location + "/";
+    public static final String relativePath = "src/main/resources/";
+    public static String absolutePath = FileSystems.getDefault()
+            .getPath(relativePath)
+            .normalize()
+            .toAbsolutePath()
+            .toString() + "/";
+    public static final String path = absolutePath + location + "/";
     private final static Logger logger = LoggerFactory.getLogger(ActivityLoader.class);
 
     //Credits to StackOverflow user Oliv at https://stackoverflow.com/questions/10633595/java-zip-how-to-unzip-folder
@@ -47,7 +49,7 @@ public class ActivityLoader {
                     Files.createDirectories(resolvedPath.getParent());
                     try {
                         Files.copy(zipIn, resolvedPath);
-                    }catch (FileAlreadyExistsException e){
+                    } catch (FileAlreadyExistsException e) {
                         logger.debug("File " + ze.getName() + " already exists.");
                     }
                 }
@@ -65,7 +67,8 @@ public class ActivityLoader {
         try{
             unzip(new FileInputStream(relativePath + "activities.zip"), new File(relativePath + location).toPath());
             logger.info("Successfully unzipped activities.zip");
-        }catch (IOException e){
+        } catch (IOException e) {
+            logger.info(absolutePath);
             logger.warn("Activities.zip is missing (or something else went wrong while loading activities.zip)");
             logger.info("It should be located at resources/activities.zip");
         }
@@ -73,13 +76,13 @@ public class ActivityLoader {
             ObjectMapper mapper = new ObjectMapper();
             try {
                 List<Activity> activities = Arrays.asList(mapper.readValue(Paths
-                        .get(relativePath + location + "/activities.json").toFile(), Activity[].class));
+                        .get(absolutePath + location + "/activities.json").toFile(), Activity[].class));
                 activities = activities.stream().filter(x -> x.getSource().length() < 150).collect(Collectors.toList());
                 repo.saveAll(activities);
                 logger.info("Activities added to repo");
-            }catch (IllegalArgumentException ex) {
+            } catch (IllegalArgumentException ex) {
                 logger.error("Something went wrong while loading activities.json");
-            }catch (FileNotFoundException e){
+            } catch (FileNotFoundException e) {
                 logger.warn("activities.json not found");
                 logger.info("It should be located at resources/activities/activities.json");
             }
