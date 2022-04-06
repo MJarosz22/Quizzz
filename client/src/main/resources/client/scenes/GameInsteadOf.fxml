@@ -57,21 +57,6 @@
                 <Font size="14.0" />
             </font>
         </Text>
-        <Pane fx:id="confirmationExit" layoutY="1.0" prefHeight="540.0" prefWidth="960.0">
-            <children>
-                <Button layoutX="545.0" layoutY="336.0" mnemonicParsing="false" onAction="#leaveGame" prefHeight="158.0"
-                        prefWidth="349.0" text="YES"/>
-                <Button layoutX="102.0" layoutY="337.0" mnemonicParsing="false" onAction="#disablePopUp"
-                        prefHeight="158.0" prefWidth="367.0" text="NO"/>
-                <Text layoutX="257.0" layoutY="206.0" strokeType="OUTSIDE" strokeWidth="0.0"
-                      text="Are you sure you want to leave the game? " wrappingWidth="576.4140625">
-                    <font>
-                        <Font size="28.0"/>
-                    </font>
-                </Text>
-            </children>
-        </Pane>
-
         <Pane layoutX="690.0" layoutY="20.0" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="120.0" prefWidth="250.0">
             <children>
                 <Pane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="60.0" prefWidth="250.0">
@@ -143,6 +128,20 @@
                         </Text>
                     </children>
                 </Pane>
+            </children>
+        </Pane>
+        <Pane fx:id="confirmationExit" layoutY="1.0" prefHeight="540.0" prefWidth="960.0">
+            <children>
+                <Button layoutX="545.0" layoutY="336.0" mnemonicParsing="false" onAction="#leaveGame" prefHeight="158.0"
+                        prefWidth="349.0" text="YES"/>
+                <Button layoutX="102.0" layoutY="337.0" mnemonicParsing="false" onAction="#disablePopUp"
+                        prefHeight="158.0" prefWidth="367.0" text="NO"/>
+                <Text layoutX="257.0" layoutY="206.0" strokeType="OUTSIDE" strokeWidth="0.0"
+                      text="Are you sure you want to leave the game? " wrappingWidth="576.4140625">
+                    <font>
+                        <Font size="28.0"/>
+                    </font>
+                </Text>
             </children>
         </Pane>
     </children>
