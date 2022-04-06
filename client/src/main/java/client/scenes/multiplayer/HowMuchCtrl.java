@@ -95,7 +95,7 @@ public class HowMuchCtrl implements QuestionCtrl {
         questionCount.setText("Question " + question.getNumber() + "/20");
         option4.setText(question.getActivity().getTitle());
         disconnect.setVisible(false);
-        progressBar.setProgress(question.getNumber() / 20.0d + 0.05);
+        progressBar.setProgress(question.getNumber() / 20.0d);
         setPowerUps();
         score.setText("Your score: " + gameCtrl.getPlayer().getScore());
         answer.setVisible(false);
@@ -218,6 +218,7 @@ public class HowMuchCtrl implements QuestionCtrl {
      */
     @Override
     public void postQuestion(Answer ans) {
+        powerUp2.setDisable(true);
         powerUp3.setDisable(true);
         submit_guess.setDisable(true); // If an answer was not submitted already.
         timeReduced = 0;
