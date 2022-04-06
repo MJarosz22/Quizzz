@@ -66,6 +66,7 @@ public class WhichOneCtrl implements QuestionCtrl {
     private final GameCtrl gameCtrl;
 
     Long player_answer;
+    private int timeLeft;
 
     @Inject
     public WhichOneCtrl(ServerUtils server, MainCtrl mainCtrl, GameCtrl gameCtrl) {
@@ -115,7 +116,7 @@ public class WhichOneCtrl implements QuestionCtrl {
         scheduler = new TimerTask() {
             @Override
             public void run() {
-                int timeLeft = server.getTimeLeft(gameCtrl.getPlayer());
+                timeLeft = server.getTimeLeft(gameCtrl.getPlayer());
                 Platform.runLater(() -> {
                     if (Math.round((timeLeft) / 1000d) <= 2)
                         powerUp3.setDisable(true);
@@ -224,7 +225,7 @@ public class WhichOneCtrl implements QuestionCtrl {
 
             @Override
             public void run() {
-                int timeLeft = server.getTimeLeft(gameCtrl.getPlayer());
+                timeLeft = server.getTimeLeft(gameCtrl.getPlayer());
                 Platform.runLater(() -> {
                     timer.setText(String.valueOf(Math.max(Math.round((timeLeft - timeReduced) / 1000d), 0)));
                 });
@@ -269,7 +270,7 @@ public class WhichOneCtrl implements QuestionCtrl {
     public void postQuestion(Answer answer) {
         powerUp3.setDisable(true);
         if(player_answer != null && player_answer == question.getAnswer()){
-            int numberOfPoints = calculatePoints(server.getTimeLeft(gameCtrl.getPlayer()));
+            int numberOfPoints = calculatePoints(timeLeft);
             gameCtrl.getPlayer().addScore(numberOfPoints);
             if(doublePointsPUUsed) numberOfPoints = numberOfPoints * 2;
             server.updatePlayer(gameCtrl.getPlayer());

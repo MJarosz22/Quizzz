@@ -64,6 +64,7 @@ public class HowMuchCtrl implements QuestionCtrl {
     private GameCtrl gameCtrl;
 
     private QuestionHowMuch question;
+    private int timeLeft;
 
     @Inject
     public HowMuchCtrl(ServerUtils server, MainCtrl mainCtrl, GameCtrl gameCtrl) {
@@ -110,7 +111,7 @@ public class HowMuchCtrl implements QuestionCtrl {
         scheduler = new TimerTask() {
             @Override
             public void run() {
-                int timeLeft = server.getTimeLeft(gameCtrl.getPlayer());
+                timeLeft = server.getTimeLeft(gameCtrl.getPlayer());
                 Platform.runLater(() -> {
                     if (Math.round((timeLeft) / 1000d) <= 2)
                         powerUp3.setDisable(true);
@@ -179,7 +180,7 @@ public class HowMuchCtrl implements QuestionCtrl {
 
             @Override
             public void run() {
-                int timeLeft = server.getTimeLeft(gameCtrl.getPlayer());
+                 timeLeft = server.getTimeLeft(gameCtrl.getPlayer());
                 Platform.runLater(() -> {
                     timer.setText(String.valueOf(Math.max(Math.round((timeLeft - timeReduced) / 1000d), 0)));
                 });

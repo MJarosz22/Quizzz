@@ -67,6 +67,7 @@ public class InsteadOfCtrl implements QuestionCtrl {
     private QuestionInsteadOf question;
 
     Long player_answer;
+    private int timeLeft;
 
     @Inject
     public InsteadOfCtrl(ServerUtils server, MainCtrl mainCtrl, GameCtrl gameCtrl) {
@@ -115,7 +116,7 @@ public class InsteadOfCtrl implements QuestionCtrl {
         scheduler = new TimerTask() {
             @Override
             public void run() {
-                int timeLeft = server.getTimeLeft(gameCtrl.getPlayer());
+                 timeLeft = server.getTimeLeft(gameCtrl.getPlayer());
                 Platform.runLater(() -> {
                     if (Math.round((timeLeft) / 1000d) <= 2)
                         powerUp3.setDisable(true);
@@ -220,7 +221,7 @@ public class InsteadOfCtrl implements QuestionCtrl {
 
             @Override
             public void run() {
-                int timeLeft = server.getTimeLeft(gameCtrl.getPlayer());
+                 timeLeft = server.getTimeLeft(gameCtrl.getPlayer());
                 Platform.runLater(() -> {
                     timer.setText(String.valueOf(Math.max(Math.round((timeLeft - timeReduced) / 1000d), 0)));
                 });
@@ -258,7 +259,7 @@ public class InsteadOfCtrl implements QuestionCtrl {
     public void postQuestion(Answer answer) {
         powerUp3.setDisable(true);
         if(player_answer != null && player_answer == question.getAnswer()){
-            int numberOfPoints = calculatePoints(server.getTimeLeft(gameCtrl.getPlayer()));
+            int numberOfPoints = calculatePoints(timeLeft);
             if(doublePointsPUUsed) numberOfPoints = numberOfPoints * 2;
             gameCtrl.getPlayer().addScore(numberOfPoints);
             server.updatePlayer(gameCtrl.getPlayer());
