@@ -67,6 +67,7 @@ public class WhichOneCtrl implements QuestionCtrl {
 
     Long player_answer;
     private int timeLeft;
+    private int answerTime;
 
     @Inject
     public WhichOneCtrl(ServerUtils server, MainCtrl mainCtrl, GameCtrl gameCtrl) {
@@ -134,6 +135,7 @@ public class WhichOneCtrl implements QuestionCtrl {
         powerUp1.setDisable(true);
         gameCtrl.submitAnswer(new Answer((long) 3));
         player_answer = question.getAnswers()[2];
+        answerTime = timeLeft;
     }
 
     public void answer2Selected(ActionEvent actionEvent) {
@@ -143,6 +145,7 @@ public class WhichOneCtrl implements QuestionCtrl {
         powerUp1.setDisable(true);
         gameCtrl.submitAnswer(new Answer((long) 2));
         player_answer = question.getAnswers()[1];
+        answerTime = timeLeft;
     }
 
     public void answer1Selected(ActionEvent actionEvent) {
@@ -152,6 +155,7 @@ public class WhichOneCtrl implements QuestionCtrl {
         powerUp1.setDisable(true);
         gameCtrl.submitAnswer(new Answer((long) 1));
         player_answer = question.getAnswers()[0];
+        answerTime = timeLeft;
     }
 
 
@@ -269,7 +273,7 @@ public class WhichOneCtrl implements QuestionCtrl {
     public void postQuestion(Answer answer) {
         powerUp3.setDisable(true);
         if(player_answer != null && player_answer == question.getAnswer()){
-            int numberOfPoints = calculatePoints(timeLeft);
+            int numberOfPoints = calculatePoints(answerTime);
             gameCtrl.getPlayer().addScore(numberOfPoints);
             if(doublePointsPUUsed) numberOfPoints = numberOfPoints * 2;
             server.updatePlayer(gameCtrl.getPlayer());
