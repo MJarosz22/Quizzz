@@ -94,7 +94,7 @@ public class InsteadOfCtrl implements QuestionCtrl {
         questionTitle.setText(question.getTitle());
         questionCount.setText("Question " + question.getNumber() + "/20");
         option4.setText(question.getActivity().getTitle());
-        progressBar.setProgress(question.getNumber() / 20.0d + 0.05);
+        progressBar.setProgress(question.getNumber() / 20.0d);
         disconnect.setVisible(false);
         answer1.setText(question.getAnswers()[0]);
         answer2.setText(question.getAnswers()[1]);

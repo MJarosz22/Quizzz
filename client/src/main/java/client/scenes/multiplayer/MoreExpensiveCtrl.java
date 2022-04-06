@@ -98,7 +98,7 @@ public class MoreExpensiveCtrl implements QuestionCtrl {
         option2Button.setText(question.getActivities()[1].getTitle());
         option3Button.setText(question.getActivities()[2].getTitle());
         disconnect.setVisible(false);
-        progressBar.setProgress(question.getNumber() / 20.0d + 0.05);
+        progressBar.setProgress(question.getNumber() / 20.0d);
         score.setText("Your score: " + gameCtrl.getPlayer().getScore());
         answer.setVisible(false);
         points.setVisible(false);

@@ -98,7 +98,7 @@ public class WhichOneCtrl implements QuestionCtrl {
         questionCount.setText("Question " + question.getNumber() + "/20");
         option4.setText(question.getActivity().getTitle());
         disconnect.setVisible(false);
-        progressBar.setProgress(question.getNumber() / 20.0d + 0.05);
+        progressBar.setProgress(question.getNumber() / 20.0d);
         answer1.setText(String.valueOf(question.getAnswers()[0]));
         answer2.setText(String.valueOf(question.getAnswers()[1]));
         answer3.setText(String.valueOf(question.getAnswers()[2]));
@@ -233,7 +233,6 @@ public class WhichOneCtrl implements QuestionCtrl {
                 if (Math.round((timeLeft - timeReduced) / 1000d) <= 0) {
                     Platform.runLater(WhichOneCtrl.this::disableAnswers);
                 }
-
             }
         };
         new Timer().scheduleAtFixedRate(scheduler, 0, 100);
