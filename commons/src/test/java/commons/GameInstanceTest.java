@@ -116,8 +116,8 @@ public class GameInstanceTest {
         GameInstance gameInstance = new GameInstance(0, GameInstance.SINGLE_PLAYER);
         List<Activity> activities = this.generateActivities();
         gameInstance.generateQuestions(activities);
-        Activity expectedActivity = new Activity("Activity-ID4", "4/test.png", "Title #4", 4L, "https://www.the-same-source.com");
-        QuestionWhichOne expectedQuestion = new QuestionWhichOne(expectedActivity, 2);
+        Activity expectedActivity = new Activity("Activity-ID3", "3/test.png", "Title #3", 3L, "https://www.the-same-source.com");
+        QuestionHowMuch expectedQuestion = new QuestionHowMuch(expectedActivity, 2);
         assertEquals(expectedQuestion, gameInstance.getQuestions().get(1));
     }
 
