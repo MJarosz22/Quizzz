@@ -37,13 +37,20 @@ public class SinglePlayerGameOverCtrl {
     }
 
     /**
-     * Method that is triggered when the user presses 'PLAY AGAIN' button in GameOver screen
+     * Method that is triggered when the user presses 'BACK' button in GameOver screen
      */
     public void back() {
         SinglePlayerCtrl singlePlayerCtrl = mainCtrl.getSinglePlayerCtrl();
         String previousTextField = singlePlayerCtrl.getPlayerName();
         singlePlayerCtrl.setTextField(previousTextField);
         mainCtrl.showSplash();
+    }
+
+    public void playAgain() {
+        SinglePlayerCtrl singlePlayerCtrl = mainCtrl.getSinglePlayerCtrl();
+        String name = singlePlayerCtrl.getPlayerName();
+        singlePlayerCtrl.setTextField(name);
+        singlePlayerCtrl.play();
     }
 
     /**
