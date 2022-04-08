@@ -20,7 +20,6 @@ import static org.springframework.http.HttpStatus.*;
 public class GameInstanceControllerTest {
 
     private TestActivityRepository activityRepository;
-    private SimpMessagingTemplate msgs;
     private GameController gameController;
     private List<GameInstanceServer> gameInstances;
     private GameInstanceController sut;
@@ -28,7 +27,10 @@ public class GameInstanceControllerTest {
     private Question q1, q2, q3;
     private Activity[] activities;
     private String firstCookie;
+    private String secondCookie;
+    private String thirdCookie;
     private GameInstanceServer firstGI;
+    private GameInstanceServer singlePlayerGI;
 
     @BeforeEach
     public void initController() {
@@ -37,7 +39,10 @@ public class GameInstanceControllerTest {
         this.gameInstances = sut.getGameInstances();
         this.mainCookie = "ec04009d98eb9e994d7563480477693c";
         this.firstGI = gameInstances.get(0);
+        this.singlePlayerGI = gameInstances.get(2);
         this.firstCookie = gameInstances.get(0).getPlayers().get(0).getCookie();
+        this.secondCookie = gameInstances.get(0).getPlayers().get(1).getCookie();
+        this.thirdCookie = gameInstances.get(3).getPlayers().get(0).getCookie();
     }
 
     @Test
@@ -92,6 +97,15 @@ public class GameInstanceControllerTest {
     @Test
     public void disconnectTest() {
         var actual = sut.disconnect(0, firstCookie);
+        assertEquals(OK, actual.getStatusCode());
+    }
+    @Test
+    public void disconnectAllPlayers() {
+        firstGI.setState(GameState.INQUESTION);
+        singlePlayerGI.setState(GameState.INQUESTION);
+        var actual = sut.disconnect(0, firstCookie);
+        sut.disconnect(0, secondCookie);
+        sut.disconnect(3, thirdCookie);
         assertEquals(OK, actual.getStatusCode());
     }
 
@@ -344,11 +358,8 @@ public class GameInstanceControllerTest {
         ActivityController activityController = new ActivityController(null, activityRepository);
         GameController gameCtrl = new GameController(msgs, activityController);
         gameCtrl.addPlayer(new RequestToJoin("Petra", "default", GameInstance.MULTI_PLAYER)); //1st
-        gameCtrl.addPlayer(new RequestToJoin("Marcin", "default", GameInstance.MULTI_PLAYER));
-        gameCtrl.addPlayer(new RequestToJoin("Joshua", "default", GameInstance.MULTI_PLAYER));
-        gameCtrl.addPlayer(new RequestToJoin("Sophie", "default", GameInstance.MULTI_PLAYER));
-        gameCtrl.addPlayer(new RequestToJoin("Vlad", null, GameInstance.SINGLE_PLAYER));
-        gameCtrl.addPlayer(new RequestToJoin("Rafael", null, GameInstance.SINGLE_PLAYER));
+        gameCtrl.addPlayer(new RequestToJoin("Marcin", "default", GameInstance.MULTI_PLAYER)); //2nd
+        gameCtrl.addPlayer(new RequestToJoin("Alexandra", null, GameInstance.SINGLE_PLAYER)); //2nd
         return gameCtrl;
     }
 
