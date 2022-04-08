@@ -18,13 +18,11 @@ import java.io.File;
 import java.io.FileNotFoundException;
 import java.net.URL;
 import java.util.Random;
-import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
 
 import static java.util.concurrent.TimeUnit.SECONDS;
 
-//Note that in the future, we can make this controller and its scene suitable for multiplayer games as well
 public class SinglePlayerGameCtrl {
 
     private final ServerUtils server;
@@ -324,6 +322,7 @@ public class SinglePlayerGameCtrl {
      * This method is called when user selects option 1 in a QuestionMoreExpensive
      */
     public void option1Selected() {
+        answered = true;
         if (((QuestionMoreExpensive) currentQuestion).getAnswer() == ((QuestionMoreExpensive) currentQuestion)
                 .getActivities()[0].getConsumption_in_wh()) {
             correctAnswer();
@@ -336,6 +335,7 @@ public class SinglePlayerGameCtrl {
      * This method is called when user selects option 2 in a QuestionMoreExpensive
      */
     public void option2Selected() {
+        answered = true;
         if (((QuestionMoreExpensive) currentQuestion).getAnswer() == ((QuestionMoreExpensive) currentQuestion)
                 .getActivities()[1].getConsumption_in_wh()) {
             correctAnswer();
@@ -348,6 +348,7 @@ public class SinglePlayerGameCtrl {
      * This method is called when user selects option 3 in a QuestionMoreExpensive
      */
     public void option3Selected() {
+        answered = true;
         if (((QuestionMoreExpensive) currentQuestion).getAnswer() == ((QuestionMoreExpensive) currentQuestion)
                 .getActivities()[2].getConsumption_in_wh()) {
             correctAnswer();
@@ -365,16 +366,7 @@ public class SinglePlayerGameCtrl {
     public void correctAnswer() {
         displayCorrectAnswerUpdates();
 
-        CompletableFuture.delayedExecutor(1, SECONDS).execute(() -> {
-            if (!isGameOver())
-                loadNextQuestion();
-        });
-
-
-        if (roundCounter >= 20) {
-            gameOver(2000);
-        }
-
+        freezeScreen();
     }
 
     /**
@@ -401,11 +393,7 @@ public class SinglePlayerGameCtrl {
     public void wrongAnswer() {
         displayWrongAnswerUpdates();
 
-        CompletableFuture.delayedExecutor(1, SECONDS).execute(() -> {
-            if (!isGameOver()) loadNextQuestion();
-        });
-
-        if (roundCounter >= 20) gameOver(2000);
+        freezeScreen();
     }
 
     /**
@@ -564,14 +552,10 @@ public class SinglePlayerGameCtrl {
             correct_guess.setText("The correct answer is: " + correct_number);
             setOptions(true);
 
-            CompletableFuture.delayedExecutor(1, SECONDS).execute(() -> {
-                if (!isGameOver())
-                    loadNextQuestion();
-            });
+            answered = true;
 
-            if (roundCounter >= 20) {
-                gameOver(2000);
-            }
+            freezeScreen();
+
         } catch (NumberFormatException e) {
             player_answer.clear();
             correct_guess.setVisible(true);
@@ -631,20 +615,15 @@ public class SinglePlayerGameCtrl {
         correct_guess.setText("The correct answer is: " + ((QuestionHowMuch) currentQuestion).getActivity().getConsumption_in_wh());
         setOptions(true);
 
-        CompletableFuture.delayedExecutor(1, SECONDS).execute(() -> {
-            if (!isGameOver())
-                loadNextQuestion();
-        });
-
-        if (roundCounter >= 20) {
-            gameOver(2000);
-        }
+        freezeScreen();
     }
 
     /**
      * This method is called when user selects answer1 in a QuestionWhichOne type of question
      */
     public void answer1Selected() {
+        answered = true;
+
         if (currentQuestion instanceof QuestionWhichOne) {
             long response = Long.parseLong(answer1.getText());
             isSelectionCorrect(answer1, response);
@@ -658,6 +637,8 @@ public class SinglePlayerGameCtrl {
      * This method is called when user selects answer2 in a QuestionWhichOne type of question
      */
     public void answer2Selected() {
+        answered = true;
+
         if (currentQuestion instanceof QuestionWhichOne) {
             long response = Long.parseLong(answer2.getText());
             isSelectionCorrect(answer2, response);
@@ -671,6 +652,8 @@ public class SinglePlayerGameCtrl {
      * This method is called when user selects answer3 in a QuestionWhichOne type of question
      */
     public void answer3Selected() {
+        answered = true;
+
         if (currentQuestion instanceof QuestionWhichOne) {
             long response = Long.parseLong(answer3.getText());
             isSelectionCorrect(answer3, response);
@@ -689,7 +672,7 @@ public class SinglePlayerGameCtrl {
      * @param response      the correct answer
      */
     public void isSelectionCorrect(RadioButton player_answer, long response) {
-        if (response == ((QuestionWhichOne) currentQuestion).getActivity().getConsumption_in_wh()) {
+        if (player_answer != null && response == ((QuestionWhichOne) currentQuestion).getActivity().getConsumption_in_wh()) {
             int numberOfPoints = calculatePoints(timeLeft);
             player.addScore(numberOfPoints);
             server.updatePlayer(player);
@@ -716,15 +699,8 @@ public class SinglePlayerGameCtrl {
 
         setOptions(true);
 
-        CompletableFuture.delayedExecutor(1, SECONDS).execute(() -> {
-            if (!isGameOver())
-                loadNextQuestion();
-        });
+        freezeScreen();
 
-
-        if (roundCounter >= 20) {
-            gameOver(2000);
-        }
     }
 
     /**
@@ -736,7 +712,7 @@ public class SinglePlayerGameCtrl {
      * @param response      the correct answer
      */
     public void isSelectionCorrectInsteadOf(RadioButton player_answer, long response) {
-        if (response == currentQuestion.getCorrectAnswer()) {
+        if (player_answer != null && response == currentQuestion.getCorrectAnswer()) {
             int numberOfPoints = calculatePoints(timeLeft);
             player.addScore(numberOfPoints);
             server.updatePlayer(player);
@@ -763,15 +739,7 @@ public class SinglePlayerGameCtrl {
 
         setOptions(true);
 
-        CompletableFuture.delayedExecutor(1, SECONDS).execute(() -> {
-            if (!isGameOver())
-                loadNextQuestion();
-        });
-
-
-        if (roundCounter >= 20) {
-            gameOver(2000);
-        }
+        freezeScreen();
     }
 
 
@@ -796,8 +764,9 @@ public class SinglePlayerGameCtrl {
                         noGuess();
                     else if (currentQ instanceof QuestionWhichOne)
                         isSelectionCorrect(null, 0);
-                    else
+                    else if (currentQ instanceof QuestionMoreExpensive)
                         wrongAnswer();
+                    else isSelectionCorrectInsteadOf(null, 0);
                     timer.setText(String.valueOf(countdown));
                     scheduler.shutdown();
                 } else if (currentQ != currentQuestion || answered || !server.containsPlayer(player)) {
@@ -891,10 +860,44 @@ public class SinglePlayerGameCtrl {
 
     /**
      * This method helps with adding players to the repository, only if the game is over
+     *
      * @return if the game is over or not
      */
-    public static boolean getGameIsOver(){
+    public static boolean getGameIsOver() {
         return gameIsOver;
     }
 
+    /**
+     * Method that shows the player the correct answer for each question type.
+     * The scene will be frozen for 5 minutes,
+     * while the timer will point out the remaining time before a new question is loaded / gameOver screen is shown
+     */
+    public void freezeScreen() {
+
+        ScheduledExecutorService scheduler = Executors.newScheduledThreadPool(1);
+        Runnable runnable = new Runnable() {
+            int countdown = 5;
+
+            public void run() {
+                if (countdown == 0) {
+                    timer.setText(String.valueOf(countdown));
+                    postQuestion();
+                    scheduler.shutdown();
+                } else {
+                    timer.setText(String.valueOf(countdown--));
+                }
+            }
+        };
+        scheduler.scheduleAtFixedRate(runnable, 0, 1, SECONDS);
+    }
+
+    /**
+     * Additional method that loads the next question if the game is not over yet, or calls the gameOver() method otherwise
+     */
+    public void postQuestion() {
+        if (roundCounter >= 20) {
+            gameOver(0);
+        } else if (!isGameOver())
+            loadNextQuestion();
+    }
 }
