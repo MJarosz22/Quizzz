@@ -19,9 +19,9 @@ import javafx.scene.paint.Color;
 import javafx.scene.text.Text;
 
 import javax.inject.Inject;
-import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.util.Random;
+import java.net.URL;
 import java.util.Timer;
 import java.util.TimerTask;
 
@@ -61,9 +61,13 @@ public class MoreExpensiveCtrl implements QuestionCtrl {
     private final GameCtrl gameCtrl;
     private final ServerUtils server;
 
+    private String timerPath = "/images/timer.png";
+
     private QuestionMoreExpensive question;
 
     Long player_answer;
+    private int timeLeft;
+    private int answerTime;
 
     @Inject
     public MoreExpensiveCtrl(MainCtrl mainCtrl, GameCtrl gameCtrl, ServerUtils server) {
@@ -72,9 +76,10 @@ public class MoreExpensiveCtrl implements QuestionCtrl {
         this.server = server;
         this.doublePointsPUUsed = false;
         try {
-            timerImageSource = new Image(new FileInputStream("client/src/main/resources/images/timer.png"));
-        } catch (FileNotFoundException e) {
-            System.out.println("Couldn't find timer image.");
+            URL absoluteTimerPath = MoreExpensiveCtrl.class.getResource(this.timerPath);
+            timerImageSource = new Image(absoluteTimerPath.toString());
+        } catch (NullPointerException e) {
+            System.out.println("Couldn't find timer image for multiplayer.");
         }
     }
 
@@ -98,7 +103,7 @@ public class MoreExpensiveCtrl implements QuestionCtrl {
         option2Button.setText(question.getActivities()[1].getTitle());
         option3Button.setText(question.getActivities()[2].getTitle());
         disconnect.setVisible(false);
-        progressBar.setProgress(question.getNumber() / 20.0d + 0.05);
+        progressBar.setProgress(question.getNumber() / 20.0d);
         score.setText("Your score: " + gameCtrl.getPlayer().getScore());
         answer.setVisible(false);
         points.setVisible(false);
@@ -116,7 +121,7 @@ public class MoreExpensiveCtrl implements QuestionCtrl {
         scheduler = new TimerTask() {
             @Override
             public void run() {
-                int timeLeft = server.getTimeLeft(gameCtrl.getPlayer());
+                 timeLeft = server.getTimeLeft(gameCtrl.getPlayer());
                 Platform.runLater(() -> {
                     if (Math.round((timeLeft) / 1000d) <= 2)
                         powerUp3.setDisable(true);
@@ -135,6 +140,7 @@ public class MoreExpensiveCtrl implements QuestionCtrl {
         powerUp1.setDisable(true);
         gameCtrl.submitAnswer(new Answer((long) 3));
         player_answer = question.getActivities()[2].getConsumption_in_wh();
+        answerTime = timeLeft;
     }
 
     public void option2Selected(ActionEvent actionEvent) {
@@ -145,6 +151,7 @@ public class MoreExpensiveCtrl implements QuestionCtrl {
         powerUp1.setDisable(true);
         gameCtrl.submitAnswer(new Answer((long) 2));
         player_answer = question.getActivities()[1].getConsumption_in_wh();
+        answerTime = timeLeft;
     }
 
     public void option1Selected(ActionEvent actionEvent) {
@@ -155,6 +162,7 @@ public class MoreExpensiveCtrl implements QuestionCtrl {
         powerUp1.setDisable(true);
         gameCtrl.submitAnswer(new Answer((long) 1));
         player_answer = question.getActivities()[0].getConsumption_in_wh();
+        answerTime = timeLeft;
     }
 
 
@@ -192,9 +200,9 @@ public class MoreExpensiveCtrl implements QuestionCtrl {
      */
     public void removeAnswer(ActionEvent actionEvent) {
         Random random = new Random();
-        int randomAnswer = random.nextInt(3)+1;
-        while(randomAnswer == question.getCorrectAnswer() || (randomAnswer != 1 && randomAnswer != 2 && randomAnswer != 3)) {
-            randomAnswer = random.nextInt(3)+1;
+        int randomAnswer = random.nextInt(3) + 1;
+        while (randomAnswer == question.getCorrectAnswer() || (randomAnswer != 1 && randomAnswer != 2 && randomAnswer != 3)) {
+            randomAnswer = random.nextInt(3) + 1;
         }
         switch (randomAnswer) {
             case 1:
@@ -228,7 +236,7 @@ public class MoreExpensiveCtrl implements QuestionCtrl {
 
             @Override
             public void run() {
-                int timeLeft = server.getTimeLeft(gameCtrl.getPlayer());
+                timeLeft = server.getTimeLeft(gameCtrl.getPlayer());
                 Platform.runLater(() -> {
                     timer.setText(String.valueOf(Math.max(Math.round((timeLeft - timeReduced) / 1000d), 0)));
                 });
@@ -273,9 +281,10 @@ public class MoreExpensiveCtrl implements QuestionCtrl {
      */
     @Override
     public void postQuestion(Answer answer){
+        powerUp1.setDisable(true);
         powerUp3.setDisable(true);
         if(player_answer != null && player_answer == question.getAnswer()){
-            int numberOfPoints = calculatePoints(server.getTimeLeft(gameCtrl.getPlayer()));
+            int numberOfPoints = calculatePoints(answerTime);
             if(doublePointsPUUsed) numberOfPoints = numberOfPoints * 2;
             gameCtrl.getPlayer().addScore(numberOfPoints);
             server.updatePlayer(gameCtrl.getPlayer());
@@ -284,7 +293,7 @@ public class MoreExpensiveCtrl implements QuestionCtrl {
             points.setVisible(true);
             this.answer.setText("Correct answer");
             this.answer.setVisible(true);
-        } else{
+        } else {
             points.setText("+0 points");
             points.setVisible(true);
             this.answer.setText("Wrong answer");
@@ -359,7 +368,6 @@ public class MoreExpensiveCtrl implements QuestionCtrl {
         timeLeft = (int) (timeLeft / 1000d);
         return (timeLeft * 10) / 2;
     }
-
 
 
     /**
@@ -487,9 +495,9 @@ public class MoreExpensiveCtrl implements QuestionCtrl {
 
     @Override
     public void showEmoji(String type, SimpleUser player) {
-        try{
+        try {
             emojiSelector(type, player);
-        } catch(Exception e) {
+        } catch (Exception e) {
             e.printStackTrace();
         }
     }

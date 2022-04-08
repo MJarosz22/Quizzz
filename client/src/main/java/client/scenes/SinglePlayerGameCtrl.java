@@ -11,30 +11,25 @@ import javafx.fxml.FXML;
 import javafx.scene.control.*;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
-import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.Pane;
 import javafx.scene.text.Text;
 
 import java.io.File;
 import java.io.FileNotFoundException;
-import java.net.URI;
+import java.net.URL;
 import java.util.Random;
-import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
 
 import static java.util.concurrent.TimeUnit.SECONDS;
 
-//Note that in the future, we can make this controller and its scene suitable for multiplayer games as well
 public class SinglePlayerGameCtrl {
 
     private final ServerUtils server;
     private final MainCtrl mainCtrl;
     private final GameCtrl gameCtrl;
 
-    private final String correctEmojiPath = "client/src/main/resources/images/correct-answer.png";
-    private final String wrongEmojiPath = "client/src/main/resources/images/wrong-answer.png";
-    private final String timerPath = "client/src/main/resources/images/timer.png";
+    private String timerPath = "/images/timer.png";
 
     private SimpleUser player;
     private GameInstance currentGame;
@@ -48,7 +43,7 @@ public class SinglePlayerGameCtrl {
     private Text questionTitle, timer, score, points, answer, option4, correct_guess, questionCount;
 
     @FXML
-    private AnchorPane timerImage, emoji;
+    private ImageView timerImage;
 
     @FXML
     private Button option1Button, option2Button, option3Button, correct_answer, submit_guess;
@@ -69,6 +64,8 @@ public class SinglePlayerGameCtrl {
     private Pane confirmationExit;
 
     private static boolean gameIsOver;
+
+    private Image timerImageSource;
 
 
     @Inject
@@ -113,7 +110,7 @@ public class SinglePlayerGameCtrl {
         infoRefresh();
         setOptions(false);
 
-        currentQuestion = currentGame.getRandomQuestion();
+        currentQuestion = currentGame.getNextQuestion();
         setImages();
 
         Platform.runLater(() -> {
@@ -325,6 +322,7 @@ public class SinglePlayerGameCtrl {
      * This method is called when user selects option 1 in a QuestionMoreExpensive
      */
     public void option1Selected() {
+        answered = true;
         if (((QuestionMoreExpensive) currentQuestion).getAnswer() == ((QuestionMoreExpensive) currentQuestion)
                 .getActivities()[0].getConsumption_in_wh()) {
             correctAnswer();
@@ -337,6 +335,7 @@ public class SinglePlayerGameCtrl {
      * This method is called when user selects option 2 in a QuestionMoreExpensive
      */
     public void option2Selected() {
+        answered = true;
         if (((QuestionMoreExpensive) currentQuestion).getAnswer() == ((QuestionMoreExpensive) currentQuestion)
                 .getActivities()[1].getConsumption_in_wh()) {
             correctAnswer();
@@ -349,6 +348,7 @@ public class SinglePlayerGameCtrl {
      * This method is called when user selects option 3 in a QuestionMoreExpensive
      */
     public void option3Selected() {
+        answered = true;
         if (((QuestionMoreExpensive) currentQuestion).getAnswer() == ((QuestionMoreExpensive) currentQuestion)
                 .getActivities()[2].getConsumption_in_wh()) {
             correctAnswer();
@@ -366,16 +366,7 @@ public class SinglePlayerGameCtrl {
     public void correctAnswer() {
         displayCorrectAnswerUpdates();
 
-        CompletableFuture.delayedExecutor(1, SECONDS).execute(() -> {
-            if (!isGameOver())
-                loadNextQuestion();
-        });
-
-
-        if (roundCounter >= 20) {
-            gameOver(2000);
-        }
-
+        freezeScreen();
     }
 
     /**
@@ -389,7 +380,6 @@ public class SinglePlayerGameCtrl {
         score.setText("Your score: " + player.getScore());
         points.setText("+" + numberOfPoints + "points");
         answer.setText("Correct answer");
-        setEmoji(emoji, true);
         setColors();
         setOptions(true);
     }
@@ -403,11 +393,7 @@ public class SinglePlayerGameCtrl {
     public void wrongAnswer() {
         displayWrongAnswerUpdates();
 
-        CompletableFuture.delayedExecutor(1, SECONDS).execute(() -> {
-            if (!isGameOver()) loadNextQuestion();
-        });
-
-        if (roundCounter >= 20) gameOver(2000);
+        freezeScreen();
     }
 
     /**
@@ -417,7 +403,6 @@ public class SinglePlayerGameCtrl {
         answered = true;
         points.setText("+0 points");
         answer.setText("Wrong answer");
-        setEmoji(emoji, false);
         setColors();
         setOptions(true);
     }
@@ -534,38 +519,19 @@ public class SinglePlayerGameCtrl {
     public void infoRefresh() {
         points.setText("");
         answer.setText("");
-        emoji.setVisible(false);
     }
 
     /**
-     * Sets the 'timerImage' AncorPane's image
+     * Sets the 'timerImage' AnchorPane's image
      *
      * @param timerImage AnchorPane object that is meant to display a timer image.
      */
-    public void setTimerImage(AnchorPane timerImage) {
-        File file = new File(timerPath);
-        URI uri = file.toURI();
-        timerImage.setStyle("-fx-background-image: url(" + uri + ");");
+    public void setTimerImage(ImageView timerImage) {
+        URL absoluteTimerPath = SinglePlayerGameCtrl.class.getResource(this.timerPath);
+        timerImageSource = new Image(absoluteTimerPath.toString());
+        timerImage.setImage(timerImageSource);
     }
 
-    /**
-     * Sets the 'emoji' AnchorPane's image, depending on the value of parameter.
-     *
-     * @param emoji   AnchorPane object that is meant to display an emoji
-     * @param correct boolean value
-     *                if 'true': displays a happy emoji image (if the answer was correct)
-     *                or a crying emoji image (otherwise)
-     */
-    public void setEmoji(AnchorPane emoji, boolean correct) {
-        emoji.setVisible(true);
-        File file;
-        if (correct)
-            file = new File(correctEmojiPath);
-        else
-            file = new File(wrongEmojiPath);
-        URI uri = file.toURI();
-        emoji.setStyle("-fx-background-image: url(" + uri + ");");
-    }
 
     /**
      * For the QuestionHowMuch
@@ -586,14 +552,10 @@ public class SinglePlayerGameCtrl {
             correct_guess.setText("The correct answer is: " + correct_number);
             setOptions(true);
 
-            CompletableFuture.delayedExecutor(1, SECONDS).execute(() -> {
-                if (!isGameOver())
-                    loadNextQuestion();
-            });
+            answered = true;
 
-            if (roundCounter >= 20) {
-                gameOver(2000);
-            }
+            freezeScreen();
+
         } catch (NumberFormatException e) {
             player_answer.clear();
             correct_guess.setVisible(true);
@@ -615,7 +577,6 @@ public class SinglePlayerGameCtrl {
             score.setText("Your score: " + player.getScore());
             points.setText("+100 points");
             answer.setText("Correct answer");
-            setEmoji(emoji, true);
         } else {
             if (number <= correct_number + (25 * correct_number) / 100 && number >= correct_number - (25 * correct_number) / 100) {
                 player.addScore(75);
@@ -623,7 +584,6 @@ public class SinglePlayerGameCtrl {
                 score.setText("Your score: " + player.getScore());
                 points.setText("+75 points");
                 answer.setText("Almost the correct answer");
-                setEmoji(emoji, true);
             } else {
                 if (number <= correct_number + (50 * correct_number) / 100 && number >= correct_number - (50 * correct_number) / 100) {
                     player.addScore(50);
@@ -631,7 +591,6 @@ public class SinglePlayerGameCtrl {
                     score.setText("Your score: " + player.getScore());
                     points.setText("+50 points");
                     answer.setText("Not quite the correct answer");
-                    setEmoji(emoji, true);
                 } else {
                     if (number <= correct_number + (75 * correct_number) / 100 && number >= correct_number - (75 * correct_number) / 100) {
                         player.addScore(25);
@@ -639,11 +598,9 @@ public class SinglePlayerGameCtrl {
                         score.setText("Your score: " + player.getScore());
                         points.setText("+25 points");
                         answer.setText("Pretty far from the correct answer");
-                        setEmoji(emoji, true);
                     } else {
                         points.setText("+0 points");
                         answer.setText("Wrong answer");
-                        setEmoji(emoji, false);
                     }
                 }
             }
@@ -658,25 +615,20 @@ public class SinglePlayerGameCtrl {
         correct_guess.setText("The correct answer is: " + ((QuestionHowMuch) currentQuestion).getActivity().getConsumption_in_wh());
         setOptions(true);
 
-        CompletableFuture.delayedExecutor(1, SECONDS).execute(() -> {
-            if (!isGameOver())
-                loadNextQuestion();
-        });
-
-        if (roundCounter >= 20) {
-            gameOver(2000);
-        }
+        freezeScreen();
     }
 
     /**
      * This method is called when user selects answer1 in a QuestionWhichOne type of question
      */
     public void answer1Selected() {
-        if(currentQuestion instanceof QuestionWhichOne) {
+        answered = true;
+
+        if (currentQuestion instanceof QuestionWhichOne) {
             long response = Long.parseLong(answer1.getText());
             isSelectionCorrect(answer1, response);
         }
-        if(currentQuestion instanceof QuestionInsteadOf) {
+        if (currentQuestion instanceof QuestionInsteadOf) {
             isSelectionCorrectInsteadOf(answer1, 1);
         }
     }
@@ -685,11 +637,13 @@ public class SinglePlayerGameCtrl {
      * This method is called when user selects answer2 in a QuestionWhichOne type of question
      */
     public void answer2Selected() {
-        if(currentQuestion instanceof QuestionWhichOne) {
+        answered = true;
+
+        if (currentQuestion instanceof QuestionWhichOne) {
             long response = Long.parseLong(answer2.getText());
             isSelectionCorrect(answer2, response);
         }
-        if(currentQuestion instanceof QuestionInsteadOf) {
+        if (currentQuestion instanceof QuestionInsteadOf) {
             isSelectionCorrectInsteadOf(answer2, 2);
         }
     }
@@ -698,11 +652,13 @@ public class SinglePlayerGameCtrl {
      * This method is called when user selects answer3 in a QuestionWhichOne type of question
      */
     public void answer3Selected() {
-        if(currentQuestion instanceof QuestionWhichOne) {
+        answered = true;
+
+        if (currentQuestion instanceof QuestionWhichOne) {
             long response = Long.parseLong(answer3.getText());
             isSelectionCorrect(answer3, response);
         }
-        if(currentQuestion instanceof QuestionInsteadOf) {
+        if (currentQuestion instanceof QuestionInsteadOf) {
             isSelectionCorrectInsteadOf(answer3, 3);
         }
     }
@@ -716,14 +672,13 @@ public class SinglePlayerGameCtrl {
      * @param response      the correct answer
      */
     public void isSelectionCorrect(RadioButton player_answer, long response) {
-        if (response == ((QuestionWhichOne) currentQuestion).getActivity().getConsumption_in_wh()) {
+        if (player_answer != null && response == ((QuestionWhichOne) currentQuestion).getActivity().getConsumption_in_wh()) {
             int numberOfPoints = calculatePoints(timeLeft);
             player.addScore(numberOfPoints);
             server.updatePlayer(player);
             score.setText("Your score: " + player.getScore());
             points.setText("+" + numberOfPoints + "points");
             answer.setText("Correct answer");
-            setEmoji(emoji, true);
             player_answer.setStyle("-fx-background-color: green; ");
             if (!answer1.equals(player_answer)) answer1.setStyle("-fx-background-color: red; ");
             if (!answer2.equals(player_answer)) answer2.setStyle("-fx-background-color: red; ");
@@ -731,7 +686,6 @@ public class SinglePlayerGameCtrl {
         } else {
             points.setText("+0 points");
             answer.setText("Wrong answer");
-            setEmoji(emoji, false);
             if (Long.parseLong(answer1.getText()) == ((QuestionWhichOne) currentQuestion).getActivity().getConsumption_in_wh())
                 answer1.setStyle("-fx-background-color: green; ");
             else answer1.setStyle("-fx-background-color: red; ");
@@ -745,15 +699,8 @@ public class SinglePlayerGameCtrl {
 
         setOptions(true);
 
-        CompletableFuture.delayedExecutor(1, SECONDS).execute(() -> {
-            if (!isGameOver())
-                loadNextQuestion();
-        });
+        freezeScreen();
 
-
-        if (roundCounter >= 20) {
-            gameOver(2000);
-        }
     }
 
     /**
@@ -765,14 +712,13 @@ public class SinglePlayerGameCtrl {
      * @param response      the correct answer
      */
     public void isSelectionCorrectInsteadOf(RadioButton player_answer, long response) {
-        if(response == currentQuestion.getCorrectAnswer()) {
+        if (player_answer != null && response == currentQuestion.getCorrectAnswer()) {
             int numberOfPoints = calculatePoints(timeLeft);
             player.addScore(numberOfPoints);
             server.updatePlayer(player);
             score.setText("Your score: " + player.getScore());
             points.setText("+" + numberOfPoints + "points");
             answer.setText("Correct answer");
-            setEmoji(emoji, true);
             player_answer.setStyle("-fx-background-color: green; ");
             if (!answer1.equals(player_answer)) answer1.setStyle("-fx-background-color: red; ");
             if (!answer2.equals(player_answer)) answer2.setStyle("-fx-background-color: red; ");
@@ -780,11 +726,10 @@ public class SinglePlayerGameCtrl {
         } else {
             points.setText("+0 points");
             answer.setText("Wrong answer");
-            setEmoji(emoji, false);
             if (currentQuestion.getCorrectAnswer() == 1)
                 answer1.setStyle("-fx-background-color: green; ");
             else answer1.setStyle("-fx-background-color: red; ");
-            if ( currentQuestion.getCorrectAnswer() == 2)
+            if (currentQuestion.getCorrectAnswer() == 2)
                 answer2.setStyle("-fx-background-color: green; ");
             else answer2.setStyle("-fx-background-color: red; ");
             if (currentQuestion.getCorrectAnswer() == 3)
@@ -794,17 +739,8 @@ public class SinglePlayerGameCtrl {
 
         setOptions(true);
 
-        CompletableFuture.delayedExecutor(1, SECONDS).execute(() -> {
-            if (!isGameOver())
-                loadNextQuestion();
-        });
-
-
-        if (roundCounter >= 20) {
-            gameOver(2000);
-        }
+        freezeScreen();
     }
-
 
 
     /**
@@ -828,8 +764,9 @@ public class SinglePlayerGameCtrl {
                         noGuess();
                     else if (currentQ instanceof QuestionWhichOne)
                         isSelectionCorrect(null, 0);
-                    else
+                    else if (currentQ instanceof QuestionMoreExpensive)
                         wrongAnswer();
+                    else isSelectionCorrectInsteadOf(null, 0);
                     timer.setText(String.valueOf(countdown));
                     scheduler.shutdown();
                 } else if (currentQ != currentQuestion || answered || !server.containsPlayer(player)) {
@@ -844,13 +781,13 @@ public class SinglePlayerGameCtrl {
     }
 
     /**
-     * Freezes the scene for 'timer' miliseconds ('run' method of thread, the first one) and after this interval of time runs the
+     * Freezes the scene for 'timer' milliseconds ('run' method of thread, the first one) and after this interval of time runs the
      * code inside the 'run'  method of Platform.runLater (the second one), by showing the user the gameOver screen
      *
-     * @param timer - an integer value representing the number of miliseconds after which the thread get executed.
+     * @param timer - an integer value representing the number of milliseconds after which the thread get executed.
      */
     public void gameOver(int timer) {
-        if(!gameIsOver){
+        if (!gameIsOver) {
             server.addPlayerToLeaderboard(player);
             server.disconnect(player);
         }
@@ -873,7 +810,7 @@ public class SinglePlayerGameCtrl {
     }
 
     /**
-     * For multiple choice types of questions (QuestionWhichOne and QuestionMoreExpensive).
+     * For multiple choice types of questions (QuestionWhichOne, QuestionMoreExpensive and QuestionInsteadOf).
      * Additional method that calculates how many points should a player be awarded if he answered to a specific
      * question in 'timeLeft' seconds. The formula was chosen for the 20 seconds type of question, so answering in i.e:
      * 15 seconds gives 75 points to the player, 12 seconds -> 60 points, etc.
@@ -923,10 +860,44 @@ public class SinglePlayerGameCtrl {
 
     /**
      * This method helps with adding players to the repository, only if the game is over
+     *
      * @return if the game is over or not
      */
-    public static boolean getGameIsOver(){
+    public static boolean getGameIsOver() {
         return gameIsOver;
     }
 
+    /**
+     * Method that shows the player the correct answer for each question type.
+     * The scene will be frozen for 5 minutes,
+     * while the timer will point out the remaining time before a new question is loaded / gameOver screen is shown
+     */
+    public void freezeScreen() {
+
+        ScheduledExecutorService scheduler = Executors.newScheduledThreadPool(1);
+        Runnable runnable = new Runnable() {
+            int countdown = 5;
+
+            public void run() {
+                if (countdown == 0) {
+                    timer.setText(String.valueOf(countdown));
+                    postQuestion();
+                    scheduler.shutdown();
+                } else {
+                    timer.setText(String.valueOf(countdown--));
+                }
+            }
+        };
+        scheduler.scheduleAtFixedRate(runnable, 0, 1, SECONDS);
+    }
+
+    /**
+     * Additional method that loads the next question if the game is not over yet, or calls the gameOver() method otherwise
+     */
+    public void postQuestion() {
+        if (roundCounter >= 20) {
+            gameOver(0);
+        } else if (!isGameOver())
+            loadNextQuestion();
+    }
 }

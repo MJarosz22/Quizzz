@@ -28,6 +28,7 @@ public class ActivityController {
 
     /**
      * Gets all the activities from the activity repository
+     *
      * @return all the activities from the activity repository
      */
     @GetMapping(path = {"", "/"})
@@ -37,6 +38,7 @@ public class ActivityController {
 
     /**
      * Adds an activity to the activity repository
+     *
      * @param activity the activity to be added to the repo
      * @return the activity that was added to the repo
      */
@@ -102,6 +104,7 @@ public class ActivityController {
 
     /**
      * Updates a certain activity
+     *
      * @param id the id of the activity to be updated
      * @param activity the activity to be updated
      * @return the updated activity
@@ -126,18 +129,15 @@ public class ActivityController {
 
     /**
      * Deletes a certain activity
+     *
      * @param id the id of the activity to be deleted
      * @return the deleted activity
      */
     @DeleteMapping("/{id}")
     public ResponseEntity<Activity> deleteActivity(@PathVariable("id") long id) {
         if (activityRepository.existsById(id)) {
-            try {
-                activityRepository.deleteById(id);
-                return ResponseEntity.ok().build();
-            } catch (Exception e) {
-                return ResponseEntity.internalServerError().build();
-            }
+            activityRepository.deleteById(id);
+            return ResponseEntity.ok().build();
         }
         return ResponseEntity.notFound().build();
     }
@@ -145,6 +145,7 @@ public class ActivityController {
 
     /**
      * Gets a random activity from the activity repository
+     *
      * @return the random activity
      */
     @GetMapping("/random")
@@ -166,7 +167,7 @@ public class ActivityController {
     public ResponseEntity<List<Activity>> getRandom60() {
         //hard coded -> size of all activities - 60
         long countIds = activityRepository.count();
-        if(activityRepository.count() == 0) {
+        if (activityRepository.count() == 0) {
             logger.error("No activities found for lobby...");
             return ResponseEntity.notFound().build();
         }
@@ -175,8 +176,8 @@ public class ActivityController {
         int limit = 60;
         int i = 0;
         long random_consumption = (long) ((Math.random() * (10000 - 50)) + 50);
-        long random_consumption_max = random_consumption +(50*random_consumption)/ 100;
-        long random_consumption_min = random_consumption -(50*random_consumption)/ 100;
+        long random_consumption_max = random_consumption + (50 * random_consumption) / 100;
+        long random_consumption_min = random_consumption - (50 * random_consumption) / 100;
         while (i < limit) {
             Optional<Activity> a = activityRepository.findById((long) idRandom);
             if (a.isPresent() && !setOfActivities.contains(a.get()) && a.get().getConsumption_in_wh() <= random_consumption_max
@@ -197,11 +198,7 @@ public class ActivityController {
      */
     @DeleteMapping("/all")
     public ResponseEntity<Activity> deleteAll() {
-        try {
-            activityRepository.deleteAll();
-        } catch (Exception e) {
-            return ResponseEntity.internalServerError().build();
-        }
+        activityRepository.deleteAll();
         return ResponseEntity.ok().build();
     }
 

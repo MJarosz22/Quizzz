@@ -20,9 +20,9 @@ import javafx.scene.layout.Pane;
 import javafx.scene.text.Text;
 
 import javax.inject.Inject;
-import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.util.Random;
+import java.net.URL;
 import java.util.Timer;
 import java.util.TimerTask;
 
@@ -65,7 +65,11 @@ public class WhichOneCtrl implements QuestionCtrl {
     private final MainCtrl mainCtrl;
     private final GameCtrl gameCtrl;
 
+    private String timerPath = "/images/timer.png";
+
     Long player_answer;
+    private int timeLeft;
+    private int answerTime;
 
     @Inject
     public WhichOneCtrl(ServerUtils server, MainCtrl mainCtrl, GameCtrl gameCtrl) {
@@ -74,9 +78,10 @@ public class WhichOneCtrl implements QuestionCtrl {
         this.gameCtrl = gameCtrl;
         this.doublePointsPUUsed = false;
         try {
-            timerImageSource = new Image(new FileInputStream("client/src/main/resources/images/timer.png"));
-        } catch (FileNotFoundException e) {
-            System.out.println("Couldn't find timer image.");
+            URL absoluteTimerPath = WhichOneCtrl.class.getResource(this.timerPath);
+            timerImageSource = new Image(absoluteTimerPath.toString());
+        } catch (NullPointerException e) {
+            System.out.println("Couldn't find timer image for multiplayer.");
         }
     }
 
@@ -98,11 +103,11 @@ public class WhichOneCtrl implements QuestionCtrl {
         questionCount.setText("Question " + question.getNumber() + "/20");
         option4.setText(question.getActivity().getTitle());
         disconnect.setVisible(false);
-        progressBar.setProgress(question.getNumber() / 20.0d + 0.05);
+        progressBar.setProgress(question.getNumber() / 20.0d);
         answer1.setText(String.valueOf(question.getAnswers()[0]));
         answer2.setText(String.valueOf(question.getAnswers()[1]));
         answer3.setText(String.valueOf(question.getAnswers()[2]));
-        score.setText("Your score: "+ gameCtrl.getPlayer().getScore());
+        score.setText("Your score: " + gameCtrl.getPlayer().getScore());
         answer.setVisible(false);
         points.setVisible(false);
         setPowerUps();
@@ -115,7 +120,7 @@ public class WhichOneCtrl implements QuestionCtrl {
         scheduler = new TimerTask() {
             @Override
             public void run() {
-                int timeLeft = server.getTimeLeft(gameCtrl.getPlayer());
+                timeLeft = server.getTimeLeft(gameCtrl.getPlayer());
                 Platform.runLater(() -> {
                     if (Math.round((timeLeft) / 1000d) <= 2)
                         powerUp3.setDisable(true);
@@ -133,6 +138,7 @@ public class WhichOneCtrl implements QuestionCtrl {
         powerUp1.setDisable(true);
         gameCtrl.submitAnswer(new Answer((long) 3));
         player_answer = question.getAnswers()[2];
+        answerTime = timeLeft;
     }
 
     public void answer2Selected(ActionEvent actionEvent) {
@@ -142,6 +148,7 @@ public class WhichOneCtrl implements QuestionCtrl {
         powerUp1.setDisable(true);
         gameCtrl.submitAnswer(new Answer((long) 2));
         player_answer = question.getAnswers()[1];
+        answerTime = timeLeft;
     }
 
     public void answer1Selected(ActionEvent actionEvent) {
@@ -151,6 +158,7 @@ public class WhichOneCtrl implements QuestionCtrl {
         powerUp1.setDisable(true);
         gameCtrl.submitAnswer(new Answer((long) 1));
         player_answer = question.getAnswers()[0];
+        answerTime = timeLeft;
     }
 
 
@@ -224,7 +232,7 @@ public class WhichOneCtrl implements QuestionCtrl {
 
             @Override
             public void run() {
-                int timeLeft = server.getTimeLeft(gameCtrl.getPlayer());
+                timeLeft = server.getTimeLeft(gameCtrl.getPlayer());
                 Platform.runLater(() -> {
                     timer.setText(String.valueOf(Math.max(Math.round((timeLeft - timeReduced) / 1000d), 0)));
                 });
@@ -233,7 +241,6 @@ public class WhichOneCtrl implements QuestionCtrl {
                 if (Math.round((timeLeft - timeReduced) / 1000d) <= 0) {
                     Platform.runLater(WhichOneCtrl.this::disableAnswers);
                 }
-
             }
         };
         new Timer().scheduleAtFixedRate(scheduler, 0, 100);
@@ -267,9 +274,10 @@ public class WhichOneCtrl implements QuestionCtrl {
      */
     @Override
     public void postQuestion(Answer answer) {
+        powerUp1.setDisable(true);
         powerUp3.setDisable(true);
         if(player_answer != null && player_answer == question.getAnswer()){
-            int numberOfPoints = calculatePoints(server.getTimeLeft(gameCtrl.getPlayer()));
+            int numberOfPoints = calculatePoints(answerTime);
             gameCtrl.getPlayer().addScore(numberOfPoints);
             if(doublePointsPUUsed) numberOfPoints = numberOfPoints * 2;
             server.updatePlayer(gameCtrl.getPlayer());
@@ -278,7 +286,7 @@ public class WhichOneCtrl implements QuestionCtrl {
             points.setVisible(true);
             this.answer.setText("Correct answer");
             this.answer.setVisible(true);
-        } else{
+        } else {
             points.setText("+0 points");
             points.setVisible(true);
             this.answer.setText("Wrong answer");
