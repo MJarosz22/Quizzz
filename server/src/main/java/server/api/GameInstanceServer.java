@@ -123,7 +123,7 @@ public class GameInstanceServer extends GameInstance {
      * Sends a new question to all clients connected to this gameInstance
      * @param questionNumber Number of question that needs to be sent.
      */
-    private void sendQuestion(int questionNumber) {
+    public void sendQuestion(int questionNumber) {
         Question currentQuestion = getQuestions().get(questionNumber);
         logger.info("[GI " + getId() + "] Question " + (questionNumber + 1) + " sent.");
         if (currentQuestion instanceof QuestionHowMuch) {
@@ -141,7 +141,7 @@ public class GameInstanceServer extends GameInstance {
      * Goes to the next question in the game
      * Displays the leaderboard after 10 and 20 questions
      */
-    private void nextQuestion() {
+    public void nextQuestion() {
         setState(GameState.INQUESTION);
         if (questionTask != null) questionTask.cancel();
         questionNumber++;
