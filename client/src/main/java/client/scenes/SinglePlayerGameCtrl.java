@@ -110,7 +110,7 @@ public class SinglePlayerGameCtrl {
         infoRefresh();
         setOptions(false);
 
-        currentQuestion = currentGame.getRandomQuestion();
+        currentQuestion = currentGame.getNextQuestion();
         setImages();
 
         Platform.runLater(() -> {

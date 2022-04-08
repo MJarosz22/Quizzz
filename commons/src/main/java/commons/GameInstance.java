@@ -19,8 +19,10 @@ public class GameInstance {
     private List<Player> players;
     private List<Question> questions;
     private GameState state = GameState.INLOBBY;
+    private int currentQuestion;
 
     public GameInstance(int id, int type) {
+        currentQuestion = 0;
         this.id = id;
         if (type < 0 || type > 1) throw new IllegalArgumentException();
         this.type = type;
@@ -28,7 +30,11 @@ public class GameInstance {
     }
 
     /**
-     * Generates 20 questions based on 60 activities
+     * QuestionMoreExpensive uses activity 0,1,2
+     * QuestionHowMuch uses activity 3
+     * QuestionWhichOne uses activity 4
+     * QuestionInsteadOf uses activity 5,6,7,8
+     * After that, the mod is 1 and QuestionHowMuch uses activity 9 etc
      *
      * @param activities List of 60 activities
      */
@@ -38,27 +44,25 @@ public class GameInstance {
         for (int i = 0; i < 20; i++) {
             int remainder = i % 4;
             int mod = i / 4;
-            if(questions.size() == 20) break;
-            if (remainder == 3) questions.add(new QuestionMoreExpensive
-                    (new Activity[]{
-                            activities.get(9 * mod + 6),
-                            activities.get(9 * mod + 7),
-                            activities.get(9 * mod + 8)},
-                            i + 1));
-            else if (remainder == 2) questions.add(new QuestionHowMuch(activities.get(9 * mod + 5), i + 1));
-            else if(remainder == 1) questions.add(new QuestionWhichOne(activities.get(9 * mod + 4), i + 1));
-            else questions.add(new QuestionInsteadOf(activities.get(9 * mod),
-                        new Activity[]{activities.get(9 * mod + 1),
-                                activities.get(9 * mod + 2), activities.get(9 * mod + 3)}, i + 1));
+            if (questions.size() == 20) break;
+            if (remainder == 3) questions.add(new QuestionInsteadOf(activities.get(9 * mod + 5),
+                    new Activity[]{activities.get(9 * mod + 6),
+                            activities.get(9 * mod + 7), activities.get(9 * mod + 8)}, i + 1));
+            else if (remainder == 2) questions.add(new QuestionWhichOne(activities.get(9 * mod + 4), i + 1));
+            else if (remainder == 1) questions.add(new QuestionHowMuch(activities.get(9 * mod + 3), i + 1));
+            else questions.add(new QuestionMoreExpensive
+                        (new Activity[]{
+                                activities.get(9 * mod),
+                                activities.get(9 * mod + 1),
+                                activities.get(9 * mod + 2)},
+                                i + 1));
         }
-        this.questions = questions;
+        setQuestions(questions);
     }
 
-    public Question getRandomQuestion() {
-        Random random = new Random();
-        int idx = random.nextInt(this.questions.size());
-        Question question = this.questions.get(idx);
-        this.questions.remove(idx);
+    public Question getNextQuestion() {
+        Question question = this.questions.get(currentQuestion);
+        currentQuestion++;
         return question;
     }
 
