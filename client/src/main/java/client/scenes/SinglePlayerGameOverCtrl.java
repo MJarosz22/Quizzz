@@ -1,9 +1,7 @@
 package client.scenes;
 
 import com.google.inject.Inject;
-import commons.GameInstance;
 import commons.player.SimpleUser;
-import communication.RequestToJoin;
 import javafx.beans.binding.Bindings;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
