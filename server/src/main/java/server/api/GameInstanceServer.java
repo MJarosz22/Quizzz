@@ -54,11 +54,11 @@ public class GameInstanceServer extends GameInstance {
 
 
     /**
-     * QuestionInsteadOf uses activity 0,1,2,3
-     * QuestionWhichOne uses activity 4
-     * QuestionHowMuch uses activity 5
+     * QuestionHowMuch uses activity 0
+     * QuestionWhichOne uses activity 1
+     * QuestionInsteadOf uses activity 2,3,4,5
      * QuestionMoreExpensive uses activity 6,7,8
-     * After that, the mod is 1 and QuestionInsteadOf uses activity 9 etc
+     * After that, the mod is 1 and QuestionHowMuch uses activity 9 etc
      *
      * @param activities List of 60 activities
      */
@@ -76,11 +76,11 @@ public class GameInstanceServer extends GameInstance {
                             activities.get(9 * mod + 7),
                             activities.get(9 * mod + 8)},
                             i + 1));
-            else if (remainder == 2) questions.add(new QuestionHowMuch(activities.get(9 * mod + 5), i + 1));
-            else if (remainder == 1) questions.add(new QuestionWhichOne(activities.get(9 * mod + 4), i + 1));
-            else questions.add(new QuestionInsteadOf(activities.get(9 * mod),
-                        new Activity[]{activities.get(9 * mod + 1),
-                                activities.get(9 * mod + 2), activities.get(9 * mod + 3)}, i + 1));
+            else if (remainder == 2) questions.add(new QuestionInsteadOf(activities.get(9 * mod + 2),
+                    new Activity[]{activities.get(9 * mod + 3),
+                            activities.get(9 * mod + 4), activities.get(9 * mod + 5)}, i + 1));
+            else if (remainder == 1) questions.add(new QuestionWhichOne(activities.get(9 * mod + 1), i + 1));
+            else questions.add(new QuestionHowMuch(activities.get(9 * mod), i + 1));
         }
         setQuestions(questions);
     }
