@@ -166,15 +166,15 @@ public class GameInstanceControllerTest {
 
     @Test
     public void answerTestOkInQuestionTest() {
-        var actual = sut.answerQuestion(0, new Answer(1L), firstCookie);
         firstGI.setState(GameState.INQUESTION);
+        var actual = sut.answerQuestion(0, new Answer(1L), firstCookie);
         assertEquals(OK, actual.getStatusCode());
     }
 
     @Test
     public void answerTestOkStartingTest() {
-        var actual = sut.answerQuestion(0, new Answer(1L), firstCookie);
         firstGI.setState(GameState.STARTING);
+        var actual = sut.answerQuestion(0, new Answer(1L), firstCookie);
         assertEquals(OK, actual.getStatusCode());
     }
 
@@ -186,8 +186,8 @@ public class GameInstanceControllerTest {
 
     @Test
     public void getCorrectAnswerInQuestionTest() {
-        var actual = sut.getCorrectAnswer(0, firstCookie);
         firstGI.setState(GameState.INQUESTION);
+        var actual = sut.getCorrectAnswer(0, firstCookie);
         assertEquals(NOT_FOUND, actual.getStatusCode());
     }
 
@@ -254,16 +254,16 @@ public class GameInstanceControllerTest {
 
     @Test
     public void decreaseTimeImpossibleTest() {
-        var actual = sut.decreaseTime(0, firstCookie, null);
         firstGI.setState(GameState.POSTQUESTION);
+        var actual = sut.decreaseTime(0, firstCookie, null);
         assertEquals(FORBIDDEN, actual.getStatusCode());
 
     }
 
     @Test
     public void decreaseTimeInvalidPlayerTest() {
-        var actual = sut.decreaseTime(3, mainCookie, null);
         firstGI.setState(GameState.INQUESTION);
+        var actual = sut.decreaseTime(3, mainCookie, null);
         assertEquals(FORBIDDEN, actual.getStatusCode());
     }
 
