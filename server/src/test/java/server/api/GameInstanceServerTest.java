@@ -89,7 +89,7 @@ public class GameInstanceServerTest {
             sut.nextQuestion(); // covers all cases
             if (i == 9) {
                 assertEquals("How much energy does it take?", sut.getCurrentQuestion().getTitle());
-                assertEquals(22L, sut.getCorrectAnswer()); //
+                assertEquals(19L, sut.getCorrectAnswer());
             }
         }
     }
