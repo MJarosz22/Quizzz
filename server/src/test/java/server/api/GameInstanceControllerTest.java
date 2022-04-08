@@ -1,6 +1,9 @@
 package server.api;
 
 import commons.*;
+import commons.powerups.AnswerPU;
+import commons.powerups.PointsPU;
+import commons.powerups.TimePU;
 import communication.RequestToJoin;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -237,17 +240,102 @@ public class GameInstanceControllerTest {
     }
 
     @Test
-    public void getServerNameFailsTest(){
+    public void getServerNameFailsTest() {
         var actual = sut.getServerName(12); // out of range
         assertEquals(BAD_REQUEST, actual.getStatusCode());
     }
+
     @Test
-    public void getServerNamETest(){
+    public void getServerNamETest() {
         var actual = sut.getServerName(0); // out of range
         assertEquals(OK, actual.getStatusCode());
-        assertEquals ("default", actual.getBody());
+        assertEquals("default", actual.getBody());
     }
 
+    @Test
+    public void decreaseTimeImpossibleTest() {
+        var actual = sut.decreaseTime(0, firstCookie, null);
+        firstGI.setState(GameState.POSTQUESTION);
+        assertEquals(FORBIDDEN, actual.getStatusCode());
+
+    }
+
+    @Test
+    public void decreaseTimeInvalidPlayerTest() {
+        var actual = sut.decreaseTime(3, mainCookie, null);
+        firstGI.setState(GameState.INQUESTION);
+        assertEquals(FORBIDDEN, actual.getStatusCode());
+    }
+
+    @Test
+    public void decreaseTimeTest() {
+        String playerName = "Petra";
+        TimePU time = new TimePU(firstCookie, playerName, 50);
+        firstGI.setState(GameState.INQUESTION);
+        var actual = sut.decreaseTime(0, firstCookie, time);
+        assertEquals(OK, actual.getStatusCode());
+    }
+
+    @Test
+    public void removeAnswerImpossibleTest() {
+        AnswerPU answerPU = new AnswerPU(firstCookie, "Petra");
+        firstGI.setState(GameState.POSTQUESTION);
+        var actual = sut.removeAnswer(0, firstCookie, answerPU);
+        assertEquals(FORBIDDEN, actual.getStatusCode());
+    }
+
+    @Test
+    public void removeAnswerInvalidPlayerTest() {
+        AnswerPU answerPU = new AnswerPU(firstCookie, "Petra");
+        firstGI.setState(GameState.POSTQUESTION);
+        var actual = sut.removeAnswer(3, mainCookie, answerPU);
+        assertEquals(FORBIDDEN, actual.getStatusCode());
+    }
+
+    @Test
+    public void removeAnswerTest() {
+        AnswerPU answerPU = new AnswerPU(firstCookie, "Petra");
+        firstGI.setState(GameState.INQUESTION);
+        var actual = sut.removeAnswer(0, firstCookie, answerPU);
+        assertEquals(OK, actual.getStatusCode());
+    }
+
+    @Test
+    public void doublePointsImpossibleTest() {
+        PointsPU pointsPU = new PointsPU(firstCookie, "Petra");
+        firstGI.setState(GameState.POSTQUESTION);
+        var actual = sut.doublePoints(0, firstCookie, pointsPU);
+        assertEquals(FORBIDDEN, actual.getStatusCode());
+    }
+
+    @Test
+    public void doublePointsInvalidPlayerTest() {
+        PointsPU pointsPU = new PointsPU(firstCookie, "Petra");
+        firstGI.setState(GameState.POSTQUESTION);
+        var actual = sut.doublePoints(3, mainCookie, pointsPU);
+        assertEquals(FORBIDDEN, actual.getStatusCode());
+    }
+
+    @Test
+    public void doublePointsTest() {
+        PointsPU pointsPU = new PointsPU(firstCookie, "Petra");
+        firstGI.setState(GameState.INQUESTION);
+        var actual = sut.doublePoints(0, firstCookie, pointsPU);
+        assertEquals(OK, actual.getStatusCode());
+    }
+
+    @Test
+    public void gameInstanceTypeFailTest() {
+        var actual = sut.gameInstanceType(-1);
+        assertEquals(BAD_REQUEST, actual.getStatusCode());
+    }
+
+    @Test
+    public void gameInstanceTypeTest() {
+        var actual = sut.gameInstanceType(3);
+        assertEquals(OK, actual.getStatusCode());
+        assertEquals(GameInstance.SINGLE_PLAYER, actual.getBody());
+    }
 
     // ----------------------------------------ADDITIONAL REMARKS ----------------------------------------
     public GameController initGameController() {
