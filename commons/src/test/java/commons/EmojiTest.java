@@ -8,6 +8,12 @@ import static org.junit.jupiter.api.Assertions.*;
 class EmojiTest {
 
     @Test
+    void emptyConstructorTest(){
+        Emoji emoji = new Emoji();
+        assertNotNull(emoji);
+    }
+
+    @Test
     void getType() {
         Emoji emoji = new Emoji("cry",new SimpleUser());
         assertTrue(emoji.getType().equals("cry"));
