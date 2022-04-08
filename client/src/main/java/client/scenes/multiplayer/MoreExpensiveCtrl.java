@@ -66,6 +66,8 @@ public class MoreExpensiveCtrl implements QuestionCtrl {
     private QuestionMoreExpensive question;
 
     Long player_answer;
+    private int timeLeft;
+    private int answerTime;
 
     @Inject
     public MoreExpensiveCtrl(MainCtrl mainCtrl, GameCtrl gameCtrl, ServerUtils server) {
@@ -101,7 +103,7 @@ public class MoreExpensiveCtrl implements QuestionCtrl {
         option2Button.setText(question.getActivities()[1].getTitle());
         option3Button.setText(question.getActivities()[2].getTitle());
         disconnect.setVisible(false);
-        progressBar.setProgress(question.getNumber() / 20.0d + 0.05);
+        progressBar.setProgress(question.getNumber() / 20.0d);
         score.setText("Your score: " + gameCtrl.getPlayer().getScore());
         answer.setVisible(false);
         points.setVisible(false);
@@ -119,7 +121,7 @@ public class MoreExpensiveCtrl implements QuestionCtrl {
         scheduler = new TimerTask() {
             @Override
             public void run() {
-                int timeLeft = server.getTimeLeft(gameCtrl.getPlayer());
+                 timeLeft = server.getTimeLeft(gameCtrl.getPlayer());
                 Platform.runLater(() -> {
                     if (Math.round((timeLeft) / 1000d) <= 2)
                         powerUp3.setDisable(true);
@@ -138,6 +140,7 @@ public class MoreExpensiveCtrl implements QuestionCtrl {
         powerUp1.setDisable(true);
         gameCtrl.submitAnswer(new Answer((long) 3));
         player_answer = question.getActivities()[2].getConsumption_in_wh();
+        answerTime = timeLeft;
     }
 
     public void option2Selected(ActionEvent actionEvent) {
@@ -148,6 +151,7 @@ public class MoreExpensiveCtrl implements QuestionCtrl {
         powerUp1.setDisable(true);
         gameCtrl.submitAnswer(new Answer((long) 2));
         player_answer = question.getActivities()[1].getConsumption_in_wh();
+        answerTime = timeLeft;
     }
 
     public void option1Selected(ActionEvent actionEvent) {
@@ -158,6 +162,7 @@ public class MoreExpensiveCtrl implements QuestionCtrl {
         powerUp1.setDisable(true);
         gameCtrl.submitAnswer(new Answer((long) 1));
         player_answer = question.getActivities()[0].getConsumption_in_wh();
+        answerTime = timeLeft;
     }
 
 
@@ -231,7 +236,7 @@ public class MoreExpensiveCtrl implements QuestionCtrl {
 
             @Override
             public void run() {
-                int timeLeft = server.getTimeLeft(gameCtrl.getPlayer());
+                timeLeft = server.getTimeLeft(gameCtrl.getPlayer());
                 Platform.runLater(() -> {
                     timer.setText(String.valueOf(Math.max(Math.round((timeLeft - timeReduced) / 1000d), 0)));
                 });
@@ -279,8 +284,8 @@ public class MoreExpensiveCtrl implements QuestionCtrl {
         powerUp1.setDisable(true);
         powerUp3.setDisable(true);
         if(player_answer != null && player_answer == question.getAnswer()){
-            int numberOfPoints = calculatePoints(server.getTimeLeft(gameCtrl.getPlayer()));
-            if (doublePointsPUUsed) numberOfPoints = numberOfPoints * 2;
+            int numberOfPoints = calculatePoints(answerTime);
+            if(doublePointsPUUsed) numberOfPoints = numberOfPoints * 2;
             gameCtrl.getPlayer().addScore(numberOfPoints);
             server.updatePlayer(gameCtrl.getPlayer());
             score.setText("Your score: " + gameCtrl.getPlayer().getScore());

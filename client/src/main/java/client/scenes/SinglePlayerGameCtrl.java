@@ -841,7 +841,7 @@ public class SinglePlayerGameCtrl {
     }
 
     /**
-     * For multiple choice types of questions (QuestionWhichOne and QuestionMoreExpensive).
+     * For multiple choice types of questions (QuestionWhichOne, QuestionMoreExpensive and QuestionInsteadOf).
      * Additional method that calculates how many points should a player be awarded if he answered to a specific
      * question in 'timeLeft' seconds. The formula was chosen for the 20 seconds type of question, so answering in i.e:
      * 15 seconds gives 75 points to the player, 12 seconds -> 60 points, etc.

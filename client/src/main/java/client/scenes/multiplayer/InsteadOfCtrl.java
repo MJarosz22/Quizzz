@@ -67,6 +67,8 @@ public class InsteadOfCtrl implements QuestionCtrl {
     private String timerPath = "/images/timer.png";
     private QuestionInsteadOf question;
 
+    private int timeLeft;
+    private int answerTime;
     private Long player_answer;
 
     @Inject
@@ -96,7 +98,7 @@ public class InsteadOfCtrl implements QuestionCtrl {
         questionTitle.setText(question.getTitle());
         questionCount.setText("Question " + question.getNumber() + "/20");
         option4.setText(question.getActivity().getTitle());
-        progressBar.setProgress(question.getNumber() / 20.0d + 0.05);
+        progressBar.setProgress(question.getNumber() / 20.0d);
         disconnect.setVisible(false);
         answer1.setText(question.getAnswers()[0]);
         answer2.setText(question.getAnswers()[1]);
@@ -117,7 +119,7 @@ public class InsteadOfCtrl implements QuestionCtrl {
         scheduler = new TimerTask() {
             @Override
             public void run() {
-                int timeLeft = server.getTimeLeft(gameCtrl.getPlayer());
+                 timeLeft = server.getTimeLeft(gameCtrl.getPlayer());
                 Platform.runLater(() -> {
                     if (Math.round((timeLeft) / 1000d) <= 2)
                         powerUp3.setDisable(true);
@@ -135,6 +137,7 @@ public class InsteadOfCtrl implements QuestionCtrl {
         powerUp1.setDisable(true);
         gameCtrl.submitAnswer(new Answer((long) 3));
         player_answer = question.getActivities()[2].getConsumption_in_wh();
+        answerTime = timeLeft;
     }
 
     public void answer2Selected(ActionEvent actionEvent) {
@@ -144,6 +147,7 @@ public class InsteadOfCtrl implements QuestionCtrl {
         powerUp1.setDisable(true);
         gameCtrl.submitAnswer(new Answer((long) 2));
         player_answer = question.getActivities()[1].getConsumption_in_wh();
+        answerTime = timeLeft;
     }
 
     public void answer1Selected(ActionEvent actionEvent) {
@@ -153,6 +157,7 @@ public class InsteadOfCtrl implements QuestionCtrl {
         powerUp1.setDisable(true);
         gameCtrl.submitAnswer(new Answer((long) 1));
         player_answer = question.getActivities()[0].getConsumption_in_wh();
+        answerTime = timeLeft;
     }
 
     public void disablePopUp(ActionEvent actionEvent) {
@@ -222,7 +227,7 @@ public class InsteadOfCtrl implements QuestionCtrl {
 
             @Override
             public void run() {
-                int timeLeft = server.getTimeLeft(gameCtrl.getPlayer());
+                 timeLeft = server.getTimeLeft(gameCtrl.getPlayer());
                 Platform.runLater(() -> {
                     timer.setText(String.valueOf(Math.max(Math.round((timeLeft - timeReduced) / 1000d), 0)));
                 });
@@ -261,7 +266,7 @@ public class InsteadOfCtrl implements QuestionCtrl {
         powerUp1.setDisable(true);
         powerUp3.setDisable(true);
         if(player_answer != null && player_answer == question.getAnswer()){
-            int numberOfPoints = calculatePoints(server.getTimeLeft(gameCtrl.getPlayer()));
+            int numberOfPoints = calculatePoints(answerTime);
             if(doublePointsPUUsed) numberOfPoints = numberOfPoints * 2;
             gameCtrl.getPlayer().addScore(numberOfPoints);
             server.updatePlayer(gameCtrl.getPlayer());

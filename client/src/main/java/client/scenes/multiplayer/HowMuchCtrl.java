@@ -66,6 +66,7 @@ public class HowMuchCtrl implements QuestionCtrl {
     private String timerPath = "/images/timer.png";
 
     private QuestionHowMuch question;
+    private int timeLeft;
 
     @Inject
     public HowMuchCtrl(ServerUtils server, MainCtrl mainCtrl, GameCtrl gameCtrl) {
@@ -97,7 +98,7 @@ public class HowMuchCtrl implements QuestionCtrl {
         questionCount.setText("Question " + question.getNumber() + "/20");
         option4.setText(question.getActivity().getTitle());
         disconnect.setVisible(false);
-        progressBar.setProgress(question.getNumber() / 20.0d + 0.05);
+        progressBar.setProgress(question.getNumber() / 20.0d);
         setPowerUps();
         score.setText("Your score: " + gameCtrl.getPlayer().getScore());
         answer.setVisible(false);
@@ -113,7 +114,7 @@ public class HowMuchCtrl implements QuestionCtrl {
         scheduler = new TimerTask() {
             @Override
             public void run() {
-                int timeLeft = server.getTimeLeft(gameCtrl.getPlayer());
+                timeLeft = server.getTimeLeft(gameCtrl.getPlayer());
                 Platform.runLater(() -> {
                     if (Math.round((timeLeft) / 1000d) <= 2)
                         powerUp3.setDisable(true);
@@ -182,7 +183,7 @@ public class HowMuchCtrl implements QuestionCtrl {
 
             @Override
             public void run() {
-                int timeLeft = server.getTimeLeft(gameCtrl.getPlayer());
+                 timeLeft = server.getTimeLeft(gameCtrl.getPlayer());
                 Platform.runLater(() -> {
                     timer.setText(String.valueOf(Math.max(Math.round((timeLeft - timeReduced) / 1000d), 0)));
                 });
@@ -220,6 +221,7 @@ public class HowMuchCtrl implements QuestionCtrl {
      */
     @Override
     public void postQuestion(Answer ans) {
+        powerUp2.setDisable(true);
         powerUp3.setDisable(true);
         submit_guess.setDisable(true); // If an answer was not submitted already.
         timeReduced = 0;
@@ -293,7 +295,6 @@ public class HowMuchCtrl implements QuestionCtrl {
         correct_guess.setVisible(false);
         player_answer.clear();
         enableAnswers();
-//        timer.setText("12000");
     }
 
     /**

@@ -40,9 +40,9 @@
             </font>
         </Text>
         <AnchorPane fx:id="emoji" layoutX="187.0" layoutY="84.0" prefHeight="30.0" prefWidth="30.0" style="-fx-background-size: contain;" />
-        <RadioButton fx:id="answer1" layoutX="581.0" layoutY="193.0" mnemonicParsing="false" onAction="#answer1Selected" prefHeight="50.0" prefWidth="235.0" text="answer1" wrapText="true" />
-        <RadioButton fx:id="answer2" layoutX="581.0" layoutY="243.0" mnemonicParsing="false" onAction="#answer2Selected" prefHeight="50.0" prefWidth="235.0" text="answer2" wrapText="true" />
-        <RadioButton fx:id="answer3" layoutX="581.0" layoutY="293.0" mnemonicParsing="false" onAction="#answer3Selected" prefHeight="50.0" prefWidth="235.0" text="answer3" wrapText="true" />
+        <RadioButton fx:id="answer1" layoutX="581.0" layoutY="193.0" mnemonicParsing="false" onAction="#answer1Selected" prefHeight="50.0" prefWidth="350.0" text="answer1" wrapText="true" />
+        <RadioButton fx:id="answer2" layoutX="581.0" layoutY="243.0" mnemonicParsing="false" onAction="#answer2Selected" prefHeight="50.0" prefWidth="350.0" text="answer2" wrapText="true" />
+        <RadioButton fx:id="answer3" layoutX="581.0" layoutY="293.0" mnemonicParsing="false" onAction="#answer3Selected" prefHeight="50.0" prefWidth="350.0" text="answer3" wrapText="true" />
         <ImageView fx:id="image4" fitHeight="200.0" fitWidth="309.0" layoutX="205.0" layoutY="160.0" pickOnBounds="true" preserveRatio="true" />
         <Text fx:id="option4" fill="WHITE" layoutX="202.0" layoutY="396.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Option 4 " wrappingWidth="315.2109375">
             <font>
@@ -57,21 +57,6 @@
                 <Font size="14.0" />
             </font>
         </Text>
-        <Pane fx:id="confirmationExit" layoutY="1.0" prefHeight="540.0" prefWidth="960.0">
-            <children>
-                <Button layoutX="545.0" layoutY="336.0" mnemonicParsing="false" onAction="#leaveGame" prefHeight="158.0"
-                        prefWidth="349.0" text="YES"/>
-                <Button layoutX="102.0" layoutY="337.0" mnemonicParsing="false" onAction="#disablePopUp"
-                        prefHeight="158.0" prefWidth="367.0" text="NO"/>
-                <Text layoutX="257.0" layoutY="206.0" strokeType="OUTSIDE" strokeWidth="0.0"
-                      text="Are you sure you want to leave the game? " wrappingWidth="576.4140625">
-                    <font>
-                        <Font size="28.0"/>
-                    </font>
-                </Text>
-            </children>
-        </Pane>
-
         <Pane layoutX="690.0" layoutY="20.0" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="120.0" prefWidth="250.0">
             <children>
                 <Pane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="60.0" prefWidth="250.0">
@@ -143,6 +128,20 @@
                         </Text>
                     </children>
                 </Pane>
+            </children>
+        </Pane>
+        <Pane fx:id="confirmationExit" layoutY="1.0" prefHeight="540.0" prefWidth="960.0">
+            <children>
+                <Button layoutX="545.0" layoutY="336.0" mnemonicParsing="false" onAction="#leaveGame" prefHeight="158.0"
+                        prefWidth="349.0" text="YES"/>
+                <Button layoutX="102.0" layoutY="337.0" mnemonicParsing="false" onAction="#disablePopUp"
+                        prefHeight="158.0" prefWidth="367.0" text="NO"/>
+                <Text layoutX="257.0" layoutY="206.0" strokeType="OUTSIDE" strokeWidth="0.0"
+                      text="Are you sure you want to leave the game? " wrappingWidth="576.4140625">
+                    <font>
+                        <Font size="28.0"/>
+                    </font>
+                </Text>
             </children>
         </Pane>
     </children>
